@@ -164,13 +164,9 @@ export default {
       }
     }
 
-    h3,
-    .button .text {
+    h3 {
       opacity: 0;
       transition: opacity 0.1s ease-out;
-    }
-
-    h3 {
       color: var(--color-primary);
       font-size: 2rem;
       margin-bottom: 0.5rem;
@@ -199,17 +195,18 @@ export default {
           border-radius: 0 2rem 2rem 0;
           border-left: 5px solid limegreen;
 
-          .material-icons,
-          .text {
-            .text {
-              color: var(--color-body);
-              transition: 0.2s ease-out;
-            }
+          .material-icons {
+            transition: 0.2s ease-out;
           }
+
+          // .text {
+          //   color: var(--color-body);
+          // }
         }
         .text {
           color: var(--color-body);
-          transition: 0.1s ease-out;
+          // height: 2rem;
+          display: none;
         }
       }
     }
@@ -242,10 +239,13 @@ export default {
         font-weight: 600;
       }
 
-      h3,
-      .button .text {
+      h3 {
         opacity: 1;
       }
+      .button .text {
+        display: block;
+      }
+
       .menu {
         .button {
           .material-icons {
@@ -281,25 +281,19 @@ export default {
 
     &.not_expanded {
       .button {
+        height: 4rem;
         .text {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          flex: 0 0 14rem;
-          padding-top: 0.7rem;
-          padding-bottom: 0.7rem;
-          transition: opacity 0.1s ease-out;
+          display: none;
+          text-align: center;
+          min-width: 15rem;
         }
-        &:hover {
+
+        &:hover .text {
+          padding: 0.7rem 1rem;
+          display: inline-block;
+          z-index: 99;
           background-color: var(--color-white);
           color: var(--color-body);
-          .text {
-            opacity: 1;
-            z-index: 99;
-            background-color: var(--color-white);
-            border-radius: 0 2rem 2rem 0;
-            color: var(--color-body);
-          }
         }
       }
     }
