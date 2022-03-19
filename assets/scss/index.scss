@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+
+@import 'variables';
+@import '~bootstrap/scss/bootstrap';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+:root {
+  --color-primary:  #007bff;
+  --color-header: #1f3bb3;
+  --dark-button: #1f3bb3;
+  --color-success: #28a745;
+  --color-white: #fff;
+  --color-body: #111;
+  --color-input: rgba(0, 47, 255, 0.010);
+  --color-background: #f2edf3;
+}
+html {
+  box-sizing: border-box;
+  font-size: 62.5%; //1rem= 10px; 10px/16px*100% = 62.5%
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  // font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  // font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+  //   'Lucida Sans', Arial, sans-serif;
+  // font-family: 'Roboto', sans-serif;
+  background: #f2edf3;
+  color: #111;
+}
+// var(--color-primary)
+ul {
+  list-style: none;
+}
+a:link{
+  text-decoration: none;
+}

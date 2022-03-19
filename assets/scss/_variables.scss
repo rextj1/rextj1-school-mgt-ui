@@ -1,0 +1,18 @@
+$font-family-sans-serif: "Roboto", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+
+
+// $font-size-base: 0.9rem;
+$enable-responsive-font-sizes: true;
+
+$border-radius: 0.3rem;
+$border-radius-lg: 0.5rem;
+$border-radius-sm: 0.3rem;
+
+$primary: #353e76;
+$secondary: #f9e844;
+
+$modal-fade-transform: scale(.8);
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
