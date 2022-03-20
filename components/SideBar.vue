@@ -197,8 +197,8 @@ export default {
       align-items: center;
       text-decoration: none;
       transition: 0.1s ease-out;
-      padding: 0.8rem 1rem;
-      margin-bottom: 0.5rem;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.8rem;
 
       .material-icons {
         font-size: 2rem;

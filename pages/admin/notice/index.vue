@@ -7,15 +7,16 @@
             <template #title>
               <b-icon icon="plus"/><strong>Add Notice</strong>
             </template>
-            <b-row>
-              <b-col md="10" class="p-2">
+            <b-row class="p-4">
+              <b-col md="10" class="p-4">
                 <b-form-group label="School Notice">
                   <b-form-textarea
                     id="textarea"
                     v-model="form.text"
                     placeholder="Enter something..."
                     rows="10"
-                    cols="1"
+                    
+                    cols="10"
                   ></b-form-textarea>
                 </b-form-group>
               </b-col>

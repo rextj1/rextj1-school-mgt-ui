@@ -1,21 +1,20 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 event">
     <div class="libarian__wrapper" @click.prevent="hideMenu">
       <b-card no-body @click="hideMenu">
         <b-tabs card style="font-size: 1.4rem">
           <b-tab active @click="hideMenu">
             <template #title>
-              <b-icon icon="plus"/><strong>Add Events</strong>
+              <b-icon icon="plus" /><strong>Add Events</strong>
             </template>
-            <b-row>
-              <b-col md="10" class="p-2">
+            <b-row class="p-4">
+              <b-col md="10" class="p-4">
                 <b-form-group label="School Events">
                   <b-form-textarea
                     id="textarea"
                     v-model="form.text"
                     placeholder="Enter something..."
                     rows="10"
-                    cols="1"
                   ></b-form-textarea>
                 </b-form-group>
               </b-col>
@@ -102,7 +101,7 @@ export default {
         schoolEvent: '',
         busy: false,
       },
-         items: [
+      items: [
         {
           date: '12-6-11',
           event:
@@ -157,34 +156,36 @@ export default {
 </script>
 
 <style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.4rem;
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
+.event {
+  .libarian__wrapper {
+    padding: 2rem;
+    font-size: 1.4rem;
+    background-color: var(--color-white);
+    border-radius: 0.5rem;
+    border: none;
 
-  .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-
-  .menu {
-    ul {
-      position: absolute;
-      border: none;
-      top: -8.5rem;
-      left: 14.3rem;
-      background-color: #fff;
+    .nav-link.active {
+      border-top: 5px solid limegreen;
     }
 
-    li:not(:last-child) {
-      background-color: #fff;
-      padding: 1.2rem 5.8rem;
-      border-bottom: 1px solid gray;
-      cursor: pointer;
+    .menu {
+      ul {
+        position: absolute;
+        border: none;
+        top: -8.5rem;
+        left: 14.3rem;
+        background-color: #fff;
+      }
 
-      &:hover {
-        background-color: var(--color-input);
+      li:not(:last-child) {
+        background-color: #fff;
+        padding: 1.2rem 5.8rem;
+        border-bottom: 1px solid gray;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--color-input);
+        }
       }
     }
   }
