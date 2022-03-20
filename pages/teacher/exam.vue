@@ -3,14 +3,6 @@
     <div>
       <b-card no-body @click="hideMenu">
         <b-tabs card style="font-size: 1.4rem">
-          <b-tab active @click="hideMenu">
-            <template #title>
-              <strong>Add Exam</strong>
-              <b-icon scale="0.8" icon="caret-down-fill" />
-            </template>
-            <AddExamTimetable />
-          </b-tab>
-
           <b-tab @click.prevent="registrationMenu" lazy>
             <template #title>
               <strong>All Exam</strong>
@@ -27,7 +19,7 @@
                   <li
                     @click.prevent="
                       dynamicStudentClass('JSS 1')
-                      activeTab = 'Timetable'
+                      activeTab = 'Jss1ExamTimeTable'
                     "
                   >
                     <span class="d-flex">JSS1</span>
@@ -35,7 +27,7 @@
                   <li
                     @click.prevent="
                       dynamicStudentClass('JSS 2')
-                      activeTab = 'Timetable'
+                      activeTab = 'Jss1ExamTimeTable'
                     "
                   >
                     <span class="d-flex">JSS2</span>
@@ -43,7 +35,7 @@
                   <li
                     @click.prevent="
                       dynamicStudentClass('JSS 3')
-                      activeTab = 'Timetable'
+                      activeTab = 'Jss1ExamTimeTable'
                     "
                   >
                     <span class="d-flex">JSS3</span>
@@ -51,7 +43,7 @@
                   <li
                     @click.prevent="
                       dynamicStudentClass('SSS 1')
-                      activeTab = 'Timetable'
+                      activeTab = 'Jss1ExamTimeTable'
                     "
                   >
                     <span class="d-flex">SSS1</span>
@@ -59,7 +51,7 @@
                   <li
                     @click.prevent="
                       dynamicStudentClass('SSS 2')
-                      activeTab = 'Timetable'
+                      activeTab = 'Jss1ExamTimeTable'
                     "
                   >
                     <span class="d-flex">SSS2</span>
@@ -67,7 +59,7 @@
                   <li
                     @click.prevent="
                       dynamicStudentClass('SSS 3')
-                      activeTab = 'Timetable'
+                      activeTab = 'Jss1ExamTimeTable'
                     "
                   >
                     <span class="d-flex"> SSS3</span>
@@ -128,18 +120,19 @@ export default {
   }
 
   .menu {
+   
     ul {
       z-index: 999;
       position: absolute;
       border: none;
-      top: -2.2rem;
-      left: 9.69rem;
+      top: -1.5rem;
+      left: 9.6rem;
       background-color: #fff;
     }
 
     li:not(:last-child) {
       background-color: #fff;
-      padding: 0.6rem 4.2rem;
+      padding: 0.8rem 4.5rem;
       border-bottom: 1px solid gray;
       cursor: pointer;
 

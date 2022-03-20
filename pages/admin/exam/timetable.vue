@@ -128,10 +128,12 @@ export default {
   }
 
   .menu {
+   
     ul {
+      z-index: 999;
       position: absolute;
       border: none;
-      top: -5.5rem;
+      top: -1.5rem;
       left: 9.6rem;
       background-color: #fff;
     }

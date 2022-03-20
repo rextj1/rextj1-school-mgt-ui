@@ -255,6 +255,7 @@ export default {
           photo: 40,
           name: { first: 'Dickerson', last: 'Macdonald' },
           gender: true,
+          class: 'JSS 1',
           subject_assigned: 5,
           phone: 810000112,
           // _cellVariants: { paid: 'success' },
@@ -267,6 +268,7 @@ export default {
           photo: 21,
           name: { first: 'Larsen', last: 'Shaw' },
           gender: false,
+          class: "JSS 2",
           subject_assigned: 5,
           phone: 810000112,
           // _cellVariants: { paid: 'success' },
@@ -303,10 +305,10 @@ export default {
           key: 'gender',
           label: 'Gender',
           formatter: (value, key, item) => {
-            return value ? 'male' : 'female'
+            return value ? 'Male' : 'Female'
           },
           sortable: true,
-          sortByFormatted: false,
+          sortByFormatted: true,
           filterByFormatted: true,
         },
 
@@ -319,6 +321,12 @@ export default {
           sortable: true,
           sortByFormatted: true,
           filterByFormatted: true,
+        },
+         {
+          key: 'class',
+          label: 'Class',
+          sortable: true,
+          sortDirection: 'desc',
         },
         {
           key: 'subject_assigned',

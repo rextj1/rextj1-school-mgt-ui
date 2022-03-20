@@ -3,17 +3,9 @@
     <div>
       <b-card no-body @click="hideMenu">
         <b-tabs card style="font-size: 1.4rem">
-          <b-tab active @click="hideMenu">
-            <template #title>
-              <strong>Add Exam</strong>
-              <b-icon scale="0.8" icon="caret-down-fill" />
-            </template>
-            <AddExamTimetable />
-          </b-tab>
-
           <b-tab @click.prevent="registrationMenu" lazy>
             <template #title>
-              <strong>All Exam</strong>
+              <strong>All Timetable</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
             </template>
 

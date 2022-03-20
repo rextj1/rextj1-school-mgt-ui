@@ -99,6 +99,7 @@ nav {
       border-radius: 50%;
     }
     .profile {
+      z-index: 999;
       position: absolute;
       background-color: #fff;
       top: 7.8rem;
@@ -123,7 +124,6 @@ nav {
       a {
         color: var(--color-body);
       }
-
       & li {
         padding: 0.8rem 7rem;
         border-bottom: 1px solid #d8e0c0;

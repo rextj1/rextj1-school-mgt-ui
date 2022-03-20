@@ -14,6 +14,109 @@
       </div>
     </div>
 
+     <!-- Liberian -->
+    <h3 class="h3-memu">Liberian</h3>
+
+    <div class="menu">
+      <nuxt-link to="/dashboard" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="columns-gap"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Dashboard</span>
+      </nuxt-link>
+
+       <nuxt-link to="/liberian/profile" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="person-fill"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Profile</span>
+      </nuxt-link>
+
+       <nuxt-link to="/liberian/books" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="book"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Books</span>
+      </nuxt-link>
+    </div>
+
+    <!-- Teacher -->
+    <h3 class="h3-memu">Teacher</h3>
+
+    <div class="menu">
+      <nuxt-link to="/dashboard" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="columns-gap"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Dashboard</span>
+      </nuxt-link>
+
+      <nuxt-link to="/teacher/profile" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="person-fill"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Profile</span>
+      </nuxt-link>
+
+      <nuxt-link to="/teacher/timetable" class="button">
+        <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
+        <span @click="ToggleMenus" class="text">Timetable</span>
+      </nuxt-link>
+
+      <nuxt-link to="/teacher/exam" class="button">
+        <b-icon @click="ToggleMenus" icon="vector-pen" class="material-icons" />
+        <span @click="ToggleMenus" class="text">Examination</span>
+      </nuxt-link>
+    </div>
+
+    <!-- Student -->
+    <h3 class="h3-memu">Student</h3>
+
+    <div class="menu">
+      <nuxt-link to="/dashboard" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="columns-gap"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Dashboard</span>
+      </nuxt-link>
+
+      <nuxt-link to="/student/profile" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="person-fill"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Profile</span>
+      </nuxt-link>
+
+      <nuxt-link to="/student/timetable" class="button">
+        <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
+        <span @click="ToggleMenus" class="text">Timetable</span>
+      </nuxt-link>
+
+      <nuxt-link to="/student/exam" class="button">
+        <b-icon @click="ToggleMenus" icon="vector-pen" class="material-icons" />
+        <span @click="ToggleMenus" class="text">Examination</span>
+      </nuxt-link>
+
+      <nuxt-link to="/student/result" class="button">
+        <b-icon @click="ToggleMenus" icon="file-text" class="material-icons" />
+        <span @click="ToggleMenus" class="text">Result</span>
+      </nuxt-link>
+    </div>
+    <!-- admin -->
     <h3 class="h3-memu">Admin</h3>
 
     <div class="menu">
@@ -42,7 +145,7 @@
         />
         <span @click="ToggleMenus" class="text">Student</span>
       </nuxt-link>
-      
+
       <nuxt-link to="/admin/liberian" class="button">
         <b-icon
           @click="ToggleMenus"
@@ -61,7 +164,7 @@
         <span @click="ToggleMenus" class="text">School Event</span>
       </nuxt-link>
 
-       <nuxt-link to="/admin/notice" class="button">
+      <nuxt-link to="/admin/notice" class="button">
         <b-icon
           @click="ToggleMenus"
           icon="calendar2-date"
@@ -70,14 +173,6 @@
         <span @click="ToggleMenus" class="text">school Notice</span>
       </nuxt-link>
 
-      <nuxt-link to="/admin/result" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="file-earmark-ruled-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Result</span>
-      </nuxt-link>
       <nuxt-link to="/admin/timetable" class="button">
         <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
         <span @click="ToggleMenus" class="text">Timetable</span>
@@ -96,7 +191,6 @@
         <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
         <span @click="ToggleMenus" class="text">Contact</span>
       </nuxt-link>
-      
     </div>
 
     <div class="flex"></div>
@@ -239,7 +333,7 @@ export default {
   // }
 
   &.is-expanded {
-    width: 20rem;
+    width: 23rem;
 
     .menu-toggle-wrap {
       top: -3rem;

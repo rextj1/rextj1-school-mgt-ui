@@ -21,7 +21,7 @@
                 </b-form-group>
               </b-col>
 
-              <b-col md="3" class="p-2">
+              <b-col md="3" class="p-4">
                 <b-form-group label="Schoo Notice">
                   <b-form-datepicker
                     id="datepicker-buttons"
@@ -34,7 +34,7 @@
                   ></b-form-datepicker>
                 </b-form-group>
               </b-col>
-              <b-col md="12" class="p-2">
+              <b-col md="12" class="p-4">
                 <b-button
                   type="submit"
                   variant="primary"
