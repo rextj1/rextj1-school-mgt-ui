@@ -42,6 +42,33 @@
         />
         <span @click="ToggleMenus" class="text">Student</span>
       </nuxt-link>
+      
+      <nuxt-link to="/admin/liberian" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="people-fill"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Liberian</span>
+      </nuxt-link>
+
+      <nuxt-link to="/admin/event" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="calendar2-date"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">School Event</span>
+      </nuxt-link>
+
+       <nuxt-link to="/admin/notice" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="calendar2-date"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">school Notice</span>
+      </nuxt-link>
 
       <nuxt-link to="/admin/result" class="button">
         <b-icon
@@ -56,7 +83,7 @@
         <span @click="ToggleMenus" class="text">Timetable</span>
       </nuxt-link>
 
-      <nuxt-link to="/admin/exam" class="button">
+      <nuxt-link to="/admin/exam/timetable" class="button">
         <b-icon @click="ToggleMenus" icon="vector-pen" class="material-icons" />
         <span @click="ToggleMenus" class="text">Exam</span>
       </nuxt-link>
@@ -69,14 +96,7 @@
         <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
         <span @click="ToggleMenus" class="text">Contact</span>
       </nuxt-link>
-      <nuxt-link to="/admievent" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="calendar2-date"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Event</span>
-      </nuxt-link>
+      
     </div>
 
     <div class="flex"></div>
@@ -141,11 +161,11 @@ export default {
     margin-bottom: 1rem;
     position: relative;
     top: 0;
-    transition: 0.3s ease-in-out;
+    transition: 0.3s ease-out;
     cursor: pointer;
 
     .menu-toggle {
-      transition: 0.3s ease-in-out;
+      transition: 0.3s ease-out;
       .material-icons {
         font-size: 3rem;
         transition: 0.2s ease-out;
@@ -177,7 +197,7 @@ export default {
       align-items: center;
       text-decoration: none;
       transition: 0.1s ease-out;
-      padding: 0.5rem 1rem;
+      padding: 0.8rem 1rem;
       margin-bottom: 0.5rem;
 
       .material-icons {
@@ -195,12 +215,13 @@ export default {
           transition: 0.2s ease-out;
         }
 
-        // .text {
-        //   color: var(--color-body);
-        // }
+        .text {
+          color: var(--color-body);
+        }
       }
       .text {
         color: var(--color-body);
+        transition: 0.2s ease-out;
         // height: 2rem;
         display: none;
       }
