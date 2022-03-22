@@ -14,7 +14,55 @@
       </div>
     </div>
 
-     <!-- Liberian -->
+    <!-- Accountant -->
+    <h3 class="h3-memu">Accountant</h3>
+
+    <div class="menu">
+      <nuxt-link to="/dashboard" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="columns-gap"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Dashboard</span>
+      </nuxt-link>
+
+      <nuxt-link to="/accountant/profile" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="person-fill"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Profile</span>
+      </nuxt-link>
+      <nuxt-link to="#" v-b-toggle.collapse-1 class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="person-fill"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text"
+          >Payment <b-icon style="margin-left:4rem" scale="0.8" icon="caret-down"
+        /></span>
+      </nuxt-link>
+
+      <b-collapse id="collapse-1" class="mt-2 dropMenuClose">
+        <b-card bg-variant="light">
+          <nuxt-link to="/accountant/create-payment" class="button">
+            <span class="text">Create</span>
+          </nuxt-link>
+
+          <nuxt-link to="/accountant/student-payment" class="button">
+            <span class="text">Payment</span>
+          </nuxt-link>
+          <nuxt-link to="/accountant/view-payments" class="button">
+            <span class="text">View</span>
+          </nuxt-link>
+        </b-card>
+      </b-collapse>
+    </div>
+
+    <!-- Liberian -->
     <h3 class="h3-memu">Liberian</h3>
 
     <div class="menu">
@@ -27,7 +75,7 @@
         <span @click="ToggleMenus" class="text">Dashboard</span>
       </nuxt-link>
 
-       <nuxt-link to="/liberian/profile" class="button">
+      <nuxt-link to="/liberian/profile" class="button">
         <b-icon
           @click="ToggleMenus"
           icon="person-fill"
@@ -36,12 +84,8 @@
         <span @click="ToggleMenus" class="text">Profile</span>
       </nuxt-link>
 
-       <nuxt-link to="/liberian/books" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="book"
-          class="material-icons"
-        />
+      <nuxt-link to="/liberian/books" class="button">
+        <b-icon @click="ToggleMenus" icon="book" class="material-icons" />
         <span @click="ToggleMenus" class="text">Books</span>
       </nuxt-link>
     </div>
@@ -274,6 +318,24 @@ export default {
     }
   }
 
+  .dropMenuClose {
+    display: block;
+
+    .button {
+      &.nuxt-link-exact-active {
+        border-radius: 0 !important;
+        border-left: 0px solid red !important;
+        width: 108%;
+        // margin-left: -1.4rem !important;
+      }
+      &:hover {
+        border-left: 0px solid red !important;
+        border-radius: 0 !important;
+        width: 108%;
+      }
+    }
+  }
+
   h3 {
     opacity: 0;
     transition: opacity 0.1s ease-out;
@@ -406,6 +468,9 @@ export default {
         background-color: var(--color-white);
         color: var(--color-body);
       }
+    }
+    .dropMenuClose {
+      display: none;
     }
   }
 

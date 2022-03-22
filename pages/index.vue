@@ -1,68 +1,31 @@
 <template>
-  <div class="p-4">
-    <div class="libarian__wrapper" @click.prevent="hideMenu">
-      <b-card no-body @click="hideMenu">
-        <b-tabs card style="font-size: 1.4rem">
-          <b-tab active @click="hideMenu">
-            <template #title>
-              <b-icon icon="plus"/><strong>Add Notice</strong>
-            </template>
-        
-          </b-tab>
-
-          <b-tab @click.prevent="registrationMenu" lazy>
-            <template #title>
-              <strong>School Notice</strong>
-              <b-icon scale="0.8" icon="caret-down-fill" />
-            </template>
-         
-          </b-tab>
-        </b-tabs>
-      </b-card>
-    </div>
-  </div>
+  <div>
+  <b-button v-b-toggle.collapse-1 variant="primary">Toggle Collapse</b-button>
+  <b-collapse id="collapse-1" class="mt-2">
+    <b-card>
+      <p class="card-text">Collapse contents Here</p>
+      <b-button v-b-toggle.collapse-1-inner size="sm">Toggle Inner Collapse</b-button>
+      <b-collapse id="collapse-1-inner" class="mt-2">
+        <b-card>Hello!</b-card>
+      </b-collapse>
+    </b-card>
+  </b-collapse>
+</div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      activeTab: '',
-      registerMenu: false,
-      registrationMenuClass: '',
+      selected: null,
+      options: [
+        { value: null, text: 'Please select some item' },
+        { value: 'a', text: 'This is First option', selected: true },
+        { value: 'b', text: 'Default Selected Option' },
+        { value: 'c', text: 'This is another option' },
+        { value: 'd', text: 'This one is disabled', disabled: true },
+      ],
     }
-  },
-  methods: {
-    registrationMenu(e) {
-      if (this.registrationMenuClass === '') {
-        this.registerMenu = true
-        this.registrationMenuClass = 'off'
-        e.stopPropagation()
-      } else {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
-      }
-    },
-    hideMenu() {
-      if (this.registerMenu === true) {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
-      }
-    },
   },
 }
 </script>
-
-<style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.4rem;
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
-
-  .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-}
-</style>

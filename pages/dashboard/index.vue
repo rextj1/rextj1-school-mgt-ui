@@ -65,12 +65,12 @@
                     ><strong> Notice Board</strong>
                   </div>
                 </template>
-                <SchoolNotice />
+                <EventNoticeSchoolNotice />
               </b-tab>
 
               <b-tab active class="card-overflow">
                 <template #title> School Event </template>
-                <SchoolEvent />
+                <EventNoticeSchoolEvent />
               </b-tab>
             </b-tabs>
           </div>

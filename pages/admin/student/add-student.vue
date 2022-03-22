@@ -273,7 +273,7 @@
         </b-col>
 
         <b-col md="3" class="p-4">
-          <b-form-group label="Bllod Group">
+          <b-form-group label="Blood Group">
             <b-form-select
               v-model="form.bloodGroup"
               :options="bloodGroups"
