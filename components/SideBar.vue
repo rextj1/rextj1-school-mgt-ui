@@ -231,9 +231,13 @@
         <b-icon @click="ToggleMenus" icon="file-text" class="material-icons" />
         <span @click="ToggleMenus" class="text">Result</span>
       </nuxt-link>
-      <nuxt-link to="/team" class="button">
+      <nuxt-link to="/admin/classes" class="button">
         <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Contact</span>
+        <span @click="ToggleMenus" class="text">Classes</span>
+      </nuxt-link>
+       <nuxt-link to="/admin/subjects" class="button">
+        <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
+        <span @click="ToggleMenus" class="text">Subjects</span>
       </nuxt-link>
     </div>
 

@@ -9,7 +9,40 @@
             </template>
 
             <div class="margin-down">
+              <!-- expense type -->
               <b-row>
+                <b-col md="2">
+                  <label for="input-small" class="label-padding"
+                    >Expense Type:</label
+                  >
+                </b-col>
+                <b-col md="8">
+                  <b-form-select
+                    size="lg"
+                    v-model="form.expenseType"
+                    :options="expenseTypes"
+                    @change="ExpenseTypes"
+                  ></b-form-select>
+                </b-col>
+              </b-row>
+
+              <b-row>
+                <b-col md="2">
+                  <label for="input-small" class="label-padding"
+                    >Payment Method:</label
+                  >
+                </b-col>
+                <b-col md="8">
+                  <b-form-select
+                    size="lg"
+                    v-model="form.paymentMethod"
+                    :options="options"
+                  ></b-form-select>
+                </b-col>
+              </b-row>
+
+              <!-- class -->
+              <b-row v-show="notSchoolFee">
                 <b-col md="2">
                   <label for="input-small" class="label-padding">Class:</label>
                 </b-col>
@@ -29,21 +62,6 @@
                       {{ currentClass }}
                     </option>
                   </datalist>
-                </b-col>
-              </b-row>
-
-              <b-row>
-                <b-col md="2">
-                  <label for="input-small" class="label-padding"
-                    >Payment Method:</label
-                  >
-                </b-col>
-                <b-col md="8">
-                  <b-form-select
-                    size="lg"
-                    v-model="form.paymentMethod"
-                    :options="options"
-                  ></b-form-select>
                 </b-col>
               </b-row>
 
@@ -92,7 +110,30 @@
                     </b-form-invalid-feedback> -->
                 </b-col>
               </b-row>
+              <!-- description -->
+              <b-row v-show="others">
+                <b-col md="2">
+                  <label for="input-small" class="label-padding"
+                    >Description:</label
+                  >
+                </b-col>
 
+                <b-col md="8">
+                  <b-form-input
+                    id="year"
+                    v-model="form.description"
+                    name="desciption"
+                    placeholder="purpose for this expenses"
+                    trim
+                    type="name"
+                    required
+                    size="lg"
+                  ></b-form-input>
+                  <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+                    {{ form.errors.get('lastName') }}
+                    </b-form-invalid-feedback> -->
+                </b-col>
+              </b-row>
               <b-row>
                 <b-col
                   md="10"
@@ -174,10 +215,15 @@
 export default {
   data() {
     return {
+      notSchoolFee: true,
+      others: false,
       form: {
+        description: '',
+        expenseType: 'Fee',
         data: null,
         year: null,
         paymentMethod: 'Cash or Online',
+        busy: false,
       },
 
       classes: ['Junour', 'Senior'],
@@ -185,7 +231,26 @@ export default {
         { value: 'Cash or Online', text: 'Cash or online' },
         { value: 'online', text: 'online', disabled: true },
       ],
+      expenseTypes: [
+        { value: 'Fee', text: 'Fee' },
+        { value: 'Salary', text: 'Salary' },
+        { value: 'Others', text: 'Others' },
+      ],
     }
+  },
+  methods: {
+    ExpenseTypes(item) {
+      if (item === 'Others') {
+        this.notSchoolFee = false
+        this.others = true
+      } else if (item === 'Salary') {
+        this.notSchoolFee = false
+        this.others = false
+      } else {
+        this.others = false
+        this.notSchoolFee = true
+      }
+    },
   },
 }
 </script>

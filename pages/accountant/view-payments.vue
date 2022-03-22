@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 view-payment">
-    <b-card class="p-3 d-flex">
+    <b-card class="p-3 mb-4 d-flex">
       <b-row no-gutters>
         <b-col md="6" class="p-4">
           <b-form-group label="Select Year">
@@ -44,14 +44,15 @@
         <b-tabs card style="font-size: 1.4rem">
           <b-tab active @click="hideMenu">
             <template #title>
-              <strong>Current Result</strong>
+              <strong>All Classes</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
             </template>
+            <PaymentIncompleteSchoolFee :currentYear="form.year" />
           </b-tab>
 
           <b-tab @click.prevent="registrationMenu" lazy>
             <template #title>
-              <strong>All Results</strong>
+              <strong>Class Payment</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
             </template>
 
@@ -61,29 +62,59 @@
                 v-show="registerMenu"
                 :class="registrationMenuClass"
               >
-                <li @click.prevent="activeTab = 'StudentResult'">
+                <li
+                  @click.prevent="
+                    dynamicStudentClass('JSS 1')
+                    activeTab = 'PaymentCompleteSchoolFee'
+                  "
+                >
                   <span class="d-flex">JSS1</span>
                 </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
+                <li
+                  @click.prevent="
+                    dynamicStudentClass('JSS 2')
+                    activeTab = 'PaymentCompleteSchoolFee'
+                  "
+                >
                   <span class="d-flex">JSS2</span>
                 </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
+                <li
+                  @click.prevent="
+                    dynamicStudentClass('JSS 3')
+                    activeTab = 'PaymentCompleteSchoolFee'
+                  "
+                >
                   <span class="d-flex">JSS3</span>
                 </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
+                <li
+                  @click.prevent="
+                    dynamicStudentClass('SSS 1')
+                    activeTab = 'PaymentCompleteSchoolFee'
+                  "
+                >
                   <span class="d-flex">SSS1</span>
                 </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
+                <li
+                  @click.prevent="
+                    dynamicStudentClass('SSS 2')
+                    activeTab = 'PaymentCompleteSchoolFee'
+                  "
+                >
                   <span class="d-flex">SSS2</span>
                 </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
+                <li
+                  @click.prevent="
+                    dynamicStudentClass('SSS 3')
+                    activeTab = 'PaymentCompleteSchoolFee'
+                  "
+                >
                   <span class="d-flex"> SSS3</span>
                 </li>
                 <li></li>
               </ul>
             </div>
 
-            <component :is="activeTab" />
+            <component :is="activeTab" :currentClassYear="[this.form.year, dynamicClass]" />
           </b-tab>
         </b-tabs>
       </b-card>
@@ -99,6 +130,7 @@ export default {
       form: {
         year: null,
       },
+      dynamicClass: '',
       years: ['2022'],
 
       activeTab: '',
@@ -107,6 +139,9 @@ export default {
     }
   },
   methods: {
+    dynamicStudentClass(item) {
+      this.dynamicClass = item
+    },
     registrationMenu(e) {
       if (this.registrationMenuClass === '') {
         this.registerMenu = true

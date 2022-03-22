@@ -4,7 +4,7 @@ const host = inProduction ? '127.0.0.1' : `school-ms.test`
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
-  universal: true,
+  universal: false,
   server: {
     host,
     port: 3000,
