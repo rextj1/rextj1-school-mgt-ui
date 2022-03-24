@@ -37,12 +37,26 @@
       </nuxt-link>
       <nuxt-link to="#" v-b-toggle.collapse-1 class="button">
         <b-icon
-          @click="ToggleMenus"
+          @click="
+            caretDown()
+            ToggleMenus()
+          "
           icon="person-fill"
           class="material-icons"
         />
-        <span @click="ToggleMenus" class="text"
-          >Payment <b-icon style="margin-left:4rem" scale="0.8" icon="caret-down"
+        <span
+          @click="
+            caretDown()
+            ToggleMenus()
+          "
+          class="text"
+          >Payment
+          <b-icon
+            style="margin-left: 4rem"
+            :class="rotate"
+            class="caret-down"
+            scale="0.8"
+            icon="caret-right"
         /></span>
       </nuxt-link>
 
@@ -222,9 +236,54 @@
         <span @click="ToggleMenus" class="text">Timetable</span>
       </nuxt-link>
 
-      <nuxt-link to="/admin/exam/timetable" class="button">
+      <!-- toggle menu -->
+      <nuxt-link to="#" v-b-toggle.collapse-2 class="button">
+        <b-icon
+          @click="
+            caretDown()
+            ToggleMenus()
+          "
+          icon="vector-pen"
+          class="material-icons"
+        />
+        <span
+          @click="
+            caretDown()
+            ToggleMenus()
+          "
+          class="text"
+          >Exam
+          <b-icon
+            style="margin-left: 4rem"
+            scale="0.8"
+            :class="rotate"
+            class="caret-down"
+            icon="caret-right"
+        /></span>
+      </nuxt-link>
+
+      <b-collapse id="collapse-2" class="mt-2 dropMenuClose">
+        <b-card bg-variant="light">
+          <nuxt-link to="/admin/exam/timetable" class="button">
+            <span class="text">Timetable</span>
+          </nuxt-link>
+
+          <nuxt-link to="/admin/exam/add-scores" class="button">
+            <span class="text">Scores</span>
+          </nuxt-link>
+          <nuxt-link to="/admin/exam/marksheet" class="button">
+            <span class="text">Marksheet</span>
+          </nuxt-link>
+            <nuxt-link to="/admin/exam/student-result" class="button">
+            <span class="text">Results</span>
+          </nuxt-link>
+        </b-card>
+      </b-collapse>
+      <!-- end -->
+
+      <nuxt-link to="/admin/exam/timetables" class="button">
         <b-icon @click="ToggleMenus" icon="vector-pen" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Exam</span>
+        <span @click="ToggleMenus" class="text">Transport</span>
       </nuxt-link>
 
       <nuxt-link to="/admin/result" class="button">
@@ -235,7 +294,7 @@
         <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
         <span @click="ToggleMenus" class="text">Classes</span>
       </nuxt-link>
-       <nuxt-link to="/admin/subjects" class="button">
+      <nuxt-link to="/admin/subjects" class="button">
         <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
         <span @click="ToggleMenus" class="text">Subjects</span>
       </nuxt-link>
@@ -260,6 +319,7 @@ export default {
   data() {
     return {
       is_expanded: 'is_expanded',
+      rotate: '',
     }
   },
   methods: {
@@ -269,6 +329,13 @@ export default {
     },
     ToggleMenus() {
       this.is_expanded = 'is_expanded'
+    },
+    caretDown() {
+      if (this.rotate === '') {
+        this.rotate = 'upDown'
+      } else {
+        this.rotate = ''
+      }
     },
   },
 }
@@ -408,6 +475,13 @@ export default {
         margin-top: -1rem;
         margin-bottom: 2rem;
       }
+    }
+    .caret-down {
+      transition: 0.2s ease-out;
+    }
+    .caret-down.upDown {
+      transform: rotate(90deg);
+      transition: 0.2s ease-out;
     }
 
     .h3-memu {

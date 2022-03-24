@@ -151,6 +151,10 @@ export default {
   border-radius: 0.5rem;
   border: none;
 
+  option{
+    padding: 0.3rem;
+  }
+
   .margin-down {
     margin-top: 5rem;
 

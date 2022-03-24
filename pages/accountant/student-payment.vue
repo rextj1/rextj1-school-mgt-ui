@@ -10,6 +10,7 @@
               class="mb-3"
               size="lg"
               required
+                @change="paymentDropdown"
             >
               <!-- This slot appears above the options from 'options' prop -->
               <template #first>
@@ -22,16 +23,6 @@
             </b-form-select>
           </b-form-group>
         </b-col>
-
-        <b-col md="2">
-          <b-button
-            @click="paymentDropdown"
-            size="lg"
-            style="margin-top: 4.5rem; padding: 0.9rem"
-            variant="primary"
-            >Submit</b-button
-          ></b-col
-        >
       </b-row>
     </b-card>
 
