@@ -5,16 +5,16 @@
 
       <b-row no-gutters>
         <b-col md="12">
-          <b-table striped responsive :items="items" :fields="fields">
+          <b-table striped responsive :items="notices" :fields="fields">
             <template #cell(date)="row">
               <div class="d-flex flex-column">
                 <div>
-                  <b-badge class="d-inline-block" variant="danger">{{
+                  <b-badge style="font-size:1.4rem" class="d-inline-block" variant="danger">{{
                     row.item.date
                   }}</b-badge>
                 </div>
 
-                <div>{{ row.item.notice }}</div>
+                <div>{{ row.item.description }}</div>
               </div>
             </template>
           </b-table>
@@ -25,151 +25,38 @@
 </template>
 
 <script>
+import { NOTICE_QUERIES } from '@/graphql/notices/queries'
 export default {
   data() {
     return {
-      items: [
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-      ],
-
       fields: [
         {
           key: 'date',
           label: 'Date',
         },
+        //   {
+        //   key: 'title',
+        //   label: 'Title',
+        // },
+        // {
+        //   key: 'published',
+        //   label: 'Published',
+        // },
+        // {
+        //   key: 'photo',
+        //   label: 'Photo',
+        // },
       ],
       form: {
         text: '',
         busy: false,
       },
     }
+  },
+  apollo: {
+    notices: {
+      query: NOTICE_QUERIES,
+    },
   },
 }
 </script>

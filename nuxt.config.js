@@ -1,21 +1,24 @@
 const inProduction = process.env.NODE_ENV === 'production'
-const host = inProduction ? '127.0.0.1' : `school-ms.test`
-// const apiRoot = process.env.APP_API_ROOT || `http://school-sms.test`
+const host = inProduction ? '127.0.0.1' : `sms.test`
+// const apiRoot = process.env.APP_API_ROOT || `http://booksgraphql.test`
 
 export default {
-  // Global page headers: https://go.nuxtjs.dev/config-head
-  universal: false,
+  universal: true,
   server: {
     host,
     port: 3000,
   },
+  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Responsive side nav',
+    title: 'nuxt-bootstrapVue',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' },
+      {
+        name: 'format-detection',
+        content: process.env.npm_package_description || '',
+      },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
@@ -48,17 +51,18 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
-    // '@nuxtjs/auth-next',
+    '@nuxtjs/auth-next',
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
     '@nuxtjs/apollo',
+    // 'vue-sweetalert2/nuxt',
   ],
 
   bootstrapVue: {
-    bootstrapCSS: true,
-    bootstrapVueCSS: true,
+    bootstrapCSS: false,
+    bootstrapVueCSS: false,
   },
 
   styleResources: {
@@ -68,37 +72,54 @@ export default {
       '~/node_modules/bootstrap/scss/_mixins.scss',
     ],
   },
-  extend(config, ctx) {
-    // if (ctx.isDev || ctx.isClient) {
-    //   config.module.rules.push({
-    //     enforce: 'pre',
-    //     test: /\.(js|vue)$/,
-    //     loader: 'eslint-loader',
-    //     exclude: /(node_modules)/,
-    //   })
-    // }
-  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
-  pwa: {
-    manifest: {
-      lang: 'en',
+  // Auth configuration
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/login',
+      home: '/dashboard',
     },
-    theme_color: '#563bd1',
+    strategies: {
+      graphql: {
+        scheme: '~/graphql/auth/scheme.js',
+      },
+    },
+    cookie: {
+      options: {
+        path: '/',
+        domain: `.${host}`,
+      },
+    },
   },
 
-  // router: {
-  //   scrollBehavior: function () {
-  //     console.log('Scoll behavior')
-  //     return false
-  //   },
-  // },
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
+  // build: { extend(config, ctx) {} },
+
+  // publicRuntimeConfig: {
+  //   APIRoot: apiRoot,
+  // },
   build: {
-    friendlyErrors: false,
+    // transpile: ['@nuxtjs/auth-next'],
+
+    babel: {
+      presets({ isServer }) {
+        return [
+          [
+            require.resolve('@nuxt/babel-preset-app'),
+            // require.resolve('@nuxt/babel-preset-app-edge'), // For nuxt-edge users
+            {
+              buildTarget: isServer ? 'server' : 'client',
+              corejs: { version: 3 },
+            },
+          ],
+        ]
+      },
+    },
   },
 
   apollo: {
@@ -138,7 +159,7 @@ export default {
       },
     },
     // optional
-    errorHandler: '~/graphql/apollo/error-handler.js',
+    errorHandler: '~/plugins/apollo-error-handler.js',
     // required
     clientConfigs: {
       default: '~/graphql/apollo/default-client.js',

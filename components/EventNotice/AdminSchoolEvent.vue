@@ -5,9 +5,11 @@
 
       <b-row no-gutters>
         <b-col md="12">
-          <b-table striped responsive hover :items="items" :fields="fields">
+          <b-table striped responsive hover :items="notices" :fields="fields">
             <template #cell(date)="date">
-              <b-badge class="d-inline-block" variant="danger">{{date.value}}</b-badge>
+              <b-badge class="d-inline-block" variant="danger">{{
+                date.value
+              }}</b-badge>
             </template>
             <template #cell(actions)="row" class="d-flex">
               <div class="d-flex">
@@ -35,27 +37,11 @@
 </template>
 
 <script>
+import { NOTICE_QUERIES } from '@/graphql/notices/queries'
 export default {
   data() {
     return {
-      items: [
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-          _cellVariants: { paid: 'success' },
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur perspiciatis laudantium modialiquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-        {
-          date: '12-6-11',
-          notice:
-            'perspiciatis laudantium modi aliquam accusantium ratione consequatur! Animi, consectetur?',
-        },
-      ],
+
 
       fields: [
         {
@@ -63,9 +49,22 @@ export default {
           label: 'Date',
         },
         {
-          key: 'notice',
-          label: 'Notice',
+          key: 'description',
+          label: 'Description',
         },
+          {
+          key: 'title',
+          label: 'Title',
+        },
+        {
+          key: 'published',
+          label: 'Published',
+        },
+        {
+          key: 'photo',
+          label: 'Photo',
+        },
+
 
         { key: 'actions', label: 'Actions' },
       ],
@@ -74,6 +73,11 @@ export default {
         busy: false,
       },
     }
+  },
+  apollo: {
+    notices: {
+      query: NOTICE_QUERIES,
+    },
   },
 }
 </script>

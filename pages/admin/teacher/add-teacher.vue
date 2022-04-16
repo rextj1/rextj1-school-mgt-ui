@@ -1,410 +1,443 @@
 <template>
-  <div class="student">
-    <div class="p-4 student__wrapper">
-      <h2 class="d-flex justify-content-center mb-4 mt-4">
-       Register Teacher
-      </h2>
-      <hr />
-      <div class="d-flex flex-column align-items-center mb-4">
-        <div class="profile-avatar mb-2">
-          <div class="photo-preview" v-if="preview_url == null">
-            <img
-              src="@/assets/svg/graduate-student.svg"
-              alt=""
-              style="border-radius: 50%"
-            />
-          </div>
-          <div
-            v-else
-            class="photo-preview"
-            :style="{
-              backgroundImage: `url(${preview_url})`,
-            }"
-          ></div>
 
-          <b-form-group>
-            <div class="file-upload">
-              <b-button
-                variant="white"
-                class="shadow-sm"
-                size="sm"
-                pill
-                @click="selectImage"
-              >
-                <b-icon icon="camera-fill" />
-              </b-button>
-              <input
-                id="avatar"
-                ref="Avatar"
-                type="file"
-                accept="image"
-                class="file-upload__input"
-                hidden
-                @change="handleFileUpload()"
+  <div class="student">
+     <template v-if="!countries && !bloodGroups">
+      <div class="grow">
+        <b-spinner
+          style="width: 15rem; height: 15rem"
+          type="grow"
+          variant="danger"
+        ></b-spinner></div
+    ></template>
+    <template v-else>
+    <b-button
+      to="/admin/teacher"
+      variant="primary"
+      size="lg"
+      class="add-student mb-4"
+    >
+      <b-icon icon="arrow-left" /> Back
+    </b-button>
+    <div class="p-4 student__wrapper">
+      <h2 class="d-flex justify-content-center mb-4 mt-4">Register Teacher</h2>
+      <hr />
+      <b-form
+        v-if="show"
+        method="POST"
+        @submit.prevent="onSubmit"
+        @keydown="form.onKeydown($event)"
+        @reset.prevent="onReset"
+      >
+        <div class="d-flex flex-column align-items-center mb-4">
+          <div class="profile-avatar mb-2">
+            <div class="photo-preview" v-if="preview_url == null">
+              <img
+                src="@/assets/svg/graduate-student.svg"
+                alt=""
+                style="border-radius: 50%"
               />
             </div>
+            <div
+              v-else
+              class="photo-preview"
+              :style="{
+                backgroundImage: `url(${preview_url})`,
+              }"
+            ></div>
 
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
+            <b-form-group>
+              <div class="file-upload">
+                <b-button
+                  variant="white"
+                  class="shadow-sm"
+                  size="sm"
+                  pill
+                  @click="selectImage"
+                >
+                  <b-icon icon="camera-fill" />
+                </b-button>
+                <input
+                  id="avatar"
+                  ref="Avatar"
+                  type="file"
+                  accept="image"
+                  class="file-upload__input"
+                  hidden
+                  @change="handleFileUpload()"
+                />
+              </div>
+
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
                   {{ form.errors.get('photo') }}
                 </b-form-invalid-feedback> -->
-          </b-form-group>
+            </b-form-group>
+          </div>
+
+          <div class="text-center">
+            <p class="small mb-2">
+              Recommended size: Less than 2MB (150 x 150)
+            </p>
+            <b-button
+              variant="outline-primary"
+              size="md"
+              class="px-3"
+              pill
+              @click="selectImage"
+            >
+              Upload photo
+            </b-button>
+          </div>
         </div>
 
-        <div class="text-center">
-          <p class="small mb-2">Recommended size: Less than 2MB (150 x 150)</p>
-          <b-button
-            variant="outline-primary"
-            size="md"
-            class="px-3"
-            pill
-            @click="selectImage"
-          >
-            Upload photo
-          </b-button>
-        </div>
-      </div>
-
-      <!--  -->
-      <b-row class="p-4">
-        <b-col md="4" class="p-4">
-          <b-form-group label="First Name">
-            <b-form-input
-              debounce="500"
-              id="firstName"
-              v-model="form.firstName"
-              name="firstName"
-              size="lg"
-              placeholder="Enter First name"
-              required
-              trim
-            ></b-form-input>
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
+        <!--  -->
+        <b-row class="p-4">
+          <b-col md="4" class="p-4">
+            <b-form-group label="First Name">
+              <b-form-input
+                debounce="500"
+                id="firstName"
+                v-model="form.first_name"
+                name="firstName"
+                size="lg"
+                placeholder="Enter First name"
+                required
+                trim
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
               {{ form.errors.get('firstName') }}
             </b-form-invalid-feedback> -->
-          </b-form-group>
-        </b-col>
-        <b-col md="4" class="p-4">
-          <b-form-group label="Last Name">
-            <b-form-input
-              debounce="500"
-              id="lastName"
-              v-model="form.lastName"
-              name="lastName"
-              size="lg"
-              placeholder="Enter Last name"
-              required
-              trim
-            ></b-form-input>
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
+            </b-form-group>
+          </b-col>
+          <b-col md="4" class="p-4">
+            <b-form-group label="Last Name">
+              <b-form-input
+                debounce="500"
+                id="lastName"
+                v-model="form.last_name"
+                name="lastName"
+                size="lg"
+                placeholder="Enter Last name"
+                required
+                trim
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
               {{ form.errors.get('firstName') }}
             </b-form-invalid-feedback> -->
-          </b-form-group>
-        </b-col>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="4" class="p-4">
-          <b-form-group label="Middle Name (optional)">
-            <b-form-input
-              debounce="500"
-              id="middleName"
-              v-model="form.middleName"
-              name="middleName"
-              size="lg"
-              placeholder="Enter Middle name"
-              required
-              trim
-            ></b-form-input>
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
+          <b-col md="4" class="p-4">
+            <b-form-group label="Middle Name (optional)">
+              <b-form-input
+                debounce="500"
+                id="middle_name"
+                v-model="form.middle_name"
+                name="middleName"
+                size="lg"
+                placeholder="Enter Middle name"
+                required
+                trim
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
               {{ form.errors.get('firstName') }}
             </b-form-invalid-feedback> -->
-          </b-form-group>
-        </b-col>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="3" class="p-4">
-          <b-form-group label="Email">
-            <b-form-input
-              debounce="500"
-              id="email"
-              v-model="form.middleName"
-              name="email"
-              size="lg"
-              type="email"
-              placeholder="Enter email"
-              required
-              trim
-            ></b-form-input>
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
+          <b-col md="3" class="p-4">
+            <b-form-group label="Email">
+              <b-form-input
+                debounce="500"
+                id="email"
+                v-model="form.email"
+                name="email"
+                size="lg"
+                type="email"
+                placeholder="Enter email"
+                required
+                trim
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
               {{ form.errors.get('firstName') }}
                 </b-form-invalid-feedback> -->
-          </b-form-group>
-        </b-col>
-        <b-col md="3" class="p-4">
-          <b-form-group label="Phone No.">
-            <b-form-input
-              id="code"
-              v-model="form.phone"
-              name="phone"
-              placeholder="Enter phone no."
-              trim
-              type="number"
-              required
-              size="lg"
-            ></b-form-input>
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+            </b-form-group>
+          </b-col>
+          <b-col md="3" class="p-4">
+            <b-form-group label="Phone No.">
+              <b-form-input
+                id="phone"
+                v-model="form.phone"
+                name="phone"
+                placeholder="Enter phone no."
+                trim
+                type="number"
+                required
+                size="lg"
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
               {{ form.errors.get('lastName') }}
             </b-form-invalid-feedback> -->
-          </b-form-group>
-        </b-col>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="3" class="p-4">
-          <b-form-group label="Parent Phone No.">
-            <b-form-input
-              id="code"
-              v-model="form.parentPhone"
-              name="phone"
-              placeholder="Enter parent phone no."
-              trim
-              type="number"
-              required
-              size="lg"
-            ></b-form-input>
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+          <b-col md="3" class="p-4">
+            <b-form-group label="Qualification">
+              <b-form-input
+                id="code"
+                v-model="form.qualification"
+                name="phone"
+                placeholder="Enter qualification"
+                trim
+                type="text"
+                required
+                size="lg"
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
               {{ form.errors.get('lastName') }}
             </b-form-invalid-feedback> -->
-          </b-form-group>
-        </b-col>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="3" class="p-4">
-          <b-form-group label="Gender">
-            <b-form-select
-              v-model="form.gender"
-              :options="genders"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select gender --</b-form-select-option
-                >
-              </template>
-
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-
-        <b-col md="3" class="p-4">
-          <b-form-group label="Date of birth">
-            <b-form-datepicker
-              id="datepicker-buttons"
-              v-model="form.birthday"
-              today-button
-              reset-button
-              close-button
-              locale="en"
-              size="lg"
-              required
-            ></b-form-datepicker>
-          </b-form-group>
-        </b-col>
-
-        <b-col md="3" class="p-4">
-          <b-form-group label="Country">
-            <b-form-select
-              v-model="form.country"
-              :options="countries"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select country --</b-form-select-option
-                >
-              </template>
-
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-
-        <b-col md="3" class="p-4">
-          <b-form-group label="State">
-            <b-form-select
-              v-model="form.state"
-              :options="states"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select state --</b-form-select-option
-                >
-              </template>
-
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-
-        <b-col md="3" class="p-4">
-          <b-form-group label="L.G.A">
-            <b-form-select
-              v-model="form.lga"
-              :options="lgas"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select L.G.A --</b-form-select-option
-                >
-              </template>
-
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-
-        <b-col md="3" class="p-4">
-          <b-form-group label="Bllod Group">
-            <b-form-select
-              v-model="form.bloodGroup"
-              :options="bloodGroups"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select blood Group--</b-form-select-option
-                >
-              </template>
-
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-
-        <b-col md="3" class="p-4">
-          <b-form-group label="Class">
-            <b-form-select
-              v-model="form.class"
-              :options="classes"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select student class --</b-form-select-option
-                >
-              </template>
-
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-
-        <b-col md="3" class="p-4">
-          <b-form-group label="Section">
-            <b-form-select
-              v-model="form.section"
-              :options="sections"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Please select section --</b-form-select-option
-                >
-              </template>
-
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-        <b-col md="3" class="p-4">
-          <b-form-group label="Parent Name">
-            <b-form-input
-              debounce="500"
-              id="address"
-              v-model="form.parentName"
-              name="parentName"
-              size="lg"
-              placeholder="Enter parent name"
-              required
-              trim
-            ></b-form-input>
-            <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
+          <b-col md="3" class="p-4">
+            <b-form-group label="Religion">
+              <b-form-input
+                id="code"
+                v-model="form.religion"
+                name="religion"
+                placeholder="Enter religion"
+                trim
+                type="text"
+                required
+                size="lg"
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
             </b-form-invalid-feedback> -->
-          </b-form-group>
-        </b-col>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
-          ><b-button
-            type="submit"
-            pill
-            variant="primary"
-            class="mr-4"
-            size="lg"
+          <b-col md="3" class="p-4">
+            <b-form-group label="Gender">
+              <b-form-select
+                v-model="form.gender"
+                :options="genders"
+                class="mb-3"
+                size="lg"
+                required
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Please select gender --</b-form-select-option
+                  >
+                </template>
+
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Date of birth">
+              <b-form-datepicker
+                id="datepicker-buttons"
+                v-model="form.birthday"
+                today-button
+                reset-button
+                close-button
+                locale="en"
+                size="lg"
+                required
+              ></b-form-datepicker>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Blood Group">
+              <b-form-select
+                id="bloodGroups"
+                value-field="id"
+                text-field="name"
+                v-model="form.bloodGroup"
+                :options="bloodGroups"
+                class="mb-3"
+                size="lg"
+                required
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Please select blood Group--</b-form-select-option
+                  >
+                </template>
+
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Facebook Link (Optional)">
+              <b-form-input
+                id="code"
+                v-model="form.facebook"
+                name="phone"
+                placeholder="facebook handle"
+                trim
+                type="text"
+                size="lg"
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
+            </b-form-invalid-feedback> -->
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Country">
+              <b-form-select
+                id="country"
+                value-field="id"
+                text-field="name"
+                v-model="form.country"
+                :options="countries"
+                class="mb-3"
+                size="lg"
+                required
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Please select country --</b-form-select-option
+                  >
+                </template>
+
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <div v-if="!country">
+              <b-form-group label="State">
+                <b-form-select class="mb-3">
+                  <b-form-select-option> </b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+            </div>
+
+            <div v-else>
+              <b-form-group label="State">
+                <b-form-select v-model="form.state" class="mb-3">
+                  <b-form-select-option
+                    v-for="k in country.state"
+                    :value="k.id"
+                    :key="k.id"
+                    >{{ k.name }}</b-form-select-option
+                  >
+                </b-form-select>
+              </b-form-group>
+            </div>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="L.G.A">
+              <b-form-input
+                id="lga"
+                v-model="form.lga"
+                name="phone"
+                placeholder="Enter lga"
+                trim
+                type="text"
+                required
+                size="lg"
+              ></b-form-input>
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
+            </b-form-invalid-feedback> -->
+            </b-form-group>
+          </b-col>
+
+          <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
+            ><b-button
+              type="submit"
+              pill
+              variant="primary"
+              class="mr-4"
+              size="lg"
+            >
+              <b-spinner
+                v-if="form.busy"
+                variant="light"
+                small
+                class="mr-1 mb-1"
+              />Register</b-button
+            >
+            <b-button
+              pill
+              class="ml-4"
+              style="font-size: 1.4rem"
+              size="lg"
+              type="reset"
+              variant="danger"
+              >Reset</b-button
+            ></b-col
           >
-            <b-spinner
-              v-if="form.busy"
-              variant="light"
-              small
-              class="mr-1 mb-1"
-            />Register</b-button
-          >
-          <b-button pill class="ml-4" style="font-size:1.4rem" size="lg" type="reset" variant="danger"
-            >Reset</b-button
-          ></b-col
-        >
-      </b-row>
+        </b-row>
+      </b-form>
     </div>
+    </template>
   </div>
 </template>
 
 <script>
+import {
+  BLOOOD_GROUP_QUERIES,
+  COUNTRY_QUERIES,
+  COUNTRY_QUERY,
+} from '~/graphql/users/queries'
+
 export default {
+  middleware: 'auth',
   data() {
     return {
-      form: {
+      form: new this.$form({
         image: null,
-        fullName: '',
-        amount: null,
-        date: null,
+        first_name: '',
+        last_name: '',
+        middle_name: null,
+        email: null,
+        country: null,
+        phone: null,
         state: null,
         lga: null,
-        class: null,
-        section: null,
+        photo: null,
+        religion: '',
         bloodGroup: null,
-        phone: '',
-        country: null,
+        facebook: null,
+        qualification: null,
         gender: null,
-        class: null,
+        birthday: null,
         busy: false,
-      },
+      }),
       preview_url: null,
-      genders: ['MAle', 'Female'],
-      countries: ['Nigeria', 'Ghana'],
-      states: ['Port Harcourt', 'Delta'],
-      lgas: ['Obio-Akpor', 'Warri North'],
-      bloodGroups: ['A', 'A-', 'B+', 'B-', 'AB', 'O+', 'O-'],
-      classes: ['jss1', 'jss2', 'jss3', 'ss1', 'ss2', 'ss3'],
-      sections: ['A', 'B', 'C', 'D', 'E', 'F'],
+      genders: ['Male', 'Female'],
+      show: true,
     }
+  },
+  apollo: {
+    countries: {
+      query: COUNTRY_QUERIES,
+    },
+    bloodGroups: {
+      query: BLOOOD_GROUP_QUERIES,
+    },
+    country: {
+      query: COUNTRY_QUERY,
+      variables() {
+        return { id: this.form.country }
+      },
+    },
   },
   methods: {
     selectImage() {
@@ -425,6 +458,18 @@ export default {
         // this.$emit('input', file[0])
       }
     },
+
+    onReset(event) {
+      event.preventDefault()
+      // Reset our form values
+      this.form = ''
+      // this.form.photo = null
+      // Trick to reset/clear native browser form validation state
+      this.show = false
+      this.$nextTick(() => {
+        this.show = true
+      })
+    },
   },
 }
 </script>
@@ -438,6 +483,12 @@ export default {
     background-color: var(--color-input);
     height: 4rem;
     font-size: 1.4rem;
+  }
+  .grow {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
   }
   .profile-avatar {
     position: relative;

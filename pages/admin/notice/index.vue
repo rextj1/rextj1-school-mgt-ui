@@ -15,7 +15,6 @@
                     v-model="form.text"
                     placeholder="Enter something..."
                     rows="10"
-                    
                     cols="10"
                   ></b-form-textarea>
                 </b-form-group>

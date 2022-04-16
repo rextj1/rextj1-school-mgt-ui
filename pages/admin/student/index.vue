@@ -125,10 +125,13 @@
                     </b-form-checkbox-group>
                   </b-form-group>
                 </b-col>
+              </b-row>
 
-                <b-col sm="5" md="6" class="my-1">
+              <b-row>
+                <b-col md="1"></b-col>
+                <b-col sm="6" md="2" class="my-1">
                   <b-form-group
-                    label="Per page"
+                    label="Show"
                     label-for="per-page-select"
                     label-cols-sm="6"
                     label-cols-md="4"
@@ -141,17 +144,16 @@
                       id="per-page-select"
                       v-model="perPage"
                       :options="pageOptions"
-                      size="md"
+                      size="lg"
                       style="background-color: #f9f9f9"
                     ></b-form-select>
-                  </b-form-group>
-                </b-col>
-              </b-row>
+                  </b-form-group> </b-col
+              ></b-row>
 
               <br /><br />
               <!-- Main table element -->
               <b-table
-                :items="items"
+                :items="teachers"
                 :fields="fields"
                 :current-page="currentPage"
                 :per-page="perPage"
@@ -169,8 +171,36 @@
                 style="font-size: 1.3rem"
                 :responsive="true"
               >
-                <template #cell(name)="row">
-                  {{ row.value.first }} {{ row.value.last }}
+                <template #cell(index)="data">
+                  {{ data.index + 1 }}
+                </template>
+                <template #cell(klases)="data">
+                  <b-badge
+                    style="line-height: 1.6"
+                    variant="primary"
+                    class="px-2"
+                    :id="`klases-${data.index}`"
+                  >
+                    <div v-for="klase in data.value" :key="klase.id">
+                      {{ klase.name }}
+                    </div>
+                  </b-badge>
+                  <b-popover
+                    :target="`klases-${data.index}`"
+                    triggers="hover click"
+                  >
+                    <b-nav vertical>
+                      <b-nav-item v-for="klases in data.value" :key="klases.id">
+                        <div
+                          v-for="kl in klases.subjects"
+                          :key="kl.id"
+                          style="margin-left: 5rem; font-size: 1.4rem"
+                        >
+                          <div>{{ kl.subject }}</div>
+                        </div>
+                      </b-nav-item>
+                    </b-nav>
+                  </b-popover>
                 </template>
 
                 <template #cell(photo)="row">
@@ -192,26 +222,32 @@
                 </template>
 
                 <!-- view modal -->
-                <template #cell(actions)="row">
+                <template #cell(actions)="data">
                   <b-button
-                    size="smd"
-                    variant="info"
-                    @click="info(row.item, row.index, $event.target)"
-                    class="mr-1"
+                    :to="{
+                      name: 'admin-teacher-slug',
+                      params: { slug: data.item.slug },
+                    }"
+                    variant="primary"
+                    size="sm"
+                    class="px-3"
                   >
-                    <b-icon icon="eye-fill"></b-icon>
+                    <b-icon icon="eye" class="mr-1"></b-icon>
+                    View
                   </b-button>
 
                   <b-button
-                    size="smd"
                     variant="primary"
-                    @click="row.toggleDetails"
+                    size="sm"
+                    class="px-3"
+                    @click="info(data.item.slug)"
                   >
-                    <b-icon icon="pencil-square"></b-icon>
-                    <!-- {{ row.detailsShowing ? 'Hide' : 'Show' }} Details -->
+                    Edit
                   </b-button>
-                  <b-button size="smd" variant="danger" @click="deleteItem">
-                    <b-icon icon="trash"></b-icon>
+
+                  <b-button variant="danger" size="sm" class="px-3">
+                    <b-icon icon="trash" class="mr-1"></b-icon>
+                    Delete
                   </b-button>
                 </template>
 
@@ -228,12 +264,15 @@
 
               <!-- Info modal -->
               <b-modal
+                class="modal"
                 :id="infoModal.id"
-                :title="infoModal.title"
-                ok-only
-                @hide="resetInfoModal"
+                :hide-backdrop="true"
+                body-bg-variant=""
+                title="Edit Book"
+                size="lg"
+                :hide-footer="true"
               >
-                <pre>{{ infoModal.content }}</pre>
+                <AdminEditTeacherModal :slug="slug" />
               </b-modal>
             </b-container>
           </div>
@@ -244,6 +283,7 @@
 </template>
 
 <script>
+import { TEACHERS_QUERIES } from '@/graphql/teachers/queries'
 export default {
   data() {
     return {
@@ -268,7 +308,7 @@ export default {
           photo: 21,
           name: { first: 'Larsen', last: 'Shaw' },
           gender: false,
-          class: "JSS 2",
+          class: 'JSS 2',
           subject_assigned: 5,
           phone: 810000112,
           // _cellVariants: { paid: 'success' },
@@ -277,22 +317,26 @@ export default {
 
       fields: [
         {
-          key: '#',
+          key: 'index',
           label: '#',
-          sortable: true,
-          sortDirection: 'desc',
         },
         {
-          key: 'name',
-          label: 'Teacher Name',
+          key: 'first_name',
+          label: 'First Name',
           sortable: true,
-          sortDirection: 'desc',
+          // sortDirection: 'desc',
+        },
+        {
+          key: 'last_name',
+          label: 'Last Name',
+          sortable: true,
+          // sortDirection: 'desc',
         },
         {
           key: 'code',
           label: 'Code',
           sortable: true,
-          sortDirection: 'desc',
+          // sortDirection: 'desc',
         },
 
         {
@@ -304,33 +348,16 @@ export default {
         {
           key: 'gender',
           label: 'Gender',
-          formatter: (value, key, item) => {
-            return value ? 'Male' : 'Female'
-          },
+          // formatter: (value, key, item) => {
+          //   return value ? 'Male' : 'Female'
+          // },
           sortable: true,
           sortByFormatted: true,
           filterByFormatted: true,
         },
-
         {
-          key: 'paid',
-          label: 'Salary',
-          formatter: (value, key, item) => {
-            return value ? 'paid' : 'Due'
-          },
-          sortable: true,
-          sortByFormatted: true,
-          filterByFormatted: true,
-        },
-         {
-          key: 'class',
+          key: 'klases',
           label: 'Class',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        {
-          key: 'subject_assigned',
-          label: 'Subjects Assigned',
           sortable: true,
           sortDirection: 'desc',
         },
@@ -338,14 +365,15 @@ export default {
           key: 'phone',
           label: 'Phone',
           sortable: true,
-          sortDirection: 'desc',
+          // sortDirection: 'desc',
         },
         { key: 'actions', label: 'Actions' },
       ],
+      slug: '',
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
-      pageOptions: [5, 10, 15, { value: 100, text: 'Show a lot' }],
+      pageOptions: [10, 25, 50, { value: 100, text: 'Show a lot' }],
       sortBy: '',
       sortDesc: false,
       sortDirection: 'asc',
@@ -357,6 +385,11 @@ export default {
         content: '',
       },
     }
+  },
+  apollo: {
+    teachers: {
+      query: TEACHERS_QUERIES,
+    },
   },
   computed: {
     sortOptions() {
@@ -374,9 +407,8 @@ export default {
   },
 
   methods: {
-    info(item, index, button) {
-      this.infoModal.title = `Row index: ${index}`
-      this.infoModal.content = JSON.stringify(item, null, 2)
+    info(item, button) {
+      this.slug = item
       this.$root.$emit('bv::show::modal', this.infoModal.id, button)
     },
     resetInfoModal() {
@@ -396,6 +428,9 @@ export default {
 </script>
 
 <style lang="scss">
+.modal {
+  background-color: rgba(0, 0, 0, 0.295) !important;
+}
 .fonts {
   font-size: 1.4rem !important;
   padding: 2rem;

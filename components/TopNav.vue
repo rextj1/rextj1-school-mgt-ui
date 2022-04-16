@@ -3,19 +3,20 @@
     <ul class="d-flex align-items-center">
       <li><b-icon class="h2 bell" variant="light" icon="bell-fill" /></li>
       <li>
-        <span class="profile-image" @click="profileImage">
+        <span class="profile-image" @click="profileImage" v-if="$auth.loggedIn">
           <div class="nav-image">
             <img src="@/assets/images/background.jpg" alt="" />
             <h5>
-              Toju<b-icon icon="caret-down-fill" style="color: #fff"></b-icon>
+              {{ $auth.user.first_name
+              }}<b-icon icon="caret-down-fill" style="color: #fff"></b-icon>
             </h5>
           </div>
           <transition class="leave-cancelled">
             <div v-show="profileBody" class="profile" :class="topNavClass">
               <div class="align-content">
                 <img src="@/assets/images/background.jpg" alt="" />
-                <p>Toju Rex</p>
-                <p>tojurex@yahoo.com</p>
+                <p>{{ $auth.user.first_name }}</p>
+                <p>{{ $auth.user.email }}</p>
               </div>
 
               <ul>
@@ -25,7 +26,7 @@
                     >Profile
                   </nuxt-link>
                 </li>
-                <li>
+                <li @click="logout">
                   <span class="nav-profile"><b-icon icon="power" /></span>Logout
                 </li>
               </ul>
@@ -59,6 +60,10 @@ export default {
     hideTopNav() {
       this.profileBody = false
       this.topNavClass = ''
+    },
+    async logout() {
+      this.$nuxt.$loading.start()
+      await this.$auth.logout()
     },
   },
 }

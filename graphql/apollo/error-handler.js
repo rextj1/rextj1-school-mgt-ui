@@ -2,13 +2,12 @@
 
 export default ({ graphQLErrors }, context) => {
   if (graphQLErrors) {
-    return 
-    // graphQLErrors.map(({ message }) => {
-    //   console.warn('error-handler: ', message)
-    //   if (message === 'Unauthorized') {
-    //     // Show Swal and redirect to login
-    //   }
-    // })
+    graphQLErrors.map(({ message }) => {
+      console.warn('error-handler: ', message)
+      if (message === 'Unauthorized') {
+        // Show Swal and redirect to login
+      }
+    })
   }
   context.error({ statusCode: 304, message: 'Server error' })
 }

@@ -5,11 +5,11 @@
         <b-tabs card style="font-size: 1.4rem">
           <b-tab active>
             <template #title>
-              <b-icon icon="plus" /><strong>Create Class</strong>
+              <b-icon icon="plus" /><strong>Create Subjects</strong>
             </template>
 
-            <h2 class="p-4">Create Subjects And Assign Teacher</h2>
-            <hr>
+            <h2 class="p-4">Create Subjects</h2>
+            <hr />
 
             <div class="margin-down">
               <!-- description -->
@@ -37,30 +37,49 @@
                 </b-col>
               </b-row>
 
-              <!-- description -->
               <b-row>
-                <b-col md="2">
-                  <label for="input-small" class="label-padding"
-                    >Discription:</label
+                <b-col
+                  md="10"
+                  class="d-flex justify-content-center p-4 mt-2 mb-4"
+                  ><b-button
+                    type="submit"
+                    variant="primary"
+                    class="mr-4"
+                    size="lg"
+                  >
+                    <b-spinner
+                      v-if="form.busy"
+                      variant="light"
+                      class="mr-1 mb-1"
+                    />Submit</b-button
                   >
                 </b-col>
+              </b-row>
+            </div>
+          </b-tab>
 
+          <b-tab>
+            <template #title>
+              <strong>Assign Teachers</strong>
+            </template>
+            <h2 class="p-4">Create Subjects And Assign Teacher</h2>
+            <hr />
+
+            <div class="margin-down">
+              <!-- description -->
+               <b-row class="mb-4">
+                <b-col md="2">
+                  <label for="input-small" class="label-padding">Subjects:</label>
+                </b-col>
                 <b-col md="8">
-                  <b-form-input
-                    id="year"
-                    v-model="form.description"
-                    name="desciption"
-                    placeholder="desciption class"
-                    trim
-                    type="name"
-                    required
+                  <b-form-select
                     size="lg"
-                  ></b-form-input>
-                  <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
-                    {{ form.errors.get('lastName') }}
-                    </b-form-invalid-feedback> -->
+                    v-model="form.subject"
+                    :options="subjects"
+                  ></b-form-select>
                 </b-col>
               </b-row>
+           
 
               <b-row class="mb-4">
                 <b-col md="2">
@@ -72,7 +91,7 @@
                     v-model="form.class"
                     :options="classes"
                     multiple
-                    style="height: 12rem;"
+                    style="height: 12rem"
                   ></b-form-select>
                 </b-col>
               </b-row>
@@ -85,11 +104,9 @@
                 </b-col>
                 <b-col md="8">
                   <b-form-select
-                    size="lg"
+                    size="md"
                     v-model="form.teacher"
                     :options="teachers"
-                    multiple
-                    style="height: 15rem"
                   ></b-form-select>
                 </b-col>
               </b-row>
@@ -114,12 +131,6 @@
               </b-row>
             </div>
           </b-tab>
-
-          <b-tab lazy>
-            <template #title>
-              <strong>All Subjects</strong>
-            </template>
-          </b-tab>
         </b-tabs>
       </b-card>
     </div>
@@ -138,6 +149,7 @@ export default {
       },
       teachers: ['Mark Cool', 'Jame Ruth', 'Evans Rain', 'Crah Loveth'],
       classes: ['JSS 1', 'JSS 2', 'JSS 3', 'SSS 1', 'SSS 2', 'SSS 3'],
+      subjects: ['Mathematics','English Language','Biology','basic Science']
     }
   },
 }
@@ -151,7 +163,7 @@ export default {
   border-radius: 0.5rem;
   border: none;
 
-  option{
+  option {
     padding: 0.3rem;
   }
 

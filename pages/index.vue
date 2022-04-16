@@ -1,31 +1,25 @@
 <template>
   <div>
-  <b-button v-b-toggle.collapse-1 variant="primary">Toggle Collapse</b-button>
-  <b-collapse id="collapse-1" class="mt-2">
-    <b-card>
-      <p class="card-text">Collapse contents Here</p>
-      <b-button v-b-toggle.collapse-1-inner size="sm">Toggle Inner Collapse</b-button>
-      <b-collapse id="collapse-1-inner" class="mt-2">
-        <b-card>Hello!</b-card>
-      </b-collapse>
-    </b-card>
-  </b-collapse>
-</div>
+    <b-form-select v-model="selected" class="mb-3">
+      <b-form-select-option :value="null">Please select an option</b-form-select-option>
+      <b-form-select-option value="a">Option A</b-form-select-option>
+      <b-form-select-option value="b" disabled>Option B (disabled)</b-form-select-option>
+      <b-form-select-option-group label="Grouped options">
+        <b-form-select-option :value="{ C: '3PO' }">Option with object value</b-form-select-option>
+        <b-form-select-option :value="{ R: '2D2' }">Another option with object value</b-form-select-option>
+      </b-form-select-option-group>
+    </b-form-select>
+
+    <div class="mt-2">Selected: <strong>{{ selected }}</strong></div>
+  </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      selected: null,
-      options: [
-        { value: null, text: 'Please select some item' },
-        { value: 'a', text: 'This is First option', selected: true },
-        { value: 'b', text: 'Default Selected Option' },
-        { value: 'c', text: 'This is another option' },
-        { value: 'd', text: 'This one is disabled', disabled: true },
-      ],
+  export default {
+    data() {
+      return {
+        selected: null
+      }
     }
-  },
-}
+  }
 </script>
