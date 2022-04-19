@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!teacher">
+    <template v-if="!accountant">
       <div style="background-color: #f1f9ae; width: 100%; min-height: 100vh">
         <div class="grow">
           <b-spinner
@@ -12,15 +12,15 @@
     ></template>
     <template v-else>
       <b-button
-        to="/admin/teacher"
+        to="/admin/accountant"
         variant="primary"
         size="lg"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="teacher shadow">
-        <h1>About {{ teacher.last_name }}</h1>
+      <b-jumbotron header="" class="accountant shadow">
+        <h1>About {{ accountant.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
           <b-img
             src="~/assets/images/teacher.jpeg"
@@ -42,33 +42,36 @@
             <p>L.G.A</p>
             <p>Social Media Links</p>
 
-            <p>
+            <!-- <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
                 >Subjects Assigned</b-badge
               >
-            </p>
+            </p> -->
           </b-col>
           <b-col md="6" class="first-details p-4">
             <p>
-              {{ teacher.last_name }} {{ teacher.first_name }}
-              {{ teacher.middle_name }}
+              {{ accountant.last_name }} {{ accountant.first_name }}
+              {{ accountant.middle_name }}
             </p>
-            <p>{{ teacher.phone }}</p>
-            <p>{{ teacher.qualification }}</p>
-            <p>{{ teacher.code }}</p>
+            <p>{{ accountant.phone }}</p>
+            <p>{{ accountant.qualification }}</p>
+            <p>{{ accountant.code }}</p>
 
-            <p>{{ teacher.gender }}</p>
+            <p>{{ accountant.gender }}</p>
             <p>
-              {{ teacher.user.blood_group.name }}
+              {{ accountant.user.blood_group.name }}
             </p>
             <p>
-              {{ teacher.user.state.name }}
+              {{ accountant.user.country.name }}
             </p>
             <p>
-              {{ teacher.user.lga.name }}
+              {{ accountant.user.state.name }}
             </p>
-            <p>{{ teacher.facebook }}</p>
-            <h3 v-for="klase in teacher.klases" :key="klase">
+            <p>
+              {{ accountant.user.lga.name }}
+            </p>
+            <p>{{ accountant.facebook }}</p>
+            <!-- <h3 v-for="klase in accountant.klases" :key="klase">
               <p>
                 <b-badge
                   style="line-height: 1.6"
@@ -88,7 +91,7 @@
                   </b-nav-item>
                 </b-nav>
               </b-popover>
-            </h3>
+            </h3> -->
           </b-col>
         </b-row>
       </b-jumbotron></template
@@ -97,11 +100,11 @@
 </template>
 
 <script>
-import { TEACHER_QUERY } from '@/graphql/teachers/queries'
+import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 export default {
   apollo: {
-    teacher: {
-      query: TEACHER_QUERY,
+    accountant: {
+      query: ACCOUNTANT_QUERY,
       variables() {
         return {
           slug: this.$route.params.slug,

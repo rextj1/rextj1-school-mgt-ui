@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!teacher">
+    <template v-if="!student || !student.user">
       <div class="grow">
         <b-spinner
           style="width: 20rem; height: 20rem"
@@ -10,15 +10,15 @@
     ></template>
     <template v-else>
       <b-button
-        to="/admin/teacher"
+        to="/admin/student"
         variant="primary"
         size="lg"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="teacher shadow">
-        <h1>About {{ teacher.last_name }}</h1>
+      <b-jumbotron header="" class="student shadow">
+        <h1>About {{ student.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
           <b-img
             src="~/assets/images/teacher.jpeg"
@@ -48,25 +48,38 @@
           </b-col>
           <b-col md="6" class="first-details p-4">
             <p>
-              {{ teacher.last_name }} {{ teacher.first_name }}
-              {{ teacher.middle_name }}
+              {{ student.last_name }} {{ student.first_name }}
+              {{ student.middle_name }}
             </p>
-            <p>{{ teacher.phone }}</p>
-            <p>{{ teacher.qualification }}</p>
-            <p>{{ teacher.code }}</p>
+            <p>{{ student.phone }}</p>
+            <!-- <p>{{ student.qualification }}</p> -->
+            <p>{{ student.code }}</p>
+            <p>{{ student.guardian_name}}</p>
+            <p>{{ student.guardian_no }}</p>
+            <p>{{ student.guardian_email }}</p>
 
-            <p>{{ teacher.gender }}</p>
+            <p>{{ student.gender }}</p>
             <p>
-              {{ teacher.user.blood_group.name }}
+              {{ student.user.email }}
             </p>
             <p>
-              {{ teacher.user.state.name }}
+              {{ student.user.religion }}
             </p>
             <p>
-              {{ teacher.user.lga.name }}
+              {{ student.user.blood_group.name }}
             </p>
-            <p>{{ teacher.facebook }}</p>
-            <h3 v-for="klase in teacher.klases" :key="klase">
+            <p>
+              {{ student.user.country.name }}
+            </p>
+            <p>
+              {{ student.user.state.name }}
+            </p>
+             <p>
+              {{ student.user.lga }}
+            </p>
+            <!-- <p>{{ student.facebook }}</p> -->
+            <p>{{student.klase.name}}</p>
+            <!-- <h3 v-for="klase in student.klase" :key="klase">
               <p>
                 <b-badge
                   style="line-height: 1.6"
@@ -86,7 +99,7 @@
                   </b-nav-item>
                 </b-nav>
               </b-popover>
-            </h3>
+            </h3> -->
           </b-col>
         </b-row>
       </b-jumbotron></template
@@ -95,11 +108,11 @@
 </template>
 
 <script>
-import { TEACHER_QUERY } from '@/graphql/teachers/queries'
+import { STUDENT_QUERY } from "~/graphql/students/queries";
 export default {
   apollo: {
-    teacher: {
-      query: TEACHER_QUERY,
+    student: {
+      query: STUDENT_QUERY,
       variables() {
         return {
           slug: this.$route.params.slug,

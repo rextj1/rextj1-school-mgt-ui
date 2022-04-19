@@ -229,7 +229,7 @@
                       params: { slug: data.item.slug },
                     }"
                     variant="primary"
-                    size="sm"
+                    size="md"
                     class="px-3"
                   >
                     <b-icon icon="eye" class="mr-1"></b-icon>
@@ -237,15 +237,15 @@
                   </b-button>
 
                   <b-button
-                    variant="primary"
-                    size="sm"
+                    variant="info"
+                    size="md"
                     class="px-3"
                     @click="info(data.item.slug)"
                   >
                     Edit
                   </b-button>
 
-                  <b-button variant="danger" size="sm" class="px-3">
+                  <b-button variant="danger" size="md" class="px-3">
                     <b-icon icon="trash" class="mr-1"></b-icon>
                     Delete
                   </b-button>
@@ -267,9 +267,10 @@
                 class="modal"
                 :id="infoModal.id"
                 :hide-backdrop="true"
-                body-bg-variant=""
-                title="Edit Book"
-                size="lg"
+                body-bg-variant="info"
+                scrollable
+                title="Edit Teacher Data"
+                size="xl"
                 :hide-footer="true"
               >
                 <AdminEditTeacherModal :slug="slug" />

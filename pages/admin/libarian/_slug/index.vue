@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!teacher">
+    <template v-if="!libarian || !libarian.user">
       <div style="background-color: #f1f9ae; width: 100%; min-height: 100vh">
         <div class="grow">
           <b-spinner
@@ -12,15 +12,15 @@
     ></template>
     <template v-else>
       <b-button
-        to="/admin/teacher"
+        to="/admin/libarian"
         variant="primary"
         size="lg"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="teacher shadow">
-        <h1>About {{ teacher.last_name }}</h1>
+      <b-jumbotron header="" class="libarian shadow">
+        <h1>About {{ libarian.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
           <b-img
             src="~/assets/images/teacher.jpeg"
@@ -42,33 +42,36 @@
             <p>L.G.A</p>
             <p>Social Media Links</p>
 
-            <p>
+            <!-- <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
                 >Subjects Assigned</b-badge
               >
-            </p>
+            </p> -->
           </b-col>
           <b-col md="6" class="first-details p-4">
             <p>
-              {{ teacher.last_name }} {{ teacher.first_name }}
-              {{ teacher.middle_name }}
+              {{ libarian.last_name }} {{ libarian.first_name }}
+              {{ libarian.middle_name }}
             </p>
-            <p>{{ teacher.phone }}</p>
-            <p>{{ teacher.qualification }}</p>
-            <p>{{ teacher.code }}</p>
+            <p>{{ libarian.phone }}</p>
+            <p>{{ libarian.qualification }}</p>
+            <p>{{ libarian.code }}</p>
 
-            <p>{{ teacher.gender }}</p>
+            <p>{{ libarian.gender }}</p>
             <p>
-              {{ teacher.user.blood_group.name }}
+              {{ libarian.user.blood_group.name }}
             </p>
             <p>
-              {{ teacher.user.state.name }}
+              {{ libarian.user.country.name }}
             </p>
             <p>
-              {{ teacher.user.lga.name }}
+              {{ libarian.user.state.name }}
             </p>
-            <p>{{ teacher.facebook }}</p>
-            <h3 v-for="klase in teacher.klases" :key="klase">
+            <p>
+              {{ libarian.user.lga.name }}
+            </p>
+            <p>{{ libarian.facebook }}</p>
+            <!-- <h3 v-for="klase in libarian.klases" :key="klase">
               <p>
                 <b-badge
                   style="line-height: 1.6"
@@ -88,7 +91,7 @@
                   </b-nav-item>
                 </b-nav>
               </b-popover>
-            </h3>
+            </h3> -->
           </b-col>
         </b-row>
       </b-jumbotron></template
@@ -97,17 +100,22 @@
 </template>
 
 <script>
-import { TEACHER_QUERY } from '@/graphql/teachers/queries'
+import { LIBARIAN_QUERY } from '~/graphql/libarians/queries'
 export default {
   apollo: {
-    teacher: {
-      query: TEACHER_QUERY,
+    libarian: {
+      query: LIBARIAN_QUERY,
       variables() {
         return {
           slug: this.$route.params.slug,
         }
       },
     },
+  },
+  data() {
+    return {
+      libarian: [],
+    }
   },
 }
 </script>

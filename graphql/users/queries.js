@@ -31,7 +31,18 @@ export const COUNTRY_QUERY = gql`
   }
 `
 
-export const BLOOOD_GROUP_QUERIES = gql`
+export const STATE_QUERY = gql`
+  query StateQuery($id: ID) {
+    state(id: $id) {
+      cities {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const BLOOD_GROUP_QUERIES = gql`
   query BloodGroupQuery {
     bloodGroups {
       id

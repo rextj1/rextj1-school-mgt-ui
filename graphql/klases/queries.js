@@ -2,8 +2,8 @@ import gql from 'graphql-tag'
 
 import { KLASE_FIELDS_FRAGMENT } from './fragments'
 
-export const KLASE_QUERIES = gql`
-  query myclassQuery {
+export const KLASES_QUERIES = gql`
+  query myclassesQuery {
     klases {
       ...KlaseFields
     }
@@ -11,9 +11,9 @@ export const KLASE_QUERIES = gql`
   ${KLASE_FIELDS_FRAGMENT}
 `
 
-export const KLASES_QUERIES = gql`
-  query myclassesQuery {
-    klases{
+export const KLASE_QUERIES = gql`
+  query myclassQuery {
+    klases {
       id
       name
     }

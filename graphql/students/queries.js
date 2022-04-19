@@ -1,6 +1,9 @@
 import gql from 'graphql-tag'
 
-import { STUDENT_FIELD_FRAGMENT, STUDENT_FIELDS_FRAGMENT } from './fragments'
+import {
+  STUDENT_FIELDS_FRAGMENT,
+  SINGLE_STUDENT_FIELD_FRAGMENT,
+} from './fragments'
 
 export const STUDENT_QUERIES = gql`
   query StudentsQuery {
@@ -13,8 +16,16 @@ export const STUDENT_QUERIES = gql`
 export const STUDENT_QUERIEX = gql`
   query StudentxQuery {
     students {
-      ...StudentField
+      ...SingleStudentField
     }
   }
-  ${STUDENT_FIELD_FRAGMENT}
+  ${SINGLE_STUDENT_FIELD_FRAGMENT}
+`
+export const STUDENT_QUERY = gql`
+  query StudentQuery($slug: String!) {
+    student(slug: $slug) {
+      ...StudentFields
+    }
+  }
+  ${STUDENT_FIELDS_FRAGMENT}
 `

@@ -1,29 +1,18 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups">
+    <template v-if="!student">
       <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
         <div class="grow">
           <b-spinner
-            style="width: 30rem; height: 30rem"
+            style="width: 15rem; height: 15rem"
             type="grow"
-            variant="danger"
+            variant="success"
           ></b-spinner>
-        </div></div
-    ></template>
+        </div>
+      </div>
+    </template>
     <template v-else>
-      <b-button
-        to="/admin/teacher"
-        variant="primary"
-        size="lg"
-        class="add-student mb-4"
-      >
-        <b-icon icon="arrow-left" /> Back
-      </b-button>
       <div class="p-4 student__wrapper">
-        <h2 class="d-flex justify-content-center mb-4 mt-4">
-          Register Teacher
-        </h2>
-        <hr />
         <b-form
           v-if="show"
           method="POST"
@@ -93,15 +82,16 @@
           </div>
 
           <!--  -->
-
           <b-row class="p-4">
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="First Name:">
+              <b-form-group label="First Name">
                 <b-form-input
-                  id="input-1"
+                  debounce="500"
+                  id="firstName"
                   v-model="form.first_name"
-                  type="text"
-                  placeholder="Enter first name"
+                  name="firstName"
+                  size="lg"
+                  placeholder="Enter First name"
                   required
                   trim
                 ></b-form-input>
@@ -110,15 +100,15 @@
             </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
-
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="Last Name">
+              <b-form-group label="Last Name">
                 <b-form-input
-                  id="input-1"
+                  debounce="500"
+                  id="lastName"
                   v-model="form.last_name"
-                  type="text"
-                  placeholder="Enter last name"
-                  name="last_name"
+                  name="lastName"
+                  size="lg"
+                  placeholder="Enter Last name"
                   required
                   trim
                 ></b-form-input>
@@ -129,13 +119,15 @@
             </b-col>
 
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="middle Name (optional)">
+              <b-form-group label="Middle Name (optional)">
                 <b-form-input
-                  id="input-1"
+                  debounce="500"
+                  id="middle_name"
                   v-model="form.middle_name"
-                  type="text"
-                  placeholder="Enter middle name"
-                  name="last_name"
+                  name="middleName"
+                  size="lg"
+                  placeholder="Enter Middle name"
+                  required
                   trim
                 ></b-form-input>
                 <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
@@ -145,68 +137,109 @@
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Email:">
+              <b-form-group label="Email">
                 <b-form-input
-                  id="input-1"
+                  debounce="500"
+                  id="email"
                   v-model="form.email"
+                  name="email"
+                  size="lg"
                   type="email"
                   placeholder="Enter email"
-                  name="email"
                   required
                   trim
                 ></b-form-input>
                 <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
               {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
-
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Phone no:">
+              <b-form-group label="Phone No.">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.phone"
-                  type="number"
-                  placeholder="Enter phone no."
-                  required
-                  trim
-                ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Qualification">
-                <b-form-input
-                  id="input-1"
-                  v-model="form.qualification"
-                  type="text"
-                  placeholder="Enter qualification"
+                  id="phone"
+                  v-model.number="form.phone"
                   name="phone"
-                  required
+                  placeholder="Enter phone no."
                   trim
+                  type="number"
+                  required
+                  size="lg"
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
             </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Religion">
+              <b-form-group label="Guardian Name">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.religion"
-                  type="text"
-                  placeholder="Enter religion"
-                  name="religion"
-                  required
+                  id="guardian_name"
+                  v-model="form.guardian_name"
+                  name="guardian_name"
+                  placeholder="Enter guardian_name"
                   trim
+                  type="text"
+                  required
+                  size="lg"
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
+            </b-form-invalid-feedback> -->
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3" class="p-4">
+              <b-form-group label="Guardian Email">
+                <b-form-input
+                  id="guardian_email"
+                  v-model="form.guardian_email"
+                  name="guardian_email"
+                  placeholder="Enter guardian email"
+                  trim
+                  type="text"
+                  required
+                  size="lg"
+                ></b-form-input>
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
+            </b-form-invalid-feedback> -->
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3" class="p-4">
+              <b-form-group label="Guardian no.">
+                <b-form-input
+                  id="guardian_no"
+                  v-model="form.guardian_no"
+                  name="guardian_no"
+                  placeholder="Enter guardian number"
+                  trim
+                  type="number"
+                  required
+                  size="lg"
+                ></b-form-input>
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
+            </b-form-invalid-feedback> -->
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3" class="p-4">
+              <b-form-group label="Religion">
+                <b-form-input
+                  id="code"
+                  v-model="form.religion"
+                  name="religion"
+                  placeholder="Enter religion"
+                  trim
+                  type="text"
+                  required
+                  size="lg"
+                ></b-form-input>
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
             </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
@@ -270,20 +303,27 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
-
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Facebook link (optional)">
-                <b-form-input
-                  id="input-1"
-                  v-model="form.facebook"
-                  type="text"
-                  placeholder="Enter facebook..."
-                  name="facebook"
-                  trim
-                ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+              <b-form-group label="Current Class">
+                <b-form-select
+                  id="klases"
+                  value-field="id"
+                  text-field="name"
+                  v-model="form.klase"
+                  :options="klases"
+                  class="mb-3"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select blood Group--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
               </b-form-group>
             </b-col>
 
@@ -358,18 +398,37 @@
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="L.G.A">
+              <b-form-group label="L.G.A">
                 <b-form-input
-                  id="input-1"
+                  id="id"
                   v-model="form.lga"
-                  type="text"
-                  placeholder="Enter L.G.A"
                   name="lga"
-                  required
+                  placeholder="Enter lga"
                   trim
+                  type="text"
+                  required
+                  size="lg"
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
+            </b-form-invalid-feedback> -->
+              </b-form-group>
+            </b-col>
+
+            <b-col md="5" class="p-4">
+              <b-form-group label="Guardian Address">
+                <b-form-textarea
+                  id="guardian_address"
+                  v-model="form.guardian_address"
+                  rows="10"
+                  max-rows="8"
+                  size="lg"
+                  trim
+                  required
+                ></b-form-textarea>
+
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+              {{ form.errors.get('lastName') }}
             </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
@@ -401,8 +460,8 @@
             >
           </b-row>
         </b-form>
-      </div>
-    </template>
+      </div></template
+    >
   </div>
 </template>
 
@@ -413,10 +472,14 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
-import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
+import { STUDENT_QUERY } from '@/graphql/students/queries'
+import { UPDATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
 
 export default {
-  middleware: 'auth',
+  props: {
+    slug: String,
+  },
   data() {
     return {
       form: new this.$form({
@@ -426,14 +489,17 @@ export default {
         email: null,
         country: null,
         phone: null,
+        klase: null,
         state: null,
         city: null,
         lga: null,
         photo: null,
         religion: null,
         bloodGroup: null,
-        facebook: null,
-        qualification: null,
+        guardian_address: null,
+        guardian_name: null,
+        guardian_email: null,
+        guardian_no: null,
         gender: null,
         // birthday: null,
         busy: false,
@@ -443,12 +509,24 @@ export default {
       show: true,
     }
   },
+
   apollo: {
+    // Simple query that will update the 'hello' vue property
+    $loadingKey: 'loading',
     countries: {
       query: COUNTRY_QUERIES,
     },
     bloodGroups: {
       query: BLOOD_GROUP_QUERIES,
+    },
+    bloodGroups: {
+      query: BLOOD_GROUP_QUERIES,
+    },
+    country: {
+      query: COUNTRY_QUERY,
+      variables() {
+        return { id: this.form.country }
+      },
     },
     country: {
       query: COUNTRY_QUERY,
@@ -460,6 +538,53 @@ export default {
       query: STATE_QUERY,
       variables() {
         return { id: this.form.state }
+      },
+    },
+    klases: {
+      query: KLASE_QUERIES,
+    },
+    student: {
+      query: STUDENT_QUERY,
+      variables() {
+        return {
+          slug: this.slug,
+        }
+      },
+      result({ data, loading }) {
+        if (!loading) {
+          const student = data.student
+
+          console.log(student)
+          // this.form.keys().forEach((key) => {
+          //   if (book[key]) {
+          //     //  if (key === 'image') {
+          //     //   return true
+          //     // }
+          //     this.form[key] = student[key]
+
+          //     // this.form.category_id = parseInt(data.book.category.id)
+          //   }
+          // })
+          this.form.id = parseInt(data.student.id)
+          this.form.first_name = data.student.first_name
+          this.form.last_name = data.student.last_name
+          this.form.middle_name = data.student.middle_name
+          this.form.klase = parseInt(data.student.klase.id)
+          this.form.guardian_name = data.student.guardian_name
+          this.form.guardian_no = data.student.guardian_no
+          this.form.guardian_email = data.student.guardian_email
+          this.form.guardian_address = data.student.guardian_address
+          this.form.phone = data.student.phone
+          this.form.email = data.student.user.email
+          this.form.religion = data.student.user.religion
+          // this.form.image = data.book.image
+          this.form.gender = data.student.gender
+          this.form.bloodGroup = parseInt(data.student.user.blood_group.id)
+          this.form.country = parseInt(data.student.user.country.id)
+          this.form.state = parseInt(data.student.user.state.id)
+          this.form.city = parseInt(data.student.user.city.id)
+          this.form.lga = data.student.user.lga
+        }
       },
     },
   },
@@ -483,46 +608,50 @@ export default {
       }
     },
 
-    onSubmit() {
+    async onSubmit() {
       this.form.busy = true
       // submit exam
-      this.$apollo
-        .mutate(
-          {
-            mutation: CREATE_TEACHER_MUTATION,
+      try {
+        await this.$apollo
+          .mutate({
+            mutation: UPDATE_STUDENT_MUTATION,
             variables: {
+              id: parseInt(this.form.id),
               first_name: this.form.first_name,
               last_name: this.form.last_name,
               middle_name: this.form.middle_name,
               email: this.form.email,
+              klase: this.form.klase,
               country: parseInt(this.form.country),
               phone: this.form.phone,
               state: parseInt(this.form.state),
               city: parseInt(this.form.city),
               lga: this.form.lga,
-              photo: this.form.photo,
+              // photo: this.form.photo,
               religion: this.form.religion,
               blood_group: parseInt(this.form.bloodGroup),
-              facebook: this.form.facebook,
-              qualification: this.form.qualification,
+              guardian_address: this.form.guardian_address,
+              guardian_name: this.form.guardian_name,
               gender: this.form.gender,
             },
-          },
-          {
-            context: {
-              hasUpload: true,
-            },
-          }
-        )
-        .then(({ data }) => {
-          console.log(data)
-          // this.$router.push('/admin/teacher')
-        })
-        .catch(() => {
-          this.form.busy = false
-        })
-    },
+          })
+          .then(({ data }) => {
+            this.$router.push('/admin/student')
+          })
 
+        this.form.busy = false
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
+        }
+      }
+    },
     onReset(event) {
       event.preventDefault()
       // Reset our form values
@@ -539,6 +668,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.grow {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
 .student {
   font-size: 1.4rem;
   padding: 2rem;

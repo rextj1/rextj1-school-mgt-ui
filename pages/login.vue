@@ -139,10 +139,10 @@ export default {
   font-size: 1.6rem;
   .background-image {
     .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-  }
+    .mb-3 {
+      height: 4rem;
+      font-size: 1.4rem;
+    }
     animation: fide-slide-down 2s 0.5s ease-out forwards;
     background-image: linear-gradient(
         to bottom,

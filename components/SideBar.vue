@@ -203,14 +203,22 @@
         />
         <span @click="ToggleMenus" class="text">Student</span>
       </nuxt-link>
-
-      <nuxt-link to="/admin/liberian" class="button">
+      <nuxt-link to="/admin/accountant" class="button">
         <b-icon
           @click="ToggleMenus"
           icon="people-fill"
           class="material-icons"
         />
-        <span @click="ToggleMenus" class="text">Liberian</span>
+        <span @click="ToggleMenus" class="text">Accountant</span>
+      </nuxt-link>
+
+      <nuxt-link to="/admin/libarian" class="button">
+        <b-icon
+          @click="ToggleMenus"
+          icon="people-fill"
+          class="material-icons"
+        />
+        <span @click="ToggleMenus" class="text">Libarian</span>
       </nuxt-link>
 
       <nuxt-link to="/admin/event" class="button">

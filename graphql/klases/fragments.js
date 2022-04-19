@@ -1,5 +1,14 @@
 import gql from 'graphql-tag'
-import { SUBJECTS_FIELDS_FRAGMENT } from '@/graphql/subjects/fragments'
+import { SINGLE_SUBJECTS_FIELDS_FRAGMENT } from '@/graphql/subjects/fragments'
+import { SINGLE_TIMETABLE_FIELDS_FRAGMENT } from '~/graphql/timetables/fragments'
+
+export const SINGLE_KLASE_FIELDS_FRAGMENT = gql`
+  fragment SingleKlaseFields on Klase {
+    id
+    slug
+    name
+  }
+`
 
 export const KLASE_FIELDS_FRAGMENT = gql`
   fragment KlaseFields on Klase {
@@ -7,8 +16,20 @@ export const KLASE_FIELDS_FRAGMENT = gql`
     slug
     name
     subjects {
-      ...SubjectsFields
+      ...SingleSubjectsFields
     }
   }
-  ${SUBJECTS_FIELDS_FRAGMENT}
+  ${SINGLE_SUBJECTS_FIELDS_FRAGMENT}
+`
+
+export const KLASE_TIMETABLE_FIELDS_FRAGMENT = gql`
+  fragment KlaseTimetableFields on Klase {
+    id
+    slug
+    name
+    timetables {
+      ...SingleTimetableFields
+    }
+  }
+  ${SINGLE_TIMETABLE_FIELDS_FRAGMENT}
 `

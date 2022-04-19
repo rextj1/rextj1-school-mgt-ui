@@ -4,7 +4,7 @@ import { GUARDIANS_FIELDS_FRAGMENT } from './fragments'
 
 export const GUARDIANS_QUERIES = gql`
   query GuardiansQuery {
-    guardianss {
+    guardians {
       ...GuardiansFields
     }
   }

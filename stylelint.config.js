@@ -13,6 +13,7 @@ module.exports = {
     'no-duplicate-selectors': null,
     'selector-pseudo-element-colon-notation': null,
     'color-hex-length': null,
+    'declaration-empty-line-before': null,
     'font-family-no-duplicate-names': null,
     'selector-pseudo-element-no-unknown': [
       true,

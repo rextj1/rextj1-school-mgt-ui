@@ -1,22 +1,32 @@
   <template>
   <div class="fonts">
-    <b-button
-      to="/admin/student/add-student"
+    <template v-if="!accountants">
+      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
+        <div class="grow">
+          <b-spinner
+            style="width: 30rem; height: 30rem"
+            type="grow"
+            variant="danger"
+          ></b-spinner>
+        </div></div
+    ></template>
+    <template v-else>
+          <b-button
+      to="/admin/accountant/add-accountant"
       variant="primary"
       pill
       size="md"
       class="add-student mb-4"
     >
-      <b-icon icon="plus" />Register Student
+      <b-icon icon="plus" />Register Accountant
     </b-button>
 
     <b-row no-gutters>
       <b-col md="12">
         <div class="card-body">
           <div class="card-student shadow p-3" style="background-color: #fff">
-            <h2 class="d-flex justify-content-center mb-4 mt-4">All Student</h2>
+            <h2 class="d-flex justify-content-center mb-4 mt-4">All Accountants</h2>
             <hr />
-
             <b-container fluid>
               <!-- User Interface controls -->
               <b-row>
@@ -154,7 +164,7 @@
               <br /><br />
               <!-- Main table element -->
               <b-table
-                :items="students"
+                :items="accountants"
                 :fields="fields"
                 :current-page="currentPage"
                 :per-page="perPage"
@@ -174,21 +184,6 @@
               >
                 <template #cell(index)="data">
                   {{ data.index + 1 }}
-                </template>
-
-                <template #cell(adm_no)="data">
-                  <div>{{ data.value }}</div>
-                </template>
-
-                <template #cell(klase)="data">
-                  <b-badge
-                    style="line-height: 1.6"
-                    variant="success"
-                    class="px-2"
-                    :id="`klase-${data.index}`"
-                  >
-                    <div>{{ data.value.name }}</div>
-                  </b-badge>
                 </template>
 
                 <template #cell(photo)="row">
@@ -212,11 +207,13 @@
                 <!-- view modal -->
                 <template #cell(actions)="data">
                   <b-button
-                    variant="primary"
                     :to="{
-                      name: 'admin-student-slug',
+                      name: 'admin-accountant-slug',
                       params: { slug: data.item.slug },
                     }"
+                    variant="primary"
+                    size="md"
+                    class="px-3"
                   >
                     <b-icon icon="eye" class="mr-1"></b-icon>
                     View
@@ -254,23 +251,25 @@
                 :id="infoModal.id"
                 :hide-backdrop="true"
                 body-bg-variant="info"
+                title="Edit Accountant Data"
                 scrollable
-                title="Edit Student Data"
-                size="xl"
+                size="lg"
                 :hide-footer="true"
               >
-                <AdminEditStudentModal :slug="slug" />
+                <AdminEditAccountantModal :slug="slug" />
               </b-modal>
             </b-container>
           </div>
         </div>
       </b-col>
     </b-row>
+    </template>
+
   </div>
 </template>
 
 <script>
-import { STUDENT_QUERIES } from '~/graphql/students/queries'
+import { ACCOUNTANT_QUERIES } from '~/graphql/accountants/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -283,9 +282,6 @@ export default {
           photo: 40,
           name: { first: 'Dickerson', last: 'Macdonald' },
           gender: true,
-          adm_no: 123,
-          class: 'JSS 1',
-          subject_assigned: 5,
           phone: 810000112,
           // _cellVariants: { paid: 'success' },
         },
@@ -297,8 +293,6 @@ export default {
           photo: 21,
           name: { first: 'Larsen', last: 'Shaw' },
           gender: false,
-          class: 'JSS 2',
-          subject_assigned: 5,
           phone: 810000112,
           // _cellVariants: { paid: 'success' },
         },
@@ -322,8 +316,14 @@ export default {
           // sortDirection: 'desc',
         },
         {
-          key: 'adm_no',
-          label: 'Adm no.',
+          key: 'middle_name',
+          label: 'Middle Name',
+          sortable: true,
+          // sortDirection: 'desc',
+        },
+           {
+          key: 'qualification',
+          label: 'Qualification',
           sortable: true,
           // sortDirection: 'desc',
         },
@@ -351,41 +351,11 @@ export default {
           filterByFormatted: true,
         },
         {
-          key: 'klase',
-          label: 'Class',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        {
           key: 'phone',
           label: 'Phone',
           sortable: true,
           // sortDirection: 'desc',
         },
-        {
-          key: 'admitted_year',
-          label: 'Admitted Year.',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        {
-          key: 'guardian_name',
-          label: 'Guardian',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        {
-          key: 'guardian_no',
-          label: 'Guardian no.',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        // {
-        //   key: 'guardian_email',
-        //   label: 'Guardian Email',
-        //   sortable: true,
-        //   sortDirection: 'desc',
-        // },
         { key: 'actions', label: 'Actions' },
       ],
       slug: '',
@@ -406,8 +376,8 @@ export default {
     }
   },
   apollo: {
-    students: {
-      query: STUDENT_QUERIES,
+    accountants: {
+      query: ACCOUNTANT_QUERIES,
     },
   },
   computed: {
@@ -450,6 +420,12 @@ export default {
 .modal {
   background-color: rgba(0, 0, 0, 0.295) !important;
 }
+ .grow {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+  }
 .fonts {
   font-size: 1.4rem !important;
   padding: 2rem;

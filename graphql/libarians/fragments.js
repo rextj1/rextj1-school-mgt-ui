@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { USERS_FIELDS_FRAGMENT } from '@/graphql/users/fragments'
+import { UXER_FIELDS_FRAGMENT } from '@/graphql/users/fragments'
 
 export const LIBARIAN_FIELDS_FRAGMENT = gql`
   fragment LibarianFields on Libarian {
@@ -11,13 +11,12 @@ export const LIBARIAN_FIELDS_FRAGMENT = gql`
     phone
     gender
     code
-    instagram
+    photo
     facebook
-    twitter
     qualification
     user {
-      ...UserRolesFields
+      ...UxerFields
     }
   }
-  ${USERS_FIELDS_FRAGMENT}
+  ${UXER_FIELDS_FRAGMENT}
 `

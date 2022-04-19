@@ -413,7 +413,7 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
-import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
+import { CREATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
 
 export default {
   middleware: 'auth',
@@ -489,7 +489,7 @@ export default {
       this.$apollo
         .mutate(
           {
-            mutation: CREATE_TEACHER_MUTATION,
+            mutation: CREATE_ACCOUNTANT_MUTATION,
             variables: {
               first_name: this.form.first_name,
               last_name: this.form.last_name,

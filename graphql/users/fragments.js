@@ -11,8 +11,8 @@ export const UXER_FIELDS_FRAGMENT = gql`
     gender
     religion
     photo
-    password
     email
+    lga
     password
     created_at
     updated_at
@@ -31,9 +31,12 @@ export const UXER_FIELDS_FRAGMENT = gql`
     state {
       id
       name
+      cities {
+        id
+        name
+      }
     }
-
-    lga {
+    city {
       id
       name
     }
@@ -98,6 +101,7 @@ export const USERS_FIELDS_FRAGMENT = gql`
     photo
     password
     email
+    lga
     password
     created_at
     updated_at
@@ -116,13 +120,12 @@ export const USERS_FIELDS_FRAGMENT = gql`
     state {
       id
       name
-      country {
+      cities {
         id
         name
       }
     }
-
-    lga {
+    city {
       id
       name
     }

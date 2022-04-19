@@ -11,19 +11,7 @@
         </div></div
     ></template>
     <template v-else>
-      <b-button
-        to="/admin/teacher"
-        variant="primary"
-        size="lg"
-        class="add-student mb-4"
-      >
-        <b-icon icon="arrow-left" /> Back
-      </b-button>
       <div class="p-4 student__wrapper">
-        <h2 class="d-flex justify-content-center mb-4 mt-4">
-          Register Teacher
-        </h2>
-        <hr />
         <b-form
           v-if="show"
           method="POST"
@@ -413,13 +401,19 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
-import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
+import { UPDATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
+import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 
 export default {
   middleware: 'auth',
+  props: {
+    slug: String,
+  },
   data() {
     return {
       form: new this.$form({
+        // id: 1,
+        // slug: 'buwa',
         first_name: '',
         last_name: '',
         middle_name: null,
@@ -429,7 +423,7 @@ export default {
         state: null,
         city: null,
         lga: null,
-        photo: null,
+        // photo: null,
         religion: null,
         bloodGroup: null,
         facebook: null,
@@ -462,6 +456,39 @@ export default {
         return { id: this.form.state }
       },
     },
+
+    accountant: {
+      query: ACCOUNTANT_QUERY,
+      variables() {
+        return {
+          slug: this.slug,
+        }
+      },
+      result({ data, loading }) {
+        if (!loading) {
+          const accountant = data.accountant
+          this.form.keys().forEach((key) => {
+            if (accountant[key]) {
+              //  if (key === 'image') {
+              //   return true
+              // }
+              this.form[key] = accountant[key]
+
+              // this.form.category_id = parseInt(data.book.category.id)
+            }
+          })
+          this.form.id = parseInt(data.accountant.id)
+          this.form.country = parseInt(data.accountant.user.country.id)
+          this.form.state = parseInt(data.accountant.user.state.id)
+          this.form.city = parseInt(data.accountant.user.city.id)
+          this.form.religion = parseInt(data.accountant.user.religion)
+          this.form.bloodGroup = parseInt(data.accountant.user.blood_group.id)
+          this.form.lga = data.accountant.user.lga
+          this.form.religion = data.accountant.user.religion
+          this.form.email = data.accountant.user.email
+        }
+      },
+    },
   },
   methods: {
     selectImage() {
@@ -478,19 +505,20 @@ export default {
         }
         reader.readAsDataURL(file)
         this.form.image = file
-
-        // this.$emit('input', file[0])
       }
     },
 
-    onSubmit() {
+    // update
+    async onSubmit() {
       this.form.busy = true
       // submit exam
-      this.$apollo
-        .mutate(
-          {
-            mutation: CREATE_TEACHER_MUTATION,
+      try {
+        await this.$apollo
+          .mutate({
+            mutation: UPDATE_ACCOUNTANT_MUTATION,
             variables: {
+              id: parseInt(this.form.id),
+              // choices: this.form.data()
               first_name: this.form.first_name,
               last_name: this.form.last_name,
               middle_name: this.form.middle_name,
@@ -500,27 +528,30 @@ export default {
               state: parseInt(this.form.state),
               city: parseInt(this.form.city),
               lga: this.form.lga,
-              photo: this.form.photo,
+              // photo: this.form.photo,
               religion: this.form.religion,
               blood_group: parseInt(this.form.bloodGroup),
               facebook: this.form.facebook,
               qualification: this.form.qualification,
               gender: this.form.gender,
             },
-          },
-          {
-            context: {
-              hasUpload: true,
-            },
-          }
-        )
-        .then(({ data }) => {
-          console.log(data)
-          // this.$router.push('/admin/teacher')
-        })
-        .catch(() => {
-          this.form.busy = false
-        })
+          })
+          .then(({ data }) => {
+            this.$router.push('/')
+          })
+
+        this.form.busy = false
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
+        }
+      }
     },
 
     onReset(event) {

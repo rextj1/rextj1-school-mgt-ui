@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2'
 import { ApolloLink } from 'apollo-link'
 import { onError } from 'apollo-link-error'
-// import { InMemoryCache } from 'apollo-cache-inmemory'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 
 const inProduction = process.env.NODE_ENV === 'production'
 const tld = inProduction ? 'com' : 'test'
@@ -46,10 +46,10 @@ const errorLink = ({ redirect, route }) => {
 }
 
 export default function DefaultConfig(ctx) {
-  // const cache = new InMemoryCache()
+  const cache = new InMemoryCache()
   return {
     link: ApolloLink.from([errorLink(ctx)]),
-    // cache,
+    cache,
     // required
     httpEndpoint: `${protocol}://sms.${tld}/graphql`,
 
