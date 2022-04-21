@@ -227,7 +227,7 @@
           icon="calendar2-date"
           class="material-icons"
         />
-        <span @click="ToggleMenus" class="text">School Event</span>
+        <span @click="ToggleMenus" class="text">Events</span>
       </nuxt-link>
 
       <nuxt-link to="/admin/notice" class="button">
@@ -236,7 +236,7 @@
           icon="calendar2-date"
           class="material-icons"
         />
-        <span @click="ToggleMenus" class="text">school Notice</span>
+        <span @click="ToggleMenus" class="text">Notices</span>
       </nuxt-link>
 
       <nuxt-link to="/admin/timetable" class="button">
@@ -289,9 +289,9 @@
       </b-collapse>
       <!-- end -->
 
-      <nuxt-link to="/admin/exam/timetables" class="button">
-        <b-icon @click="ToggleMenus" icon="vector-pen" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Transport</span>
+      <nuxt-link to="/admin/driver" class="button">
+        <b-icon @click="ToggleMenus" icon="truck" class="material-icons" />
+        <span @click="ToggleMenus" class="text">Drivers</span>
       </nuxt-link>
 
       <nuxt-link to="/admin/result" class="button">

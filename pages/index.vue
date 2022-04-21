@@ -1,17 +1,56 @@
 <template>
-  <div>
-    <b-form-select v-model="selected" class="mb-3">
-      <b-form-select-option :value="null">Please select an option</b-form-select-option>
-      <b-form-select-option value="a">Option A</b-form-select-option>
-      <b-form-select-option value="b" disabled>Option B (disabled)</b-form-select-option>
-      <b-form-select-option-group label="Grouped options">
-        <b-form-select-option :value="{ C: '3PO' }">Option with object value</b-form-select-option>
-        <b-form-select-option :value="{ R: '2D2' }">Another option with object value</b-form-select-option>
-      </b-form-select-option-group>
-    </b-form-select>
+  <div class="margin-down">
+          <!-- description -->
+          <b-form
+            v-if="show"
+            method="POST"
+            @submit.prevent="onSubmitCreate"
+            @keydown="form.onKeydown($event)"
+            @reset.prevent="onReset"
+          >
+            <!-- description -->
+            <b-row no-gutters>
+              <b-col md="2">
+                <label
+                  for="input-small"
+                  class="label-padding"
+                  style="font-size: 2rem"
+                  >Name:</label
+                >
+              </b-col>
 
-    <div class="mt-2">Selected: <strong>{{ selected }}</strong></div>
-  </div>
+              <b-col md="8">
+                <div class="d-flex">
+                  <b-form-input
+                    id="name"
+                    v-model="form.names"
+                    name="name"
+                    placeholder="Enter class"
+                    trim
+                    type="name"
+                    required
+                    size="lg"
+                  ></b-form-input>
+                  <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
+                      {{ form.errors.get('lastName') }}
+                      </b-form-invalid-feedback> -->
+                  <b-button
+                    type="submit"
+                    variant="primary"
+                    class="mr-4"
+                    size="lg"
+                  >
+                    <b-spinner
+                      v-if="form.busy"
+                      variant="light"
+                      class="mr-1 mb-1"
+                    />Add Class</b-button
+                  >
+                </div>
+              </b-col>
+            </b-row>
+          </b-form>
+        </div>
 </template>
 
 <script>

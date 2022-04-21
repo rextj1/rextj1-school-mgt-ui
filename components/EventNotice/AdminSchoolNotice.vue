@@ -41,8 +41,6 @@ import { NOTICE_QUERIES } from '@/graphql/notices/queries'
 export default {
   data() {
     return {
-
-
       fields: [
         {
           key: 'date',

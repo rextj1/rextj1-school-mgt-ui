@@ -9,7 +9,24 @@ export const DRIVER_FIELDS_FRAGMENT = gql`
     route
     driver_license
     vehicle_number
-    blood_group
+    religion
+    phone
+    lga
+    blood_group {
+      id
+      name
+    }
+    country {
+      id
+      name
+    }
+    state {
+      id
+      name
+    }
+    city {
+      id
+      name
+    }
   }
-
 `
