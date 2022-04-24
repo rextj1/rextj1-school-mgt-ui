@@ -1,16 +1,12 @@
 import gql from 'graphql-tag'
 
-export const CREATE_CREATE_MUTATION = gql`
+export const CREATE_SUBJECT_MUTATION = gql`
   mutation CreateSubjectMutation(
     $subject: String!
     $klase: Int
     $student: Int
   ) {
-    createSubject(
-      subject: $subject
-      klase: $klase
-      student: $Int
-    ) {
+    createSubject(subject: $subject, klase: $klase, student: $Int) {
       id
     }
   }

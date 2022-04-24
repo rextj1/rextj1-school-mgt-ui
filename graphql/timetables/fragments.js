@@ -3,8 +3,6 @@ import gql from 'graphql-tag'
 export const TIMETABLE_FIELDS_FRAGMENT = gql`
   fragment TimetableFields on Timetable {
     id
-    slug
-    subject
     monday
     tuesday
     wednesday
@@ -22,8 +20,6 @@ export const TIMETABLE_FIELDS_FRAGMENT = gql`
 export const SINGLE_TIMETABLE_FIELDS_FRAGMENT = gql`
   fragment SingleTimetableFields on Timetable {
     id
-    slug
-    subject
     monday
     tuesday
     wednesday

@@ -1,12 +1,8 @@
 import gql from 'graphql-tag'
-import { MYCLASSES_FIELDS_FRAGMENT } from '~/graphql/klases/fragments'
 
 export const EXAM_TIMETABLE_FIELDS_FRAGMENT = gql`
-  fragment ExamTimetableFields on Event {
+  fragment ExamTimetableFields on ExamTimetable {
     id
-    slug
-    subject
-    term
     monday
     tuesday
     wednesday
@@ -14,9 +10,23 @@ export const EXAM_TIMETABLE_FIELDS_FRAGMENT = gql`
     friday
     time
     date
-    my_class {
-      ...MyclassesFields
+    klase {
+      id
+      slug
+      name
     }
   }
-  ${MYCLASSES_FIELDS_FRAGMENT}
+`
+
+export const SINGLE_EXAM_TIMETABLE_FIELDS_FRAGMENT = gql`
+  fragment SingleExamTimetableFields on ExamTimetable {
+    id
+    monday
+    tuesday
+    wednesday
+    thursday
+    friday
+    time
+    date
+  }
 `

@@ -3,14 +3,17 @@
     <b-card class="p-3 mb-4 d-flex">
       <b-row no-gutters>
         <b-col md="6" class="p-4">
-          <b-form-group label="Class">
+          <b-form-group label="Current Class:">
             <b-form-select
+              id="klase"
+              value-field="id"
+              text-field="name"
               v-model="form.class"
-              :options="classes"
+              :options="klases"
               class="mb-3"
               size="lg"
               required
-                @change="timetableDropdown"
+              @change="timetableDropdown"
             >
               <!-- This slot appears above the options from 'options' prop -->
               <template #first>
@@ -28,7 +31,7 @@
 
     <div
       class="libarian__wrapper"
-      @click.prevent="hideMenu"
+      @click="hideMenu"
       v-show="timetableDropdownClass"
     >
       <b-card no-body @click="hideMenu">
@@ -38,12 +41,161 @@
               <strong>Create Timetable</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
             </template>
-           <ExamCreateExamTimetable :currentClass="form.class"/>
+
+            <b-row no-gutters>
+              <b-col md="12">
+                <h3 class="d-flex justify-content-center mb-4">
+                  <!-- <div v-for="time in timetable[0]" :key="time.id">
+                    {{ time['name'] }}
+                  </div> -->
+                  Exam Timetable
+                </h3>
+
+                <div class="card-body">
+                  <div class="card-student p-3">
+                    <b-table
+                      hover
+                      bordered
+                      head-variant="dark"
+                      caption-top
+                      no-border-collapse
+                      fixed
+                      stacked="md"
+                      responsive="true"
+                      :items="examTimetables"
+                      :fields="fields"
+                    >
+                      <template #cell(Action)="data">
+                        <div class="d-flex justify-content-center">
+                          <b-button
+                            variant="primary"
+                            size="lg"
+                            @click="timetableEdit(data.item.id)"
+                            >Edit</b-button
+                          >
+
+                          <b-button
+                            variant="danger"
+                            size="lg"
+                            class="ml-2"
+                            @click="deleteItem(data.item.id)"
+                            >Delete</b-button
+                          >
+                        </div>
+                      </template>
+                    </b-table>
+                  </div>
+                </div>
+                <!-- Info modal -->
+                <b-modal
+                  class="modal"
+                  :id="infoModal"
+                  :hide-backdrop="false"
+                  body-bg-variant="info"
+                  title="Edit  Data"
+                  size="lg"
+                  :hide-footer="true"
+                >
+                  <AdminEditExamTimetableModal
+                    :slug="[slug, form.class, infoModal]"
+                  />
+                </b-modal>
+                <!-- end modal -->
+              </b-col>
+            </b-row>
+
+            <div class="exam-timetble">
+              <b-form
+                v-show="show"
+                method="POST"
+                @submit.prevent="onSubmit"
+                @keydown="form.onKeydown($event)"
+              >
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Time</th>
+                      <th scope="col">Monday</th>
+                      <th scope="col">Tuesday</th>
+                      <th scope="col">Wednesday</th>
+                      <th scope="col">Thursday</th>
+                      <th scope="col">Friday</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <th scope="row">
+                        <b-input
+                          v-model="form.date"
+                          style="width: 11rem"
+                          type="text"
+                        ></b-input>
+                      </th>
+                      <th scope="row">
+                        <b-input
+                          v-model="form.time"
+                          style="width: 11rem"
+                          type="text"
+                        ></b-input>
+                      </th>
+
+                      <th scope="row">
+                        <b-form-input
+                          v-model="form.monday"
+                          type="text"
+                        ></b-form-input>
+                      </th>
+                      <th scope="row">
+                        <b-form-input
+                          v-model="form.tuesday"
+                          type="text"
+                        ></b-form-input>
+                      </th>
+                      <th scope="row">
+                        <b-form-input
+                          v-model="form.wednesday"
+                          type="text"
+                        ></b-form-input>
+                      </th>
+                      <th scope="row">
+                        <b-form-input
+                          v-model="form.thursday"
+                          type="text"
+                        ></b-form-input>
+                      </th>
+                      <th scope="row">
+                        <b-form-input
+                          v-model="form.friday"
+                          type="text"
+                        ></b-form-input>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="d-flex justify-content-center">
+                  <b-button
+                    type="submit"
+                    variant="primary"
+                    class="mr-4"
+                    size="lg"
+                  >
+                    <b-spinner
+                      v-if="form.busy"
+                      variant="light"
+                      small
+                      class="mr-1 mb-1"
+                    />Register</b-button
+                  >
+                </div>
+              </b-form>
+            </div>
           </b-tab>
 
-          <b-tab @click.prevent="registrationMenu" lazy>
+          <b-tab @click="registrationMenu" lazy>
             <template #title>
-              <strong>Class Payment</strong>
+              <strong>Exam Timetable</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
             </template>
 
@@ -53,61 +205,22 @@
                 v-show="registerMenu"
                 :class="registrationMenuClass"
               >
-                <li
-                  @click.prevent="
-                    dynamicStudentClass('JSS 1')
-                    activeTab = 'ExamEditClassTimetable'
-                  "
-                >
-                  <span class="d-flex">JSS1</span>
-                </li>
-                <li
-                  @click.prevent="
-                    dynamicStudentClass('JSS 2')
-                    activeTab = 'ExamEditClassTimetable'
-                  "
-                >
-                  <span class="d-flex">JSS2</span>
-                </li>
-                <li
-                  @click.prevent="
-                    dynamicStudentClass('JSS 3')
-                    activeTab = 'ExamEditClassTimetable'
-                  "
-                >
-                  <span class="d-flex">JSS3</span>
-                </li>
-                <li
-                  @click.prevent="
-                    dynamicStudentClass('SSS 1')
-                    activeTab = 'ExamEditClassTimetable'
-                  "
-                >
-                  <span class="d-flex">SSS1</span>
-                </li>
-                <li
-                  @click.prevent="
-                    dynamicStudentClass('SSS 2')
-                    activeTab = 'ExamEditClassTimetable'
-                  "
-                >
-                  <span class="d-flex">SSS2</span>
-                </li>
-                <li
-                  @click.prevent="
-                    dynamicStudentClass('SSS 3')
-                    activeTab = 'ExamEditClassTimetable'
-                  "
-                >
-                  <span class="d-flex"> SSS3</span>
-                </li>
-                <li></li>
+                <span v-for="klase in klases" :key="klase.id">
+                  <li
+                    @click.prevent="
+                      dynamicStudentClass(klase.id, klase.name)
+                      activeTab = 'TimetableEditClassExamTimetable'
+                    "
+                  >
+                    <span class="d-flex">{{ klase.name }}</span>
+                  </li>
+                </span>
               </ul>
             </div>
 
             <component
               :is="activeTab"
-              :editCurrentClass="(dynamicClass)"
+              :editCurrentClass="[dynamicClass, klaseName]"
             />
           </b-tab>
         </b-tabs>
@@ -117,23 +230,71 @@
 </template>
 
 <script>
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
+
+import {
+  CREATE_EXAM_TIMETABLE_MUTATION,
+  DELETE_EXAM_TIMETABLE_MUTATION,
+} from '~/graphql/examTimetables/mutations'
 export default {
+  middleware: 'auth',
   data() {
     return {
+      examTimetables: [],
+      infoModal: 'modelInfo',
+      slug: '',
       timetableDropdownClass: false,
-      form: {
+      id: 0,
+      klaseName: '',
+      show: true,
+      form: new this.$form({
         class: null,
-      },
-      classes: ['JSS 1', 'JSS 2', 'JSS 3', 'SSS 1', 'SSS 2', 'SSS 3'],
+        date: null,
+        time: null,
+        monday: null,
+        tuesday: null,
+        wednesday: null,
+        thursday: null,
+        friday: null,
+        busy: false,
+      }),
+      fields: [
+        { key: 'date', label: 'Date' },
+        { key: 'time', label: 'Time' },
+        { key: 'monday', label: 'Monday' },
+
+        { key: 'tuesday', label: 'Tuesday' },
+
+        { key: 'wednesday', label: 'Wednesday' },
+
+        { key: 'thursday', label: 'Thursday' },
+
+        { key: 'friday', label: 'Friday' },
+        { key: 'Action', label: 'Action' },
+      ],
       dynamicClass: '',
+
       activeTab: '',
       registerMenu: false,
       registrationMenuClass: '',
     }
   },
+  apollo: {
+    klases: {
+      query: KLASE_QUERIES,
+    },
+  },
   methods: {
-    dynamicStudentClass(item) {
+    // modal
+    timetableEdit(item) {
+      this.$bvModal.show(this.infoModal)
+      this.slug = item
+    },
+    // end modal
+    dynamicStudentClass(item, itemName) {
       this.dynamicClass = item
+      this.klaseName = itemName
     },
     registrationMenu(e) {
       if (this.registrationMenuClass === '') {
@@ -152,12 +313,136 @@ export default {
       }
     },
     timetableDropdown() {
+      this.$apollo.addSmartQuery('examTimetables', {
+        query: EXAM_TIMETABLE_QUERIES,
+        variables() {
+          return {
+            klase_id: parseInt(this.form.class),
+          }
+        },
+        result({ data, loading }) {
+          if (!loading) {
+            this.examTimetables = data.examTimetables
+          }
+        },
+      })
+
       if (this.form.class === null) {
         return false
       } else {
         this.timetableDropdownClass = true
       }
     },
+
+    // -------- create mutation -------------- //
+    onSubmit() {
+      if (
+        this.form.date === null &&
+        this.form.time === null &&
+        this.form.monday === null &&
+        this.form.tuesday === null &&
+        this.form.wednesday === null &&
+        this.form.thursday === null &&
+        this.form.friday === null
+      ) {
+      } else {
+        const klaseId = this.form.class
+        this.form.busy = true
+        this.$apollo
+          .mutate({
+            mutation: CREATE_EXAM_TIMETABLE_MUTATION,
+            variables: {
+              date: this.form.date,
+              time: this.form.time,
+              monday: this.form.monday,
+              tuesday: this.form.tuesday,
+              wednesday: this.form.wednesday,
+              thursday: this.form.thursday,
+              friday: this.form.friday,
+              klase_id: parseInt(this.form.class),
+            },
+            update: (store, { data: { createExamTimetable } }) => {
+              // Read the data from our cache for this query.
+              const data = store.readQuery({
+                query: EXAM_TIMETABLE_QUERIES,
+                variables: { klase_id: parseInt(klaseId) },
+              })
+              // console.log(this.form.class);
+
+              data.examTimetables.push(createExamTimetable)
+              // console.log(dataCopy)
+
+              // Write our data back to the cache.
+              // Write back to the cache
+              store.writeQuery({
+                query: EXAM_TIMETABLE_QUERIES,
+                variables: {
+                  klase_id: parseInt(klaseId),
+                },
+                data,
+              })
+            },
+          })
+          .then(({ data }) => {
+            this.form.busy = false
+            this.form.date = ''
+            this.form.time = ''
+            this.form.monday = ''
+            this.form.tuesday = ''
+            this.form.wednesday = ''
+            this.form.thursday = ''
+            this.form.friday = ''
+
+            // this.$router.push('/admin/exam/timetable')
+          })
+          .catch((err) => {
+            // this.klase_id =
+          })
+      }
+    },
+    // -------- end mutation -------------- //
+
+    // -------- delete mutation -------------- //
+    deleteItem(item) {
+      const klaseId = this.form.class
+      const deleteId = item
+      this.form.busy = true
+      this.$apollo
+        .mutate({
+          mutation: DELETE_EXAM_TIMETABLE_MUTATION,
+          variables: {
+            id: parseInt(item),
+          },
+          update: (store, { data: { deleteExamTimetable } }) => {
+            const data = store.readQuery({
+              query: EXAM_TIMETABLE_QUERIES,
+              variables: { klase_id: parseInt(klaseId) },
+            })
+
+            const index = data.examTimetables.findIndex((m) => m.id == deleteId)
+            if (index !== -1) {
+              // Mutate cache result
+              data.examTimetables.splice(index, 1)
+
+              store.readQuery({
+                query: EXAM_TIMETABLE_QUERIES,
+                variables: {
+                  klase_id: parseInt(klaseId),
+                },
+                data,
+              })
+            }
+          },
+        })
+        .then(({ data }) => {
+          this.form.busy = false
+          // this.$router.push('/admin/teacher')
+        })
+        .catch((err) => {
+          // this.klase_id =
+        })
+    },
+    // -------- end mutation -------------- //
   },
 }
 </script>
@@ -193,14 +478,14 @@ export default {
         z-index: 999;
         position: absolute;
         border: none;
-        top: -3.5rem;
-        left: 14.2rem;
+        top: -9.5rem;
+        left: 15.5rem;
         background-color: #fff;
       }
 
-      li:not(:last-child) {
+      li {
         background-color: #fff;
-        padding: 1rem 4.8rem;
+        padding: 1.3rem 5.5rem;
         border-bottom: 1px solid gray;
         cursor: pointer;
 
