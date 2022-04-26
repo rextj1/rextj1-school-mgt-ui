@@ -5,7 +5,7 @@ export const UXER_FIELDS_FRAGMENT = gql`
     id
     first_name
     last_name
-    middle_name
+    # middle_name
     user_type
     phone
     gender

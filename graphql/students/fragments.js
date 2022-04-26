@@ -38,9 +38,9 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     klase {
       ...KlaseFields
     }
-    timetable {
-      ...SingleTimetableFields
-    }
+    # timetable {
+    #   ...SingleTimetableFields
+    # }
     user {
       id
       lga

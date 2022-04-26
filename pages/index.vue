@@ -1,57 +1,26 @@
 <template>
   <div class="margin-down">
     <!-- description -->
+<!-- {{ form.roa }} -->
     <b-form
-      v-show="show"
       method="POST"
       @submit.prevent="onSubmit"
       @keydown="form.onKeydown($event)"
     >
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">Time</th>
-            <th scope="col">Monday</th>
-            <th scope="col">Tuesday</th>
-            <th scope="col">Wednesday</th>
-            <th scope="col">Thursday</th>
-            <th scope="col">Friday</th>
-          </tr>
-        </thead>
+      <b-row class="p-4">
+        <b-col md="4" class="p-4">
+          <input type="text" v-model="form.roa.a" id="" />
+          <input type="text" v-model="form.rob.b" id="" />
+          <input type="text" v-model="form.roc.c" id="" />
+          <input type="text" v-model="form.rod.d" id="" />
+          <input type="text" v-model="form.roe.e" id="" />
+        </b-col>
+      </b-row>
 
-        <tbody>
-          <tr>
-            <th scope="row">
-              <b-input
-                v-model="form.time"
-                style="width: 11rem"
-                type="text"
-                required
-              ></b-input>
-            </th>
-
-            <th scope="row">
-              <b-form-input v-model="form.monday" type="text"></b-form-input>
-            </th>
-            <th scope="row">
-              <b-form-input v-model="form.tuesday" type="text"></b-form-input>
-            </th>
-            <th scope="row">
-              <b-form-input v-model="form.wednesday" type="text"></b-form-input>
-            </th>
-            <th scope="row">
-              <b-form-input v-model="form.thursday" type="text"></b-form-input>
-            </th>
-            <th scope="row">
-              <b-form-input v-model="form.friday" type="text"></b-form-input>
-            </th>
-          </tr>
-        </tbody>
-      </table>
       <div class="d-flex justify-content-center">
         <b-button type="submit" variant="primary" class="mr-4" size="lg">
           <b-spinner
-            v-if="form.busy"
+          v-if="form.busy"
             variant="light"
             small
             class="mr-1 mb-1"
@@ -63,31 +32,26 @@
 </template>
 
 <script>
+import { CREATE_ROW_MUTATION } from '~/graphql/notices/mutations'
 export default {
   data() {
     return {
-      selected: null,
-      show: true,
       form: new this.$form({
-        class: null,
-        time: null,
-        monday: null,
-        tuesday: null,
-        wednesday: null,
-        thursday: null,
-        friday: null,
-        busy: false,
+        roa: { a: '', id: 1 },
+        rob: { b: '', id: 2 },
+        roc: { c: '', id: 3 },
+        rod: { d: '', id: 4 },
+        roe: { e: '', id: 5 },
       }),
     }
   },
   methods: {
     onSubmit() {
-      alert(this.form.class)
       this.form.busy = true
       this.$apollo
         .mutate({
-          mutation: CREATE_TIMETABLE_MUTATION,
-          variables: this.form.data(),
+          mutation: CREATE_ROW_MUTATION,
+          variables: {description: this.form.data()}
         })
         .then(({ data }) => {
           this.form.busy = false

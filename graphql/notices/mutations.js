@@ -39,3 +39,10 @@ export const UPDATE_NOTICE_MUTATION = gql`
     }
   }
 `
+export const CREATE_ROW_MUTATION = gql`
+  mutation UpdatexMutation($description: [ObjectT]) {
+    createRow(description: $description) {
+      id
+    }
+  }
+`
