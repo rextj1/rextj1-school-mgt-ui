@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!accountant">
+    <template v-if="!accountant || !accountant.user">
       <div style="background-color: #f1f9ae; width: 100%; min-height: 100vh">
         <div class="grow">
           <b-spinner
@@ -22,13 +22,26 @@
       <b-jumbotron header="" class="accountant shadow">
         <h1>About {{ accountant.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
-          <b-img
-            src="~/assets/images/teacher.jpeg"
-            thumbnail
-            fluid
-            alt="Responsive image"
-            width="230"
-          ></b-img>
+          <span
+            v-if="accountant.gender == 'Female' && accountant.photo == null"
+          >
+            <b-img
+              src="~/assets/images/teacher.jpeg"
+              thumbnail
+              fluid
+              alt="Responsive image"
+              width="230"
+            ></b-img>
+          </span>
+          <span v-else>
+            <b-img
+              :src="`http://sms.test/storage/accountant/${accountant.photo}`"
+              thumbnail
+              fluid
+              alt="image"
+              width="230"
+            ></b-img>
+          </span>
         </div>
         <b-row no-gutters class="sm-query">
           <b-col md="6" class="first-detail p-4">
@@ -37,10 +50,11 @@
             <p>Qualifications</p>
             <p>Code</p>
             <p>Gender</p>
+            <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
+            <p>City</p>
             <p>L.G.A</p>
-            <p>Social Media Links</p>
 
             <!-- <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
@@ -61,16 +75,18 @@
             <p>
               {{ accountant.user.blood_group.name }}
             </p>
-            <!-- <p>
+            <p>
               {{ accountant.user.country.name }}
             </p>
             <p>
               {{ accountant.user.state.name }}
-            </p> -->
-            <p>
-              {{ accountant.user.lga.name }}
             </p>
-            <p>{{ accountant.facebook }}</p>
+            <p>
+              {{ accountant.user.city.name }}
+            </p>
+            <p>
+              {{ accountant.user.lga }}
+            </p>
             <!-- <h3 v-for="klase in accountant.klases" :key="klase">
               <p>
                 <b-badge
@@ -102,6 +118,11 @@
 <script>
 import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 export default {
+  data() {
+    return {
+      accountant: [],
+    }
+  },
   apollo: {
     accountant: {
       query: ACCOUNTANT_QUERY,

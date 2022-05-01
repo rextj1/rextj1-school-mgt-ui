@@ -69,10 +69,9 @@
                     @change="handleFileUpload()"
                   />
                 </div>
-
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
+                <b-form-invalid-feedback :state="!form.errors.has('photo')">
                   {{ form.errors.get('photo') }}
-                </b-form-invalid-feedback> -->
+                </b-form-invalid-feedback>
               </b-form-group>
             </div>
 
@@ -98,33 +97,34 @@
             <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="First Name:">
                 <b-form-input
-                  id="input-1"
+                  id="first_name"
                   v-model="form.first_name"
                   type="text"
                   placeholder="Enter first name"
-                  required
+                  name="first_name"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('first_name')"
+                >
+                  {{ form.errors.get('first_name') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="Last Name">
+              <b-form-group id="last_name" label="Last Name">
                 <b-form-input
-                  id="input-1"
+                  id="first_name"
                   v-model="form.last_name"
                   type="text"
                   placeholder="Enter last name"
                   name="last_name"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('last_name')">
+                  {{ form.errors.get('last_name') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
@@ -138,9 +138,6 @@
                   name="last_name"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
 
@@ -152,62 +149,60 @@
                   type="email"
                   placeholder="Enter email"
                   name="email"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('email')">
+                  {{ form.errors.get('email') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="Phone no:">
                 <b-form-input
-                  id="input-1"
+                  id="qualification"
                   v-model="form.phone"
                   type="number"
                   placeholder="Enter phone no."
-                  required
+                  name="phone"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('phone')">
+                  {{ form.errors.get('phone') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Qualification">
+              <b-form-group label="Qualification">
                 <b-form-input
-                  id="input-1"
+                  id="qualification"
                   v-model="form.qualification"
                   type="text"
                   placeholder="Enter qualification"
-                  name="phone"
-                  required
-                  trim
+                  name="qualification"
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('qualification')"
+                >
+                  {{ form.errors.get('qualification') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Religion">
+              <b-form-group label="Religion">
                 <b-form-input
-                  id="input-1"
+                  id="religion"
                   v-model="form.religion"
                   type="text"
                   placeholder="Enter religion"
                   name="religion"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('religion')">
+                  {{ form.errors.get('religion') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
@@ -232,7 +227,7 @@
               </b-form-group>
             </b-col>
 
-            <!-- <b-col md="3" class="p-4">
+            <b-col md="3" class="p-4">
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
@@ -242,10 +237,13 @@
                   close-button
                   locale="en"
                   size="lg"
-                  required
+                  name="birthday"
                 ></b-form-datepicker>
+                <b-form-invalid-feedback :state="!form.errors.has('birthday')">
+                  {{ form.errors.get('birthday') }}
+                </b-form-invalid-feedback>
               </b-form-group>
-            </b-col> -->
+            </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group label="Blood Group">
@@ -257,7 +255,6 @@
                   :options="bloodGroups"
                   class="mb-3"
                   size="lg"
-                  required
                 >
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
@@ -268,22 +265,6 @@
 
                   <!-- These options will appear after the ones from 'options' prop -->
                 </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Facebook link (optional)">
-                <b-form-input
-                  id="input-1"
-                  v-model="form.facebook"
-                  type="text"
-                  placeholder="Enter facebook..."
-                  name="facebook"
-                  trim
-                ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
 
@@ -315,7 +296,7 @@
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
-                    <b-form-select-option> </b-form-select-option>
+                    <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
               </div>
@@ -338,7 +319,7 @@
               <div v-if="!state">
                 <b-form-group label="City">
                   <b-form-select class="mb-3">
-                    <b-form-select-option> </b-form-select-option>
+                    <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
               </div>
@@ -360,17 +341,15 @@
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
-                  id="input-1"
+                  id="lga"
                   v-model="form.lga"
                   type="text"
                   placeholder="Enter L.G.A"
                   name="lga"
-                  required
-                  trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('lga')">
+                  {{ form.errors.get('lga') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
@@ -414,11 +393,13 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
+import Swal from 'sweetalert2'
 
 export default {
   middleware: 'auth',
   data() {
     return {
+      k: null,
       form: new this.$form({
         first_name: '',
         last_name: '',
@@ -432,10 +413,9 @@ export default {
         photo: null,
         religion: null,
         bloodGroup: null,
-        facebook: null,
         qualification: null,
         gender: null,
-        // birthday: null,
+        birthday: null,
         busy: false,
       }),
       preview_url: null,
@@ -470,57 +450,110 @@ export default {
     handleFileUpload() {
       const input = this.$refs.Avatar
       const file = input.files[0]
-      if (file) {
-        const reader = new FileReader()
+      if (!file) return
+      const reader = new FileReader()
 
-        reader.onload = (e) => {
-          this.preview_url = e.target.result
-        }
-        reader.readAsDataURL(file)
-        this.form.image = file
-
-        // this.$emit('input', file[0])
+      reader.onload = (e) => {
+        this.preview_url = e.target.result
       }
+      reader.readAsDataURL(file)
+      this.form.photo = file
+
+      this.isValidFile(file)
     },
 
-    onSubmit() {
+    isValidFile(file) {
+      const imageFormats = ['image/png', 'image/jpeg', 'image/jpg']
+
+      const inValidType = !imageFormats.includes(file.type)
+
+      if (inValidType) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Please upload a valid image',
+          timer: 1500,
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+        return false
+      }
+
+      const size = file.size / 1000
+      if (imageFormats.includes(file.type) && size > 2240) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Image size must not exceed 5MB',
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+
+        return false
+      }
+
+      return true
+    },
+
+    async onSubmit() {
       this.form.busy = true
       // submit exam
-      this.$apollo
-        .mutate(
-          {
-            mutation: CREATE_TEACHER_MUTATION,
-            variables: {
-              first_name: this.form.first_name,
-              last_name: this.form.last_name,
-              middle_name: this.form.middle_name,
-              email: this.form.email,
-              country: parseInt(this.form.country),
-              phone: this.form.phone,
-              state: parseInt(this.form.state),
-              city: parseInt(this.form.city),
-              lga: this.form.lga,
-              photo: this.form.photo,
-              religion: this.form.religion,
-              blood_group: parseInt(this.form.bloodGroup),
-              facebook: this.form.facebook,
-              qualification: this.form.qualification,
-              gender: this.form.gender,
+      try {
+        await this.$apollo
+          .mutate(
+            {
+              mutation: CREATE_TEACHER_MUTATION,
+              variables: {
+                first_name: this.form.first_name,
+                last_name: this.form.last_name,
+                middle_name: this.form.middle_name,
+                email: this.form.email,
+                country_id: parseInt(this.form.country),
+                phone: this.form.phone,
+                state_id: parseInt(this.form.state),
+                city_id: parseInt(this.form.city),
+                lga: this.form.lga,
+                photo: this.form.photo,
+                birthday: this.form.birthday,
+                religion: this.form.religion,
+                blood_group_id: parseInt(this.form.bloodGroup),
+                qualification: this.form.qualification,
+                gender: this.form.gender,
+              },
             },
-          },
-          {
-            context: {
-              hasUpload: true,
-            },
-          }
-        )
-        .then(({ data }) => {
-          console.log(data)
-          // this.$router.push('/admin/teacher')
-        })
-        .catch(() => {
-          this.form.busy = false
-        })
+            {
+              context: {
+                hasUpload: true,
+              },
+            }
+          )
+          .then(({ data }) => {
+            Swal.fire({
+              title: 'Done...',
+              icon: 'success',
+              timer: 1500,
+              text: 'Your work has been saved',
+              position: 'center',
+              color: '#fff',
+              background: '#4bb543',
+              toast: false,
+              backdrop: false,
+              showConfirmButton: false,
+            })
+            this.form.busy = false
+            this.$router.push('/admin/teacher')
+          })
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
+        }
+      }
     },
 
     onReset(event) {

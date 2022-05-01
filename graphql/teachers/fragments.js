@@ -13,7 +13,7 @@ export const TEACHER_FIELDS_FRAGMENT = gql`
     gender
     code
     photo
-    facebook
+    birthday
     qualification
   }
 `
@@ -28,7 +28,7 @@ export const TEACHERS_FIELDS_FRAGMENT = gql`
     gender
     code
     photo
-    facebook
+    birthday
     qualification
     klases {
       ...KlaseFields

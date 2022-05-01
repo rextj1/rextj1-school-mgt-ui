@@ -12,7 +12,7 @@ export const ACCOUNTANT_FIELDS_FRAGMENT = gql`
     gender
     code
     photo
-    facebook
+    birthday
     qualification
     user {
       ...UxerFields

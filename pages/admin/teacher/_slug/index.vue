@@ -37,11 +37,12 @@
             <p>Qualifications</p>
             <p>Code</p>
             <p>Gender</p>
+            <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
+            <p>city</p>
             <p>L.G.A</p>
-            <p>Social Media Links</p>
-
+          
             <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
                 >Subjects Assigned</b-badge
@@ -60,14 +61,21 @@
             <p>{{ teacher.gender }}</p>
             <p>
               {{ teacher.user.blood_group.name }}
+              
             </p>
-            <!-- <p>
-              {{ teacher.user.state.name }}
-            </p> -->
             <p>
-              {{ teacher.user.lga.name }}
+              {{ teacher.user.country.name }}
             </p>
-            <p>{{ teacher.facebook }}</p>
+            <p>
+              {{ teacher.user.state.name }}
+            </p>
+            <p>
+              {{ teacher.user.city.name }}
+            </p>
+            <p>
+              {{ teacher.user.lga }}
+            </p>
+
             <h3 v-for="klase in teacher.klases" :key="klase">
               <p>
                 <b-badge

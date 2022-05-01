@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups">
+    <template v-if="!countries && !bloodGroups && !libarian">
       <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
         <div class="grow">
           <b-spinner
@@ -24,9 +24,8 @@
               <div class="photo-preview" v-if="preview_url == null">
                 <img
                   :src="`http://sms.test/storage/libarian/${form.photo}`"
-                  width="108"
-                  height="108"
                   alt=""
+                  width="100"
                   style="border-radius: 50%"
                 />
               </div>
@@ -59,9 +58,10 @@
                     @change="handleFileUpload()"
                   />
                 </div>
-                <b-form-invalid-feedback :state="!form.errors.has('photo')">
+
+                <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
                   {{ form.errors.get('photo') }}
-                </b-form-invalid-feedback>
+                </b-form-invalid-feedback> -->
               </b-form-group>
             </div>
 
@@ -135,7 +135,7 @@
               <b-form-group id="input-group-1" label="Email:">
                 <b-form-input
                   id="input-1"
-                  v-model="form.lib.email"
+                  v-model="form.userLib.email"
                   type="email"
                   placeholder="Enter email"
                   name="email"
@@ -383,7 +383,7 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { UPDATE_LIBARIAN_MUTATION } from '~/graphql/libarians/mutations'
-import { LIBARIAN_QUERIES, LIBARIAN_QUERY } from '~/graphql/libarians/queries'
+import { LIBARIAN_QUERY } from '~/graphql/libarians/queries'
 import Swal from 'sweetalert2'
 
 export default {
@@ -401,6 +401,7 @@ export default {
           country: null,
           state: null,
           city: null,
+          email: null,
           lga: null,
           bloodGroup: null,
           religion: null,
@@ -410,7 +411,7 @@ export default {
           last_name: '',
           middle_name: null,
           gender: null,
-          email: null,
+
           image: null,
           birthday: null,
           phone: null,
@@ -443,9 +444,6 @@ export default {
         return { id: this.form.userLib.state }
       },
     },
-    libarians: {
-      query: LIBARIAN_QUERIES,
-    },
 
     libarian: {
       query: LIBARIAN_QUERY,
@@ -456,8 +454,6 @@ export default {
       },
       result({ data, loading }) {
         if (!loading) {
-        
-
           this.form.lib.first_name = data.libarian.first_name
           this.form.lib.last_name = data.libarian.last_name
           this.form.lib.middle_name = data.libarian.middle_name
@@ -467,13 +463,12 @@ export default {
           this.form.lib.phone = data.libarian.phone
           this.form.lib.gender = data.libarian.gender
 
-          this.form.lib.email = data.libarian.email
-
           this.form.id = parseInt(data.libarian.id)
           this.form.userLib.country = data.libarian.user.country.id
           this.form.userLib.state = data.libarian.user.state.id
           this.form.userLib.city = data.libarian.user.city.id
           this.form.userLib.religion = data.libarian.user.religion
+          this.form.userLib.email = data.libarian.user.email
           this.form.userLib.bloodGroup = data.libarian.user.blood_group.id
 
           this.form.userLib.lga = data.libarian.user.lga
@@ -535,6 +530,7 @@ export default {
 
     // update
     async onSubmit() {
+      const slugName = this.slug[0]
       this.form.busy = true
       // submit exam
       try {
@@ -549,15 +545,18 @@ export default {
             update: (store, { data: { updateLibarian } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
-                query: LIBARIAN_QUERIES,
+                query: LIBARIAN_QUERY,
+                variables: { slug: slugName },
               })
-
-              data.libarians = updateLibarian
+              console.log(data)
+              data.libarian = updateLibarian
 
               // Mutate cache result
 
               store.writeQuery({
-                query: LIBARIAN_QUERIES,
+                query: LIBARIAN_QUERY,
+                variables: { slug: slugName },
+
                 data,
               })
             },

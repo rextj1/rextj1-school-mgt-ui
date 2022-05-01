@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups">
+    <template v-if="!countries && !bloodGroups && !accountant">
       <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
         <div class="grow">
           <b-spinner
@@ -23,8 +23,9 @@
             <div class="profile-avatar mb-2">
               <div class="photo-preview" v-if="preview_url == null">
                 <img
-                  src="@/assets/svg/graduate-student.svg"
+                  :src="`http://sms.test/storage/accountant/${form.photo}`"
                   alt=""
+                  width="100"
                   style="border-radius: 50%"
                 />
               </div>
@@ -86,33 +87,34 @@
             <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="First Name:">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.first_name"
+                  id="first_name"
+                  v-model="form.lib.first_name"
                   type="text"
                   placeholder="Enter first name"
-                  required
+                  name="first_name"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('first_name')"
+                >
+                  {{ form.errors.get('first_name') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="Last Name">
+              <b-form-group id="last_name" label="Last Name">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.last_name"
+                  id="first_name"
+                  v-model="form.lib.last_name"
                   type="text"
                   placeholder="Enter last name"
                   name="last_name"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('last_name')">
+                  {{ form.errors.get('last_name') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
@@ -120,15 +122,12 @@
               <b-form-group id="input-group-1" label="middle Name (optional)">
                 <b-form-input
                   id="input-1"
-                  v-model="form.middle_name"
+                  v-model="form.lib.middle_name"
                   type="text"
                   placeholder="Enter middle name"
                   name="last_name"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
               </b-form-group>
             </b-col>
 
@@ -136,73 +135,71 @@
               <b-form-group id="input-group-1" label="Email:">
                 <b-form-input
                   id="input-1"
-                  v-model="form.email"
+                  v-model="form.userLib.email"
                   type="email"
                   placeholder="Enter email"
                   name="email"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('email')">
+                  {{ form.errors.get('email') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="Phone no:">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.phone"
+                  id="qualification"
+                  v-model="form.lib.phone"
                   type="number"
                   placeholder="Enter phone no."
-                  required
+                  name="phone"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('phone')">
+                  {{ form.errors.get('phone') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Qualification">
+              <b-form-group label="Qualification">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.qualification"
+                  id="qualification"
+                  v-model="form.lib.qualification"
                   type="text"
                   placeholder="Enter qualification"
-                  name="phone"
-                  required
-                  trim
+                  name="qualification"
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('qualification')"
+                >
+                  {{ form.errors.get('qualification') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Religion">
+              <b-form-group label="Religion">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.religion"
+                  id="religion"
+                  v-model="form.userLib.religion"
                   type="text"
                   placeholder="Enter religion"
                   name="religion"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('religion')">
+                  {{ form.errors.get('religion') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Gender">
                 <b-form-select
-                  v-model="form.gender"
+                  v-model="form.lib.gender"
                   :options="genders"
                   class="mb-3"
                   size="lg"
@@ -220,32 +217,34 @@
               </b-form-group>
             </b-col>
 
-            <!-- <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
-                  v-model="form.birthday"
+                  v-model="form.lib.birthday"
                   today-button
                   reset-button
                   close-button
                   locale="en"
                   size="lg"
-                  required
+                  name="birthday"
                 ></b-form-datepicker>
+                <b-form-invalid-feedback :state="!form.errors.has('birthday')">
+                  {{ form.errors.get('birthday') }}
+                </b-form-invalid-feedback>
               </b-form-group>
-            </b-col> -->
+            </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
                   value-field="id"
                   text-field="name"
-                  v-model="form.bloodGroup"
+                  v-model="form.userLib.bloodGroup"
                   :options="bloodGroups"
                   class="mb-3"
                   size="lg"
-                  required
                 >
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
@@ -260,28 +259,12 @@
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Facebook link (optional)">
-                <b-form-input
-                  id="input-1"
-                  v-model="form.facebook"
-                  type="text"
-                  placeholder="Enter facebook..."
-                  name="facebook"
-                  trim
-                ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
                   value-field="id"
                   text-field="name"
-                  v-model="form.country"
+                  v-model="form.userLib.country"
                   :options="countries"
                   class="mb-3"
                   size="lg"
@@ -303,14 +286,14 @@
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
-                    <b-form-select-option> </b-form-select-option>
+                    <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
               </div>
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.state" class="mb-3">
+                  <b-form-select v-model="form.userLib.state" class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
                       :value="k.id"
@@ -326,14 +309,14 @@
               <div v-if="!state">
                 <b-form-group label="City">
                   <b-form-select class="mb-3">
-                    <b-form-select-option> </b-form-select-option>
+                    <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
               </div>
 
               <div v-else>
                 <b-form-group label="City">
-                  <b-form-select v-model="form.city" class="mb-3">
+                  <b-form-select v-model="form.userLib.city" class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
                       :value="k.id"
@@ -348,17 +331,15 @@
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
-                  id="input-1"
-                  v-model="form.lga"
+                  id="lga"
+                  v-model="form.userLib.lga"
                   type="text"
                   placeholder="Enter L.G.A"
                   name="lga"
-                  required
-                  trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('lga')">
+                  {{ form.errors.get('lga') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
@@ -403,33 +384,40 @@ import {
 } from '~/graphql/users/queries'
 import { UPDATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
 import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
+import Swal from 'sweetalert2'
 
 export default {
   middleware: 'auth',
   props: {
-    slug: String,
+    slug: Array,
   },
   data() {
     return {
+      k: null,
+      accountants: [],
       form: new this.$form({
-        // id: 1,
-        // slug: 'buwa',
-        first_name: '',
-        last_name: '',
-        middle_name: null,
-        email: null,
-        country: null,
-        phone: null,
-        state: null,
-        city: null,
-        lga: null,
-        // photo: null,
-        religion: null,
-        bloodGroup: null,
-        facebook: null,
-        qualification: null,
-        gender: null,
-        // birthday: null,
+        photo: null,
+        userLib: {
+          country: null,
+          state: null,
+          city: null,
+          lga: null,
+          email: null,
+          bloodGroup: null,
+          religion: null,
+        },
+        lib: {
+          first_name: '',
+          last_name: '',
+          middle_name: null,
+          gender: null,
+
+          image: null,
+          birthday: null,
+          phone: null,
+          qualification: null,
+        },
+
         busy: false,
       }),
       preview_url: null,
@@ -447,13 +435,13 @@ export default {
     country: {
       query: COUNTRY_QUERY,
       variables() {
-        return { id: this.form.country }
+        return { id: this.form.userLib.country }
       },
     },
     state: {
       query: STATE_QUERY,
       variables() {
-        return { id: this.form.state }
+        return { id: this.form.userLib.state }
       },
     },
 
@@ -461,31 +449,31 @@ export default {
       query: ACCOUNTANT_QUERY,
       variables() {
         return {
-          slug: this.slug,
+          slug: this.slug[0],
         }
       },
       result({ data, loading }) {
         if (!loading) {
-          const accountant = data.accountant
-          this.form.keys().forEach((key) => {
-            if (accountant[key]) {
-              //  if (key === 'image') {
-              //   return true
-              // }
-              this.form[key] = accountant[key]
+          this.form.lib.first_name = data.accountant.first_name
+          this.form.lib.last_name = data.accountant.last_name
+          this.form.lib.middle_name = data.accountant.middle_name
+          this.form.lib.birthday = data.accountant.birthday
+          this.form.lib.qualification = data.accountant.qualification
+          this.form.photo = data.accountant.photo
+          this.form.lib.phone = data.accountant.phone
+          this.form.lib.gender = data.accountant.gender
 
-              // this.form.category_id = parseInt(data.book.category.id)
-            }
-          })
+        
+
           this.form.id = parseInt(data.accountant.id)
-          this.form.country = parseInt(data.accountant.user.country.id)
-          this.form.state = parseInt(data.accountant.user.state.id)
-          this.form.city = parseInt(data.accountant.user.city.id)
-          this.form.religion = parseInt(data.accountant.user.religion)
-          this.form.bloodGroup = parseInt(data.accountant.user.blood_group.id)
-          this.form.lga = data.accountant.user.lga
-          this.form.religion = data.accountant.user.religion
-          this.form.email = data.accountant.user.email
+          this.form.userLib.country = data.accountant.user.country.id
+          this.form.userLib.state = data.accountant.user.state.id
+          this.form.userLib.city = data.accountant.user.city.id
+          this.form.userLib.religion = data.accountant.user.religion
+           this.form.userLib.email = data.accountant.user.email
+          this.form.userLib.bloodGroup = data.accountant.user.blood_group.id
+
+          this.form.userLib.lga = data.accountant.user.lga
         }
       },
     },
@@ -497,19 +485,54 @@ export default {
     handleFileUpload() {
       const input = this.$refs.Avatar
       const file = input.files[0]
-      if (file) {
-        const reader = new FileReader()
+      if (!file) return
+      const reader = new FileReader()
 
-        reader.onload = (e) => {
-          this.preview_url = e.target.result
-        }
-        reader.readAsDataURL(file)
-        this.form.image = file
+      reader.onload = (e) => {
+        this.preview_url = e.target.result
       }
+      reader.readAsDataURL(file)
+      this.form.lib.image = file
+
+      this.isValidFile(file)
+    },
+
+    isValidFile(file) {
+      const imageFormats = ['image/png', 'image/jpeg', 'image/jpg']
+
+      const inValidType = !imageFormats.includes(file.type)
+
+      if (inValidType) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Please upload a valid image',
+          timer: 1500,
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+        return false
+      }
+
+      const size = file.size / 1000
+      if (imageFormats.includes(file.type) && size > 2240) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Image size must not exceed 5MB',
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+
+        return false
+      }
+
+      return true
     },
 
     // update
     async onSubmit() {
+      const slugName = this.slug[0]
       this.form.busy = true
       // submit exam
       try {
@@ -518,26 +541,43 @@ export default {
             mutation: UPDATE_ACCOUNTANT_MUTATION,
             variables: {
               id: parseInt(this.form.id),
-              // choices: this.form.data()
-              first_name: this.form.first_name,
-              last_name: this.form.last_name,
-              middle_name: this.form.middle_name,
-              email: this.form.email,
-              country: parseInt(this.form.country),
-              phone: this.form.phone,
-              state: parseInt(this.form.state),
-              city: parseInt(this.form.city),
-              lga: this.form.lga,
-              // photo: this.form.photo,
-              religion: this.form.religion,
-              blood_group: parseInt(this.form.bloodGroup),
-              facebook: this.form.facebook,
-              qualification: this.form.qualification,
-              gender: this.form.gender,
+              userLib: this.form.userLib,
+              lib: this.form.lib,
+            },
+            update: (store, { data: { updateAccountant } }) => {
+              // Read the data from our cache for this query.
+              const data = store.readQuery({
+                query: ACCOUNTANT_QUERY,
+                variables: { slug: slugName },
+              })
+
+              data.accountant = updateAccountant
+
+              // Mutate cache result
+
+              store.writeQuery({
+                query: ACCOUNTANT_QUERY,
+                variables: { slug: slugName },
+
+                data,
+              })
             },
           })
           .then(({ data }) => {
-            this.$router.push('/')
+            Swal.fire({
+              title: 'Done...',
+              icon: 'success',
+              timer: 1500,
+              text: 'Your work has been successfully edited ',
+              position: 'center',
+              color: '#fff',
+              background: '#4bb543',
+              toast: false,
+              backdrop: false,
+              showConfirmButton: false,
+            })
+            this.form.busy = false
+            this.$bvModal.hide(this.slug[1])
           })
 
         this.form.busy = false
