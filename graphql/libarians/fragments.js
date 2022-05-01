@@ -11,8 +11,9 @@ export const LIBARIAN_FIELDS_FRAGMENT = gql`
     phone
     gender
     code
+    email
+    birthday
     photo
-    facebook
     qualification
     user {
       ...UxerFields

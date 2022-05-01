@@ -66,7 +66,6 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
   }
 
   ${KLASE_FIELDS_FRAGMENT}
-  ${SINGLE_TIMETABLE_FIELDS_FRAGMENT}
 `
 export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
   fragment SingleStudentField on Student {

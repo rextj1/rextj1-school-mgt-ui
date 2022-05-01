@@ -39,7 +39,7 @@ export const UPDATE_TIMETABLE_MUTATION = gql`
     $thursday: String
     $friday: String
     $time: String
-    $klase_id: Int
+    $klase_id: Int!
   ) {
     updateTimetable(
       id: $id

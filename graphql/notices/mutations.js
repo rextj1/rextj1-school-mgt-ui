@@ -5,7 +5,7 @@ export const CREATE_NOTICE_MUTATION = gql`
     $description: String!
     $title: String
     $photo: Upload
-    $date: Date!
+    $date: String!
   ) {
     createNotice(
       description: $description
@@ -25,7 +25,7 @@ export const UPDATE_NOTICE_MUTATION = gql`
     $title: String
     $photo: Upload
     $published: Boolean
-    $date: Date
+    $date: String
   ) {
     updateNotice(
       id: $id

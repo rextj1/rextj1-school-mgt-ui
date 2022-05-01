@@ -171,7 +171,7 @@ export default {
             console.log(data)
             // console.log(this.form.class);
             const index = data.timetable.id
-            console.log(index)
+            
             if (index !== -1) {
               // Mutate cache result
               data.timetable = updateTimetable

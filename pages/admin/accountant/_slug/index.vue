@@ -61,12 +61,12 @@
             <p>
               {{ accountant.user.blood_group.name }}
             </p>
-            <p>
+            <!-- <p>
               {{ accountant.user.country.name }}
             </p>
             <p>
               {{ accountant.user.state.name }}
-            </p>
+            </p> -->
             <p>
               {{ accountant.user.lga.name }}
             </p>

@@ -19,25 +19,26 @@
               <template #cell(#)="data">
                 {{ data.index + 1 }}
               </template>
+              
               <template #cell(name)="data">
                 <div v-if="klaseEditingId == data.item.id">
                   <b-row no-gutters>
                     <b-col md="4">
-                      <b-form-input
+                      <input
+                        style="width: 10rem"
                         v-model="form.names"
-                        trim
                         type="text"
                         required
                         size="lg"
-                        @blur="updatingKlase(data.vale)"
+                        @blur="updatingKlase(data.value)"
                         @keydown.enter="editFiled(data.item.id)"
-                      ></b-form-input>
+                      />
                     </b-col>
                   </b-row>
                 </div>
 
                 <div v-else @click="setToEditing(data.item.id)">
-                  {{ data.item.name }}
+                  {{ data.value }}
                 </div>
               </template>
 
@@ -73,7 +74,12 @@
                   <b-icon icon="pencil" class="mr-1"> </b-icon>
                   Edit
                 </b-button>
-                <b-button variant="danger" size="sm" class="px-3">
+                <b-button
+                  variant="danger"
+                  size="sm"
+                  class="px-3"
+                  @click="deleteKlase(data.item.id)"
+                >
                   <b-icon icon="trash" class="mr-1"></b-icon>
                   Delete
                 </b-button>
@@ -146,15 +152,16 @@
 import { KLASES_SUBJECT_QUERIES, KLASE_QUERY } from '~/graphql/klases/queries'
 import {
   CREATE_KLASE_MUTATION,
+  DELETE_KLASE_MUTATION,
   UPDATE_KLASE_MUTATION,
 } from '@/graphql/klases/mutations'
 export default {
+  middleware: 'auth',
   data() {
     return {
       id: 0,
       klaseEditingId: '',
-      editSlug: '',
-
+      klase: {},
       form: new this.$form({
         id: 0,
         name: '',
@@ -164,10 +171,6 @@ export default {
       fields: [
         {
           key: '#',
-          sortable: false,
-        },
-        {
-          key: 'slug',
           sortable: false,
         },
         {
@@ -198,50 +201,45 @@ export default {
       this.klaseEditingId = item
       this.id = item
 
-      setTimeout(() => {
-        if (this.id > 0) {
-          this.$apollo.addSmartQuery('klase', {
-            query: KLASE_QUERY,
-            variables() {
-              return {
-                id: parseInt(this.id),
-              }
-            },
-            result({ data, loading }) {
-              if (!loading) {
-                this.form.id = parseInt(data.klase.id)
-                this.form.names = data.klase.name
-              }
-            },
-          })
-        } else {
-          return false
-        }
-      }, 1)
+      if (this.id > 0) {
+        this.$apollo.addSmartQuery('klase', {
+          query: KLASE_QUERY,
+          variables() {
+            return {
+              id: parseInt(this.id),
+            }
+          },
+          result({ data, loading }) {
+            if (!loading) {
+              this.form.id = parseInt(data.klase.id)
+              this.form.names = data.klase.name
+            }
+          },
+        })
+      }
     },
     updatingKlase() {
       this.klaseEditingId = ''
     },
+    // ------- edit -------- //
     editFiled() {
-      alert(this.form.names)
-      // submit exam
       this.$apollo
         .mutate({
           mutation: UPDATE_KLASE_MUTATION,
           variables: {
             id: parseInt(this.id),
-
             name: this.form.names,
           },
         })
         .then(({ data }) => {
-          this.$bvModal.hide(this.infoModal)
+          this.klaseEditingId = ''
         })
         .catch((error) => {
           error
         })
     },
 
+    // -------create -------- //
     async onSubmitCreate() {
       this.form.busy = true
       // submit exam
@@ -250,11 +248,29 @@ export default {
           .mutate({
             mutation: CREATE_KLASE_MUTATION,
             variables: {
-              name: this.form.nameS,
+              name: this.form.name,
+            },
+            update: (store, { data: { createKlase } }) => {
+              // Read the data from our cache for this query.
+              const data = store.readQuery({
+                query: KLASES_SUBJECT_QUERIES,
+              })
+              // console.log(this.form.class);
+
+              data.klases.push(createKlase)
+              // console.log(dataCopy)
+
+              // Write our data back to the cache.
+              // Write back to the cache
+              store.writeQuery({
+                query: KLASES_SUBJECT_QUERIES,
+                data,
+              })
             },
           })
           .then(({ data }) => {
-            this.$bvModal.hide(this.infoModal)
+            this.form.busy = false
+            this.form.name = ''
           })
 
         this.form.busy = false
@@ -269,6 +285,40 @@ export default {
           })
         }
       }
+    },
+
+    // ----- delete ------- //
+    deleteKlase(item) {
+      const deleteId = item
+      this.$apollo
+        .mutate({
+          mutation: DELETE_KLASE_MUTATION,
+          variables: {
+            id: parseInt(deleteId),
+          },
+          update: (store, { data: { deleteKlase } }) => {
+            const data = store.readQuery({
+              query: KLASES_SUBJECT_QUERIES,
+            })
+
+            const index = data.klases.findIndex((m) => m.id == deleteId)
+            if (index !== -1) {
+              // Mutate cache result
+              data.klases.splice(index, 1)
+
+              store.readQuery({
+                query: KLASES_SUBJECT_QUERIES,
+                data,
+              })
+            }
+          },
+        })
+        .then(({ data }) => {
+          // this.$router.push('/admin/teacher')
+        })
+        .catch((erre) => {
+          error
+        })
     },
   },
 }

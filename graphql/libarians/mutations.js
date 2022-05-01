@@ -1,21 +1,22 @@
 import gql from 'graphql-tag'
+import { LIBARIAN_FIELDS_FRAGMENT } from './fragments'
 
 export const CREATE_LIBARIAN_MUTATION = gql`
   mutation CreateLibarianMutation(
     $first_name: String!
     $last_name: String!
     $gender: String!
-    $email: String!
-    $country: Int!
-    $state: Int!
-    $city: Int!
+    $email: String
+    $country_id: Int!
+    $state_id: Int!
+    $city_id: Int!
     $lga: String
+    $birthday: String
     $middle_name: String
     $photo: Upload
     $phone: String
-    $facebook: String
     $qualification: String
-    $blood_group: Int
+    $blood_group_id: Int
     $religion: String
   ) {
     createLibarian(
@@ -25,13 +26,13 @@ export const CREATE_LIBARIAN_MUTATION = gql`
       email: $email
       phone: $phone
       gender: $gender
+      birthday: $birthday
       photo: $photo
-      facebook: $facebook
       qualification: $qualification
-      blood_group: $blood_group
-      country: $country
-      state: $state
-      city: $city
+      blood_group_id: $blood_group_id
+      country_id: $country_id
+      state_id: $state_id
+      city_id: $city_id
       lga: $lga
       religion: $religion
     ) {
@@ -43,43 +44,12 @@ export const CREATE_LIBARIAN_MUTATION = gql`
 export const UPDATE_LIBARIAN_MUTATION = gql`
   mutation UpdateLibarianMutation(
     $id: ID!
-    $first_name: String!
-    $last_name: String!
-    $gender: String!
-    $email: String!
-    $country: Int!
-    $state: Int!
-    $city: Int!
-    $lga: String
-    $middle_name: String
-    # $photo: Upload
-    $phone: String
-    $facebook: String
-    $qualification: String
-    $blood_group: Int
-    $religion: String
+    $userLib: LibarianUserInput
+    $lib: LibarianInput
   ) {
-    updateLibarian(
-      id: $id
-      choices: {
-        first_name: $first_name
-        last_name: $last_name
-        middle_name: $middle_name
-        email: $email
-        phone: $phone
-        gender: $gender
-        # photo: $photo
-        facebook: $facebook
-        qualification: $qualification
-        blood_group: $blood_group
-        country: $country
-        state: $state
-        city: $city
-        lga: $lga
-        religion: $religion
-      }
-    ) {
-      id
+    updateLibarian(id: $id, userLib: $userLib, lib: $lib) {
+      ...LibarianFields
     }
   }
+  ${LIBARIAN_FIELDS_FRAGMENT}
 `

@@ -26,7 +26,7 @@
           <div class="card-body">
             <div class="card-student shadow p-3" style="background-color: #fff">
               <h2 class="d-flex justify-content-center mb-4 mt-4">
-                All Libarians
+                All Drivers
               </h2>
               <hr />
               <b-container fluid>
@@ -37,7 +37,6 @@
                   stacked="md"
                   show-empty
                   small
-                 
                   striped
                   hover
                   style="font-size: 1.3rem"
@@ -47,13 +46,11 @@
                     {{ data.index + 1 }}
                   </template>
 
-                  <template #cell(photo)="row">
+                  <template #cell(photo)="data">
                     <b-avatar
                       variant="primary"
-                      src="@/assets/svg/student-svg.svg"
-                    >
-                    </b-avatar
-                    >{{ row.i }}
+                      :src="`http://sms.test/storage/driver/${data.item.photo}`"
+                    />
                   </template>
 
                   <!-- <template #cell(paid)="row">
@@ -89,7 +86,12 @@
                       Edit
                     </b-button>
 
-                    <b-button variant="danger" size="md" class="px-3">
+                    <b-button
+                      variant="danger"
+                      size="md"
+                      class="px-3"
+                      @click="callDeleteModal(data.item.id)"
+                    >
                       <b-icon icon="trash" class="mr-1"></b-icon>
                       Delete
                     </b-button>
@@ -109,7 +111,7 @@
                 <!-- Info modal -->
                 <b-modal
                   class="modal"
-                  :id="infoModal.id"
+                  :id="infoModal"
                   :hide-backdrop="true"
                   body-bg-variant="info"
                   title="Edit Driver Data"
@@ -117,7 +119,45 @@
                   size="lg"
                   :hide-footer="true"
                 >
-                  <AdminEditDriverModal :slug="slug" />
+                  <AdminEditDriverModal :slug="[slug, infoModal]" />
+                </b-modal>
+
+                <b-modal
+                  id="deleteInfo"
+                  :hide-backdrop="true"
+                  body-bg-variant="info"
+                  size="sm"
+                  centered
+                  :hide-footer="true"
+                >
+                  <template #default="{ hide }">
+                    <div class="p-4 text-center">
+                      <h4 class="mb-3">This will permanently be removed.</h4>
+                      <p>Are you sure you want to continue?</p>
+
+                      <div class="mt-4">
+                        <b-button
+                          variant="link"
+                          class="px-4 mr-2"
+                          pill
+                          @click="hide"
+                        >
+                          Cancel
+                        </b-button>
+                        <b-button
+                          type="submit"
+                          variant="danger"
+                          class="px-4"
+                          pill
+                          :disabled="isDeleting"
+                          @click="deleteDriver"
+                        >
+                          <b-spinner v-if="isDeleting" class="mr-1" small />
+                          Delete
+                        </b-button>
+                      </div>
+                    </div>
+                  </template>
                 </b-modal>
               </b-container>
             </div>
@@ -129,11 +169,14 @@
 </template>
 
 <script>
+import { DELETE_DRIVER_MUTATION } from '~/graphql/drivers/mutations'
 import { DRIVER_QUERIES } from '~/graphql/drivers/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
+      isDeleting: false,
+      isDeletingId: null,
       fields: [
         {
           key: 'index',
@@ -150,6 +193,10 @@ export default {
         {
           key: 'photo',
           label: 'Photo',
+        },
+        {
+          key: 'birthday',
+          label: 'Birthday',
         },
         {
           key: 'route',
@@ -187,9 +234,7 @@ export default {
         { key: 'actions', label: 'Actions' },
       ],
       slug: '',
-      infoModal: {
-        id: 'info-modal',
-      },
+      infoModal: 'info-modal',
     }
   },
   apollo: {
@@ -197,18 +242,51 @@ export default {
       query: DRIVER_QUERIES,
     },
   },
-  
+
   methods: {
     info(item, button) {
       this.slug = item
-      this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+      this.$root.$emit('bv::show::modal', this.infoModal, button)
     },
     resetInfoModal() {
       this.infoModal.title = ''
       this.infoModal.content = ''
     },
-    deleteItem() {
-      console.log('yes')
+    callDeleteModal(item) {
+      this.isDeletingId = item
+      this.$bvModal.show('deleteInfo')
+    },
+    deleteDriver() {
+      const deleteId = this.isDeletingId
+      this.isDeleting = true
+      this.$apollo
+        .mutate({
+          mutation: DELETE_DRIVER_MUTATION,
+          variables: { id: parseInt(this.isDeletingId) },
+          update: (store, { data: { deleteDriver } }) => {
+            const data = store.readQuery({
+              query: DRIVER_QUERIES,
+            })
+
+            const index = data.drivers.findIndex((m) => m.id == deleteId)
+            if (index !== -1) {
+              // Mutate cache result
+              data.drivers.splice(index, 1)
+
+              store.readQuery({
+                query: DRIVER_QUERIES,
+                data,
+              })
+            }
+          },
+        })
+        .then(({ data }) => {
+          this.isDeleting = false
+        })
+        .finally(() => {
+          this.isDeleting = false
+          this.$bvModal.hide('deleteInfo')
+        })
     },
   },
 }

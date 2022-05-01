@@ -12,7 +12,7 @@
     ></template>
     <template v-else>
       <b-button
-        to="/admin/teacher"
+        to="/admin/accountant"
         variant="primary"
         size="lg"
         class="add-student mb-4"

@@ -35,7 +35,7 @@
                               type="text"
                               required
                               size="lg"
-                              @blur="updatingKlase(data.vale)"
+                              @blur="updatingSubject(data.value)"
                               @keydown.enter="editFiled(data.item.id)"
                             ></b-form-input>
                           </b-col>
@@ -47,31 +47,6 @@
                       </div>
                     </template>
 
-                    <!-- <template #cell(subjects)="data">
-                      <b-badge
-                        :id="`subjects-${data.index}`"
-                        variant="info"
-                        class="px-2"
-                      >
-                        {{ data.value.length }} subjects
-                      </b-badge>
-                      <b-popover
-                        v-if="data.value.length > 0"
-                        :target="`subjects-${data.index}`"
-                        triggers="hover click"
-                      >
-                        <b-nav vertical>
-                          <b-nav-item
-                            v-for="subject in data.value"
-                            :key="subject.id"
-                          >
-                            <h5 style="font-size: 1.3rem">
-                              {{ subject.subject }}
-                            </h5>
-                          </b-nav-item>
-                        </b-nav>
-                      </b-popover>
-                    </template> -->
                     <template #cell(actions)="data">
                       <b-button
                         variant="primary"
@@ -82,7 +57,12 @@
                         <b-icon icon="pencil" class="mr-1"> </b-icon>
                         Edit
                       </b-button>
-                      <b-button variant="danger" size="sm" class="px-3">
+                      <b-button
+                        variant="danger"
+                        size="sm"
+                        class="px-3"
+                        @click="deleteSubject(data.item.id)"
+                      >
                         <b-icon icon="trash" class="mr-1"></b-icon>
                         Delete
                       </b-button>
@@ -178,8 +158,8 @@
                   <b-col md="8">
                     <b-form-select
                       size="lg"
-                      v-model="form.class"
-                      :options="classes"
+                      v-model="form.klase"
+                      :options="klases"
                       multiple
                       style="height: 12rem"
                     ></b-form-select>
@@ -233,16 +213,20 @@ import { SUBJECT_QUERIES, SUBJECT_QUERY } from '@/graphql/subjects/queries'
 import {
   UPDATE_SUBJECT_MUTATION,
   CREATE_SUBJECT_MUTATION,
+  DELETE_SUBJECT_MUTATION,
 } from '@/graphql/subjects/mutations'
 export default {
+   middleware: 'auth',
   data() {
     return {
       id: 0,
       subjectEditingId: '',
       editSlug: '',
+      subject: {},
 
       form: new this.$form({
         id: 0,
+        klase: [],
         subject: '',
         subjects: '',
         busy: false,
@@ -250,10 +234,6 @@ export default {
       fields: [
         {
           key: '#',
-          sortable: false,
-        },
-        {
-          key: 'slug',
           sortable: false,
         },
         {
@@ -267,8 +247,7 @@ export default {
       ],
       show: true,
       teachers: ['Mark Cool', 'Jame Ruth', 'Evans Rain', 'Crah Loveth'],
-      classes: ['JSS 1', 'JSS 2', 'JSS 3', 'SSS 1', 'SSS 2', 'SSS 3'],
-      subjects: ['Mathematics', 'English Language', 'Biology', 'basic Science'],
+      klases: ['JSS 1', 'JSS 2', 'JSS 3', 'SSS 1', 'SSS 2', 'SSS 3'],
     }
   },
   apollo: {
@@ -283,52 +262,48 @@ export default {
       this.subjectEditingId = item
       this.id = item
 
-      setTimeout(() => {
-        if (this.id > 0) {
-          this.$apollo.addSmartQuery('subject', {
-            query: SUBJECT_QUERY,
-            variables() {
-              return {
-                id: parseInt(this.id),
-              }
-            },
-            result({ data, loading }) {
-              if (!loading) {
-                this.form.id = parseInt(data.subject.id)
-                this.form.subjects = data.subject.subject
-              }
-            },
-          })
-        } else {
-          return false
-        }
-      }, 1)
+      if (this.id > 0) {
+        this.$apollo.addSmartQuery('subject', {
+          query: SUBJECT_QUERY,
+          variables() {
+            return {
+              id: parseInt(this.id),
+            }
+          },
+          result({ data, loading }) {
+            if (!loading) {
+              this.form.id = parseInt(data.subject.id)
+              this.form.subjects = data.subject.subject
+            }
+          },
+        })
+      }
     },
-    updatingKlase() {
+    updatingSubject() {
       this.subjectEditingId = ''
     },
-    editFiled() {
-      alert(this.form.subjects)
-      // submit exam
+    // ------- edit ----//
+    editFiled(item) {
       this.$apollo
         .mutate({
           mutation: UPDATE_SUBJECT_MUTATION,
           variables: {
-            id: parseInt(this.id),
-
+            id: parseInt(item),
             subject: this.form.subjects,
           },
         })
         .then(({ data }) => {
-          this.$bvModal.hide(this.infoModal)
-        })
+            this.subjectEditingId = ''
+          })
         .catch((error) => {
           error
         })
     },
 
+    // ------create --------//
     async onSubmitCreate() {
       this.form.busy = true
+      // const subjectVariable = this.form.subject
       // submit exam
       try {
         await this.$apollo
@@ -337,9 +312,26 @@ export default {
             variables: {
               subject: this.form.subject,
             },
+            update: (store, { data: { createSubject } }) => {
+              // Read the data from our cache for this query.
+              const data = store.readQuery({
+                query: SUBJECT_QUERIES,
+              })
+              // console.log(this.form.class);
+
+              data.subjects.push(createSubject)
+              // console.log(dataCopy)
+
+              // Write our data back to the cache.
+              // Write back to the cache
+              store.writeQuery({
+                query: SUBJECT_QUERIES,
+                data,
+              })
+            },
           })
           .then(({ data }) => {
-            this.$bvModal.hide(this.infoModal)
+            this.form.subject = ''
           })
 
         this.form.busy = false
@@ -354,6 +346,40 @@ export default {
           })
         }
       }
+    },
+
+    //------delete ----------/
+    deleteSubject(item) {
+      const deleteId = item
+      this.$apollo
+        .mutate({
+          mutation: DELETE_SUBJECT_MUTATION,
+          variables: {
+            id: parseInt(deleteId),
+          },
+          update: (store, { data: { deleteSubject } }) => {
+            const data = store.readQuery({
+              query: SUBJECT_QUERIES,
+            })
+
+            const index = data.subjects.findIndex((m) => m.id == deleteId)
+            if (index !== -1) {
+              // Mutate cache result
+              data.subjects.splice(index, 1)
+
+              store.readQuery({
+                query: SUBJECT_QUERIES,
+                data,
+              })
+            }
+          },
+        })
+        .then(({ data }) => {
+          // this.$router.push('/admin/teacher')
+        })
+        .catch((err) => {
+          // this.klase_id =
+        })
     },
   },
 }

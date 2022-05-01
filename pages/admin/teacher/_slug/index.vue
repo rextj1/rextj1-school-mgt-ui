@@ -61,9 +61,9 @@
             <p>
               {{ teacher.user.blood_group.name }}
             </p>
-            <p>
+            <!-- <p>
               {{ teacher.user.state.name }}
-            </p>
+            </p> -->
             <p>
               {{ teacher.user.lga.name }}
             </p>

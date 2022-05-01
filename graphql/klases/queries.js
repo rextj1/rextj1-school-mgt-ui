@@ -15,7 +15,6 @@ export const KLASE_QUERIES = gql`
   query myclassQuery {
     klases {
       id
-      slug
       name
     }
   }
@@ -25,7 +24,6 @@ export const KLASE_QUERY = gql`
   query klaseQuery($id: ID!) {
     klase(id: $id) {
       id
-      slug
       name
     }
   }

@@ -8,7 +8,7 @@ export const CREATE_EXAM_TIMETABLE_MUTATION = gql`
     $thursday: String
     $friday: String
     $time: String
-    $date: Date
+    $date: String
     $klase_id: Int!
   ) {
     createExamTimetable(
@@ -42,8 +42,8 @@ export const UPDATE_EXAM_TIMETABLE_MUTATION = gql`
     $thursday: String
     $friday: String
     $time: String
-    $date: Date
-    $klase_id: Int
+    $date: String
+    $klase_id: Int!
   ) {
     updateExamTimetable(
       id: $id

@@ -69,7 +69,7 @@ export const UPDATE_STUDENT_MUTATION = gql`
     $lga: String
     $religion: String
   ) {
-    updateTeacher(
+    updateStudent(
       id: $id
       first_name: $first_name
       last_name: $last_name

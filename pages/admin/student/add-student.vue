@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-     <template v-if="!countries && !bloodGroups">
+    <template v-if="!countries && !bloodGroups">
       <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
         <div class="grow">
           <b-spinner
@@ -482,6 +482,7 @@ import {
 } from '~/graphql/users/queries'
 import { CREATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import Swal from 'sweetalert2'
 
 export default {
   props: {
@@ -558,19 +559,53 @@ export default {
     handleFileUpload() {
       const input = this.$refs.Avatar
       const file = input.files[0]
-      if (file) {
+      this.isValidFile(file)
+
+      if (!file) {
+        return false
+      } else {
         const reader = new FileReader()
 
         reader.onload = (e) => {
           this.preview_url = e.target.result
         }
         reader.readAsDataURL(file)
-        this.form.image = file
-
-        // this.$emit('input', file[0])
+        this.form.photo = file
       }
     },
 
+    isValidFile(file) {
+      const imageFormats = ['image/png', 'image/jpeg', 'image/jpg']
+
+      const inValidType = !imageFormats.includes(file.type)
+
+      if (inValidType) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Please upload a valid image',
+          timer: 1500,
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+        return false
+      }
+
+      const size = file.size / 1000
+      if (imageFormats.includes(file.type) && size > 2240) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Image size must not exceed 5MB',
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+
+        return false
+      }
+
+      return true
+    },
     async onSubmit() {
       this.form.busy = true
       // submit exam

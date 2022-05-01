@@ -68,12 +68,12 @@
             <p>
               {{ student.user.blood_group.name }}
             </p>
-            <p>
+            <!-- <p>
               {{ student.user.country.name }}
             </p>
             <p>
               {{ student.user.state.name }}
-            </p>
+            </p> -->
              <p>
               {{ student.user.lga }}
             </p>

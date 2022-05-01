@@ -20,9 +20,7 @@
         <b-icon icon="arrow-left" /> Back
       </b-button>
       <div class="p-4 student__wrapper">
-        <h2 class="d-flex justify-content-center mb-4 mt-4">
-          Register Driver
-        </h2>
+        <h2 class="d-flex justify-content-center mb-4 mt-4">Register Driver</h2>
         <hr />
         <b-form
           v-if="show"
@@ -70,9 +68,9 @@
                   />
                 </div>
 
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
+                <b-form-invalid-feedback :state="!form.errors.has('photo')">
                   {{ form.errors.get('photo') }}
-                </b-form-invalid-feedback> -->
+                </b-form-invalid-feedback>
               </b-form-group>
             </div>
 
@@ -98,127 +96,130 @@
             <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="First Name:">
                 <b-form-input
-                  id="input-1"
+                  id="first_name"
                   v-model="form.first_name"
                   type="text"
                   placeholder="Enter first name"
-                  required
+                  name="first_name"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('first_name')"
+                >
+                  {{ form.errors.get('first_name') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="Last Name">
                 <b-form-input
-                  id="input-1"
+                  id="last_name"
                   v-model="form.last_name"
                   type="text"
                   placeholder="Enter last name"
                   name="last_name"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('last_name')">
+                  {{ form.errors.get('last_name') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="Route">
                 <b-form-input
-                  id="input-1"
+                  id="route"
                   v-model="form.route"
                   type="text"
                   placeholder="Enter middle name"
                   name="route"
-                  trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('route')">
+                  {{ form.errors.get('route') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="Driver License">
                 <b-form-input
-                  id="input-1"
+                  id="driver_license"
                   v-model="form.driver_license"
                   type="text"
                   placeholder="Enter license no."
                   name="driver_license"
-                  required
-                  trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('driver_license')"
+                >
+                  {{ form.errors.get('driver_license') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="Vehicle no.">
                 <b-form-input
-                  id="input-1"
+                  id="vehicle_number"
                   v-model="form.vehicle_number"
                   type="text"
                   placeholder="Enter vehicle no."
                   name="vehicle_number"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('vehicle_number')"
+                >
+                  {{ form.errors.get('vehicle_number') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="Phone no">
                 <b-form-input
-                  id="input-1"
+                  id="phone"
                   v-model="form.phone"
                   type="number"
                   placeholder="Enter phone no."
-                  required
+                  name="phone"
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('phone')">
+                  {{ form.errors.get('phone') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Religion">
+              <b-form-group label="Religion">
                 <b-form-input
-                  id="input-1"
+                  id="religion"
                   v-model="form.religion"
                   type="text"
                   placeholder="Enter religion"
                   name="religion"
-                  required
                   trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('religion')">
+                  {{ form.errors.get('religion') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group label="Gender">
                 <b-form-select
+                  id="gender"
                   v-model="form.gender"
                   :options="genders"
                   class="mb-3"
-                  size="lg"
+                  value-field="name"
+                  text-field="title"
                   required
+                  size="lg"
                 >
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
@@ -231,8 +232,8 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
-
-            <!-- <b-col md="3" class="p-4">
+            
+            <b-col md="3" class="p-4">
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
@@ -242,10 +243,11 @@
                   close-button
                   locale="en"
                   size="lg"
+                  name="birthday"
                   required
                 ></b-form-datepicker>
               </b-form-group>
-            </b-col> -->
+            </b-col>
 
             <b-col md="3" class="p-4">
               <b-form-group label="Blood Group">
@@ -255,9 +257,9 @@
                   text-field="name"
                   v-model="form.bloodGroup"
                   :options="bloodGroups"
+                  required
                   class="mb-3"
                   size="lg"
-                  required
                 >
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
@@ -299,14 +301,14 @@
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
-                    <b-form-select-option> </b-form-select-option>
+                    <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
               </div>
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.state" class="mb-3">
+                  <b-form-select v-model="form.state" required class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
                       :value="k.id"
@@ -322,14 +324,14 @@
               <div v-if="!state">
                 <b-form-group label="City">
                   <b-form-select class="mb-3">
-                    <b-form-select-option> </b-form-select-option>
+                    <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
               </div>
 
               <div v-else>
                 <b-form-group label="City">
-                  <b-form-select v-model="form.city" class="mb-3">
+                  <b-form-select v-model="form.city" required class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
                       :value="k.id"
@@ -344,17 +346,15 @@
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
-                  id="input-1"
+                  id="lga"
                   v-model="form.lga"
                   type="text"
                   placeholder="Enter L.G.A"
                   name="lga"
-                  required
-                  trim
                 ></b-form-input>
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('firstName')">
-              {{ form.errors.get('firstName') }}
-            </b-form-invalid-feedback> -->
+                <b-form-invalid-feedback :state="!form.errors.has('lga')">
+                  {{ form.errors.get('lga') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
@@ -398,6 +398,7 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { CREATE_DRIVER_MUTATION } from '~/graphql/drivers/mutations'
+import Swal from 'sweetalert2'
 
 export default {
   middleware: 'auth',
@@ -406,8 +407,7 @@ export default {
       form: new this.$form({
         first_name: '',
         last_name: '',
-        route: '',
-        email: null,
+        route: null,
         country: null,
         phone: null,
         state: null,
@@ -419,7 +419,7 @@ export default {
         vehicle_number: null,
         driver_license: null,
         gender: null,
-        // birthday: null,
+        birthday: null,
         busy: false,
       }),
       preview_url: null,
@@ -437,13 +437,13 @@ export default {
     country: {
       query: COUNTRY_QUERY,
       variables() {
-        return { id: this.form.country }
+        return { id: parseInt(this.form.country) }
       },
     },
     state: {
       query: STATE_QUERY,
       variables() {
-        return { id: this.form.state }
+        return { id: parseInt(this.form.state) }
       },
     },
   },
@@ -454,57 +454,113 @@ export default {
     handleFileUpload() {
       const input = this.$refs.Avatar
       const file = input.files[0]
-      if (file) {
-        const reader = new FileReader()
 
-        reader.onload = (e) => {
-          this.preview_url = e.target.result
-        }
-        reader.readAsDataURL(file)
-        this.form.image = file
+      if (!file) return
 
-        // this.$emit('input', file[0])
+      const reader = new FileReader()
+
+      reader.onload = (e) => {
+        this.preview_url = e.target.result
       }
+      reader.readAsDataURL(file)
+      this.form.photo = file
+
+      // this.$emit('input', file[0])
+      this.isValidFile(file)
     },
 
-    onSubmit() {
+    isValidFile(file) {
+      const imageFormats = ['image/png', 'image/jpeg', 'jpg']
+
+      const inValidType = !imageFormats.includes(file.type)
+
+      if (inValidType) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Please upload a valid image',
+          timer: 1500,
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+        return false
+      }
+
+      const size = file.size / 1000
+      if (imageFormats.includes(file.type) && size > 2240) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Image size must not exceed 5MB',
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+
+        return false
+      }
+
+      return true
+    },
+
+    async onSubmit() {
       this.form.busy = true
       // submit exam
-      this.$apollo
-        .mutate(
-          {
-            mutation: CREATE_DRIVER_MUTATION,
-            variables: {
-              first_name: this.form.first_name,
-              last_name: this.form.last_name,
-              route: this.form.route,
-              email: this.form.email,
-              country: parseInt(this.form.country),
-              phone: this.form.phone,
-              state: parseInt(this.form.state),
-              city: parseInt(this.form.city),
-              lga: this.form.lga,
-              photo: this.form.photo,
-              religion: this.form.religion,
-              blood_group: parseInt(this.form.bloodGroup),
-              vehicle_number: this.form.vehicle_number,
-              driver_license: this.form.driver_license,
-              gender: this.form.gender,
+      try {
+        await this.$apollo
+          .mutate(
+            {
+              mutation: CREATE_DRIVER_MUTATION,
+              variables: {
+                first_name: this.form.first_name,
+                last_name: this.form.last_name,
+                route: this.form.route,
+                phone: this.form.phone,
+                birthday: this.form.birthday,
+                lga: this.form.lga,
+                vehicle_number: this.form.vehicle_number,
+                driver_license: this.form.driver_license,
+                gender: this.form.gender,
+                religion: this.form.religion,
+                state_id: parseInt(this.form.state),
+                city_id: parseInt(this.form.city),
+                country_id: parseInt(this.form.country),
+                blood_group_id: parseInt(this.form.bloodGroup),
+                photo: this.form.photo,
+              },
             },
-          },
-          {
-            context: {
-              hasUpload: true,
-            },
-          }
-        )
-        .then(({ data }) => {
-          console.log(data)
-          // this.$router.push('/admin/driver')
-        })
-        .catch(() => {
-          this.form.busy = false
-        })
+            {
+              context: {
+                hasUpload: true,
+              },
+            }
+          )
+          .then(({ data }) => {
+            Swal.fire({
+              title: 'Done...',
+              icon: 'success',
+              timer: 1500,
+              text: 'Your work has been saved',
+              position: 'center',
+              color: '#fff',
+              background: '#4bb543',
+              toast: false,    
+              backdrop: false,
+              showConfirmButton: false,
+            })
+            this.form.busy = false
+            this.$router.push('/admin/driver')
+          })
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
+        }
+      }
     },
 
     onReset(event) {
@@ -524,12 +580,12 @@ export default {
 
 <style lang="scss" scoped>
 .student {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   padding: 2rem;
   .form-control,
   .mb-3 {
     background-color: var(--color-input);
-    height: 4rem;
+    height: 4.3rem;
     font-size: 1.4rem;
   }
   .grow {

@@ -6,11 +6,13 @@ export const DRIVER_FIELDS_FRAGMENT = gql`
     slug
     first_name
     last_name
+    birthday
     route
     driver_license
     vehicle_number
     religion
     phone
+    photo
     lga
     blood_group {
       id

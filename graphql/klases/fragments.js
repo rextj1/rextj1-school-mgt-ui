@@ -5,7 +5,7 @@ import { SINGLE_TIMETABLE_FIELDS_FRAGMENT } from '~/graphql/timetables/fragments
 export const SINGLE_KLASE_FIELDS_FRAGMENT = gql`
   fragment SingleKlaseFields on Klase {
     id
-    slug
+
     name
   }
 `
@@ -13,19 +13,18 @@ export const SINGLE_KLASE_FIELDS_FRAGMENT = gql`
 export const KLASE_FIELDS_FRAGMENT = gql`
   fragment KlaseFields on Klase {
     id
-    slug
+
     name
-    subjects {
-      ...SingleSubjectsFields
-    }
+    # subjects {
+    #   ...SingleSubjectsFields
+    # }
   }
-  ${SINGLE_SUBJECTS_FIELDS_FRAGMENT}
 `
 
 export const KLASE_TIMETABLE_FIELDS_FRAGMENT = gql`
   fragment KlaseTimetableFields on Klase {
     id
-    slug
+
     name
     timetables {
       ...SingleTimetableFields
