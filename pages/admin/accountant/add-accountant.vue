@@ -538,7 +538,6 @@ export default {
               background: '#4bb543',
               toast: false,
               backdrop: false,
-              showConfirmButton: false,
             })
             this.form.busy = false
             this.$router.push('/admin/accountant')

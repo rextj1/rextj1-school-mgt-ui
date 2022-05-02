@@ -76,7 +76,7 @@
               {{ teacher.user.lga }}
             </p>
 
-            <h3 v-for="klase in teacher.klases" :key="klase">
+            <h3 v-for="klase in teacher.klases" :key="klase.id">
               <p>
                 <b-badge
                   style="line-height: 1.6"

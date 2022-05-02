@@ -30,14 +30,15 @@
                       <div v-if="subjectEditingId == data.item.id">
                         <b-row no-gutters>
                           <b-col md="4">
-                            <b-form-input
+                            <input
+                              style="width: 10rem"
                               v-model="form.subjects"
                               type="text"
                               required
                               size="lg"
                               @blur="updatingSubject(data.value)"
                               @keydown.enter="editFiled(data.item.id)"
-                            ></b-form-input>
+                            />
                           </b-col>
                         </b-row>
                       </div>
@@ -45,6 +46,36 @@
                       <div v-else @click="setToEditing(data.item.id)">
                         {{ data.item.subject }}
                       </div>
+                    </template>
+
+                    <!-- teachers -->
+                    <template #cell(teachers)="data">
+                      <b-badge
+                        :id="`teachers-${data.index}`"
+                        variant="info"
+                        class="px-2"
+                      >
+                        {{ data.value.length }} Teacheers
+                      </b-badge>
+                      <b-popover
+                        v-if="data.value.length > 0"
+                        :target="`teachers-${data.index}`"
+                        triggers="hover click"
+                      >
+                        <b-nav vertical>
+                          <b-nav-item
+                            v-for="teacher in data.value"
+                            :key="teacher.id"
+                          >
+                            <h5 style="font-size: 1.3rem">
+                              <nuxt-link :to="`/admin/teacher/${teacher.slug}`">
+                                {{ teacher.first_name }}
+                                {{ teacher.last_name }}</nuxt-link
+                              >
+                            </h5>
+                          </b-nav-item>
+                        </b-nav>
+                      </b-popover>
                     </template>
 
                     <template #cell(actions)="data">
@@ -71,7 +102,6 @@
                 </div>
               </div>
 
-              <!-- Info modal -->
               <!-- Add Classes -->
               <div class="margin-down">
                 <!-- description -->
@@ -98,14 +128,11 @@
                         <b-form-input
                           v-model="form.subject"
                           placeholder="Enter class"
-                          trim
                           type="text"
                           required
                           size="lg"
                         ></b-form-input>
-                        <!-- <b-form-invalid-feedback :state="!form.errors.has('lastName')">
-                      {{ form.errors.get('lastName') }}
-                      </b-form-invalid-feedback> -->
+
                         <b-button
                           type="submit"
                           variant="primary"
@@ -129,76 +156,94 @@
               <template #title>
                 <strong>Assign Teachers</strong>
               </template>
-              <h2 class="p-4">Create Subjects And Assign Teacher</h2>
+              <h2 class="p-4">Assign Subjects to Teacher</h2>
               <hr />
 
               <div class="margin-down">
                 <!-- description -->
-                <b-row class="mb-4">
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding"
-                      >Subjects:</label
-                    >
-                  </b-col>
-                  <b-col md="8">
-                    <b-form-select
-                      size="lg"
-                      v-model="form.subject"
-                      :options="subjects"
-                    ></b-form-select>
-                  </b-col>
-                </b-row>
 
-                <b-row class="mb-4">
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding"
-                      >Class:</label
-                    >
-                  </b-col>
-                  <b-col md="8">
-                    <b-form-select
-                      size="lg"
-                      v-model="form.klase"
-                      :options="klases"
-                      multiple
-                      style="height: 12rem"
-                    ></b-form-select>
-                  </b-col>
-                </b-row>
+                <b-form
+                  v-if="show"
+                  method="POST"
+                  @submit.prevent="assignSubjectToTeacher"
+                  @keydown="form.onKeydown($event)"
+                  @reset.prevent="onReset"
+                >
+                  <b-row class="mb-4">
+                    <b-col md="2">
+                      <label for="input-small" class="label-padding"
+                        >Subjects:</label
+                      >
+                    </b-col>
+                 
+                    <b-col md="8">
+                      <b-form-group>
+                        <b-form-select
+                          id="subjects"
+                          style="height: 20rem"
+                          value-field="id"
+                          text-field="subject"
+                          v-model="subjectx"
+                          :options="subjects"
+                          multiple
+                          required
+                          class="mb-3"
+                          size="lg"
+                        >
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
 
-                <b-row class="py-4">
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding"
-                      >Assign Teacher:</label
-                    >
-                  </b-col>
-                  <b-col md="8">
-                    <b-form-select
-                      size="md"
-                      v-model="form.teacher"
-                      :options="teachers"
-                    ></b-form-select>
-                  </b-col>
-                </b-row>
+                  <b-row class="py-4">
+                    <b-col md="2">
+                      <label for="input-small" class="label-padding"
+                        >Assign Teacher:</label
+                      >
+                    </b-col>
+                    <b-col md="8">
+                      <b-form-group label="">
+                        <b-form-select
+                          id="teachers"
+                          value-field="id"
+                          text-field="first_name"
+                          v-model="form.teacher"
+                          :options="teachers"
+                          class="mb-3"
+                          size="lg"
+                        >
+                          <!-- This slot appears above the options from 'options' prop -->
+                          <template #first>
+                            <b-form-select-option :value="null" disabled
+                              >-- select teacher--</b-form-select-option
+                            >
+                          </template>
 
-                <b-row>
-                  <b-col
-                    md="10"
-                    class="d-flex justify-content-center p-4 mt-2 mb-4"
-                    ><b-button
-                      type="submit"
-                      variant="primary"
-                      class="mr-4"
-                      size="lg"
-                    >
-                      <b-spinner
-                        v-if="form.busy"
-                        variant="light"
-                        class="mr-1 mb-1"
-                      />Submit</b-button
-                    >
-                  </b-col>
-                </b-row>
+                          <!-- These options will appear after the ones from 'options' prop -->
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+
+                  <b-row>
+                    <b-col
+                      md="10"
+                      class="d-flex justify-content-center p-4 mt-2 mb-4"
+                      ><b-button
+                        type="submit"
+                        variant="primary"
+                        class="mr-4"
+                        size="lg"
+                      >
+                        <b-spinner
+                          v-if="busy"
+                          variant="light"
+                          class="mr-1 mb-1"
+                        />Submit</b-button
+                      >
+                    </b-col>
+                  </b-row>
+                </b-form>
               </div>
             </b-tab>
           </b-tabs>
@@ -214,21 +259,26 @@ import {
   UPDATE_SUBJECT_MUTATION,
   CREATE_SUBJECT_MUTATION,
   DELETE_SUBJECT_MUTATION,
+  ASSIGN_SUBJECT_TO_TEACHER_MUTATION,
 } from '@/graphql/subjects/mutations'
+import { TEACHER_QUERIES } from '~/graphql/teachers/queries'
+import Swal from 'sweetalert2'
 export default {
-   middleware: 'auth',
+  middleware: 'auth',
   data() {
     return {
       id: 0,
       subjectEditingId: '',
       editSlug: '',
       subject: {},
-
+      subjectx: [],
+      busy: false,
       form: new this.$form({
         id: 0,
-        klase: [],
-        subject: '',
-        subjects: '',
+        klase: null,
+        subject: null,
+        subjects: [],
+        teacher: null,
         busy: false,
       }),
       fields: [
@@ -240,19 +290,22 @@ export default {
           key: 'subject',
           sortable: false,
         },
+        { key: 'teachers' },
         {
           key: 'actions',
           sortable: false,
         },
       ],
       show: true,
-      teachers: ['Mark Cool', 'Jame Ruth', 'Evans Rain', 'Crah Loveth'],
-      klases: ['JSS 1', 'JSS 2', 'JSS 3', 'SSS 1', 'SSS 2', 'SSS 3'],
     }
   },
   apollo: {
     subjects: {
       query: SUBJECT_QUERIES,
+    },
+
+    teachers: {
+      query: TEACHER_QUERIES,
     },
   },
 
@@ -293,8 +346,8 @@ export default {
           },
         })
         .then(({ data }) => {
-            this.subjectEditingId = ''
-          })
+          this.subjectEditingId = ''
+        })
         .catch((error) => {
           error
         })
@@ -375,11 +428,85 @@ export default {
           },
         })
         .then(({ data }) => {
-          // this.$router.push('/admin/teacher')
+           Swal.fire({
+            timer: 1000,
+            text: 'subject removed successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+          })
         })
         .catch((err) => {
           // this.klase_id =
         })
+    },
+
+    async assignSubjectToTeacher() {
+      if (this.subjectx === [] || this.form.teacher === null) {
+        return false
+      } else {
+        this.subjectx.forEach((element) => {
+          const intValue = parseInt(element)
+          this.form.subjects.push(intValue)
+        })
+      }
+
+      this.busy = true
+      // submit exam
+      try {
+        await this.$apollo
+          .mutate({
+            mutation: ASSIGN_SUBJECT_TO_TEACHER_MUTATION,
+            variables: {
+              subjects: this.form.subjects,
+              teacher: parseInt(this.form.teacher),
+            },
+            // update: (store, { data: { assignKlaseToTeacherassignKlaseToTeacher } }) => {
+            //   // Read the data from our cache for this query.
+            //   const data = store.readQuery({
+            //     query: KLASE_QUERIES,
+            //   })
+
+            //   data.klases.push(assignKlaseToTeacher)
+
+            //   store.writeQuery({
+            //     query: KLASE_QUERIES,
+            //     data,
+            //   })
+            // },
+          })
+          .then(({ data }) => {
+            this.busy = false
+            this.form.subjects = []
+            this.form.teacher = ''
+            Swal.fire({
+              title: 'Done...',
+              icon: 'success',
+              timer: 1500,
+              text: 'Teacher(s) assigned successfully',
+              position: 'center',
+              color: '#fff',
+              background: '#4bb543',
+              toast: false,
+              backdrop: false,
+              showConfirmButton: false,
+            })
+          })
+
+        this.form.busy = false
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
+        }
+      }
     },
   },
 }

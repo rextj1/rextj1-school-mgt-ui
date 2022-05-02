@@ -6,6 +6,12 @@ export const SUBJECT_QUERIES = gql`
   query subjectsQuery {
     subjects {
       ...SingleSubjectsFields
+      teachers{
+        id
+        first_name
+        last_name
+        slug
+      }
     }
   }
   ${SINGLE_SUBJECTS_FIELDS_FRAGMENT}
