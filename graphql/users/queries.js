@@ -41,6 +41,14 @@ export const STATE_QUERY = gql`
     }
   }
 `
+export const LGA_QUERY = gql`
+  query LgaQuery {
+    lga {
+      id
+      name
+    }
+  }
+`
 
 export const BLOOD_GROUP_QUERIES = gql`
   query BloodGroupQuery {
@@ -50,6 +58,13 @@ export const BLOOD_GROUP_QUERIES = gql`
     }
   }
 `
+// export const BLOOD_GROUP_QUERY = gql`
+//   query BloodGroupQuery {
+//     bloodGroup {
+//       name
+//     }
+//   }
+// `
 
 export const USERS_ROLE_QUERY = gql`
   query UsersQuery {
@@ -67,41 +82,6 @@ export const USER_QUERY = gql`
       name
     }
   }
-`
-
-export const PERMISSIONS_QUERY = gql`
-  query PermissionsQuery {
-    permissions {
-      ...PermissionFields
-    }
-  }
-  ${PERMISSION_FIELDS_FRAGMENT}
-`
-export const ROLEX_QUERY = gql`
-  query rolex($page: Int) {
-    rolex(first: 10, page: $page) {
-      data {
-        ...RoleFields
-      }
-      paginatorInfo {
-        currentPage
-        lastPage
-      }
-    }
-  }
-  ${ROLE_FIELDS_FRAGMENT}
-`
-export const USER_ROLE_QUERY = gql`
-  query userRoles($id: ID!) {
-    user(id: $id) {
-      ...UserFields
-      roles {
-        id
-        name
-      }
-    }
-  }
-  ${USER_FIELDS_FRAGMENT}
 `
 
 // export const USER_ROLE_QUERY = gql`
@@ -137,18 +117,92 @@ export const USERS_QUERY = gql`
 //   }
 // `
 
-export const LGA_QUERY = gql`
-  query LgaQuery {
-    lga {
+// roles and permission
+export const ROLEX_QUERIEX = gql`
+  query UserRoleQuery($id: ID!) {
+    user(id: $id) {
+      roles {
+        name
+      }
+    }
+  }
+`
+export const ROLES_QUERIES = gql`
+  query rolesAssignQuery {
+    roles {
       id
       name
     }
   }
 `
-export const BLOOD_GROUP_QUERY = gql`
-  query BloodGroupQuery {
-    bloodGroup {
+
+export const PERMISSIONS_QUERY = gql`
+  query PermissionsQuery {
+    permissions {
+      ...PermissionFields
+    }
+  }
+  ${PERMISSION_FIELDS_FRAGMENT}
+`
+
+export const USER_ROLE_QUERY = gql`
+  query userRoles($id: ID!) {
+    user(id: $id) {
+      id
+      first_name
+      roles {
+        ...RoleFields
+      }
+    }
+  }
+  ${ROLE_FIELDS_FRAGMENT}
+`
+export const ROLES_AND_PERMISSION_QUERIES = gql`
+  query rolesQuery {
+    roles {
+      id
       name
+      permissions {
+        id
+        name
+      }
+    }
+  }
+`
+// student
+export const USER_STUDENT_QUERY = gql`
+  query userStudent($id: ID!) {
+    user(id: $id) {
+      id
+      blood_group {
+        name
+      }
+      students {
+        id
+        slug
+        first_name
+        last_name
+        middle_name
+        phone
+        gender
+        photo
+        adm_no
+        code
+        status
+        klase{
+          id
+          name
+        }
+        address
+        admitted_year
+        guardian_name
+        guardian_no
+        guardian_email
+        guardian_address
+        term
+        session
+        birthday
+      }
     }
   }
 `

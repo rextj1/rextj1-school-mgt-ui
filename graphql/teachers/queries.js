@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { KLASE_FIELDS_FRAGMENT } from '../klases/fragments'
 
 import { TEACHER_FIELDS_FRAGMENT, TEACHERS_FIELDS_FRAGMENT } from './fragments'
 // dashboard
@@ -27,4 +28,36 @@ export const TEACHERS_QUERIES = gql`
     }
   }
   ${TEACHERS_FIELDS_FRAGMENT}
+`
+
+export const USER_TEACHER_QUERY = gql`
+  query userTeacher($id: ID!) {
+    user(id: $id) {
+      id
+      blood_group {
+        name
+      }
+      teachers {
+        id
+        slug
+        first_name
+        last_name
+        middle_name
+        phone
+        gender
+        code
+        photo
+        birthday
+        qualification
+        subjects {
+          id
+          subject
+        }
+        klases {
+          ...KlaseFields
+        }
+      }
+    }
+  }
+  ${KLASE_FIELDS_FRAGMENT}
 `

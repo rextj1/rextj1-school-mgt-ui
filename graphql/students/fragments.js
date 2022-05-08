@@ -24,6 +24,7 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     guardian_address
     term
     session
+    birthday
     # guardian: Guardian @belongsTo
     # klase: Klase @belongsTo
     # user: User @belongsTo
@@ -88,5 +89,6 @@ export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
     guardian_address
     term
     session
+    birthday
   }
 `

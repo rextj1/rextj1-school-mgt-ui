@@ -23,9 +23,9 @@
             <td>John Kelvin</td>
             <td>English Language</td>
             <td>12345</td>
-            <td scope="row"><input v-model="form.ca1" type="text" /></td>
-            <td scope="row"><input v-model="form.ca2" type="text" /></td>
-            <td scope="row"><input v-model="form.totalMark" type="text" /></td>
+            <td scope="row"><input v-model="form.ca1" type="number" min="0" max="20" /></td>
+            <td scope="row"><input v-model="form.ca2" type="number" min="0" max="20"/></td>
+            <td scope="row"><input v-model="form.totalMark" type="number" min="0" max="60" /></td>
           </tr>
         </tbody>
       </table>
@@ -57,6 +57,7 @@ export default {
 
   input {
     width: 6rem;
+    text-align:center
   }
 }
 </style>

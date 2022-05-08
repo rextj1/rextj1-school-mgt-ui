@@ -1,7 +1,23 @@
 <template>
-  <nav class="" @click="hideTopNav">
+  <div v-if="!user"></div>
+  <nav class="" @click="hideTopNav" v-else>
     <ul class="d-flex align-items-center">
-      <li><b-icon class="h2 bell" variant="light" icon="bell-fill" /></li>
+      <li>
+        <span class="mainNotification">
+          <b-icon
+            class="h1 bell"
+            scale="1.1"
+            variant="light"
+            icon="bell-fill"
+          />
+          <div v-if="!user"></div>
+          <div v-if="user.unreadNotifications.length === 0"></div>
+
+          <div class="userNotification" @click="notificationModal" v-else>
+            {{ user.unreadNotifications.length }}
+          </div>
+        </span>
+      </li>
       <li>
         <span class="profile-image" @click="profileImage" v-if="$auth.loggedIn">
           <div class="nav-image">
@@ -35,16 +51,39 @@
         </span>
       </li>
     </ul>
+    <b-modal
+      class="modal"
+      :id="notice"
+      :hide-backdrop="true"
+      title="Edit Accountant Data"
+      scrollable
+      size="md"
+      :hide-footer="true"
+    >
+      <Notification :notifyNow="[$auth.user.id, notice]" />
+    </b-modal>
   </nav>
 </template>
 
 <script>
+import { USER_NOTIFICATION_QUERIES } from '@/graphql/notifications/queries'
 export default {
   data() {
     return {
       profileBody: false,
       topNavClass: '',
+      notice: 'info',
     }
+  },
+  apollo: {
+    user: {
+      query: USER_NOTIFICATION_QUERIES,
+      variables() {
+        return { id: parseInt(this.$auth.user.id) }
+      },
+      fetchPolicy: 'no-cache',
+      // pollInterval: 15000,
+    },
   },
   methods: {
     profileImage(e) {
@@ -65,6 +104,9 @@ export default {
       this.$nuxt.$loading.start()
       await this.$auth.logout()
     },
+    notificationModal() {
+      this.$bvModal.show(this.notice)
+    },
   },
 }
 </script>
@@ -81,7 +123,26 @@ nav {
   .bell {
     margin-top: 1.4rem;
     margin-right: 2rem;
+
     cursor: pointer;
+  }
+
+  .mainNotification {
+    position: relative;
+    .userNotification {
+      background-color: #ff0e0e;
+      text-align: center;
+      color: #fff;
+      // border: 1.4px solid #fff;
+      min-width: 43%;
+      min-height: 100%;
+      font-size: 1.1rem;
+      position: absolute;
+      border-radius: 50%;
+      right: 1.2rem;
+      top: -1.9rem;
+      cursor: pointer;
+    }
   }
 
   .profile-image {

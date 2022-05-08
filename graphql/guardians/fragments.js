@@ -8,6 +8,10 @@ export const GUARDIANS_FIELDS_FRAGMENT = gql`
     Students {
       ...SingleStudentField
     }
+    user{
+      id
+      email
+    }
   }
 `
 export const SINLE_GUARDIANS_FIELDS_FRAGMENT = gql`

@@ -16,7 +16,7 @@
           <b-tabs card style="font-size: 1.4rem">
             <b-tab active>
               <template #title>
-                <b-icon icon="plus" /><strong>Add Notice</strong>
+                <b-icon icon="plus" /><strong>Add Events</strong>
               </template>
               <b-form
                 v-if="show"
@@ -27,7 +27,7 @@
               >
                 <b-row class="p-4">
                   <b-col md="10" class="p-4">
-                    <b-form-group label="School Notice">
+                    <b-form-group label="School Event">
                       <b-form-textarea
                         id="textarea"
                         v-model="form.description"

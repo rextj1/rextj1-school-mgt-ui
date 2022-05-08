@@ -191,13 +191,14 @@
                   </b-badge>
                 </template>
 
-                <template #cell(photo)="row">
+                <template #cell(photo)="data">
+                  
                   <b-avatar
                     variant="primary"
-                    src="@/assets/svg/student-svg.svg"
+                    :src="`http://sms.test/storage/student/${data.value}`"
                   >
                   </b-avatar
-                  >{{ row.i }}
+                  >
                 </template>
 
                 <template #cell(paid)="row">
@@ -251,7 +252,7 @@
               <!-- Info modal -->
               <b-modal
                 class="modal"
-                :id="infoModal.id"
+                :id="infoModal"
                 :hide-backdrop="true"
                 body-bg-variant="info"
                 scrollable
@@ -259,7 +260,7 @@
                 size="xl"
                 :hide-footer="true"
               >
-                <AdminEditStudentModal :slug="slug" />
+                <AdminEditStudentModal :slug="[slug, infoModal]" />
               </b-modal>
             </b-container>
           </div>
@@ -275,34 +276,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      items: [
-        {
-          paid: true,
-          '#': 1,
-          code: 12345,
-          photo: 40,
-          name: { first: 'Dickerson', last: 'Macdonald' },
-          gender: true,
-          adm_no: 123,
-          class: 'JSS 1',
-          subject_assigned: 5,
-          phone: 810000112,
-          // _cellVariants: { paid: 'success' },
-        },
-
-        {
-          paid: false,
-          '#': 2,
-          code: 12346,
-          photo: 21,
-          name: { first: 'Larsen', last: 'Shaw' },
-          gender: false,
-          class: 'JSS 2',
-          subject_assigned: 5,
-          phone: 810000112,
-          // _cellVariants: { paid: 'success' },
-        },
-      ],
+      items: [],
 
       fields: [
         {
@@ -398,11 +372,7 @@ export default {
       sortDirection: 'asc',
       filter: null,
       filterOn: [],
-      infoModal: {
-        id: 'info-modal',
-        title: '',
-        content: '',
-      },
+      infoModal: 'info-modal',
     }
   },
   apollo: {
@@ -428,7 +398,7 @@ export default {
   methods: {
     info(item, button) {
       this.slug = item
-      this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+      this.$root.$emit('bv::show::modal', this.infoModal, button)
     },
     resetInfoModal() {
       this.infoModal.title = ''

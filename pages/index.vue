@@ -34,6 +34,7 @@
 <script>
 import { CREATE_ROW_MUTATION } from '~/graphql/notices/mutations'
 export default {
+   middleware: 'auth',
   data() {
     return {
       form: new this.$form({

@@ -5,7 +5,7 @@ export const CREATE_EVENT_MUTATION = gql`
     $description: String!
     $title: String
     $photo: Upload
-    $date: Date!
+    $date: String!
   ) {
     createEvent(
       description: $description
@@ -36,11 +36,11 @@ export const CREATE_PUBLISHED_MUTATION = gql`
 export const UPDATE_EVENT_MUTATION = gql`
   mutation UpdateMutation(
     $id: ID!
-    $description: String
+    $description: String!
     $title: String
     $photo: Upload
     $published: Boolean
-    $date: Date
+    $date: String!
   ) {
     updateEvent(
       id: $id

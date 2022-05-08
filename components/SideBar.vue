@@ -1,5 +1,7 @@
 <template>
+  <div v-if="!user"></div>
   <div
+    v-else
     class="shadow aside"
     style="font-size: 1.6rem"
     :class="`${is_expanded ? 'is-expanded' : 'not_expanded'}`"
@@ -13,299 +15,346 @@
         <b-icon icon="chevron-double-right" class="material-icons" />
       </div>
     </div>
+    <div v-for="role in user.roles" :key="role.id">
+      <!-- Accountant -->
+      <span v-if="role.name == 'accountant'">
+        <h3 class="h3-memu">Accountant</h3>
 
-    <!-- Accountant -->
-    <h3 class="h3-memu">Accountant</h3>
-
-    <div class="menu">
-      <nuxt-link to="/dashboard" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="columns-gap"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Dashboard</span>
-      </nuxt-link>
-
-      <nuxt-link to="/accountant/profile" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="person-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Profile</span>
-      </nuxt-link>
-      <nuxt-link to="#" v-b-toggle.collapse-1 class="button">
-        <b-icon
-          @click="
-            caretDown()
-            ToggleMenus()
-          "
-          icon="person-fill"
-          class="material-icons"
-        />
-        <span
-          @click="
-            caretDown()
-            ToggleMenus()
-          "
-          class="text"
-          >Payment
-          <b-icon
-            style="margin-left: 4rem"
-            :class="rotate"
-            class="caret-down"
-            scale="0.8"
-            icon="caret-right"
-        /></span>
-      </nuxt-link>
-
-      <b-collapse id="collapse-1" class="mt-2 dropMenuClose">
-        <b-card bg-variant="light">
-          <nuxt-link to="/accountant/create-payment" class="button">
-            <span class="text">Create</span>
+        <div class="menu">
+          <nuxt-link to="/dashboard" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="columns-gap"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Dashboard</span>
           </nuxt-link>
 
-          <nuxt-link to="/accountant/student-payment" class="button">
-            <span class="text">Payment</span>
+          <nuxt-link to="/accountant/profile" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="person-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Profile</span>
           </nuxt-link>
-          <nuxt-link to="/accountant/view-payments" class="button">
-            <span class="text">View</span>
-          </nuxt-link>
-        </b-card>
-      </b-collapse>
-    </div>
-
-    <!-- Liberian -->
-    <h3 class="h3-memu">Liberian</h3>
-
-    <div class="menu">
-      <nuxt-link to="/dashboard" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="columns-gap"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Dashboard</span>
-      </nuxt-link>
-
-      <nuxt-link to="/liberian/profile" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="person-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Profile</span>
-      </nuxt-link>
-
-      <nuxt-link to="/liberian/books" class="button">
-        <b-icon @click="ToggleMenus" icon="book" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Books</span>
-      </nuxt-link>
-    </div>
-
-    <!-- Teacher -->
-    <h3 class="h3-memu">Teacher</h3>
-
-    <div class="menu">
-      <nuxt-link to="/dashboard" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="columns-gap"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Dashboard</span>
-      </nuxt-link>
-
-      <nuxt-link to="/teacher/profile" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="person-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Profile</span>
-      </nuxt-link>
-
-      <nuxt-link to="/teacher/timetable" class="button">
-        <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Timetable</span>
-      </nuxt-link>
-
-      <nuxt-link to="/teacher/exam" class="button">
-        <b-icon @click="ToggleMenus" icon="vector-pen" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Examination</span>
-      </nuxt-link>
-    </div>
-
-    <!-- Student -->
-    <h3 class="h3-memu">Student</h3>
-
-    <div class="menu">
-      <nuxt-link to="/dashboard" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="columns-gap"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Dashboard</span>
-      </nuxt-link>
-
-      <nuxt-link to="/student/profile" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="person-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Profile</span>
-      </nuxt-link>
-
-      <nuxt-link to="/student/timetable" class="button">
-        <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Timetable</span>
-      </nuxt-link>
-
-      <nuxt-link to="/student/exam" class="button">
-        <b-icon @click="ToggleMenus" icon="vector-pen" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Examination</span>
-      </nuxt-link>
-
-      <nuxt-link to="/student/result" class="button">
-        <b-icon @click="ToggleMenus" icon="file-text" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Result</span>
-      </nuxt-link>
-    </div>
-    <!-- admin -->
-    <h3 class="h3-memu">Admin</h3>
-
-    <div class="menu">
-      <nuxt-link to="/dashboard" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="columns-gap"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Dashboard</span>
-      </nuxt-link>
-      <nuxt-link to="/admin/teacher" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="person-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Teacher</span>
-      </nuxt-link>
-
-      <nuxt-link to="/admin/student" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="people-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Student</span>
-      </nuxt-link>
-      <nuxt-link to="/admin/accountant" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="people-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Accountant</span>
-      </nuxt-link>
-
-      <nuxt-link to="/admin/libarian" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="people-fill"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Libarian</span>
-      </nuxt-link>
-
-      <nuxt-link to="/admin/event" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="calendar2-date"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Events</span>
-      </nuxt-link>
-
-      <nuxt-link to="/admin/notice" class="button">
-        <b-icon
-          @click="ToggleMenus"
-          icon="calendar2-date"
-          class="material-icons"
-        />
-        <span @click="ToggleMenus" class="text">Notices</span>
-      </nuxt-link>
-
-      <nuxt-link to="/admin/timetable" class="button">
-        <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Timetable</span>
-      </nuxt-link>
-
-      <!-- toggle menu -->
-      <nuxt-link to="#" v-b-toggle.collapse-2 class="button">
-        <b-icon
-          @click="
-            caretDown()
-            ToggleMenus()
-          "
-          icon="vector-pen"
-          class="material-icons"
-        />
-        <span
-          @click="
-            caretDown()
-            ToggleMenus()
-          "
-          class="text"
-          >Exam
-          <b-icon
-            style="margin-left: 4rem"
-            scale="0.8"
-            :class="rotate"
-            class="caret-down"
-            icon="caret-right"
-        /></span>
-      </nuxt-link>
-
-      <b-collapse id="collapse-2" class="mt-2 dropMenuClose">
-        <b-card bg-variant="light">
-          <nuxt-link to="/admin/exam/timetable" class="button">
-            <span class="text">Timetable</span>
+          <nuxt-link to="#" v-b-toggle.collapse-1 class="button">
+            <b-icon
+              @click="
+                caretDown()
+                ToggleMenus()
+              "
+              icon="person-fill"
+              class="material-icons"
+            />
+            <span
+              @click="
+                caretDown()
+                ToggleMenus()
+              "
+              class="text"
+              >Payment
+              <b-icon
+                style="margin-left: 4rem"
+                :class="rotate"
+                class="caret-down"
+                scale="0.8"
+                icon="caret-right"
+            /></span>
           </nuxt-link>
 
-          <nuxt-link to="/admin/exam/add-scores" class="button">
-            <span class="text">Scores</span>
-          </nuxt-link>
-          <nuxt-link to="/admin/exam/marksheet" class="button">
-            <span class="text">Marksheet</span>
-          </nuxt-link>
-            <nuxt-link to="/admin/exam/student-result" class="button">
-            <span class="text">Results</span>
-          </nuxt-link>
-        </b-card>
-      </b-collapse>
-      <!-- end -->
+          <b-collapse id="collapse-1" class="mt-2 dropMenuClose">
+            <b-card bg-variant="light">
+              <nuxt-link to="/accountant/create-payment" class="button">
+                <span class="text">Create</span>
+              </nuxt-link>
 
-      <nuxt-link to="/admin/driver" class="button">
-        <b-icon @click="ToggleMenus" icon="truck" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Drivers</span>
-      </nuxt-link>
+              <nuxt-link to="/accountant/student-payment" class="button">
+                <span class="text">Payment</span>
+              </nuxt-link>
+              <nuxt-link to="/accountant/view-payments" class="button">
+                <span class="text">View</span>
+              </nuxt-link>
+            </b-card>
+          </b-collapse>
+        </div>
+      </span>
 
-      <nuxt-link to="/admin/result" class="button">
-        <b-icon @click="ToggleMenus" icon="file-text" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Result</span>
-      </nuxt-link>
-      <nuxt-link to="/admin/classes" class="button">
-        <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Classes</span>
-      </nuxt-link>
-      <nuxt-link to="/admin/subjects" class="button">
-        <b-icon @click="ToggleMenus" icon="envelope" class="material-icons" />
-        <span @click="ToggleMenus" class="text">Subjects</span>
-      </nuxt-link>
+      <!-- Liberian -->
+      <span v-if="role.name == 'libarian'">
+        <h3 class="h3-memu">Liberian</h3>
+
+        <div class="menu">
+          <nuxt-link to="/dashboard" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="columns-gap"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Dashboard</span>
+          </nuxt-link>
+
+          <nuxt-link to="/liberian/profile" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="person-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Profile</span>
+          </nuxt-link>
+
+          <nuxt-link to="/liberian/books" class="button">
+            <b-icon @click="ToggleMenus" icon="book" class="material-icons" />
+            <span @click="ToggleMenus" class="text">Books</span>
+          </nuxt-link>
+        </div>
+      </span>
+
+      <!-- Teacher -->
+      <span v-if="role.name == 'teacher'">
+        <h3 class="h3-memu">Teacher</h3>
+
+        <div class="menu">
+          <nuxt-link to="/dashboard" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="columns-gap"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Dashboard</span>
+          </nuxt-link>
+
+          <nuxt-link to="/teacher/profile" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="person-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Profile</span>
+          </nuxt-link>
+
+          <nuxt-link to="/teacher/timetable" class="button">
+            <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
+            <span @click="ToggleMenus" class="text">Timetable</span>
+          </nuxt-link>
+
+          <nuxt-link to="/teacher/exam" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="vector-pen"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Examination</span>
+          </nuxt-link>
+        </div>
+      </span>
+
+      <!-- Student -->
+      <span v-if="role.name == 'student'">
+        <h3 class="h3-memu">Student</h3>
+
+        <div class="menu">
+          <nuxt-link to="/dashboard" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="columns-gap"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Dashboard</span>
+          </nuxt-link>
+
+          <nuxt-link to="/student/profile" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="person-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Profile</span>
+          </nuxt-link>
+
+          <nuxt-link to="/student/timetable" class="button">
+            <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
+            <span @click="ToggleMenus" class="text">Timetable</span>
+          </nuxt-link>
+
+          <nuxt-link to="/student/exam" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="vector-pen"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Examination</span>
+          </nuxt-link>
+
+          <nuxt-link to="/student/result" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="file-text"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Result</span>
+          </nuxt-link>
+        </div>
+      </span>
+      <!-- admin -->
+
+      <span v-if="role.name == 'main admin'">
+        <h3 class="h3-memu">Admin</h3>
+
+        <div class="menu">
+          <nuxt-link to="/dashboard" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="columns-gap"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Dashboard</span>
+          </nuxt-link>
+          <nuxt-link to="/admin/roles" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="person-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">User Roles</span>
+          </nuxt-link>
+          <nuxt-link to="/admin/teacher" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="person-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Teacher</span>
+          </nuxt-link>
+
+          <nuxt-link to="/admin/student" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="people-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Student</span>
+          </nuxt-link>
+          <nuxt-link to="/admin/accountant" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="people-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Accountant</span>
+          </nuxt-link>
+
+          <nuxt-link to="/admin/libarian" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="people-fill"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Libarian</span>
+          </nuxt-link>
+
+          <nuxt-link to="/admin/event" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="calendar2-date"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Events</span>
+          </nuxt-link>
+
+          <nuxt-link to="/admin/notice" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="calendar2-date"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Notices</span>
+          </nuxt-link>
+
+          <nuxt-link to="/admin/timetable" class="button">
+            <b-icon @click="ToggleMenus" icon="alarm" class="material-icons" />
+            <span @click="ToggleMenus" class="text">Timetable</span>
+          </nuxt-link>
+
+          <!-- toggle menu -->
+          <nuxt-link to="#" v-b-toggle.collapse-2 class="button">
+            <b-icon
+              @click="
+                caretDown()
+                ToggleMenus()
+              "
+              icon="vector-pen"
+              class="material-icons"
+            />
+            <span
+              @click="
+                caretDown()
+                ToggleMenus()
+              "
+              class="text"
+              >Exam
+              <b-icon
+                style="margin-left: 4rem"
+                scale="0.8"
+                :class="rotate"
+                class="caret-down"
+                icon="caret-right"
+            /></span>
+          </nuxt-link>
+
+          <b-collapse id="collapse-2" class="mt-2 dropMenuClose">
+            <b-card bg-variant="light">
+              <nuxt-link to="/admin/exam/timetable" class="button">
+                <span class="text">Timetable</span>
+              </nuxt-link>
+
+              <nuxt-link to="/admin/exam/add-scores" class="button">
+                <span class="text">Scores</span>
+              </nuxt-link>
+              <nuxt-link to="/admin/exam/mark" class="button">
+                <span class="text">Marks</span>
+              </nuxt-link>
+              <nuxt-link to="/admin/exam/marksheet" class="button">
+                <span class="text">Marksheet</span>
+              </nuxt-link>
+              <nuxt-link to="/admin/exam/student-result" class="button">
+                <span class="text">Results</span>
+              </nuxt-link>
+            </b-card>
+          </b-collapse>
+          <!-- end -->
+
+          <nuxt-link to="/admin/driver" class="button">
+            <b-icon @click="ToggleMenus" icon="truck" class="material-icons" />
+            <span @click="ToggleMenus" class="text">Drivers</span>
+          </nuxt-link>
+
+          <nuxt-link to="/admin/result" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="file-text"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Result</span>
+          </nuxt-link>
+          <nuxt-link to="/admin/classes" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="envelope"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Classes</span>
+          </nuxt-link>
+          <nuxt-link to="/admin/subjects" class="button">
+            <b-icon
+              @click="ToggleMenus"
+              icon="envelope"
+              class="material-icons"
+            />
+            <span @click="ToggleMenus" class="text">Subjects</span>
+          </nuxt-link>
+        </div>
+      </span>
     </div>
 
     <div class="flex"></div>
@@ -320,6 +369,7 @@
 </template>
 
 <script>
+import { ROLEX_QUERIEX } from '~/graphql/users/queries'
 export default {
   mounted() {
     this.is_expanded = localStorage.getItem('is_expanded') === 'true'
@@ -329,6 +379,14 @@ export default {
       is_expanded: 'is_expanded',
       rotate: '',
     }
+  },
+  apollo: {
+    user: {
+      query: ROLEX_QUERIEX,
+      variables() {
+        return { id: this.$auth.user.id }
+      },
+    },
   },
   methods: {
     ToggleMenu() {

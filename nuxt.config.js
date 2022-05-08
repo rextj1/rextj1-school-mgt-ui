@@ -1,6 +1,6 @@
 const inProduction = process.env.NODE_ENV === 'production'
 const host = inProduction ? '127.0.0.1' : `sms.test`
-// const apiRoot = process.env.APP_API_ROOT || `http://booksgraphql.test`
+const apiRoot = process.env.APP_API_ROOT || `http://sms.test`
 
 export default {
   universal: true,
@@ -96,31 +96,44 @@ export default {
       },
     },
   },
-
+  baseUrl: `http://sms.test`,
   // Build Configuration: https://go.nuxtjs.dev/config-build
   // build: { extend(config, ctx) {} },
+  build: {
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {},
+  },
+  publicRuntimeConfig: {
+    APIRoot: apiRoot,
+  },
+
+  publicRuntimeConfig: {
+    APIRoot: apiRoot,
+  },
 
   // publicRuntimeConfig: {
-  //   APIRoot: apiRoot,
+  // APIRoot: apiRoot,
   // },
-  build: {
-    // transpile: ['@nuxtjs/auth-next'],
+  // build: {
+  //   // transpile: ['@nuxtjs/auth-next'],
 
-    babel: {
-      presets({ isServer }) {
-        return [
-          [
-            require.resolve('@nuxt/babel-preset-app'),
-            // require.resolve('@nuxt/babel-preset-app-edge'), // For nuxt-edge users
-            {
-              buildTarget: isServer ? 'server' : 'client',
-              corejs: { version: 3 },
-            },
-          ],
-        ]
-      },
-    },
-  },
+  //   babel: {
+  //     presets({ isServer }) {
+  //       return [
+  //         [
+  //           require.resolve('@nuxt/babel-preset-app'),
+  //           // require.resolve('@nuxt/babel-preset-app-edge'), // For nuxt-edge users
+  //           {
+  //             buildTarget: isServer ? 'server' : 'client',
+  //             corejs: { version: 3 },
+  //           },
+  //         ],
+  //       ]
+  //     },
+  //   },
+  // },
 
   apollo: {
     // tokenName: 'yourApolloTokenName', // optional, default: apollo-token

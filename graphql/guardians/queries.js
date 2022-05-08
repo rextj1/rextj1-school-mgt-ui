@@ -15,6 +15,10 @@ export const GUARDIAN_QUERIES = gql`
     guardians {
       id
       slug
+      user{
+        id
+        email
+      }
     }
   }
 `
