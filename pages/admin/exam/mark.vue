@@ -1,8 +1,6 @@
 <template>
   <div class="timetable p-4">
-    <h2 class="d-flex justify-content-center p-4">
-      <!-- {{ currentClass }} Class Timetable -->
-    </h2>
+    <h2 class="d-flex justify-content-center p-4"></h2>
     <div class="exam-timetable table-responsive p-4">
       <b-form
         method="POST"
@@ -36,7 +34,7 @@
               <td scope="row">
                 <input
                   v-model="mark.ca1"
-                  @input="sendText($event.target.value, mark.id)"
+                  @input="sendText(mark, $event.target.value, 'ca1')"
                   type="number"
                   min="0"
                   max="20"
@@ -48,13 +46,13 @@
                   type="number"
                   min="0"
                   max="20"
-                  @change="sendText($event.target.value, mark.id)"
+                  @input="sendText(mark, $event.target.value, 'ca2')"
                 />
               </td>
               <td scope="row">
                 <input
                   v-model="mark.exam_total"
-                  @change="sendText($event.target.value, mark.id)"
+                  @input="sendText(mark, $event.target.value, 'exam')"
                   type="number"
                   min="0"
                   max="60"
@@ -75,20 +73,16 @@
 
 <script>
 import { MARK_QUERIES } from '@/graphql/marks/queries'
+import { CREATE_ROW_MUTATION } from '~/graphql/marks/mutations'
 export default {
   middleware: 'auth',
   // props: {
   //   currentClass: String,
   // },
-  mounted(){
- 
-     this.first = []
-     this.first = this.marks.length
-  
-  },
+
   data() {
     return {
-      first: [],
+      scores: [],
       form: new this.$form({
         ca: [],
       }),
@@ -103,14 +97,38 @@ export default {
       },
     },
   },
-
   methods: {
-    sendText(item, items) {
-      this.first = [item, items]
-      this.form.ca.push(this.first)
+    sendText(mark, value, keyName) {
+      const index = this.scores.findIndex((score) => score.markId === mark.id)
+      console.log(index)
+      if (index === -1) {
+        this.scores = [
+          ...this.scores,
+          {
+            markId: mark.id,
+            [keyName]: value,
+          },
+        ]
+      } else {
+        this.scores = [
+          ...this.scores.slice(0, index),
+          {
+            ...this.scores[index],
+            [keyName]: value,
+          },
+          ...this.scores.slice(index + 1),
+        ]
+      }
+
+      console.log(this.scores)
     },
     onLogin() {
-      console.log(this.form.ca)
+     this.$apollo.mutate({
+       mutation: CREATE_ROW_MUTATION,
+       variables: {marks: this.scores}
+     }).then(({data})=> {
+       console.log(data);
+     })
     },
   },
 }

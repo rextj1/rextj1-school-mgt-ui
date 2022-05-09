@@ -17,3 +17,27 @@ export const LIBARIAN_QUERY = gql`
   }
   ${LIBARIAN_FIELDS_FRAGMENT}
 `
+
+export const USER_LIBARIAN_QUERY = gql`
+  query userLibarian($id: ID!) {
+    user(id: $id) {
+      id
+      blood_group {
+        name
+      }
+      libarians {
+        id
+        slug
+        first_name
+        last_name
+        middle_name
+        phone
+        gender
+        code
+        photo
+        birthday
+        qualification
+      }
+    }
+  }
+`

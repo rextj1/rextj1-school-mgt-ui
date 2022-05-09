@@ -34,3 +34,11 @@ export const KLASE_QUERY = gql`
     }
   }
 `
+export const KLASES_QUERIES = gql`
+  query myclassesQuery {
+    klases {
+      id
+      name
+    }
+  }
+`

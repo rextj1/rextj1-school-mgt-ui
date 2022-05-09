@@ -9,7 +9,7 @@
           <tr>
             <th scope="col">S/N</th>
             <th scope="col">Name</th>
-             <th scope="col">Subject</th>
+            <th scope="col">Subject</th>
             <th scope="col">ADM No.</th>
             <th scope="col">1ST (CA) 20%</th>
             <th scope="col">2ND (CA) 20%</th>
@@ -23,9 +23,15 @@
             <td>John Kelvin</td>
             <td>English Language</td>
             <td>12345</td>
-            <td scope="row"><input v-model="form.ca1" type="number" min="0" max="20" /></td>
-            <td scope="row"><input v-model="form.ca2" type="number" min="0" max="20"/></td>
-            <td scope="row"><input v-model="form.totalMark" type="number" min="0" max="60" /></td>
+            <td scope="row">
+              <input v-model="form.ca1" type="number" min="0" max="20" />
+            </td>
+            <td scope="row">
+              <input v-model="form.ca2" type="number" min="0" max="20" />
+            </td>
+            <td scope="row">
+              <input v-model="form.totalMark" type="number" min="0" max="60" />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -37,15 +43,24 @@
 </template>
 
 <script>
+import { MARK_QUERIES } from '@/graphql/marks/queries'
 export default {
   props: {
     currentClass: String,
   },
   data() {
     return {
-      form: {
-      },
+      form: {},
     }
+  },
+  apollo: {
+    marks: {
+      query: MARK_QUERIES,
+      variables: {
+        klase_id: 1,
+        subject_id: 1,
+      },
+    },
   },
 }
 </script>
@@ -57,7 +72,7 @@ export default {
 
   input {
     width: 6rem;
-    text-align:center
+    text-align: center;
   }
 }
 </style>

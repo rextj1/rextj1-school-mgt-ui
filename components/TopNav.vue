@@ -81,7 +81,7 @@ export default {
       variables() {
         return { id: parseInt(this.$auth.user.id) }
       },
-      fetchPolicy: 'no-cache',
+      // fetchPolicy: 'no-cache',
       // pollInterval: 15000,
     },
   },

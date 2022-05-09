@@ -18,7 +18,7 @@
           <h1>About {{ teacher.last_name }}</h1>
           <div class="d-flex justify-content-center mb-4">
             <b-img
-              :src="`http://sms.test/storage/teacher/${teacher.photo}`"
+              :src="`${$config.APIRoot}/storage/teacher/${teacher.photo}`"
               thumbnail
               fluid
               alt="Responsive image"

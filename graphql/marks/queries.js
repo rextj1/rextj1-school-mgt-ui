@@ -9,3 +9,21 @@ export const MARK_QUERIES = gql`
   }
   ${MARK_FIELDS_FRAGMENT}
 `
+export const TERM_QUERIES = gql`
+  query TermsQuery {
+    terms {
+      id
+      name
+    }
+  }
+
+`
+
+export const SESSION_QUERIES = gql`
+  query SessionsQuery {
+    sessions {
+      id
+      name
+    }
+  }
+`

@@ -1,104 +1,116 @@
 <template>
   <div class="p-4 view-payment">
     <b-card class="p-3 mb-4 d-flex">
-      <b-row no-gutters>
-        <b-col md="3" class="p-4">
-          <b-form-group label="Class">
-            <b-form-select
-              v-model="form.class"
-              :options="classes"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- select class --</b-form-select-option
-                >
-              </template>
+      <b-form @submit.prevent="markSubmit">
+        <b-row no-gutters>
+          <b-col md="3">
+            <b-form-group label="Clases">
+              <b-form-select
+                id="klases"
+                value-field="id"
+                text-field="name"
+                v-model="form.class"
+                :options="klases"
+                class="mb-3"
+                size="lg"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- select class--</b-form-select-option
+                  >
+                </template>
 
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="3" class="p-4">
-          <b-form-group label="Term">
-            <b-form-select
-              v-model="form.term"
-              :options="terms"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- select term --</b-form-select-option
-                >
-              </template>
+          <b-col md="3">
+            <b-form-group label="Terms">
+              <b-form-select
+                id="terms"
+                value-field="id"
+                text-field="name"
+                v-model="form.term"
+                :options="terms"
+                class="mb-3"
+                size="lg"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- select term--</b-form-select-option
+                  >
+                </template>
 
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="3" class="p-4">
-          <b-form-group label="Session">
-            <b-form-select
-              v-model="form.session"
-              :options="sessions"
-              class="mb-3"
-              size="lg"
-              required
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- select session --</b-form-select-option
-                >
-              </template>
+          <b-col md="3">
+            <b-form-group label="Session">
+              <b-form-select
+                id="sessions"
+                value-field="id"
+                text-field="name"
+                v-model="form.session"
+                :options="sessions"
+                class="mb-3"
+                size="lg"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- select session--</b-form-select-option
+                  >
+                </template>
 
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
 
-        <b-col md="3" class="p-4">
-          <b-form-group label="Subject">
-            <b-form-select
-              v-model="form.subject"
-              :options="subjects"
-              class="mb-3"
-              size="lg"
-              required
-              @change="timetableDropdown"
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- select subject --</b-form-select-option
-                >
-              </template>
+          <b-col md="3">
+            <b-form-group label="Subject">
+              <b-form-select
+                id="subject"
+                value-field="id"
+                text-field="subject"
+                v-model="form.subject"
+                :options="subjects"
+                class="mb-3"
+                size="lg"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- select subject--</b-form-select-option
+                  >
+                </template>
 
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-      </b-row>
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <b-button type="submit" variant="danger">Submit</b-button>
+      </b-form>
     </b-card>
 
-    <div
-      class="libarian__wrapper"
-      v-show="timetableDropdownClass"
-    >
-    <ExamEditExamScores />
+    <div class="libarian__wrapper" v-show="timetableDropdownClass">
+      <ExamEditExamScores />
     </div>
   </div>
 </template>
 
 <script>
+import { KLASES_QUERIES } from '~/graphql/klases/queries'
+import { CREATE_FIELD_MUTATION } from '~/graphql/marks/mutations'
+import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { SUBJECTS_QUERIES } from '~/graphql/subjects/queries'
 export default {
   data() {
     return {
@@ -109,10 +121,6 @@ export default {
         session: null,
         term: null,
       },
-      classes: ['JSS 1', 'JSS 2', 'JSS 3', 'SSS 1', 'SSS 2', 'SSS 3'],
-      subjects: ['Mathematics', 'English Language', 'Basic Science'],
-      terms: ['First Terms', 'Second Term', 'Third Term'],
-      sessions: [2022],
 
       dynamicClass: '',
       activeTab: '',
@@ -120,12 +128,23 @@ export default {
       registrationMenuClass: '',
     }
   },
+  apollo: {
+    klases: {
+      query: KLASES_QUERIES,
+    },
+    subjects: {
+      query: SUBJECTS_QUERIES,
+    },
+    terms: {
+      query: TERM_QUERIES,
+    },
+    sessions: SESSION_QUERIES,
+  },
   methods: {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
-
-    timetableDropdown() {
+    markSubmit() {
       if (
         this.form.class === null ||
         this.form.term === null ||
@@ -135,6 +154,25 @@ export default {
       } else {
         this.timetableDropdownClass = true
       }
+      this.$apollo
+        .mutate({
+          mutation: CREATE_FIELD_MUTATION,
+          variables: {
+            klase: parseInt(this.form.class),
+            subject: parseInt(this.form.subject),
+            session: parseInt(this.form.session),
+            term: parseInt(this.form.term),
+          },
+        })
+        .then(({ data }) => {
+          console.log(data)
+        })
+        .catch((err) => {
+          err
+        })
+
+
+
     },
   },
 }

@@ -384,7 +384,7 @@ export default {
     user: {
       query: ROLEX_QUERIEX,
       variables() {
-        return { id: this.$auth.user.id }
+        return { id: parseInt(this.$auth.user.id) }
       },
     },
   },

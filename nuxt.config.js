@@ -96,7 +96,6 @@ export default {
       },
     },
   },
-  baseUrl: `http://sms.test`,
   // Build Configuration: https://go.nuxtjs.dev/config-build
   // build: { extend(config, ctx) {} },
   build: {
@@ -109,9 +108,6 @@ export default {
     APIRoot: apiRoot,
   },
 
-  publicRuntimeConfig: {
-    APIRoot: apiRoot,
-  },
 
   // publicRuntimeConfig: {
   // APIRoot: apiRoot,

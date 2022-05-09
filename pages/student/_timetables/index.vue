@@ -102,7 +102,7 @@ export default {
       query: TIMETABLE_QUERIES,
       variables() {
         return {
-          klase_id: parseInt(this.$route.params.timetable),
+          klase_id: parseInt(this.$route.params.timetables),
         }
       },
     },

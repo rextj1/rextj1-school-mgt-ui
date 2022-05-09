@@ -24,3 +24,13 @@ export const SUBJECT_QUERY = gql`
   }
   ${SINGLE_SUBJECTS_FIELDS_FRAGMENT}
 `
+export const SUBJECTS_QUERIES = gql`
+  query subjectsQueries {
+    subjects {
+      id
+      subject
+
+    }
+  }
+
+`

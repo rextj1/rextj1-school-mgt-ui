@@ -19,8 +19,8 @@
           </h1>
           <b-button
             :to="{
-              name: 'student-timetable',
-              params: { timetable: parseInt(student.klase.id) },
+              name: 'student-timetables',
+              params: { timetables: parseInt(student.klase.id) },
             }"
             variant="primary"
             size="md"
@@ -54,7 +54,7 @@
             </div>
             <div v-else>
               <b-img
-                :src="`http://sms.test/storage/student/${student.photo}`"
+                :src="`${$config.APIRoot}/storage/student/${student.photo}`"
                 thumbnail
                 fluid
                 alt="Responsive image"

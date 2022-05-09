@@ -433,13 +433,13 @@ export default {
     country: {
       query: COUNTRY_QUERY,
       variables() {
-        return { id: this.form.country }
+        return { id: parseInt(this.form.country) }
       },
     },
     state: {
       query: STATE_QUERY,
       variables() {
-        return { id: this.form.state }
+        return { id: parseInt(this.form.state) }
       },
     },
   },

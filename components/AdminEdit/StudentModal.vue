@@ -627,22 +627,22 @@ export default {
     bloodGroups: {
       query: BLOOD_GROUP_QUERIES,
     },
+    // country: {
+    //   query: COUNTRY_QUERY,
+    //   variables() {
+    //     return { id: parseInt(this.form.country) }
+    //   },
+    // },
     country: {
       query: COUNTRY_QUERY,
       variables() {
-        return { id: this.form.country }
-      },
-    },
-    country: {
-      query: COUNTRY_QUERY,
-      variables() {
-        return { id: this.form.userStudent.country }
+        return { id: parseInt(this.form.userStudent.country) }
       },
     },
     state: {
       query: STATE_QUERY,
       variables() {
-        return { id: this.form.userStudent.state }
+        return { id: parseInt(this.form.userStudent.state) }
       },
     },
     klases: {

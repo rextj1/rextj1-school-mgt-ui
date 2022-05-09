@@ -1,7 +1,7 @@
  <template>
   <div>
     <template v-if="!students && !teachers && !guardians">
-      <div style="background-color: #f1f9ae; width:100%; height:100vh">
+      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
         <div class="grow">
           <b-spinner
             style="width: 30rem; height: 30rem"
