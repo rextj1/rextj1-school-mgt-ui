@@ -116,6 +116,7 @@ export default {
             ...this.scores[index],
             [keyName]: value,
           },
+          // to account for the remainder
           ...this.scores.slice(index + 1),
         ]
       }
