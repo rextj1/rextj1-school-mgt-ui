@@ -311,8 +311,8 @@
               <nuxt-link to="/admin/exam/add-scores" class="button">
                 <span class="text">Scores</span>
               </nuxt-link>
-              <nuxt-link to="/admin/exam/mark" class="button">
-                <span class="text">Marks</span>
+              <nuxt-link to="/admin/exam/tabulation" class="button">
+                <span class="text">Tabulation Sheet</span>
               </nuxt-link>
               <nuxt-link to="/admin/exam/marksheet" class="button">
                 <span class="text">Marksheet</span>

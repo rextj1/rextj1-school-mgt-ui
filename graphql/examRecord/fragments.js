@@ -1,15 +1,13 @@
 import gql from 'graphql-tag'
 
-export const MARK_FIELDS_FRAGMENT = gql`
-  fragment MarkFields on Mark {
+export const EXAM_RECORD_FIELDS_FRAGMENT = gql`
+  fragment ExamRecordFields on ExamRecord {
     id
-    ca1
-    ca2
-    tca
-    exam
-    exam_total
-    sub_position
-    cum_ave
+    total
+    avg
+    position
+    p_comment
+    t_comment
     term {
       id
       name
@@ -18,12 +16,13 @@ export const MARK_FIELDS_FRAGMENT = gql`
       id
       name
     }
-    cum
     student {
       id
       first_name
       last_name
       adm_no
+      photo
+      birthday
     }
     subject {
       id
@@ -32,14 +31,6 @@ export const MARK_FIELDS_FRAGMENT = gql`
     klase {
       id
       name
-    }
-    grade {
-      id
-      name
-
-      mark_from
-      mark_to
-      remark
     }
   }
 `

@@ -112,7 +112,10 @@
       </b-card>
 
       <div class="libarian__wrapper" v-show="timetableDropdownClass">
-        <ExamEditExamScores :marks="marks" />
+        <ExamEditExamScores
+          :marks="marks"
+          :student="[form.class, form.subject, form.term, form.session]"
+        />
       </div>
     </template>
   </div>
@@ -132,7 +135,7 @@ export default {
   data() {
     return {
       marks: [],
-      timetableDropdownClass: true,
+      timetableDropdownClass: false,
       form: {
         class: null,
         subject: null,
@@ -156,7 +159,9 @@ export default {
     terms: {
       query: TERM_QUERIES,
     },
-    sessions: SESSION_QUERIES,
+    sessions: {
+      query: SESSION_QUERIES
+    },
   },
   methods: {
     dynamicStudentClass(item) {
@@ -195,7 +200,8 @@ export default {
           variables: {
             klase_id: parseInt(this.form.class),
             subject_id: parseInt(this.form.subject),
-            session: parseInt(this.form.session),
+            session_id: parseInt(this.form.session),
+            term_id: parseInt(this.form.term)
           },
           result({ loading, data }, key) {
             if (!loading) {

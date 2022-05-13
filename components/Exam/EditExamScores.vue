@@ -19,9 +19,7 @@
               <th scope="col">Exam 60%</th>
             </tr>
           </thead>
-          <!-- {{
-            mark
-          }} -->
+ 
           <tbody>
             <tr v-for="(mark, value) in marks" :key="mark.id">
               <td>{{ value + 1 }}</td>
@@ -76,6 +74,7 @@ import { CREATE_ROW_MUTATION } from '~/graphql/marks/mutations'
 export default {
   props: {
     marks: Array,
+    student: Array,
   },
   data() {
     return {
@@ -111,7 +110,13 @@ export default {
       this.$apollo
         .mutate({
           mutation: CREATE_ROW_MUTATION,
-          variables: { marks: this.scores },
+          variables: {
+            marks: this.scores,
+            klase_id: parseInt(this.student[0]),
+            subject_id: parseInt(this.student[1]),
+            term_id: parseInt(this.student[2]),
+            session_id: parseInt(this.student[3]),
+          },
         })
         .then(({ data }) => {
           console.log(data)

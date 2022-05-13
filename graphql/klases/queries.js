@@ -39,6 +39,11 @@ export const KLASES_QUERIES = gql`
     klases {
       id
       name
+      students{
+        id
+        first_name
+        last_name
+      }
     }
   }
 `

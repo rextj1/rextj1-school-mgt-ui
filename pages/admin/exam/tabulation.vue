@@ -89,9 +89,10 @@
       </b-card>
 
       <div class="libarian__wrapper" v-show="timetableDropdownClass">
-        <ExamStudentResult
-          :klaseResults="klaseResults"
-          :student="[form.class, form.term, form.session]"
+        <ExamTabulation
+          :records="records"
+          :examRecords="examRecords"
+          :term="form.term"
         />
       </div>
     </template>
@@ -100,6 +101,7 @@
 
 <script>
 import {
+  EXAM_RECORDS_QUERIES,
   EXAM_RECORD_QUERIES,
 } from '~/graphql/examRecord/queries'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
@@ -108,8 +110,9 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      klaseResults: [],
-      timetableDropdownClass: false,
+      records: [],
+      examRecords: [],
+      timetableDropdownClass: true,
       form: {
         class: null,
         session: null,
@@ -126,6 +129,7 @@ export default {
     klases: {
       query: KLASES_QUERIES,
     },
+
     terms: {
       query: TERM_QUERIES,
     },
@@ -160,7 +164,23 @@ export default {
           },
           result({ loading, data }, key) {
             if (!loading) {
-              this.klaseResults = data.klaseResults
+              this.records = data.klaseResults
+            }
+          },
+        })
+      }, 100)
+      setTimeout(() => {
+        this.$apollo.addSmartQuery('examRecords', {
+          query: EXAM_RECORDS_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              session_id: parseInt(this.form.term),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.examRecords = data.examRecords
             }
           },
         })

@@ -27,8 +27,20 @@ export const CREATE_FIELD_MUTATION = gql`
 `
 
 export const CREATE_ROW_MUTATION = gql`
-  mutation UpdateMarkMutation($marks: [MarkInput]) {
-    updateMarks(marks: $marks) {
+  mutation UpdateMarkMutation(
+    $marks: [MarkInput]
+    $klase_id: Int!
+    $subject_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+  ) {
+    updateMarks(
+      marks: $marks
+      klase_id: $klase_id
+      subject_id: $subject_id
+      term_id: $term_id
+      session_id: $session_id
+    ) {
       id
     }
   }
