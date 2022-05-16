@@ -60,6 +60,16 @@ export const SESSION_QUERIES = gql`
     }
   }
 `
+
+export const SESSION_QUERY = gql`
+  query SessionQuery($id: Int!) {
+    session(id: $id) {
+      id
+      name
+    }
+  }
+`
+
 export const TERM_QUERIES = gql`
   query TermsQuery {
     terms {

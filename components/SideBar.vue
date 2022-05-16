@@ -308,9 +308,6 @@
                 <span class="text">Timetable</span>
               </nuxt-link>
 
-              <nuxt-link to="/admin/exam/add-scores" class="button">
-                <span class="text">Scores</span>
-              </nuxt-link>
               <nuxt-link to="/admin/exam/tabulation" class="button">
                 <span class="text">Tabulation Sheet</span>
               </nuxt-link>
@@ -319,6 +316,19 @@
               </nuxt-link>
               <nuxt-link to="/admin/exam/student-result" class="button">
                 <span class="text">Results</span>
+              </nuxt-link>
+                <nuxt-link to="/admin/exam/session" class="button">
+                <span class="text">Session</span>
+              </nuxt-link>
+
+              <nuxt-link to="/admin/exam/promotion" class="button">
+                <span class="text">promotion</span>
+              </nuxt-link>
+              <nuxt-link to="/admin/exam/reset" class="button">
+                <span class="text">Reset Promotion</span>
+              </nuxt-link>
+              <nuxt-link to="/admin/exam/publish" class="button">
+                <span class="text">publish Result</span>
               </nuxt-link>
             </b-card>
           </b-collapse>

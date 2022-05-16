@@ -168,8 +168,6 @@ export default {
                 id: parseInt(updateId),
               },
             })
-            console.log(data)
-            // console.log(this.form.class);
             const index = data.timetable.id
             
             if (index !== -1) {

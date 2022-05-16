@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups && !student">
+    <template v-if="!countries && !bloodGroups && !student && !sessions && !terms">
       <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
         <div class="grow">
           <b-spinner
@@ -32,8 +32,9 @@
             <div class="profile-avatar mb-2">
               <div class="photo-preview" v-if="preview_url == null">
                 <img
-                  src="@/assets/svg/graduate-student.svg"
+                  :src="`${$config.APIRoot}/storage/student/${form.photo}`"
                   alt=""
+                  width="100"
                   style="border-radius: 50%"
                 />
               </div>
@@ -384,12 +385,37 @@
                   :options="terms"
                   class="mb-3"
                   size="lg"
+                  value-field="id"
+                  text-field="name"
                   required
                 >
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
                       >-- Please select term--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3" class="p-4">
+              <b-form-group label="Session">
+                <b-form-select
+                  value-field="id"
+                  text-field="name"
+                  v-model="form.student.session"
+                  :options="sessions"
+                  class="mb-3"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select session--</b-form-select-option
                     >
                   </template>
 
@@ -569,6 +595,7 @@ import { STUDENT_QUERY } from '@/graphql/students/queries'
 import { UPDATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import Swal from 'sweetalert2'
+import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 
 export default {
   props: {
@@ -603,6 +630,7 @@ export default {
           guardian_address: null,
           adm_no: null,
           term: null,
+          session: null,
           address: null,
           admitted_year: null,
         },
@@ -610,14 +638,13 @@ export default {
       }),
       preview_url: null,
       genders: ['Male', 'Female'],
-      terms: ['first-term', 'second-term', 'third-term'],
       show: true,
     }
   },
 
   apollo: {
     // Simple query that will update the 'hello' vue property
-    $loadingKey: 'loading',
+    // $loadingKey: 'loading',
     countries: {
       query: COUNTRY_QUERIES,
     },
@@ -627,12 +654,6 @@ export default {
     bloodGroups: {
       query: BLOOD_GROUP_QUERIES,
     },
-    // country: {
-    //   query: COUNTRY_QUERY,
-    //   variables() {
-    //     return { id: parseInt(this.form.country) }
-    //   },
-    // },
     country: {
       query: COUNTRY_QUERY,
       variables() {
@@ -647,6 +668,12 @@ export default {
     },
     klases: {
       query: KLASE_QUERIES,
+    },
+    terms: {
+      query: TERM_QUERIES,
+    },
+    sessions: {
+      query: SESSION_QUERIES,
     },
     student: {
       query: STUDENT_QUERY,
@@ -665,7 +692,8 @@ export default {
           this.form.student.phone = data.student.phone
           this.form.student.address = data.student.address
           this.form.student.gender = data.student.gender
-          this.form.student.term = data.student.term
+          this.form.student.term = data.student.term.id
+          this.form.student.session = data.student.session.id
           this.form.student.adm_no = data.student.adm_no
           this.form.student.klase = data.student.klase.id
           this.form.student.admitted_year = data.student.admitted_year
@@ -758,8 +786,7 @@ export default {
                 query: STUDENT_QUERY,
                 variables: { slug: slugName },
               })
-              console.log(data)
-              data.teacher = updateTeacher
+              data.updateStudent = updateStudent
 
               // Mutate cache result
 
@@ -772,7 +799,7 @@ export default {
             },
           })
           .then(({ data }) => {
-               Swal.fire({
+            Swal.fire({
               title: 'Done...',
               icon: 'success',
               timer: 1500,

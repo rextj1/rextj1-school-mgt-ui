@@ -15,6 +15,7 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     photo
     adm_no
     code
+    cum_avg
     status
     address
     admitted_year
@@ -22,8 +23,14 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     guardian_no
     guardian_email
     guardian_address
-    term
-    session
+    term {
+      id
+      name
+    }
+    session {
+      id
+      name
+    }
     birthday
     # guardian: Guardian @belongsTo
     # klase: Klase @belongsTo
@@ -80,6 +87,7 @@ export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
     photo
     adm_no
     code
+    cum_avg
     status
     address
     admitted_year
@@ -87,8 +95,14 @@ export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
     guardian_no
     guardian_email
     guardian_address
-    term
-    session
+    term {
+      id
+      name
+    }
+    session {
+      id
+      name
+    }
     birthday
   }
 `

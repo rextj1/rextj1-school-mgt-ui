@@ -384,12 +384,38 @@
                   :options="terms"
                   class="mb-3"
                   size="lg"
+                  value-field="id"
+                  text-field="name"
                   required
                 >
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
                       >-- Please select term--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3">
+              <b-form-group label="Session">
+                <b-form-select
+                  id="sessions"
+                  value-field="id"
+                  text-field="name"
+                  v-model="form.student.session"
+                  :options="sessions"
+                  required
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select session--</b-form-select-option
                     >
                   </template>
 
@@ -569,6 +595,7 @@ import {
 import { CREATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import Swal from 'sweetalert2'
+import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 
 export default {
   middleware: 'auth',
@@ -599,6 +626,7 @@ export default {
           guardian_address: null,
           adm_no: null,
           term: null,
+          session: null,
           address: null,
           admitted_year: null,
         },
@@ -606,7 +634,6 @@ export default {
       }),
       preview_url: null,
       genders: ['Male', 'Female'],
-      terms: ['first-term', 'second-term', 'third-term'],
       show: true,
     }
   },
@@ -634,6 +661,12 @@ export default {
     },
     klases: {
       query: KLASE_QUERIES,
+    },
+    terms: {
+      query: TERM_QUERIES,
+    },
+    sessions: {
+      query: SESSION_QUERIES,
     },
   },
   methods: {

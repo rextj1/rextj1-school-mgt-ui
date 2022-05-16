@@ -45,3 +45,19 @@ export const CREATE_ROW_MUTATION = gql`
     }
   }
 `
+export const CREATE_SESSION_MUTATION = gql`
+  mutation createSessionMutation($name: String!) {
+    createSession(name: $name) {
+      id
+      name
+    }
+  }
+`
+export const UPDATE_SESSION_MUTATION = gql`
+  mutation updateSessionMutation($id: ID!, $name: String!) {
+    updateSession(id: $id, name: $name) {
+      id
+      name
+    }
+  }
+`
