@@ -1,6 +1,12 @@
 <template>
   <div class="timetable">
-    <h2 class="d-flex justify-content-center p-4">Class Timetable</h2>
+    <div v-if="marks[0] == null"></div>
+
+    <h2 class="d-flex justify-content-center p-4" v-else>
+      <span style="color: green; font-weight: bold"
+        >({{ marks[0].klase.name }}) Scoresheet</span
+      >
+    </h2>
     <div class="exam-timetable table-responsive">
       <b-form
         method="POST"
@@ -19,16 +25,17 @@
               <th scope="col">Exam 60%</th>
             </tr>
           </thead>
- 
+
           <tbody>
             <tr v-for="(mark, value) in marks" :key="mark.id">
               <td>{{ value + 1 }}</td>
+              
               <td>
                 {{ mark.student.first_name }} {{ mark.student.last_name }}
               </td>
               <td>{{ mark.subject.subject }}</td>
 
-              <td></td>
+              <td> {{ mark.student.adm_no }}</td>
               <td scope="row">
                 <input
                   v-model="mark.ca1"
@@ -61,7 +68,8 @@
         </table>
         <div class="d-flex justify-content-center mt-4">
           <b-button size="lg" type="submit" variant="danger"
-            >Submit Scores</b-button
+            ><b-spinner variant="light" v-if="busy" small class="mr-1 mb-1" />Add
+            Scores</b-button
           >
         </div>
       </b-form>
@@ -70,6 +78,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import { CREATE_ROW_MUTATION } from '~/graphql/marks/mutations'
 export default {
   props: {
@@ -79,6 +88,7 @@ export default {
   data() {
     return {
       scores: [],
+      busy: false,
       form: new this.$form({}),
     }
   },
@@ -107,6 +117,7 @@ export default {
       }
     },
     onLogin() {
+      this.busy = true
       this.$apollo
         .mutate({
           mutation: CREATE_ROW_MUTATION,
@@ -120,6 +131,19 @@ export default {
         })
         .then(({ data }) => {
           console.log(data)
+          Swal.fire({
+            title: 'Good',
+            icon: 'success',
+            text: 'Students scores added successfully',
+            position: 'center',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
+          this.busy = false
         })
     },
   },

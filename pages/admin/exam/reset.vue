@@ -61,9 +61,16 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
+             <b-button
+              type="submit"
+              variant="danger"
+              size="lg"
+              style="height: 3.85rem; margin-top: 2.85rem"
+              >Reset Promotion</b-button
+            >
           </b-row>
 
-          <b-button type="submit" variant="danger">Submit</b-button>
+         
         </b-form>
       </b-card>
 
@@ -116,28 +123,6 @@ export default {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
-    // studenSetPromotion(item) {
-    //   console.log(item)
-    //   this.$apollo
-    //     .mutate({
-    //       mutation: CREATE_SET_PROMOTION_MUTATION,
-    //       variables: { id: 1, name: parseInt(item) },
-    //     })
-    //     .then(({ data }) => {
-    //       Swal.fire({
-    //         title: 'Good',
-    //         icon: 'success',
-    //         text: 'Promotion mark set successfully!',
-    //         position: 'top-end',
-    //         color: '#fff',
-    //         background: '#4bb543',
-    //         toast: false,
-    //         backdrop: false,
-    //         timer: 1500,
-    //         showConfirmButton: false
-    //       })
-    //     })
-    // },
     markSubmit() {
       if (this.form.class === null || this.form.session === null) {
         Swal.fire({
@@ -209,16 +194,8 @@ export default {
   }
   .custom-select {
     option {
-      font-size: 1.8rem !important;
+      font-size: 1.5rem !important;
     }
-  }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
   }
 
   .libarian__wrapper {

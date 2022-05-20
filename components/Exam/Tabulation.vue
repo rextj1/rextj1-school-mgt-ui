@@ -1,8 +1,27 @@
 <template>
   <div>
     <div class="card">
-      <div class="card-header">
-        <h6 class="card-title font-weight-bold">Tabulation Sheet for</h6>
+      <div v-if="publishResult == null"></div>
+      <div
+        v-else
+        class="card-header"
+        @click="
+          resulStatus(
+            publishResult.status === 'published' ? 'unpublished' : 'published'
+          )
+        "
+      >
+        <b-button
+          variant="primary"
+          size="lg"
+          :disabled="publishResult.status === 'published'"
+        >
+          {{
+            publishResult.status === 'published'
+              ? 'Results Published'
+              : 'publish Results'
+          }}
+        </b-button>
       </div>
 
       <vue-html2pdf
@@ -25,19 +44,13 @@
               <table class="table table-responsive table-striped">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>NAMES</th>
-                    <!-- @foreach($subjects as $sub) -->
-                    <th title="" rowspan="2"></th>
-                    <!-- @endforeach
-                        -->
-                    <div v-if="term == 1">
-                      <th>1st Term Total</th>
-                      <th>2nd Term Total</th>
-                      <th>3rd Term Total</th>
-                      <th style="color: darkred">Cum Total</th>
-                      <th style="color: darkblue">Cum Average</th>
-                    </div>
+                    <th>S/N</th>
+                    <th>Na</th>
+                    <th>1st Term Total</th>
+                    <th>2nd Term Total</th>
+                    <th>3rd Term Total</th>
+                    <th style="color: darkred">Cum Total</th>
+                    <th style="color: darkblue">Cum Average</th>
 
                     <th style="color: darkred">Total</th>
                     <th style="color: darkblue">Average</th>
@@ -45,26 +58,26 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- @foreach($students as $s) -->
                   <tr v-for="(record, value) in records" :key="record.id">
                     <td>{{ value + 1 }}</td>
                     <td style="">
                       {{ record.student.first_name }}
                       {{ record.student.last_name }}
                     </td>
-                    <!-- @foreach($subjects as $sub) -->
-                    <td></td>
-                    <!-- @endforeach -->
 
-                    <div v-if="term == 1">
-                      <td>{{ '-' }}</td>
+                    <td v-for="first in firstTerm" :key="first.id">
+                      {{ first.cum_avg }}
+                    </td>
 
-                      <td>{{ '-' }}</td>
+                    <td v-for="secound in secoundTerm" :key="secound.id">
+                      {{ secound.cum_avg }}
+                    </td>
 
-                      <td>{{ '-' }}</td>
-                    </div>
+                    <td v-for="third in thirdTerm" :key="third.id">
+                      {{ third.cum_avg }}
+                    </td>
 
-                    <td style="color: darkred">{{ record.total }}</td>
+                    <!-- <td style="color: darkred">{{ record.total }}</td> -->
                     <td style="color: darkblue">{{ record.avg }}</td>
                     <td
                       style="color: darkgreen"
@@ -90,17 +103,80 @@
 </template>
 
 <script>
+import { UPDATE_PUBLISH_RESULT_MUTATION } from '@/graphql/examRecord/mutations'
+import { PUBLISH_RESULT_QUERY } from '~/graphql/examRecord/queries'
+import Swal from 'sweetalert2'
 export default {
   props: {
     records: Array,
     examRecords: Array,
-    term: String,
+    firstTerm: Array,
+    secoundTerm: Array,
+    thirdTerm: Array,
+    publishResult: Object,
+    student: Array,
   },
   data() {
     return {}
   },
 
   methods: {
+    resulStatus(item) {
+      const klase = parseInt(this.student[0])
+      const term = parseInt(this.student[1])
+      const session = parseInt(this.student[2])
+      this.busy = true
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_PUBLISH_RESULT_MUTATION,
+          variables: {
+            klase_id: parseInt(this.student[0]),
+            term_id: parseInt(this.student[1]),
+            session_id: parseInt(this.student[2]),
+            status: item,
+          },
+          update: (store, { data: { updatePublishResult } }) => {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: PUBLISH_RESULT_QUERY,
+              variables: {
+                klase_id: parseInt(klase),
+                term_id: parseInt(term),
+                session_id: parseInt(session),
+              },
+            })
+
+            data.publishResult.status != updatePublishResult
+
+            store.writeQuery({
+              query: PUBLISH_RESULT_QUERY,
+              variables: {
+                klase_id: parseInt(klase),
+                term_id: parseInt(term),
+                session_id: parseInt(session),
+              },
+
+              data,
+            })
+          },
+        })
+        .then(({ data }) => {
+          this.busy = false
+          Swal.fire({
+            title: 'Good',
+            icon: 'success',
+            text: 'Done!',
+            position: 'center',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
+        })
+    },
+
     postion(i) {
       var j = i % 10
       const k = i % 100

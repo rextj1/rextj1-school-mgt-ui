@@ -10,6 +10,7 @@ export const MARK_FIELDS_FRAGMENT = gql`
     exam_total
     sub_position
     cum_ave
+    status
     term {
       id
       name
@@ -36,7 +37,6 @@ export const MARK_FIELDS_FRAGMENT = gql`
     grade {
       id
       name
-
       mark_from
       mark_to
       remark

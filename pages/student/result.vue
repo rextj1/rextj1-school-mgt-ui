@@ -1,118 +1,289 @@
 <template>
-  <div class="p-4">
-    <div class="libarian__wrapper" @click.prevent="hideMenu">
-      <b-card no-body @click="hideMenu">
-        <b-tabs card style="font-size: 1.4rem">
-          <b-tab active @click="hideMenu">
-            <template #title>
-              <strong>Current Result</strong>
-              <b-icon scale="0.8" icon="caret-down-fill" />
-            </template>
-            <StudentResult />
-          </b-tab>
+  <div class="p-4 view-payment">
+    <template v-if="!klases && !terms && !sessions && !user">
+      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
+        <div class="grow">
+          <b-spinner
+            style="width: 30rem; height: 30rem"
+            type="grow"
+            variant="danger"
+          ></b-spinner>
+        </div></div
+    ></template>
+    <template v-else>
+      <b-card class="p-3 mb-4 d-flex">
+        <b-form @submit.prevent="markSubmit">
+          <b-row>
+            <b-col md="2">
+              <b-form-group label="Classes">
+                <b-form-select
+                  id="klases"
+                  value-field="id"
+                  text-field="name"
+                  v-model="form.class"
+                  :options="klases"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select class--</b-form-select-option
+                    >
+                  </template>
 
-          <b-tab @click.prevent="registrationMenu" lazy>
-            <template #title>
-              <strong>All Results</strong>
-              <b-icon scale="0.8" icon="caret-down-fill" />
-            </template>
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
 
-            <div class="menu" style="background-color: #fff">
-              <ul
-                class="shadow"
-                v-show="registerMenu"
-                :class="registrationMenuClass"
-              >
-                <li @click.prevent="activeTab = 'StudentResult'">
-                  <span class="d-flex">JSS1</span>
-                </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
-                  <span class="d-flex">JSS2</span>
-                </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
-                  <span class="d-flex">JSS3</span>
-                </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
-                  <span class="d-flex">SSS1</span>
-                </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
-                  <span class="d-flex">SSS2</span>
-                </li>
-                <li @click.prevent="activeTab = 'StudentResult'">
-                  <span class="d-flex"> SSS3</span>
-                </li>
-                <li></li>
-              </ul>
-            </div>
+            <b-col md="2">
+              <b-form-group label="Terms">
+                <b-form-select
+                  id="terms"
+                  value-field="id"
+                  text-field="name"
+                  v-model="form.term"
+                  :options="terms"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select term--</b-form-select-option
+                    >
+                  </template>
 
-            <component :is="activeTab" />
-          </b-tab>
-        </b-tabs>
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="2">
+              <b-form-group label="Sessions">
+                <b-form-select
+                  id="sessions"
+                  value-field="id"
+                  text-field="name"
+                  v-model="form.session"
+                  :options="sessions"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select session--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+            <b-button
+              type="submit"
+              variant="danger"
+              size="lg"
+              style="height: 3.85rem; margin-top: 2.85rem"
+              >Submit</b-button
+            >
+          </b-row>
+        </b-form>
       </b-card>
-    </div>
+
+      <div class="libarian__wrapper" v-show="timetableDropdownClass">
+        <ExamSingleStudentResult
+          :klaseResults="klaseResults"
+          :studentExamResult="studentExamResult"
+          :studentMarkResult="studentMarkResult"
+          :student="[form.class, form.term, form.session]"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import {
+  EXAM_RECORD_QUERIES,
+  STUDENT_EXAM_RESULT_QUERIES,
+} from '~/graphql/examRecord/queries'
+import { KLASES_QUERIES } from '~/graphql/klases/queries'
+import {
+  SESSION_QUERIES,
+  STUDENT_MARK_RESULT_QUERIES,
+  TERM_QUERIES,
+} from '~/graphql/marks/queries'
+import { USER_STUDENT_QUERY } from '~/graphql/users/queries'
 export default {
+  middleware: 'auth',
   data() {
     return {
+      klaseResults: [],
+      studentExamResult: [],
+      studentMarkResult: [],
+      user: [],
+      timetableDropdownClass: false,
+      form: {
+        class: null,
+        session: null,
+        term: null,
+      },
+
+      dynamicClass: '',
       activeTab: '',
       registerMenu: false,
       registrationMenuClass: '',
     }
   },
-  methods: {
-    registrationMenu(e) {
-      if (this.registrationMenuClass === '') {
-        this.registerMenu = true
-        this.registrationMenuClass = 'off'
-        e.stopPropagation()
-      } else {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
-      }
+  apollo: {
+    klases: {
+      query: KLASES_QUERIES,
     },
-    hideMenu() {
-      if (this.registerMenu === true) {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
+    terms: {
+      query: TERM_QUERIES,
+    },
+    sessions: {
+      query: SESSION_QUERIES,
+    },
+    user: {
+      query: USER_STUDENT_QUERY,
+      variables() {
+        return {
+          id: parseInt(this.$auth.user.id),
+        }
+      },
+    },
+  },
+  methods: {
+    dynamicStudentClass(item) {
+      this.dynamicClass = item
+    },
+    markSubmit() {
+      if (
+        this.form.class === null ||
+        this.form.term === null ||
+        this.form.session === null
+      ) {
+        return false
+      } else {
+        this.timetableDropdownClass = true
       }
+
+      setTimeout(() => {
+        this.$apollo.addSmartQuery('klaseResults', {
+          query: EXAM_RECORD_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: parseInt(this.form.term),
+              session_id: parseInt(this.form.session),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.klaseResults = data.klaseResults
+            }
+          },
+        })
+      }, 100)
+      setTimeout(() => {
+        const studentId = this.user.students[0].id
+        this.$apollo.addSmartQuery('studentExamResult', {
+          query: STUDENT_EXAM_RESULT_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              student_id: parseInt(studentId),
+              term_id: parseInt(this.form.term),
+              session_id: parseInt(this.form.session),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.studentExamResult = data.studentExamResult
+            }
+          },
+        })
+      }, 100)
+      setTimeout(() => {
+        const studentId = this.user.students[0].id
+        this.$apollo.addSmartQuery('studentMarkResult', {
+          query: STUDENT_MARK_RESULT_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              student_id: parseInt(studentId),
+              term_id: parseInt(this.form.term),
+              session_id: parseInt(this.form.session),
+            }
+          },
+
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.studentMarkResult = data.studentMarkResult
+            }
+          },
+        })
+      }, 100)
     },
   },
 }
 </script>
 
 <style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.4rem;
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
+.view-payment {
+  font-size: 1.6rem;
 
-  .nav-link.active {
-    border-top: 5px solid limegreen;
+  .custom-select:focus {
+    box-shadow: none;
+  }
+  .grow {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+  }
+  .custom-select,
+  .form-control,
+  .mb-3 {
+    height: 4rem;
+    font-size: 1.4rem;
+    color: #000;
   }
 
-  .menu {
-    ul {
-      z-index: 999;
-      position: absolute;
-      border: none;
-      top: -3.5rem;
-      left: 14.2rem;
-      background-color: #fff;
+  .libarian__wrapper {
+    padding: 2rem;
+    font-size: 1.4rem;
+    background-color: var(--color-white);
+    border-radius: 0.5rem;
+    border: none;
+
+    .nav-link.active {
+      border-top: 5px solid limegreen;
     }
 
-    li:not(:last-child) {
-      background-color: #fff;
-      padding: 1rem 4.8rem;
-      border-bottom: 1px solid gray;
-      cursor: pointer;
+    .menu {
+      ul {
+        z-index: 999;
+        position: absolute;
+        border: none;
+        top: -3.5rem;
+        left: 14.2rem;
+        background-color: #fff;
+      }
 
-      &:hover {
-        background-color: var(--color-input);
+      li:not(:last-child) {
+        background-color: #fff;
+        padding: 1rem 4.8rem;
+        border-bottom: 1px solid gray;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--color-input);
+        }
       }
     }
   }

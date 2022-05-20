@@ -12,6 +12,7 @@ export const EXAM_RECORD_FIELDS_FRAGMENT = gql`
       id
       name
     }
+    status
     session {
       id
       name

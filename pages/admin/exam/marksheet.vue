@@ -13,9 +13,9 @@
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
-          <b-row no-gutters>
-            <b-col md="3">
-              <b-form-group label="Clases">
+          <b-row>
+            <b-col md="2">
+              <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
                   value-field="id"
@@ -28,7 +28,7 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- select class--</b-form-select-option
+                      >-- Select class --</b-form-select-option
                     >
                   </template>
 
@@ -37,7 +37,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
@@ -51,7 +51,7 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- select term--</b-form-select-option
+                      >-- Select term--</b-form-select-option
                     >
                   </template>
 
@@ -60,7 +60,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
@@ -74,7 +74,7 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- select session--</b-form-select-option
+                      >-- Select session--</b-form-select-option
                     >
                   </template>
 
@@ -83,7 +83,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Subject">
                 <b-form-select
                   id="subject"
@@ -97,7 +97,7 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- select subject--</b-form-select-option
+                      >-- Select subject--</b-form-select-option
                     >
                   </template>
 
@@ -105,9 +105,14 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
+            <b-button
+              type="submit"
+              variant="danger"
+              size="lg"
+              style="height: 3.8rem; margin-top: 2.83rem"
+              >Submit</b-button
+            >
           </b-row>
-
-          <b-button type="submit" variant="danger">Submit</b-button>
         </b-form>
       </b-card>
 
@@ -160,7 +165,7 @@ export default {
       query: TERM_QUERIES,
     },
     sessions: {
-      query: SESSION_QUERIES
+      query: SESSION_QUERIES,
     },
   },
   methods: {
@@ -201,7 +206,7 @@ export default {
             klase_id: parseInt(this.form.class),
             subject_id: parseInt(this.form.subject),
             session_id: parseInt(this.form.session),
-            term_id: parseInt(this.form.term)
+            term_id: parseInt(this.form.term),
           },
           result({ loading, data }, key) {
             if (!loading) {
@@ -234,6 +239,11 @@ export default {
     height: 4rem;
     font-size: 1.4rem;
     color: #000;
+  }
+  .custom-select {
+    option {
+      font-size: 1.5rem !important;
+    }
   }
 
   .libarian__wrapper {

@@ -58,13 +58,6 @@ export const BLOOD_GROUP_QUERIES = gql`
     }
   }
 `
-// export const BLOOD_GROUP_QUERY = gql`
-//   query BloodGroupQuery {
-//     bloodGroup {
-//       name
-//     }
-//   }
-// `
 
 export const USERS_ROLE_QUERY = gql`
   query UsersQuery {
@@ -199,8 +192,15 @@ export const USER_STUDENT_QUERY = gql`
         guardian_no
         guardian_email
         guardian_address
-        term
-        session
+        term{
+          id
+          name
+        }
+        cum_avg
+        session{
+          id
+          name
+        }
         birthday
       }
     }

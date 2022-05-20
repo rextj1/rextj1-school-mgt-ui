@@ -13,7 +13,7 @@
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
-          <b-row no-gutters>
+          <b-row>
             <b-col md="3">
               <b-form-group label="Clases">
                 <b-form-select
@@ -82,9 +82,11 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
+             <b-button type="submit" variant="danger" size="lg"
+             style="height:3.8rem; margin-top:2.8rem">Submit</b-button>
           </b-row>
 
-          <b-button type="submit" variant="danger">Submit</b-button>
+         
         </b-form>
       </b-card>
 
@@ -92,7 +94,11 @@
         <ExamTabulation
           :records="records"
           :examRecords="examRecords"
-          :term="form.term"
+          :firstTerm="firstTerm"
+          :secoundTerm="secoundTerm"
+          :thirdTerm="thirdTerm"
+          :student="[form.class, form.term, form.session]"
+          :publishResult="publishResult"
         />
       </div>
     </template>
@@ -103,6 +109,10 @@
 import {
   EXAM_RECORDS_QUERIES,
   EXAM_RECORD_QUERIES,
+  FIRST_TERM_QUERIES,
+  PUBLISH_RESULT_QUERY,
+  SECOUND_TERM_QUERIES,
+  THIRD_TERM_QUERIES,
 } from '~/graphql/examRecord/queries'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
@@ -111,8 +121,13 @@ export default {
   data() {
     return {
       records: [],
+      klaseResults: [],
       examRecords: [],
-      timetableDropdownClass: true,
+      firstTerm: [],
+      secoundTerm: [],
+      thirdTerm: [],
+      publishResult: {},
+      timetableDropdownClass: false,
       form: {
         class: null,
         session: null,
@@ -185,6 +200,76 @@ export default {
           },
         })
       }, 100)
+
+      setTimeout(() => {
+        this.$apollo.addSmartQuery('publishResult', {
+          query: PUBLISH_RESULT_QUERY,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: parseInt(this.form.term),
+              session_id: parseInt(this.form.session),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.publishResult = data.publishResult
+            }
+          },
+        })
+      }, 101)
+       setTimeout(() => {
+        this.$apollo.addSmartQuery('firstTerm', {
+          query: FIRST_TERM_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: 1,
+              session_id: parseInt(this.form.session),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.firstTerm = data.firstTerm
+            }
+          },
+        })
+      }, 101)
+      setTimeout(() => {
+        this.$apollo.addSmartQuery('secoundTerm', {
+          query: SECOUND_TERM_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: 2,
+              session_id: parseInt(this.form.session),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.secoundTerm = data.secoundTerm
+            }
+          },
+        })
+      }, 101)
+
+      setTimeout(() => {
+        this.$apollo.addSmartQuery('thirdTerm', {
+          query: THIRD_TERM_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: 3,
+              session_id: parseInt(this.form.session),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.thirdTerm = data.thirdTerm
+            }
+          },
+        })
+      }, 101)
     },
   },
 }

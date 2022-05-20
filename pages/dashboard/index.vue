@@ -177,12 +177,15 @@ export default {
   apollo: {
     students: {
       query: STUDENT_QUERIEX,
+      errorPolicy: 'all',
     },
     teachers: {
       query: TEACHER_QUERIES,
+      errorPolicy: 'all',
     },
     guardians: {
       query: GUARDIAN_QUERIES,
+      errorPolicy: 'all',
     },
   },
   beforeUpdate() {
@@ -207,6 +210,7 @@ export default {
   left: 50%;
 }
 .home {
+  // margin-top: 5rem;
   font-size: 1.6rem;
   &.main {
     flex: 1 1 0;

@@ -78,3 +78,24 @@ export const TERM_QUERIES = gql`
     }
   }
 `
+// stdent Result Query
+export const MAIN_STUDENT_MARK_RESULT_QUERIES = gql`
+  query MainStudentMarkResultsQuery(
+    $klase_id: Int!
+    $student_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+    $status: String!
+  ) {
+    MainStudentMarkResult(
+      klase_id: $klase_id
+      student_id: $student_id
+      term_id: $term_id
+      session_id: $session_id
+      status: $status
+    ) {
+      ...MarkFields
+    }
+  }
+  ${MARK_FIELDS_FRAGMENT}
+`

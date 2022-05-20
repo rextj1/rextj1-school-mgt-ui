@@ -4,7 +4,10 @@
       <div class="card">
         <div class="card-body">
           <div class="p-3 roles-table">
-            <h2 class="p-4 d-flex justify-content-center">
+            <h2
+              class="p-4 d-flex justify-content-center"
+              style="font-weight: bold"
+            >
               Reset Student Promotion
             </h2>
 
@@ -128,7 +131,6 @@ export default {
 
               data.resetPromotion = data.resetPromotion.filter((t) => {
                 return t.from_class !== parseInt(klase)
-                
               })
               // data.resetPromotion = createPromoteStudents
 
@@ -159,27 +161,39 @@ export default {
               showConfirmButton: false,
             })
           })
-      }else{
-         Swal.fire({
-              title: 'Ooops...',
-              icon: 'warning',
-              text: 'No record found!',
-              position: 'center',
-              color: '#fff',
-              background: '#cc3300',
-              toast: false,
-              backdrop: false,
-              timer: 1500,
-              showConfirmButton: false,
-            })
+      } else {
+        Swal.fire({
+          title: 'Ooops...',
+          icon: 'warning',
+          text: 'No record found!',
+          position: 'center',
+          color: '#fff',
+          background: '#cc3300',
+          toast: false,
+          backdrop: false,
+          timer: 1500,
+          showConfirmButton: false,
+        })
       }
     },
   },
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .card {
   font-size: 1.5rem;
+  .custom-select,
+  .form-control,
+  .mb-3 {
+    height: 4rem;
+    font-size: 1.4rem;
+    color: #000;
+  }
+  .custom-select {
+    option {
+      font-size: 1.5rem !important;
+    }
+  }
 }
 </style>

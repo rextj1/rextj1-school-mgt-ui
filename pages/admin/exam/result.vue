@@ -13,9 +13,9 @@
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
-          <b-row no-gutters>
-            <b-col md="3">
-              <b-form-group label="Clases">
+          <b-row>
+            <b-col md="2">
+              <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
                   value-field="id"
@@ -37,7 +37,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
@@ -60,8 +60,8 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
-              <b-form-group label="Session">
+            <b-col md="2">
+              <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
                   value-field="id"
@@ -82,26 +82,77 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
+            <b-button
+              type="submit"
+              variant="danger"
+              size="lg"
+              style="height: 3.85rem; margin-top: 2.85rem"
+              >Submit</b-button
+            >
           </b-row>
-
-          <b-button type="submit" variant="danger">Submit</b-button>
         </b-form>
       </b-card>
 
-      <div class="libarian__wrapper" v-show="timetableDropdownClass">
-        <ExamStudentResult
-          :klaseResults="klaseResults"
-          :student="[form.class, form.term, form.session]"
-        />
+      <div class="card">
+        <div class="card-body">
+          <div class="p-3 roles-table">
+            <h2
+              class="p-4 d-flex justify-content-center"
+              style="font-weight: bold"
+            >
+              Student Result Section
+            </h2>
+            <b-table :items="klaseResults" :fields="fields">
+              <template #cell(#)="data">
+                {{ data.index + 1 }}
+              </template>
+
+              <template #cell(student)="data">
+                {{ data.value.first_name }} {{ data.value.last_name }}
+              </template>
+
+              <template #cell(adm_no)="data">
+                {{ data.item.student.adm_no }}
+              </template>
+
+              <template #cell(term)="data">
+                {{ data.item.term.name }}
+              </template>
+
+              <template #cell(session)="data">
+                {{ data.item.session.name }}
+              </template>
+
+              <template #cell(klase)="data">
+                {{ data.item.klase.name }}
+              </template>
+
+              <template #cell(actions)="data">
+                <router-link
+                  variant="primary"
+                  :to="{
+                    name: 'admin-exam-slug',
+                    params: { slug: data.item.student.id },
+                    query: {
+                      student,
+                      klaseResults,
+                    },
+                  }"
+                >
+                  <b-icon icon="eye" class="mr-1"></b-icon>
+                  View Result
+                </router-link>
+              </template>
+            </b-table>
+          </div>
+        </div>
       </div>
     </template>
   </div>
 </template>
 
 <script>
-import {
-  EXAM_RECORD_QUERIES,
-} from '~/graphql/examRecord/queries'
+import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 export default {
@@ -109,6 +160,7 @@ export default {
   data() {
     return {
       klaseResults: [],
+      student: [],
       timetableDropdownClass: false,
       form: {
         class: null,
@@ -120,6 +172,43 @@ export default {
       activeTab: '',
       registerMenu: false,
       registrationMenuClass: '',
+      fields: [
+        {
+          key: '#',
+          sortable: false,
+        },
+        {
+          key: 'student',
+          label: 'Full Name',
+          sortable: false,
+        },
+        {
+          key: 'adm_no',
+          label: 'Adm_no.',
+        },
+        {
+          key: 'klase',
+          label: 'Class',
+        },
+        {
+          key: 'term',
+          label: 'Term.',
+        },
+        {
+          key: 'session',
+          label: 'Session.',
+        },
+
+        {
+          key: '',
+          sortable: false,
+        },
+        {
+          key: 'actions',
+          label: 'Actions',
+          sortable: false,
+        },
+      ],
     }
   },
   apollo: {
@@ -149,6 +238,7 @@ export default {
       }
 
       setTimeout(() => {
+        this.student = [this.form.class, this.form.term, this.form.session]
         this.$apollo.addSmartQuery('klaseResults', {
           query: EXAM_RECORD_QUERIES,
           variables() {

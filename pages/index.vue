@@ -1,66 +1,30 @@
 <template>
-  <div class="margin-down">
-    <!-- description -->
-<!-- {{ form.roa }} -->
-    <b-form
-      method="POST"
-      @submit.prevent="onSubmit"
-      @keydown="form.onKeydown($event)"
-    >
-      <b-row class="p-4">
-        <b-col md="4" class="p-4">
-          <input type="text" v-model="form.roa.a" id="" />
-          <input type="text" v-model="form.rob.b" id="" />
-          <input type="text" v-model="form.roc.c" id="" />
-          <input type="text" v-model="form.rod.d" id="" />
-          <input type="text" v-model="form.roe.e" id="" />
-        </b-col>
-      </b-row>
-
-      <div class="d-flex justify-content-center">
-        <b-button type="submit" variant="primary" class="mr-4" size="lg">
-          <b-spinner
-          v-if="form.busy"
-            variant="light"
-            small
-            class="mr-1 mb-1"
-          />Register</b-button
-        >
-      </div>
-    </b-form>
-  </div>
+ <div>
+  <b-button v-b-toggle:my-collapse>
+    <span class="when-open">Close</span><span class="when-closed">Open</span> My Collapse
+  </b-button>
+  <b-collapse id="my-collapse">
+    <!-- Content here -->
+  </b-collapse>
+</div>
 </template>
 
 <script>
-import { CREATE_ROW_MUTATION } from '~/graphql/notices/mutations'
-export default {
-   middleware: 'auth',
-  data() {
-    return {
-      form: new this.$form({
-        roa: { a: '', id: 1 },
-        rob: { b: '', id: 2 },
-        roc: { c: '', id: 3 },
-        rod: { d: '', id: 4 },
-        roe: { e: '', id: 5 },
-      }),
+  export default {
+    middleware: 'auth',
+    data() {
+      return {
+        text: `
+          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+          richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
+          brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
+          tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+          assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
+          wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+          vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic
+          synth nesciunt you probably haven't heard of them accusamus labore VHS.
+        `
+      }
     }
-  },
-  methods: {
-    onSubmit() {
-      this.form.busy = true
-      this.$apollo
-        .mutate({
-          mutation: CREATE_ROW_MUTATION,
-          variables: {description: this.form.data()}
-        })
-        .then(({ data }) => {
-          this.form.busy = false
-          console.log(data)
-          // this.$router.push('/admin/teacher')
-        })
-        .catch(() => {})
-    },
-  },
-}
+  }
 </script>

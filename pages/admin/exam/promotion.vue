@@ -13,9 +13,10 @@
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <!-- setPromotion -->
-        <h3>Set Promotion</h3>
+
+        <h3>Set promotion mark</h3>
         <b-row>
-          <b-col md="3">
+          <b-col md="3" class="mb-4">
             <div v-for="set in setPromotion" :key="set.id">
               <input
                 v-model="set.name"
@@ -34,7 +35,7 @@
 
         <b-form @submit.prevent="markSubmit">
           <b-row>
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Current Class">
                 <b-form-select
                   id="klases"
@@ -57,7 +58,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Current Session">
                 <b-form-select
                   id="sessions"
@@ -80,7 +81,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Next Class">
                 <b-form-select
                   id="klases"
@@ -103,7 +104,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Next Session">
                 <b-form-select
                   id="sessions"
@@ -125,9 +126,14 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
+            <b-button
+              type="submit"
+              variant="danger"
+              size="lg"
+              style="height: 3.75rem; margin-top: 2.9rem"
+              >Submit</b-button
+            >
           </b-row>
-
-          <b-button type="submit" variant="danger">Submit</b-button>
         </b-form>
       </b-card>
 
@@ -135,6 +141,7 @@
         <ExamStudentPromotion
           :promoteStudents="promoteStudents"
           :student="[form.class, form.classTo, form.session, form.sessionTo]"
+          :setPromotion="setPromotion"
         />
       </div>
     </template>
@@ -206,7 +213,7 @@ export default {
             toast: false,
             backdrop: false,
             timer: 1500,
-            showConfirmButton: false
+            showConfirmButton: false,
           })
         })
     },
@@ -227,7 +234,7 @@ export default {
           text: 'select all available fields, current class and new class must not be the same or if current session and new session to are the same, you may need to create a new session!',
           position: 'center',
           color: '#fff',
-          background: '#4bb543',
+          background: '#d9534f',
           toast: false,
           backdrop: false,
         })
@@ -277,6 +284,12 @@ export default {
     height: 4rem;
     font-size: 1.4rem;
     color: #000;
+  }
+
+  .custom-select {
+    option {
+      font-size: 1.5rem !important;
+    }
   }
 
   .libarian__wrapper {
