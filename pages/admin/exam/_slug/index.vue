@@ -4,17 +4,6 @@
     <div class="card">
       <div class="card-header">
         <div class="card">
-          <div class="card-body">
-            <div class="p-3 roles-table">
-              <h2
-                class="p-4 d-flex justify-content-center"
-                style="font-weight: bold"
-              >
-                Student Result Section
-              </h2>
-            </div>
-          </div>
-
           <vue-html2pdf
             :show-layout="true"
             :float-layout="false"
@@ -31,118 +20,142 @@
           >
             <section slot="pdf-content">
               <div class="p-4 text-center">
-                <div class="student__wrapper" style="padding: 3rem 4rem">
-                  <div v-for="first in studentExamResult" :key="first.id">
+                <div
+                  class="student__wrapper"
+                  style="
+                    border: 2px solid #000;
+                    font-weight: bold;
+                    width: 70%;
+                    margin: auto;
+                  "
+                >
+                  <div
+                    style="
+                      font-weight: bold;
+                      border: 4px solid #f0ad4e;
+                      width: 98%;
+                      margin: auto;
+                      margin-top: 0.5rem;
+                    "
+                  >
                     <div
-                      class="
-                        d-flex
-                        justify-content-between
-                        align-items-center
-                        mb-4
+                      v-for="first in studentExamResult"
+                      :key="first.id"
+                      style="
+                        margin-top: 1rem;
+                        padding: 1rem;
+
+                        overflow-x: auto;
+                        font-weight: bold;
                       "
-                      style=""
                     >
-                      <!-- :src="`${$config.APIRoot}/student/storage/${first.student.photo}`" -->
-                      <div class="school-logo" style="">
-                        <img
-                          src="@/assets/svg/ronazon-logo.svg"
-                          alt="logo"
-                          width="100"
-                        />
-                      </div>
-                      <div class="d-flex flex-column align-items-center">
-                        <h2>Ronazon Academy</h2>
-                        <h4>Result sheet {{ first.klase.name }}</h4>
-                      </div>
-                      <div class="student-picture">
-                        <img
-                          src="@/assets/images/teacher.jpeg"
-                          alt="student-photo"
-                          width="100"
-                        />
-                      </div>
-                    </div>
-                    <!-- end header -->
-                    <div class="d-flex justify-content-between">
                       <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
+                        class="
+                          d-flex
+                          justify-content-between
+                          align-items-center
+                        "
+                        style=""
                       >
-                        <h4>Name:</h4>
-                        <h5 style="margin-top: 0.3rem; margin-left: 0.5rem">
-                          {{ first.student.first_name }}
-                          {{ first.student.last_name }}
-                          {{ first.student.middle_name }}
-                        </h5>
+                        <!-- :src="`${$config.APIRoot}/student/storage/${first.student.photo}`" -->
+                        <div class="school-logo" style="">
+                          <img
+                            src="@/assets/svg/ronazon-logo.svg"
+                            alt="logo"
+                            width="100"
+                          />
+                        </div>
+                        <div class="d-flex flex-column align-items-center">
+                          <h2>Ronazon Academy</h2>
+                          <h4>Result sheet {{ first.klase.name }}</h4>
+                        </div>
+                        <div class="student-picture">
+                          <img
+                            src="@/assets/images/teacher.jpeg"
+                            alt="student-photo"
+                            width="60"
+                          />
+                        </div>
                       </div>
-                      <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
-                      >
-                        <h4>ADM No:</h4>
-                        <h5 style="margin-top: 0.3rem; margin-left: 0.5rem">
-                          {{ first.student.adm_no }}
-                        </h5>
-                      </div>
-                      <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
-                      >
-                        <h4>Class:</h4>
-                        <h5 style="margin-top: 0.3rem; margin-left: 0.5rem">
-                          {{ first.klase.name }}
-                        </h5>
-                      </div>
-                      <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
-                      >
-                        <h4>House:</h4>
+                      <!-- end header -->
+                      <div class="d-flex justify-content-between">
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>NAME OF STUDENT:</h4>
+                          <h4 style="margin-left: 0.5rem">
+                            {{ first.student.first_name }}
+                            {{ first.student.last_name }}
+                            {{ first.student.middle_name }}
+                          </h4>
+                        </div>
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>ADM No:</h4>
+                          <h4 style="margin-left: 0.5rem">
+                            {{ first.student.adm_no }}
+                          </h4>
+                        </div>
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>Class:</h4>
+                          <h4 style="margin-left: 0.5rem">
+                            {{ first.klase.name }}
+                          </h4>
+                        </div>
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>HOUSE:</h4>
 
-                        <h5 style="margin-top: 0.3rem; margin-left: 0.5rem">
-                          Red House
-                        </h5>
+                          <h4 style="margin-left: 0.5rem">RED HOUSE</h4>
+                        </div>
                       </div>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
-                      >
-                        <h4>Report sheet for:</h4>
-                        <h4
-                          style="margin-top: 0.3rem; margin-left: 0.5rem"
-                          v-html="position(first.position)"
-                        ></h4>
-                      </div>
-                      <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
-                      >
-                        <h4>Academic year:</h4>
-                        <h5 style="margin-top: 0.3rem; margin-left: 0.5rem">
-                          2020-2023
-                        </h5>
-                      </div>
-                      <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
-                      >
-                        <h4>Age:</h4>
+                      <div class="d-flex justify-content-between">
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>POSITION:</h4>
+                          <h4
+                            style="margin-left: 0.5rem"
+                            v-html="position(first.position)"
+                          ></h4>
+                        </div>
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>SESSION:</h4>
+                          <h4 style="margin-left: 0.5rem">2020-2023</h4>
+                        </div>
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>Age:</h4>
 
-                        <h5 style="margin-top: 0.3rem; margin-left: 0.5rem">
-                          {{ first.student.birthday }}
-                        </h5>
-                      </div>
-                      <div
-                        class="d-flex align-items-stretch"
-                        style="margin-top: 3rem"
-                      >
-                        <h4>House:</h4>
+                          <h5
+                            style="margin-top: 0.3rem; margin-left: 0.5rem"
+                            v-html="getAge(first.student.birthday)"
+                          ></h5>
+                        </div>
+                        <div
+                          class="d-flex align-items-stretch"
+                          style="margin-top: 3rem"
+                        >
+                          <h4>NUMBERS IN CLASS:</h4>
 
-                        <h5 style="margin-top: 0.3rem; margin-left: 0.5rem">
-                          JSS 1
-                        </h5>
+                          <h4 style="margin-left: 0.5rem">
+                         noth
+                          </h4>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -150,17 +163,25 @@
                   <!-- table -->
 
                   <div
-                    style="margin-top: 2rem; padding: 3rem; overflow-x: auto"
+                    style="
+                      overflow-x: auto;
+                      font-weight: bold;
+                      width: 98%;
+                      margin: 2rem auto;
+                    "
                   >
                     <div class="d-flex flex-column">
-                      <table border="2" style="text-align: center">
-                        <tr>
+                      <table
+                        border="2"
+                        style="text-align: center; border: 3px solid #292b2c"
+                      >
+                        <tr style="color: #1c0988">
                           <th style="padding: 0.5rem" rowspan="2">Subjects</th>
                           <th style="padding: 0.5rem" colspan="3">
                             Contineous Assesment
                           </th>
                           <th style="padding: 0.5rem" rowspan="2">
-                            Exam <br />60
+                            Exam <br />60%
                           </th>
                           <th style="padding: 0.5rem" rowspan="2">
                             Final remarks <br />(100%)
@@ -171,16 +192,16 @@
                           </th>
                           <th style="padding: 0.5rem" rowspan="2">Remarks</th>
                         </tr>
-                        <tr>
-                          <th style="padding: 0.5rem">ca1(20%)</th>
-                          <th style="padding: 0.5rem">ca2(20%)</th>
-                          <th style="padding: 0.5rem">Total(40%)</th>
+                        <tr style="color: #1c0988">
+                          <th style="padding: 0.5rem">Ca1<br />(20%)</th>
+                          <th style="padding: 0.5rem">Ca2<br />(20%)</th>
+                          <th style="padding: 0.5rem">Total<br />(40%)</th>
                         </tr>
                         <tr
                           v-for="second in studentMarkResult"
                           :key="second.id"
                         >
-                          <th style="padding: 0.5rem">
+                          <th style="padding: 0.5rem; color: #1c0988">
                             {{ second.subject.subject }}
                           </th>
                           <td style="padding: 0.5rem">{{ second.ca1 }}</td>
@@ -190,28 +211,52 @@
                           <td style="padding: 0.5rem">
                             {{ second.exam_total }}
                           </td>
-                          <td style="padding: 0.5rem">
-                            {{
+
+                          <td
+                            style="padding: 0.5rem; color: #d9534f"
+                            v-if="
                               second.grade == null
                                 ? ''
-                                : second.grade.name
-                            }}
+                                : second.grade.name == 'F'
+                            "
+                          >
+                            {{ second.grade == null ? '' : second.grade.name }}
+                          </td>
+
+                          <td style="padding: 0.5rem; color: green" v-else>
+                            {{ second.grade == null ? '' : second.grade.name }}
                           </td>
 
                           <td
                             style="padding: 0.5rem"
                             v-html="position(second.sub_position)"
                           ></td>
-                          <td style="padding: 0.5rem">
-                            {{
+
+                          <td
+                            style="padding: 0.5rem; color: #d9534f"
+                            v-if="
                               second.grade == null
                                 ? ''
-                                : second.grade.remark
+                                : second.grade.name == 'F'
+                            "
+                          >
+                            {{
+                              second.grade == null ? '' : second.grade.remark
+                            }}
+                          </td>
+
+                          <td style="padding: 0.5rem; color: green" v-else>
+                            {{
+                              second.grade == null ? '' : second.grade.remark
                             }}
                           </td>
                         </tr>
 
-                        <tr v-for="third in studentExamResult" :key="third.id">
+                        <tr
+                          v-for="third in studentExamResult"
+                          :key="third.id"
+                          style="color: #1c0988"
+                        >
                           <th style="padding: 0.5rem" colspan="3">
                             Total score obtained: {{ third.total }}
                           </th>
@@ -224,57 +269,42 @@
                         </tr>
                       </table>
                     </div>
-                    <div style="margin-top: 2rem; font-weight: bold">
-                      <u>Key</u>
-                    </div>
 
-                    <div class="d-flex">
-                      <div style="list-style: inside">
-                        <ol>
-                          <li>70% - 100% = Excellent</li>
-                          <li>60% - 69% = Very Good</li>
-                          <li>50% - 59% = Good</li>
-                          <li>40% - 49% = Fair</li>
-                          <li>0 - 39% = poor</li>
-                        </ol>
+                    <div
+                      style="margin-top: 2rem; font-weight: bold"
+                      class="d-flex"
+                    >
+                      <div>
+                        <table
+                          border="2"
+                          style="width: 30rem; border: 2px solid #d9534f"
+                        >
+                          <tr>
+                            <td style="width: 30rem; border: 2px solid #d9534f">
+                              Principal Remarks
+                            </td>
+                            <td style="width: 30rem; border: 2px solid #d9534f">
+                              Albert
+                            </td>
+                          </tr>
+                        </table>
                       </div>
 
-                      <table border="2" class="ml-auto">
-                        <tr>
-                          <th>Affected trait</th>
-                          <th>Rating</th>
-                        </tr>
-                        <tr>
-                          <th>Fitness</th>
-                          <th></th>
-                        </tr>
-                      </table>
-                    </div>
-
-                    <div class="mt-4 remarks">
-                      <div class="d-flex">
-                        Teacher's comment:
-                        <p
-                          style="
-                            width: 70%;
-                            border-bottom: 1px solid #000;
-                            margin-left: 2rem;
-                          "
+                      <!-- comments -->
+                      <div class="ml-auto">
+                        <table
+                          border="2"
+                          style="width: 30rem; border: 2px solid #d9534f"
                         >
-                          A very bright
-                        </p>
-                      </div>
-                      <div class="d-flex">
-                        Principal's comment:
-                        <p
-                          style="
-                            width: 70%;
-                            border-bottom: 1px solid #000;
-                            margin-left: 2rem;
-                          "
-                        >
-                          An excellent performance
-                        </p>
+                          <tr>
+                            <td style="width: 30rem; border: 2px solid #d9534f">
+                              Principal Remarks
+                            </td>
+                            <td style="width: 30rem; border: 2px solid #d9534f">
+                              Albert
+                            </td>
+                          </tr>
+                        </table>
                       </div>
                     </div>
                   </div>
@@ -346,6 +376,14 @@ export default {
         return i + '<sup>th</sup>'
       }
     },
+    getAge(item) {
+      var dob = new Date(item)
+      var month_diff = Date.now() - dob.getTime()
+      var age_dt = new Date(month_diff)
+      var year = age_dt.getUTCFullYear()
+      var age = Math.abs(year - 1970)
+      return age + ' years'
+    },
     generateReport() {
       this.$refs.html2Pdf.generatePdf()
     },
@@ -356,5 +394,6 @@ export default {
 <style lang="scss" scoped>
 .card {
   font-size: 1.5rem;
+  // color: #1c0988;
 }
 </style>

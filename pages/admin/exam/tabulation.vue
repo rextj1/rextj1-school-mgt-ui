@@ -209,6 +209,7 @@ export default {
               klase_id: parseInt(this.form.class),
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
+              status: 'published'
             }
           },
           result({ loading, data }, key) {

@@ -11,8 +11,8 @@
       </div>
 
       <div class="menu-toggle-wrap">
-        <div class="menu-toggle" @click="ToggleMenu">
-          <b-icon icon="chevron-double-right" class="material-icons" />
+        <div class="menu-toggle">
+          <b-icon icon="" class="material-icons" />
         </div>
       </div>
       <div v-for="role in user.roles" :key="role.id">
@@ -210,7 +210,7 @@
           <h3 class="h3-memu">Admin</h3>
 
           <div class="menu">
-            <nuxt-link to="/dashboard" class="button">
+            <nuxt-link to="/dashboard" class="button" exact-active-class="exact">
               <b-icon
                 @click="ToggleMenus"
                 icon="columns-gap"
@@ -227,7 +227,7 @@
               <span @click="ToggleMenus" class="text">User Roles</span>
             </nuxt-link>
 
-            <nuxt-link :to="{name: ''}" v-b-toggle.collapse-3 class="button">
+            <nuxt-link event="" :to="{ name: '#####' }" v-b-toggle.collapse-3 class="button">
               <b-icon
                 @click="
                   caretDown()
@@ -251,6 +251,7 @@
                   icon="caret-right"
               /></span>
             </nuxt-link>
+
             <b-collapse id="collapse-3" class="mt-2 dropMenuClose">
               <b-card bg-variant="light">
                 <nuxt-link to="/admin/teacher" class="button">
@@ -318,7 +319,7 @@
             </nuxt-link>
 
             <!-- toggle menu -->
-            <nuxt-link :to="{name: ''}" v-b-toggle.collapse-2 class="button">
+            <nuxt-link event=""  :to="{ name: '#' }" v-b-toggle.collapse-2 class="button">
               <b-icon
                 @click="
                   caretDown()
@@ -343,7 +344,7 @@
               /></span>
             </nuxt-link>
 
-            <b-collapse id="collapse-2" class="mt-2 dropMenuClose">
+            <b-collapse id="collapse-2"  class="mt-2 dropMenuClose">
               <b-card bg-variant="light">
                 <nuxt-link to="/admin/exam/timetable" class="button">
                   <span class="text">Timetable</span>
@@ -368,12 +369,14 @@
                 <nuxt-link to="/admin/exam/reset" class="button">
                   <span class="text">Reset Promotion</span>
                 </nuxt-link>
-                <nuxt-link to="/admin/exam/publish" class="button">
+                <!-- <nuxt-link to="/admin/exam/publish" class="button">
                   <span class="text">publish Result</span>
-                </nuxt-link>
+                </nuxt-link> -->
               </b-card>
             </b-collapse>
             <!-- end -->
+
+  
 
             <nuxt-link to="/admin/driver" class="button">
               <b-icon
@@ -384,14 +387,14 @@
               <span @click="ToggleMenus" class="text">Drivers</span>
             </nuxt-link>
 
-            <nuxt-link to="/admin/result" class="button">
+            <!-- <nuxt-link to="/admin/result" class="button">
               <b-icon
                 @click="ToggleMenus"
                 icon="file-text"
                 class="material-icons"
               />
               <span @click="ToggleMenus" class="text">Result</span>
-            </nuxt-link>
+            </nuxt-link> -->
             <nuxt-link to="/admin/classes" class="button">
               <b-icon
                 @click="ToggleMenus"
@@ -468,9 +471,8 @@ export default {
   position: fixed;
   overflow-y: auto;
   width: 20.5rem;
-  background-color: #fff;
-top: 0;
-z-index: 2;
+  top: 0;
+  z-index: 2;
 
   .aside {
     // position: sticky !important;
@@ -597,7 +599,7 @@ z-index: 2;
     // }
 
     &.is-expanded {
-      width:100%;
+      width: 100%;
 
       .menu-toggle-wrap {
         top: -3rem;

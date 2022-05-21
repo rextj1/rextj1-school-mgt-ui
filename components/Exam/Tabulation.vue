@@ -1,28 +1,40 @@
 <template>
   <div>
     <div class="card">
-      <div v-if="publishResult == null"></div>
-      <div
-        v-else
-        class="card-header"
-        @click="
-          resulStatus(
-            publishResult.status === 'published' ? 'unpublished' : 'published'
-          )
-        "
-      >
-        <b-button
-          variant="primary"
-          size="lg"
-          :disabled="publishResult.status === 'published'"
-        >
-          {{
-            publishResult.status === 'published'
-              ? 'Results Published'
-              : 'publish Results'
-          }}
-        </b-button>
+      <div v-if="publishResult == null">
+        <div class="card-header"></div>
       </div>
+      <div v-else-if="publishResult.status == 'unpublished'">
+        <div class="card-header" @click="resulStatus('published')">
+          <b-button variant="primary" size="lg">
+            {{ 'publish Result' }}
+          </b-button>
+        </div>
+      </div>
+      <div v-else-if="publishResult.status == 'published'">
+        <div
+          class="card-header"
+          @click="
+            resulStatus(
+              publishResult.status === 'published' ? 'unpublished' : 'published'
+            )
+          "
+        >
+          <b-button
+            variant="primary"
+            size="lg"
+            :disabled="publishResult.status === 'published'"
+          >
+            {{
+              publishResult.status === 'published'
+                ? 'Results Published'
+                : 'publish Results'
+            }}
+          </b-button>
+        </div>
+      </div>
+
+      {{ publishResult === null ? 'nulllllll' : publishResult.status }}
 
       <vue-html2pdf
         :show-layout="true"
@@ -122,6 +134,7 @@ export default {
 
   methods: {
     resulStatus(item) {
+      alert(item)
       const klase = parseInt(this.student[0])
       const term = parseInt(this.student[1])
       const session = parseInt(this.student[2])
@@ -143,6 +156,7 @@ export default {
                 klase_id: parseInt(klase),
                 term_id: parseInt(term),
                 session_id: parseInt(session),
+                status: 'published',
               },
             })
 
@@ -161,19 +175,23 @@ export default {
           },
         })
         .then(({ data }) => {
-          this.busy = false
-          Swal.fire({
-            title: 'Good',
-            icon: 'success',
-            text: 'Done!',
-            position: 'center',
-            color: '#fff',
-            background: '#4bb543',
-            toast: false,
-            backdrop: false,
-            timer: 1500,
-            showConfirmButton: false,
-          })
+          if (data.updatePublishResult.lenght == 0) {
+            return false
+          } else {
+            this.busy = false
+            Swal.fire({
+              title: 'Good',
+              icon: 'success',
+              text: 'Done!',
+              position: 'center',
+              color: '#fff',
+              background: '#4bb543',
+              toast: false,
+              backdrop: false,
+              timer: 1500,
+              showConfirmButton: false,
+            })
+          }
         })
     },
 

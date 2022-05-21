@@ -1,18 +1,6 @@
  <template>
-  <div>
-    <template v-if="!students && !teachers && !guardians">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="success"
-          ></b-spinner>
-        </div>
-      </div>
-    </template>
-    <template v-else
-      ><div class="home main">
+ <div v-if="!students || !teachers || !guardians"></div>
+ <div class="home main" v-else>
         <b-row no-gutters>
           <b-col md="4" class="p-3">
             <div class="card card1 shadow p-3">
@@ -124,8 +112,8 @@
               </div>
             </div> </b-col
         ></b-row></div
-    ></template>
-  </div>
+    >
+
 </template>
 
 <script>
@@ -137,7 +125,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      admin: [],
+      admin: [1,2,6],
       // chartOptions: {
       //   chart: {
       //     width: 380,
@@ -188,17 +176,17 @@ export default {
       errorPolicy: 'all',
     },
   },
-  beforeUpdate() {
-    if (!this.students || !this.teachers || !this.guardians) {
-      return
-    } else {
-      this.admin = [
-        this.students.length,
-        this.teachers.length,
-        this.guardians.length,
-      ]
-    }
-  },
+  // beforeUpdate() {
+  //   if (!this.students || !this.teachers || !this.guardians) {
+  //     return
+  //   } else {
+  //     this.admin = [
+  //       this.students.length,
+  //       this.teachers.length,
+  //       this.guardians.length,
+  //     ]
+  //   }
+  // },
 }
 </script>
 
@@ -208,6 +196,7 @@ export default {
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
+  width: 100%;
 }
 .home {
   // margin-top: 5rem;
