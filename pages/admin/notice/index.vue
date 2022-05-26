@@ -1,15 +1,6 @@
 <template>
   <div class="p-4">
-    <template v-if="!notices">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!notices"> <div></div></template>
     <template v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -183,7 +174,6 @@ export default {
   methods: {
     // update
     async onSubmit() {
-      alert('yu')
       this.form.busy = true
       // submit exam
       try {
@@ -226,12 +216,6 @@ export default {
 </script>
 
 <style lang="scss">
- .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
 .libarian__wrapper {
   padding: 2rem;
   font-size: 1.6rem;

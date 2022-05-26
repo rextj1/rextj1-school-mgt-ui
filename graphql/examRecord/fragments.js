@@ -5,9 +5,12 @@ export const EXAM_RECORD_FIELDS_FRAGMENT = gql`
     id
     total
     avg
+    cum_total
+    cum_avg
     position
     p_comment
     t_comment
+    ps
     term {
       id
       name

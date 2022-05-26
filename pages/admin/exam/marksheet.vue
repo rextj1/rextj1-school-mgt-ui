@@ -1,16 +1,7 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !subjects && !sessions">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
-    <template v-else>
+    <div v-if="!klases && !terms && !subjects && !sessions"></div>
+    <div v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
@@ -18,9 +9,9 @@
               <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
+                  v-model="form.class"
                   value-field="id"
                   text-field="name"
-                  v-model="form.class"
                   :options="klases"
                   class="mb-3"
                   size="lg"
@@ -41,9 +32,9 @@
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
+                  v-model="form.term"
                   value-field="id"
                   text-field="name"
-                  v-model="form.term"
                   :options="terms"
                   class="mb-3"
                   size="lg"
@@ -64,9 +55,9 @@
               <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
+                  v-model="form.session"
                   value-field="id"
                   text-field="name"
-                  v-model="form.session"
                   :options="sessions"
                   class="mb-3"
                   size="lg"
@@ -87,9 +78,9 @@
               <b-form-group label="Subject">
                 <b-form-select
                   id="subject"
+                  v-model="form.subject"
                   value-field="id"
                   text-field="subject"
-                  v-model="form.subject"
                   :options="subjects"
                   class="mb-3"
                   size="lg"
@@ -116,13 +107,13 @@
         </b-form>
       </b-card>
 
-      <div class="libarian__wrapper" v-show="timetableDropdownClass">
+      <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamEditExamScores
           :marks="marks"
           :student="[form.class, form.subject, form.term, form.session]"
         />
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -192,8 +183,7 @@ export default {
             term: parseInt(this.form.term),
           },
         })
-        .then(({ data }) => {
-        })
+        .then(({ data }) => {})
         .catch((err) => {
           err
         })
@@ -225,12 +215,6 @@ export default {
 
   .custom-select:focus {
     box-shadow: none;
-  }
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
   }
   .custom-select,
   .form-control,

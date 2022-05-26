@@ -13,14 +13,24 @@ export const STUDENT_QUERIES = gql`
   }
   ${STUDENT_FIELDS_FRAGMENT}
 `
-export const STUDENT_QUERIEX = gql`
-  query StudentxQuery {
-    students {
-      ...SingleStudentField
+// DASHBOARD
+export const STUDENT_DASHBOARD_QUERIEX = gql`
+  query StudentxDashdashboardQuery {
+    studentsDashboard {
+      id
     }
   }
-  ${SINGLE_STUDENT_FIELD_FRAGMENT}
 `
+
+// export const STUDENT_QUERIEX = gql`
+//   query StudentxQuery {
+//     students {
+//       ...SingleStudentField
+//     }
+//   }
+//   ${SINGLE_STUDENT_FIELD_FRAGMENT}
+// `
+
 export const STUDENT_QUERY = gql`
   query StudentQuery($slug: String!) {
     student(slug: $slug) {

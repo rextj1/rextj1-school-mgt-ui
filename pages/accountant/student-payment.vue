@@ -26,8 +26,8 @@
       </b-row>
     </b-card>
 
-    <b-card class="p-4" v-show="paymentDropdownClass"> 
-        <PaymentStudentPayment :CurrentClass="form.class"/>
+    <b-card v-show="paymentDropdownClass" class="p-4"> 
+        <PaymentStudentPayment :current-class="form.class"/>
     </b-card>
   </div>
 </template>

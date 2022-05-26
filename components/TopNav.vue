@@ -1,6 +1,6 @@
 <template>
   <div v-if="!user"></div>
-  <div class="top" v-else>
+  <div v-else class="top">
     <nav class="" @click="hideTopNav">
       <ul class="d-flex align-items-center">
         <li>
@@ -14,16 +14,16 @@
             <div v-if="!user"></div>
             <div v-if="user.unreadNotifications.length === 0"></div>
 
-            <div class="userNotification" @click="notificationModal" v-else>
+            <div v-else class="userNotification" @click="notificationModal">
               {{ user.unreadNotifications.length }}
             </div>
           </span>
         </li>
         <li>
           <span
+            v-if="$auth.loggedIn"
             class="profile-image"
             @click="profileImage"
-            v-if="$auth.loggedIn"
           >
             <div class="nav-image">
               <img src="@/assets/images/background.jpg" alt="" />
@@ -58,15 +58,15 @@
         </li>
       </ul>
       <b-modal
-        class="modal"
         :id="notice"
+        class="modal"
         :hide-backdrop="true"
         title="Edit Accountant Data"
         scrollable
         size="md"
         :hide-footer="true"
       >
-        <Notification :notifyNow="[$auth.user.id, notice]" />
+        <Notification :notify-now="[$auth.user.id, notice]" />
       </b-modal>
     </nav>
   </div>
@@ -88,8 +88,8 @@ export default {
       variables() {
         return { id: parseInt(this.$auth.user.id) }
       },
-      // fetchPolicy: 'no-cache',
-      // pollInterval: 15000,
+      fetchPolicy: 'no-cache',
+      pollInterval: 15000,
     },
   },
   methods: {

@@ -1,15 +1,6 @@
 <template>
   <div class="p-4">
-    <template v-if="!sessions">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!sessions"> <div></div></template>
     <template v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -25,8 +16,8 @@
                     <b-row no-gutters>
                       <b-col md="4">
                         <input
-                          style="width: 10rem"
                           v-model="form.names"
+                          style="width: 10rem"
                           type="text"
                           required
                           size="lg"
@@ -41,8 +32,6 @@
                     {{ data.item.name }}
                   </div>
                 </template>
-
-        
 
                 <template #cell(actions)="data">
                   <b-button
@@ -116,7 +105,10 @@
 <script>
 import Swal from 'sweetalert2'
 import { SESSION_QUERIES, SESSION_QUERY } from '~/graphql/marks/queries'
-import { CREATE_SESSION_MUTATION, UPDATE_SESSION_MUTATION } from '~/graphql/marks/mutations'
+import {
+  CREATE_SESSION_MUTATION,
+  UPDATE_SESSION_MUTATION,
+} from '~/graphql/marks/mutations'
 export default {
   middleware: 'auth',
   data() {

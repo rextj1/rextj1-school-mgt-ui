@@ -22,13 +22,13 @@
                       <b-row>
                         <b-col lg="6" class="my-1">
                           <b-form-group
+                            v-slot="{ ariaDescribedby }"
                             label="Sort"
                             label-for="sort-by-select"
                             label-cols-sm="3"
                             label-align-sm="right"
                             label-size="md"
                             class="mb-0"
-                            v-slot="{ ariaDescribedby }"
                           >
                             <b-input-group size="md">
                               <b-form-select
@@ -107,6 +107,7 @@
 
                         <b-col lg="6" class="my-1">
                           <b-form-group
+                            v-slot="{ ariaDescribedby }"
                             v-model="sortDirection"
                             label="Filter On"
                             description="Leave all unchecked to filter on all data"
@@ -114,7 +115,6 @@
                             label-align-sm="right"
                             label-size="sm"
                             class="mb-0"
-                            v-slot="{ ariaDescribedby }"
                           >
                             <b-form-checkbox-group
                               v-model="filterOn"
@@ -174,11 +174,11 @@
                         stacked="md"
                         show-empty
                         small
-                        @filtered="onFiltered"
                         striped
                         hover
                         style="font-size: 1.3rem"
                         :responsive="true"
+                        @filtered="onFiltered"
                       >
                         <template #cell(name)="row">
                           {{ row.value.first }} {{ row.value.last }}
@@ -207,8 +207,8 @@
                           <b-button
                             size="smd"
                             variant="info"
-                            @click="info(row.item, row.index, $event.target)"
                             class="mr-1"
+                            @click="info(row.item, row.index, $event.target)"
                           >
                             <b-icon icon="eye-fill"></b-icon>
                           </b-button>
@@ -257,7 +257,7 @@
             </b-row>
           </b-tab>
 
-          <b-tab @click.prevent="registrationMenu" lazy>
+          <b-tab lazy @click.prevent="registrationMenu">
             <template #title>
               <strong>Add Books</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
@@ -269,7 +269,7 @@
               <hr />
               <div class="d-flex flex-column align-items-center mb-4">
                 <div class="profile-avatar mb-2">
-                  <div class="photo-preview" v-if="preview_url == null">
+                  <div v-if="preview_url == null" class="photo-preview">
                     <img
                       src="@/assets/svg/graduate-student.svg"
                       alt=""
@@ -333,9 +333,9 @@
                 <b-col md="4" class="p-4">
                   <b-form-group label="First Name">
                     <b-form-input
-                      debounce="500"
                       id="firstName"
                       v-model="form.firstName"
+                      debounce="500"
                       name="firstName"
                       size="lg"
                       placeholder="Enter First name"
@@ -350,9 +350,9 @@
                 <b-col md="4" class="p-4">
                   <b-form-group label="Last Name">
                     <b-form-input
-                      debounce="500"
                       id="lastName"
                       v-model="form.lastName"
+                      debounce="500"
                       name="lastName"
                       size="lg"
                       placeholder="Enter Last name"
@@ -368,9 +368,9 @@
                 <b-col md="4" class="p-4">
                   <b-form-group label="Middle Name (optional)">
                     <b-form-input
-                      debounce="500"
                       id="middleName"
                       v-model="form.middleName"
+                      debounce="500"
                       name="middleName"
                       size="lg"
                       placeholder="Enter Middle name"
@@ -386,9 +386,9 @@
                 <b-col md="3" class="p-4">
                   <b-form-group label="Email">
                     <b-form-input
-                      debounce="500"
                       id="email"
                       v-model="form.middleName"
+                      debounce="500"
                       name="email"
                       size="lg"
                       type="email"
@@ -602,9 +602,9 @@
                 <b-col md="3" class="p-4">
                   <b-form-group label="Parent Name">
                     <b-form-input
-                      debounce="500"
                       id="address"
                       v-model="form.parentName"
+                      debounce="500"
                       name="parentName"
                       size="lg"
                       placeholder="Enter parent name"

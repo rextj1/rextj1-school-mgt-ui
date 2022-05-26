@@ -21,7 +21,7 @@
         >
           <div class="d-flex flex-column align-items-center mb-4">
             <div class="profile-avatar mb-2">
-              <div class="photo-preview" v-if="preview_url == null">
+              <div v-if="preview_url == null" class="photo-preview">
                 <img
                   :src="`http://sms.test/storage/driver/${form.photo}`"
                   alt=""
@@ -268,9 +268,9 @@
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
+                  v-model="form.country"
                   value-field="id"
                   text-field="name"
-                  v-model="form.country"
                   :options="countries"
                   class="mb-3"
                   size="lg"
@@ -302,8 +302,8 @@
                   <b-form-select v-model="form.state" required class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>
@@ -325,8 +325,8 @@
                   <b-form-select v-model="form.city" required class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>

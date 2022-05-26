@@ -1,15 +1,8 @@
 <template>
   <div class="p-4 view-payment">
     <template v-if="!klases && !sessions && !resetPromotion">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+      <div></div>
+    </template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <!-- end of setPromotion -->
@@ -20,9 +13,9 @@
               <b-form-group label="Previous Class">
                 <b-form-select
                   id="klases"
+                  v-model="form.class"
                   value-field="id"
                   text-field="name"
-                  v-model="form.class"
                   :options="klases"
                   class="mb-3"
                   size="lg"
@@ -43,9 +36,9 @@
               <b-form-group label="Previous Session">
                 <b-form-select
                   id="sessions"
+                  v-model="form.session"
                   value-field="id"
                   text-field="name"
-                  v-model="form.session"
                   :options="sessions"
                   class="mb-3"
                   size="lg"
@@ -61,7 +54,8 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
-             <b-button
+
+            <b-button
               type="submit"
               variant="danger"
               size="lg"
@@ -69,15 +63,13 @@
               >Reset Promotion</b-button
             >
           </b-row>
-
-         
         </b-form>
       </b-card>
 
-      <div class="libarian__wrapper" v-show="timetableDropdownClass">
+      <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamResetPromotion
-          :resetPromotion="resetPromotion"
-          :resetKlase="resetKlase"
+          :reset-promotion="resetPromotion"
+          :reset-klase="resetKlase"
           :student="[form.class, form.session]"
         />
       </div>
@@ -86,13 +78,13 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES } from '~/graphql/marks/queries'
+import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 import {
   RESET_KLASE_QUERIES,
   RESET_PROMOTE_QUERIES,
 } from '@/graphql/promotions/queries'
-import Swal from 'sweetalert2'
 export default {
   middleware: 'auth',
   data() {
@@ -147,6 +139,7 @@ export default {
                 from_class: parseInt(this.form.class),
                 status: true,
                 from_session: parseInt(this.form.session),
+                from_term: 3,
               }
             },
             result({ loading, data }, key) {
@@ -185,12 +178,6 @@ export default {
 
   .custom-select:focus {
     box-shadow: none;
-  }
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
   }
   .custom-select {
     option {

@@ -30,7 +30,7 @@
         >
           <div class="d-flex flex-column align-items-center mb-4">
             <div class="profile-avatar mb-2">
-              <div class="photo-preview" v-if="preview_url == null">
+              <div v-if="preview_url == null" class="photo-preview">
                 <img
                   :src="`${$config.APIRoot}/storage/student/${form.photo}`"
                   alt=""
@@ -95,9 +95,9 @@
             <b-col md="4" class="p-4">
               <b-form-group label="First Name">
                 <b-form-input
-                  debounce="500"
                   id="firstName"
                   v-model="form.student.first_name"
+                  debounce="500"
                   name="first_name"
                   size="lg"
                   placeholder="Enter First name"
@@ -113,9 +113,9 @@
             <b-col md="4" class="p-4">
               <b-form-group label="Last Name">
                 <b-form-input
-                  debounce="500"
                   id="last_name"
                   v-model="form.student.last_name"
+                  debounce="500"
                   name="lastName"
                   size="lg"
                   placeholder="Enter Last name"
@@ -132,9 +132,9 @@
             <b-col md="4" class="p-4">
               <b-form-group label="Middle Name (optional)">
                 <b-form-input
-                  debounce="500"
                   id="middle_name"
                   v-model="form.student.middle_name"
+                  debounce="500"
                   name="middle_name"
                   size="lg"
                   placeholder="Enter Middle name"
@@ -146,9 +146,9 @@
             <b-col md="3" class="p-4">
               <b-form-group label="Email">
                 <b-form-input
-                  debounce="500"
                   id="email"
                   v-model="form.userStudent.email"
+                  debounce="500"
                   name="email"
                   size="lg"
                   type="email"
@@ -222,9 +222,9 @@
             <b-col md="4" class="p-4">
               <b-form-group label="Address">
                 <b-form-input
-                  debounce="500"
                   id="address"
                   v-model="form.student.address"
+                  debounce="500"
                   name="address"
                   size="lg"
                   placeholder="Enter address"
@@ -358,9 +358,9 @@
               <b-form-group label="Current Class">
                 <b-form-select
                   id="klases"
+                  v-model="form.student.klase"
                   value-field="id"
                   text-field="name"
-                  v-model="form.student.klase"
                   :options="klases"
                   class="mb-3"
                   size="lg"
@@ -404,9 +404,9 @@
             <b-col md="3" class="p-4">
               <b-form-group label="Session">
                 <b-form-select
+                  v-model="form.student.session"
                   value-field="id"
                   text-field="name"
-                  v-model="form.student.session"
                   :options="sessions"
                   class="mb-3"
                   size="lg"
@@ -428,9 +428,9 @@
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
+                  v-model="form.userStudent.bloodGroup"
                   value-field="id"
                   text-field="name"
-                  v-model="form.userStudent.bloodGroup"
                   :options="bloodGroups"
                   class="mb-3"
                   size="lg"
@@ -451,9 +451,9 @@
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
+                  v-model="form.userStudent.country"
                   value-field="id"
                   text-field="name"
-                  v-model="form.userStudent.country"
                   :options="countries"
                   class="mb-3"
                   size="lg"
@@ -485,8 +485,8 @@
                   <b-form-select v-model="form.userStudent.state" class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>
@@ -508,8 +508,8 @@
                   <b-form-select v-model="form.userStudent.city" class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>
@@ -585,6 +585,7 @@
   </div>
 </template>
 <script>
+import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
   COUNTRY_QUERIES,
@@ -594,7 +595,6 @@ import {
 import { STUDENT_QUERY } from '@/graphql/students/queries'
 import { UPDATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import Swal from 'sweetalert2'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 
 export default {

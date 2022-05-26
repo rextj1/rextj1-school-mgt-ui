@@ -21,13 +21,13 @@
               <b-row>
                 <b-col lg="6" class="my-1">
                   <b-form-group
+                    v-slot="{ ariaDescribedby }"
                     label="Sort"
                     label-for="sort-by-select"
                     label-cols-sm="3"
                     label-align-sm="right"
                     label-size="md"
                     class="mb-0"
-                    v-slot="{ ariaDescribedby }"
                   >
                     <b-input-group size="md">
                       <b-form-select
@@ -104,6 +104,7 @@
 
                 <b-col lg="6" class="my-1">
                   <b-form-group
+                    v-slot="{ ariaDescribedby }"
                     v-model="sortDirection"
                     label="Filter On"
                     description="Leave all unchecked to filter on all data"
@@ -111,7 +112,6 @@
                     label-align-sm="right"
                     label-size="sm"
                     class="mb-0"
-                    v-slot="{ ariaDescribedby }"
                   >
                     <b-form-checkbox-group
                       v-model="filterOn"
@@ -165,21 +165,21 @@
                 stacked="md"
                 show-empty
                 small
-                @filtered="onFiltered"
                 striped
                 hover
                 style="font-size: 1.3rem"
                 :responsive="true"
+                @filtered="onFiltered"
               >
                 <template #cell(index)="data">
                   {{ data.index + 1 }}
                 </template>
                 <template #cell(klases)="data">
                   <b-badge
+                    :id="`klases-${data.index}`"
                     style="line-height: 1.6"
                     variant="primary"
                     class="px-2"
-                    :id="`klases-${data.index}`"
                   >
                     <div v-for="klase in data.value" :key="klase.id">
                       {{ klase.name }}
@@ -263,8 +263,8 @@
 
               <!-- Info modal -->
               <b-modal
-                class="modal"
                 :id="infoModal"
+                class="modal"
                 :hide-backdrop="true"
                 body-bg-variant="info"
                 scrollable

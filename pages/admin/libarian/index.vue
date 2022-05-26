@@ -1,15 +1,6 @@
   <template>
   <div class="fonts">
-    <template v-if="!libarians">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!libarians"> <div></div></template>
     <template v-else>
       <b-button
         to="/admin/libarian/add-libarian"
@@ -34,13 +25,13 @@
                 <b-row>
                   <b-col lg="6" class="my-1">
                     <b-form-group
+                      v-slot="{ ariaDescribedby }"
                       label="Sort"
                       label-for="sort-by-select"
                       label-cols-sm="3"
                       label-align-sm="right"
                       label-size="md"
                       class="mb-0"
-                      v-slot="{ ariaDescribedby }"
                     >
                       <b-input-group size="md">
                         <b-form-select
@@ -117,6 +108,7 @@
 
                   <b-col lg="6" class="my-1">
                     <b-form-group
+                      v-slot="{ ariaDescribedby }"
                       v-model="sortDirection"
                       label="Filter On"
                       description="Leave all unchecked to filter on all data"
@@ -124,7 +116,6 @@
                       label-align-sm="right"
                       label-size="sm"
                       class="mb-0"
-                      v-slot="{ ariaDescribedby }"
                     >
                       <b-form-checkbox-group
                         v-model="filterOn"
@@ -178,11 +169,11 @@
                   stacked="md"
                   show-empty
                   small
-                  @filtered="onFiltered"
                   striped
                   hover
                   style="font-size: 1.3rem"
                   :responsive="true"
+                  @filtered="onFiltered"
                 >
                   <template #cell(index)="data">
                     {{ data.index + 1 }}
@@ -249,8 +240,8 @@
 
                 <!-- Info modal -->
                 <b-modal
-                  class="modal"
                   :id="infoModal"
+                  class="modal"
                   :hide-backdrop="true"
                   body-bg-variant="info"
                   title="Edit Libarian Data"
@@ -276,9 +267,7 @@ export default {
   data() {
     return {
       lib: [],
-      items: [
-      
-      ],
+      items: [],
 
       fields: [
         {
@@ -365,7 +354,7 @@ export default {
   mounted() {
     // Set the initial number of items
     this.totalRows = this.items.length
-      // this.lib = this.libarians
+    // this.lib = this.libarians
   },
 
   methods: {
@@ -394,12 +383,7 @@ export default {
 .modal {
   background-color: rgba(0, 0, 0, 0.295) !important;
 }
-.grow {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-}
+
 .fonts {
   font-size: 1.4rem !important;
   padding: 2rem;

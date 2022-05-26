@@ -1,6 +1,8 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !sessions"> <div></div></template>
+    <template v-if="!klases && !terms && !subjects && !sessions">
+      <div></div
+    ></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
@@ -19,7 +21,7 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- select class--</b-form-select-option
+                      >-- Select class --</b-form-select-option
                     >
                   </template>
 
@@ -42,7 +44,7 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- select term--</b-form-select-option
+                      >-- Select term--</b-form-select-option
                     >
                   </template>
 
@@ -52,7 +54,7 @@
             </b-col>
 
             <b-col md="2">
-              <b-form-group label="Sessions">
+              <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
                   v-model="form.session"
@@ -65,7 +67,30 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- select session--</b-form-select-option
+                      >-- Select session--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="2">
+              <b-form-group label="Subject">
+                <b-form-select
+                  id="subject"
+                  v-model="form.subject"
+                  value-field="id"
+                  text-field="subject"
+                  :options="subjects"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Select subject--</b-form-select-option
                     >
                   </template>
 
@@ -77,87 +102,41 @@
               type="submit"
               variant="danger"
               size="lg"
-              style="height: 3.85rem; margin-top: 2.85rem"
+              style="height: 3.8rem; margin-top: 2.83rem"
               >Submit</b-button
             >
-           
           </b-row>
         </b-form>
       </b-card>
 
-      <div class="card" v-show="timetableDropdownClass">
-        <div class="card-body">
-          <div class="p-3 roles-table">
-            <h2
-              class="p-4 d-flex justify-content-center"
-              style="font-weight: bold"
-            >
-              Student Result Section
-            </h2>
-            <b-table :items="klaseResults" :fields="fields">
-              <template #cell(#)="data">
-                {{ data.index + 1 }}
-              </template>
-
-              <template #cell(student)="data">
-                {{ data.value.first_name }} {{ data.value.last_name }}
-              </template>
-
-              <template #cell(adm_no)="data">
-                {{ data.item.student.adm_no }}
-              </template>
-
-              <template #cell(term)="data">
-                {{ data.item.term.name }}
-              </template>
-
-              <template #cell(session)="data">
-                {{ data.item.session.name }}
-              </template>
-
-              <template #cell(klase)="data">
-                {{ data.item.klase.name }}
-              </template>
-
-              <template #cell(actions)="data">
-                <router-link
-                  variant="primary"
-                  :to="{
-                    name: 'admin-exam-slug',
-                    params: { slug: data.item.student.id },
-                    query: {
-                      student,
-                      klaseResults,
-                      numStudents,
-                    },
-                  }"
-                >
-                  <b-icon icon="eye" class="mr-1"></b-icon>
-                  View Result
-                </router-link>
-              </template>
-            </b-table>
-          </div>
-        </div>
+      <div v-show="timetableDropdownClass" class="libarian__wrapper">
+        <ExamEditExamScores
+          :marks="marks"
+          :student="[form.class, form.subject, form.term, form.session]"
+        />
       </div>
     </template>
   </div>
 </template>
 
 <script>
-import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { CREATE_FIELD_MUTATION } from '~/graphql/marks/mutations'
+import {
+  MARK_QUERIES,
+  SESSION_QUERIES,
+  TERM_QUERIES,
+} from '~/graphql/marks/queries'
+import { SUBJECTS_QUERIES } from '~/graphql/subjects/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
-      klaseResults: [],
-      student: [],
-      numStudents: null,
+      marks: [],
       timetableDropdownClass: false,
       form: {
         class: null,
+        subject: null,
         session: null,
         term: null,
       },
@@ -166,48 +145,14 @@ export default {
       activeTab: '',
       registerMenu: false,
       registrationMenuClass: '',
-      fields: [
-        {
-          key: '#',
-          sortable: false,
-        },
-        {
-          key: 'student',
-          label: 'Full Name',
-          sortable: false,
-        },
-        {
-          key: 'adm_no',
-          label: 'Adm_no.',
-        },
-        {
-          key: 'klase',
-          label: 'Class',
-        },
-        {
-          key: 'term',
-          label: 'Term.',
-        },
-        {
-          key: 'session',
-          label: 'Session.',
-        },
-
-        {
-          key: '',
-          sortable: false,
-        },
-        {
-          key: 'actions',
-          label: 'Actions',
-          sortable: false,
-        },
-      ],
     }
   },
   apollo: {
     klases: {
       query: KLASES_QUERIES,
+    },
+    subjects: {
+      query: SUBJECTS_QUERIES,
     },
     terms: {
       query: TERM_QUERIES,
@@ -230,27 +175,33 @@ export default {
       } else {
         this.timetableDropdownClass = true
       }
+      this.$apollo
+        .mutate({
+          mutation: CREATE_FIELD_MUTATION,
+          variables: {
+            klase: parseInt(this.form.class),
+            subject: parseInt(this.form.subject),
+            session: parseInt(this.form.session),
+            term: parseInt(this.form.term),
+          },
+        })
+        .then(({ data }) => {})
+        .catch((err) => {
+          err
+        })
 
       setTimeout(() => {
-        this.student = [this.form.class, this.form.term, this.form.session]
-        this.$apollo.addSmartQuery('klaseResults', {
-          query: EXAM_RECORD_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.form.class),
-              term_id: parseInt(this.form.term),
-              session_id: parseInt(this.form.session),
-            }
+        this.$apollo.addSmartQuery('marks', {
+          query: MARK_QUERIES,
+          variables: {
+            klase_id: parseInt(this.form.class),
+            subject_id: parseInt(this.form.subject),
+            session_id: parseInt(this.form.session),
+            term_id: parseInt(this.form.term),
           },
           result({ loading, data }, key) {
             if (!loading) {
-              this.klaseResults = data.klaseResults
-
-              
-              const numStudents = Object.keys(this.klaseResults).length;
-              this.numStudents = numStudents;
-
-            
+              this.marks = data.marks
             }
           },
         })
@@ -273,6 +224,11 @@ export default {
     height: 4rem;
     font-size: 1.4rem;
     color: #000;
+  }
+  .custom-select {
+    option {
+      font-size: 1.5rem !important;
+    }
   }
 
   .libarian__wrapper {

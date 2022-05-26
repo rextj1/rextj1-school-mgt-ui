@@ -28,9 +28,9 @@
             <label>Password</label>
             <b-input-group label="Password" label-for="password">
               <input
-                class="form-control shadow-sm"
                 id="password"
                 v-model="form.password"
+                class="form-control shadow-sm"
                 :type="[showPassword == true ? 'text' : 'password']"
                 required
                 name="password"
@@ -39,8 +39,8 @@
 
               <b-input-group-append
                 is-text
-                @click="showPassword = !showPassword"
                 class="icon-pass"
+                @click="showPassword = !showPassword"
               >
                 <b-icon
                   :icon="showPassword ? 'eye-slash-fill' : 'eye-fill'"
@@ -68,8 +68,8 @@
                 :disabled="form.busy"
               >
                 <b-spinner
-                  variant="light"
                   v-if="form.busy"
+                  variant="light"
                   small
                   class="mr-1 mb-1"
                 />

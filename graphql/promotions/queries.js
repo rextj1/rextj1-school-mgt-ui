@@ -42,15 +42,18 @@ export const RESET_PROMOTE_QUERIES = gql`
     $status: Boolean!
     $from_class: Int!
     $from_session: Int!
+    $from_term: Int!
   ) {
     resetPromotion(
       status: $status
       from_class: $from_class
       from_session: $from_session
+      from_term: $from_term
     ) {
       id
       from_class
       from_session
+      from_term
       status
       student {
         id

@@ -2,7 +2,7 @@
   <div class="timetable">
     <div v-if="marks[0] == null"></div>
 
-    <h2 class="d-flex justify-content-center p-4" v-else>
+    <h2 v-else class="d-flex justify-content-center p-4">
       <span style="color: green; font-weight: bold"
         >({{ marks[0].klase.name }}) Scoresheet</span
       >
@@ -39,10 +39,10 @@
               <td scope="row">
                 <input
                   v-model="mark.ca1"
-                  @input="sendScores(mark, $event.target.value, 'ca1')"
                   type="number"
                   min="0"
                   max="20"
+                  @input="sendScores(mark, $event.target.value, 'ca1')"
                 />
               </td>
               <td scope="row">
@@ -57,10 +57,10 @@
               <td scope="row">
                 <input
                   v-model="mark.exam"
-                  @input="sendScores(mark, $event.target.value, 'exam')"
                   type="number"
                   min="0"
                   max="60"
+                  @input="sendScores(mark, $event.target.value, 'exam')"
                 />
               </td>
             </tr>
@@ -68,7 +68,7 @@
         </table>
         <div class="d-flex justify-content-center mt-4">
           <b-button size="lg" type="submit" variant="danger"
-            ><b-spinner variant="light" v-if="busy" small class="mr-1 mb-1" />Add
+            ><b-spinner v-if="busy" variant="light" small class="mr-1 mb-1" />Add
             Scores</b-button
           >
         </div>

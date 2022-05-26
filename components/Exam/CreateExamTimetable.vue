@@ -21,16 +21,16 @@
           <tr>
             <th scope="row">
               <input
+                v-model="form.date"
                 required
                 style="width: 8rem"
-                v-model="form.date"
                 type="text"
               />
             </th>
             <th scope="row">
               <input
-                required
                 v-model="form.date"
+                required
                 style="width: 11rem"
                 type="text"
               />

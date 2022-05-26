@@ -9,6 +9,7 @@
     "generate": "nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{vue,css}\" --ignore-path .gitignore",
+    "lintfix": "eslint --fix --ext \".js,.vue\" --ignore-path .gitignore .",
     "prepare": "husky install",
     "lint": "yarn lint:js && yarn lint:style",
     "test": "jest"
@@ -31,6 +32,7 @@
     "graphql-tag": "^2.12.5",
     "node-sass": "^6.0.1",
     "nuxt": "^2.15.7",
+    "nuxt-paystack": "^0.0.12",
     "sass-loader": "^10.1.1",
     "sweetalert2": "^11.2.1",
     "vform": "^2.1.2",

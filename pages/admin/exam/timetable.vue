@@ -6,9 +6,9 @@
           <b-form-group label="Current Class:">
             <b-form-select
               id="klase"
+              v-model="form.class"
               value-field="id"
               text-field="name"
-              v-model="form.class"
               :options="klases"
               class="mb-3"
               size="lg"
@@ -30,9 +30,9 @@
     </b-card>
 
     <div
+      v-show="timetableDropdownClass"
       class="libarian__wrapper"
       @click="hideMenu"
-      v-show="timetableDropdownClass"
     >
       <b-card no-body @click="hideMenu">
         <b-tabs card style="font-size: 1.4rem">
@@ -88,8 +88,8 @@
                 </div>
                 <!-- Info modal -->
                 <b-modal
-                  class="modal"
                   :id="infoModal"
+                  class="modal"
                   :hide-backdrop="false"
                   body-bg-variant="info"
                   title="Edit  Data"
@@ -193,7 +193,7 @@
             </div>
           </b-tab>
 
-          <b-tab @click="registrationMenu" lazy>
+          <b-tab lazy @click="registrationMenu">
             <template #title>
               <strong>Exam Timetable</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
@@ -201,8 +201,8 @@
 
             <div class="menu" style="background-color: #fff">
               <ul
-                class="shadow"
                 v-show="registerMenu"
+                class="shadow"
                 :class="registrationMenuClass"
               >
                 <span v-for="klase in klases" :key="klase.id">
@@ -220,7 +220,7 @@
 
             <component
               :is="activeTab"
-              :editCurrentClass="[dynamicClass, klaseName]"
+              :edit-current-class="[dynamicClass, klaseName]"
             />
           </b-tab>
         </b-tabs>

@@ -1,13 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!student || !student.user">
-      <div class="grow">
-        <b-spinner
-          style="width: 20rem; height: 20rem"
-          type="grow"
-          variant="danger"
-        ></b-spinner></div
-    ></template>
+    <template v-if="!student || !student.user"> <div></div></template>
     <template v-else>
       <b-button
         to="/admin/student"
@@ -54,7 +47,7 @@
             <p>{{ student.phone }}</p>
             <!-- <p>{{ student.qualification }}</p> -->
             <p>{{ student.code }}</p>
-            <p>{{ student.guardian_name}}</p>
+            <p>{{ student.guardian_name }}</p>
             <p>{{ student.guardian_no }}</p>
             <p>{{ student.guardian_email }}</p>
 
@@ -74,11 +67,11 @@
             <p>
               {{ student.user.state.name }}
             </p> -->
-             <p>
+            <p>
               {{ student.user.lga }}
             </p>
             <!-- <p>{{ student.facebook }}</p> -->
-            <p>{{student.klase.name}}</p>
+            <p>{{ student.klase.name }}</p>
             <!-- <h3 v-for="klase in student.klase" :key="klase">
               <p>
                 <b-badge
@@ -108,7 +101,7 @@
 </template>
 
 <script>
-import { STUDENT_QUERY } from "~/graphql/students/queries";
+import { STUDENT_QUERY } from '~/graphql/students/queries'
 export default {
   apollo: {
     student: {
@@ -127,12 +120,7 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
+
   .first-detail p {
     display: block;
     margin-left: 40%;

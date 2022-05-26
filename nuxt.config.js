@@ -57,6 +57,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
     '@nuxtjs/apollo',
+    'nuxt-paystack',
     // 'vue-sweetalert2/nuxt',
   ],
 
@@ -80,9 +81,9 @@ export default {
   auth: {
     redirect: {
       login: '/login',
-      logout: '/login',
+      logout: '/login?logout=1',
       callback: '/login',
-      home: '/dashboard',
+      home: '/',
     },
     strategies: {
       graphql: {
@@ -107,7 +108,6 @@ export default {
   publicRuntimeConfig: {
     APIRoot: apiRoot,
   },
-
 
   // publicRuntimeConfig: {
   // APIRoot: apiRoot,

@@ -1,15 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!teacher">
-      <div style="background-color: #f1f9ae; width: 100%; min-height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!teacher"> <div></div></template>
     <template v-else>
       <b-button
         to="/admin/teacher"
@@ -42,7 +33,7 @@
             <p>State</p>
             <p>city</p>
             <p>L.G.A</p>
-          
+
             <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
                 >Subjects Assigned</b-badge
@@ -61,7 +52,6 @@
             <p>{{ teacher.gender }}</p>
             <p>
               {{ teacher.user.blood_group.name }}
-              
             </p>
             <p>
               {{ teacher.user.country.name }}
@@ -79,10 +69,10 @@
             <h3 v-for="klase in teacher.klases" :key="klase.id">
               <p>
                 <b-badge
+                  :id="klase.id"
                   style="line-height: 1.6"
                   variant="warning"
                   class="px-2"
-                  :id="klase.id"
                   >{{ klase.name }}</b-badge
                 >
               </p>
@@ -124,12 +114,7 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
+
   .first-detail p {
     display: block;
     margin-left: 40%;

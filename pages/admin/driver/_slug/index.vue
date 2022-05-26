@@ -1,16 +1,7 @@
 <template>
   <div class="profile">
-    <template v-if="!driver">
-      <div style="background-color: #f1f9ae; width: 100%; min-height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
-    <template v-else>
+    <div v-if="!driver"></div>
+    <div v-else>
       <b-button
         to="/admin/driver"
         variant="primary"
@@ -49,10 +40,7 @@
             </p> -->
           </b-col>
           <b-col md="6" class="first-details p-4">
-            <p>
-              {{ driver.last_name }} {{ driver.first_name }}
-  
-            </p>
+            <p>{{ driver.last_name }} {{ driver.first_name }}</p>
             <p>{{ driver.route }}</p>
             <p>{{ driver.driver_license }}</p>
             <p>{{ driver.vehicle_number }}</p>
@@ -67,14 +55,12 @@
             <p>
               {{ driver.state.name }}
             </p>
-            <p>
-            </p>
+            <p></p>
             <p>{{ driver.lga }}</p>
-           
           </b-col>
         </b-row>
-      </b-jumbotron></template
-    >
+      </b-jumbotron>
+    </div>
   </div>
 </template>
 
@@ -98,12 +84,7 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
+
   .first-detail p {
     display: block;
     margin-left: 40%;

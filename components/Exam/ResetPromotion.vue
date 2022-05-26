@@ -56,8 +56,8 @@
                     >
                       <b-button variant="danger" size="lg">
                         <b-spinner
-                          variant="danger"
                           v-if="resetSpinner"
+                          variant="danger"
                           small
                           class="mr-1 mb-1"
                         />Reset</b-button
@@ -74,8 +74,8 @@
           >
             <b-button variant="success" size="lg">
               <b-spinner
-                variant="light"
                 v-if="busy"
+                variant="light"
                 small
                 class="mr-1 mb-1"
               />Reset Promotion By Class</b-button
@@ -91,6 +91,7 @@
 import Swal from 'sweetalert2'
 import { CREATE_RESET_PROMOTION_MUTATION } from '~/graphql/promotions/mutations'
 import { RESET_PROMOTE_QUERIES } from '~/graphql/promotions/queries'
+import { UPDATE_PUBLISH_RESULT_MUTATION } from '~/graphql/examRecord/mutations'
 export default {
   props: {
     resetPromotion: Array,
@@ -117,6 +118,7 @@ export default {
               from_class: parseInt(this.student[0]),
               status: true,
               from_session: parseInt(this.student[1]),
+               from_term: 3,
             },
             update: (store, { data: { createResetPromote } }) => {
               // Read the data from our cache for this query.
@@ -126,6 +128,7 @@ export default {
                   from_class: parseInt(klase),
                   status: true,
                   from_session: parseInt(session),
+                   from_term: 3,
                 },
               })
 
@@ -140,6 +143,7 @@ export default {
                   from_class: parseInt(klase),
                   status: true,
                   from_session: parseInt(session),
+                  from_term: 3
                 },
 
                 data,
@@ -161,6 +165,17 @@ export default {
               showConfirmButton: false,
             })
           })
+            this.$apollo
+          .mutate({
+            mutation: UPDATE_PUBLISH_RESULT_MUTATION,
+            variables: {
+              klase_id: parseInt(this.student[0]),
+              term_id: 3,
+              session_id: parseInt(this.student[1]),
+              status: 'unpublished',
+            },
+          })
+          .then(({ data }) => {})
       } else {
         Swal.fire({
           title: 'Ooops...',

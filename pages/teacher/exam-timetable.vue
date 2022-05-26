@@ -9,7 +9,7 @@
               <b-tabs card style="font-size: 1.4rem">
                 <b-tab lazy @click="registrationMenu">
                   <template #title>
-                    <strong>View Timetable</strong>
+                    <strong>Exam Timetable</strong>
                     <b-icon scale="0.8" icon="caret-down-fill" />
                   </template>
 
@@ -23,7 +23,7 @@
                         <li
                           @click.prevent="
                             dynamicStudentClass(klase.id, klase.name)
-                            activeTab = 'TimetableEditClassTimetable'
+                            activeTab = 'TimetableEditClassExamTimetable'
                           "
                         >
                           <span class="d-flex">{{ klase.name }}</span>
@@ -48,17 +48,17 @@
 
 <script>
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import { TIMETABLE_QUERIES } from '~/graphql/timetables/queries'
+import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
 
 import {
-  CREATE_TIMETABLE_MUTATION,
-  DELETE_TIMETABLE_MUTATION,
-} from '~/graphql/timetables/mutations'
+  CREATE_EXAM_TIMETABLE_MUTATION,
+  DELETE_EXAM_TIMETABLE_MUTATION,
+} from '~/graphql/examTimetables/mutations'
 export default {
   middleware: 'auth',
   data() {
     return {
-      timetables: [],
+      examTimetables: [],
       infoModal: 'modelInfo',
       slug: '',
 
@@ -67,6 +67,7 @@ export default {
       show: true,
       form: new this.$form({
         class: null,
+        date: null,
         time: null,
         monday: null,
         tuesday: null,
@@ -76,6 +77,7 @@ export default {
         busy: false,
       }),
       fields: [
+        { key: 'date', label: 'Date' },
         { key: 'time', label: 'Time' },
         { key: 'monday', label: 'Monday' },
 
@@ -128,8 +130,8 @@ export default {
       }
     },
     timetableDropdown() {
-      this.$apollo.addSmartQuery('timetables', {
-        query: TIMETABLE_QUERIES,
+      this.$apollo.addSmartQuery('examTimetables', {
+        query: EXAM_TIMETABLE_QUERIES,
         variables() {
           return {
             klase_id: parseInt(this.form.class),
@@ -137,7 +139,7 @@ export default {
         },
         result({ data, loading }) {
           if (!loading) {
-            this.timetables = data.timetables
+            this.examTimetables = data.examTimetables
           }
         },
       })
@@ -146,6 +148,7 @@ export default {
     // -------- create mutation -------------- //
     onSubmit() {
       if (
+        this.form.date === null &&
         this.form.time === null &&
         this.form.monday === null &&
         this.form.tuesday === null &&
@@ -158,8 +161,9 @@ export default {
         this.form.busy = true
         this.$apollo
           .mutate({
-            mutation: CREATE_TIMETABLE_MUTATION,
+            mutation: CREATE_EXAM_TIMETABLE_MUTATION,
             variables: {
+              date: this.form.date,
               time: this.form.time,
               monday: this.form.monday,
               tuesday: this.form.tuesday,
@@ -168,21 +172,21 @@ export default {
               friday: this.form.friday,
               klase_id: parseInt(this.form.class),
             },
-            update: (store, { data: { createTimetable } }) => {
+            update: (store, { data: { createExamTimetable } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
-                query: TIMETABLE_QUERIES,
+                query: EXAM_TIMETABLE_QUERIES,
                 variables: { klase_id: parseInt(klaseId) },
               })
               // console.log(this.form.class);
 
-              data.timetables.push(createTimetable)
+              data.examTimetables.push(createExamTimetable)
               // console.log(dataCopy)
 
               // Write our data back to the cache.
               // Write back to the cache
               store.writeQuery({
-                query: TIMETABLE_QUERIES,
+                query: EXAM_TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
                 },
@@ -192,7 +196,7 @@ export default {
           })
           .then(({ data }) => {
             this.form.busy = false
-
+            this.form.date = ''
             this.form.time = ''
             this.form.monday = ''
             this.form.tuesday = ''
@@ -200,7 +204,7 @@ export default {
             this.form.thursday = ''
             this.form.friday = ''
 
-            this.$router.push('/admin/timetable')
+            // this.$router.push('/admin/exam/timetable')
           })
           .catch((err) => {
             // this.klase_id =
@@ -216,23 +220,23 @@ export default {
       this.form.busy = true
       this.$apollo
         .mutate({
-          mutation: DELETE_TIMETABLE_MUTATION,
+          mutation: DELETE_EXAM_TIMETABLE_MUTATION,
           variables: {
             id: parseInt(item),
           },
-          update: (store, { data: { deleteTimetable } }) => {
+          update: (store, { data: { deleteExamTimetable } }) => {
             const data = store.readQuery({
-              query: TIMETABLE_QUERIES,
+              query: EXAM_TIMETABLE_QUERIES,
               variables: { klase_id: parseInt(klaseId) },
             })
 
-            const index = data.timetables.findIndex((m) => m.id == deleteId)
+            const index = data.examTimetables.findIndex((m) => m.id == deleteId)
             if (index !== -1) {
               // Mutate cache result
-              data.timetables.splice(index, 1)
+              data.examTimetables.splice(index, 1)
 
               store.readQuery({
-                query: TIMETABLE_QUERIES,
+                query: EXAM_TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
                 },

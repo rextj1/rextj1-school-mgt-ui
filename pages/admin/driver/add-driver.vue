@@ -1,16 +1,8 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
-    <template v-else>
+    <div v-if="!countries && !bloodGroups">
+    </div>
+    <div v-else>
       <b-button
         to="/admin/driver"
         variant="primary"
@@ -31,7 +23,7 @@
         >
           <div class="d-flex flex-column align-items-center mb-4">
             <div class="profile-avatar mb-2">
-              <div class="photo-preview" v-if="preview_url == null">
+              <div v-if="preview_url == null" class="photo-preview">
                 <img
                   src="@/assets/svg/graduate-student.svg"
                   alt=""
@@ -253,9 +245,9 @@
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
+                  v-model="form.bloodGroup"
                   value-field="id"
                   text-field="name"
-                  v-model="form.bloodGroup"
                   :options="bloodGroups"
                   required
                   class="mb-3"
@@ -277,9 +269,9 @@
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
+                  v-model="form.country"
                   value-field="id"
                   text-field="name"
-                  v-model="form.country"
                   :options="countries"
                   class="mb-3"
                   size="lg"
@@ -311,8 +303,8 @@
                   <b-form-select v-model="form.state" required class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>
@@ -334,8 +326,8 @@
                   <b-form-select v-model="form.city" required class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>
@@ -386,11 +378,12 @@
           </b-row>
         </b-form>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
   COUNTRY_QUERIES,
@@ -398,7 +391,6 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { CREATE_DRIVER_MUTATION } from '~/graphql/drivers/mutations'
-import Swal from 'sweetalert2'
 
 export default {
   middleware: 'auth',
@@ -588,12 +580,7 @@ export default {
     height: 4.3rem;
     font-size: 1.4rem;
   }
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
+
   .profile-avatar {
     position: relative;
     text-align: center;

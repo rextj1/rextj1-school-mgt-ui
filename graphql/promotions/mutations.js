@@ -15,12 +15,14 @@ export const CREATE_PROMOTION_MUTATION = gql`
     $klaseTo: Int!
     $session_id: Int!
     $sessionTo: Int!
+    $from_term: Int!
   ) {
     createPromoteStudents(
       klase_id: $klase_id
       klaseTo: $klaseTo
       session_id: $session_id
       sessionTo: $sessionTo
+      from_term: $from_term
     ) {
       id
       first_name
@@ -45,15 +47,18 @@ export const CREATE_RESET_PROMOTION_MUTATION = gql`
     $from_class: Int!
     $status: Boolean!
     $from_session: Int!
+    $from_term: Int!
   ) {
     createResetPromote(
       from_class: $from_class
       status: $status
       from_session: $from_session
+      from_term: $from_term
     ) {
       id
       from_class
       from_session
+      from_term
       student {
         adm_no
         status

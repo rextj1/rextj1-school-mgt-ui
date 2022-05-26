@@ -18,8 +18,8 @@
                 </b-col>
                 <b-col md="8">
                   <b-form-select
-                    size="lg"
                     v-model="form.expenseType"
+                    size="lg"
                     :options="expenseTypes"
                     @change="ExpenseTypes"
                   ></b-form-select>
@@ -34,8 +34,8 @@
                 </b-col>
                 <b-col md="8">
                   <b-form-select
-                    size="lg"
                     v-model="form.paymentMethod"
+                    size="lg"
                     :options="options"
                   ></b-form-select>
                 </b-col>
@@ -49,11 +49,11 @@
 
                 <b-col md="8">
                   <b-form-input
+                    v-model="form.data"
                     class="focus"
                     placeholder="select class"
                     size="lg"
                     list="my-list-id"
-                    v-model="form.data"
                   ></b-form-input>
 
                   <datalist id="my-list-id">

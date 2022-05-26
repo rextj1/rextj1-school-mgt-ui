@@ -2,16 +2,7 @@
   <div class="font">
     <template>
       <div class="fonts">
-        <template v-if="!timetables">
-          <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-            <div class="grow">
-              <b-spinner
-                style="width: 20rem; height: 20rem"
-                type="grow"
-                variant="danger"
-              ></b-spinner>
-            </div></div
-        ></template>
+        <template v-if="!timetables"> <div></div></template>
         <template v-else>
           <div v-if="timetables.length == 0">
             <h2 style="text-align: center">No record found</h2>
@@ -27,6 +18,7 @@
             </div>
 
             <vue-html2pdf
+              ref="html2Pdf"
               :show-layout="true"
               :float-layout="false"
               :enable-download="false"
@@ -38,7 +30,6 @@
               pdf-format="a4"
               pdf-orientation="landscape"
               pdf-content-width=""
-              ref="html2Pdf"
             >
               <section slot="pdf-content">
                 <b-row no-gutters>
@@ -77,7 +68,7 @@
 <script>
 import { TIMETABLE_QUERIES } from '~/graphql/timetables/queries'
 export default {
-   middleware: 'auth',
+  middleware: 'auth',
   data() {
     return {
       klaseId: '',
@@ -119,13 +110,6 @@ export default {
 .fonts {
   font-size: 1.4rem !important;
   padding: 2rem;
-
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
 
   .add-student {
     font-size: 1.6rem;

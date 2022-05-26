@@ -1,14 +1,7 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !sessions && !setPromotion">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
+    <template v-if="!klases && !sessions && !setPromotion">
+      <div></div
     ></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
@@ -20,12 +13,12 @@
             <div v-for="set in setPromotion" :key="set.id">
               <input
                 v-model="set.name"
-                @keydown.enter="studenSetPromotion($event.target.value)"
                 type="number"
                 class="mb-3"
                 size="lg"
                 required
                 style="width: 40%; text-align: center"
+                @keydown.enter="studenSetPromotion($event.target.value)"
               />
             </div>
           </b-col>
@@ -39,9 +32,9 @@
               <b-form-group label="Current Class">
                 <b-form-select
                   id="klases"
+                  v-model="form.class"
                   value-field="id"
                   text-field="name"
-                  v-model="form.class"
                   :options="klases"
                   class="mb-3"
                   size="lg"
@@ -62,9 +55,9 @@
               <b-form-group label="Current Session">
                 <b-form-select
                   id="sessions"
+                  v-model="form.session"
                   value-field="id"
                   text-field="name"
-                  v-model="form.session"
                   :options="sessions"
                   class="mb-3"
                   size="lg"
@@ -85,9 +78,9 @@
               <b-form-group label="Next Class">
                 <b-form-select
                   id="klases"
+                  v-model="form.classTo"
                   value-field="id"
                   text-field="name"
-                  v-model="form.classTo"
                   :options="klases"
                   class="mb-3"
                   size="lg"
@@ -108,9 +101,9 @@
               <b-form-group label="Next Session">
                 <b-form-select
                   id="sessions"
+                  v-model="form.sessionTo"
                   value-field="id"
                   text-field="name"
-                  v-model="form.sessionTo"
                   :options="sessions"
                   class="mb-3"
                   size="lg"
@@ -126,6 +119,7 @@
                 </b-form-select>
               </b-form-group>
             </b-col>
+
             <b-button
               type="submit"
               variant="danger"
@@ -137,11 +131,11 @@
         </b-form>
       </b-card>
 
-      <div class="libarian__wrapper" v-show="timetableDropdownClass">
+      <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamStudentPromotion
-          :promoteStudents="promoteStudents"
+          :promote-students="promoteStudents"
           :student="[form.class, form.classTo, form.session, form.sessionTo]"
-          :setPromotion="setPromotion"
+          :set-promotion="setPromotion"
         />
       </div>
     </template>
@@ -149,6 +143,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 import {
@@ -156,7 +151,6 @@ import {
   SET_PROMOTION_QUERIES,
 } from '@/graphql/promotions/queries'
 import { CREATE_SET_PROMOTION_MUTATION } from '@/graphql/promotions/mutations'
-import Swal from 'sweetalert2'
 export default {
   middleware: 'auth',
   data() {
@@ -168,7 +162,6 @@ export default {
         session: null,
         classTo: null,
         sessionTo: null,
-        // term: null,
       },
 
       dynamicClass: '',
@@ -180,9 +173,6 @@ export default {
   apollo: {
     klases: {
       query: KLASES_QUERIES,
-    },
-    terms: {
-      query: TERM_QUERIES,
     },
     sessions: {
       query: SESSION_QUERIES,
@@ -271,12 +261,6 @@ export default {
 
   .custom-select:focus {
     box-shadow: none;
-  }
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
   }
   .custom-select,
   .form-control,

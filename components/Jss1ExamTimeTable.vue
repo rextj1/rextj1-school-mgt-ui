@@ -6,6 +6,7 @@
       >
     </div>
     <vue-html2pdf
+      ref="html2Pdf"
       :show-layout="true"
       :float-layout="false"
       :enable-download="false"
@@ -17,7 +18,6 @@
       pdf-format="a4"
       pdf-orientation="landscape"
       pdf-content-width=""
-      ref="html2Pdf"
     >
       <section slot="pdf-content">
         <div class="p-4 liberian__wrapper mb-4">

@@ -3,7 +3,6 @@
     <div class="card-header"></div>
     <div class="card">
       <div class="card-body">
-        {{promotioMark}}
         <div class="p-3 roles-table">
           <div v-if="promoteStudents[0] == null"></div>
           <div v-else>
@@ -50,8 +49,8 @@
         >
           <b-button variant="danger" size="lg">
             <b-spinner
-              variant="light"
               v-if="busy"
+              variant="light"
               small
               class="mr-1 mb-1"
             />Promote Students</b-button
@@ -66,6 +65,7 @@
 import Swal from 'sweetalert2'
 import { CREATE_PROMOTION_MUTATION } from '~/graphql/promotions/mutations'
 import { PROMOTESTUDENTS_QUERIES } from '~/graphql/promotions/queries'
+import { UPDATE_PUBLISH_RESULT_MUTATION } from '~/graphql/examRecord/mutations'
 export default {
   props: {
     promoteStudents: Array,
@@ -136,6 +136,7 @@ export default {
               klaseTo: parseInt(this.student[1]),
               session_id: parseInt(this.student[2]),
               sessionTo: parseInt(this.student[3]),
+              from_term: 3,
             },
             update: (store, { data: { createPromoteStudents } }) => {
               // Read the data from our cache for this query.
@@ -180,6 +181,17 @@ export default {
               showConfirmButton: false,
             })
           })
+        this.$apollo
+          .mutate({
+            mutation: UPDATE_PUBLISH_RESULT_MUTATION,
+            variables: {
+              klase_id: parseInt(this.student[0]),
+              term_id: 3,
+              session_id: parseInt(this.student[2]),
+              status: 'published',
+            },
+          })
+          .then(({ data }) => {})
       } else {
         Swal.fire({
           title: 'Ooops...',

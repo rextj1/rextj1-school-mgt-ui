@@ -1,42 +1,8 @@
 <template>
   <div>
     <div class="card">
-      <div v-if="publishResult == null">
-        <div class="card-header"></div>
-      </div>
-      <div v-else-if="publishResult.status == 'unpublished'">
-        <div class="card-header" @click="resulStatus('published')">
-          <b-button variant="primary" size="lg">
-            {{ 'publish Result' }}
-          </b-button>
-        </div>
-      </div>
-      <div v-else-if="publishResult.status == 'published'">
-        <div
-          class="card-header"
-          @click="
-            resulStatus(
-              publishResult.status === 'published' ? 'unpublished' : 'published'
-            )
-          "
-        >
-          <b-button
-            variant="primary"
-            size="lg"
-            :disabled="publishResult.status === 'published'"
-          >
-            {{
-              publishResult.status === 'published'
-                ? 'Results Published'
-                : 'publish Results'
-            }}
-          </b-button>
-        </div>
-      </div>
-
-      {{ publishResult === null ? 'nulllllll' : publishResult.status }}
-
       <vue-html2pdf
+        ref="html2Pdf"
         :show-layout="true"
         :float-layout="false"
         :enable-download="false"
@@ -48,25 +14,49 @@
         pdf-format="a4"
         pdf-orientation="landscape"
         pdf-content-width=""
-        ref="html2Pdf"
       >
         <section slot="pdf-content">
           <div class="card">
             <div class="card-body">
+              <h2 style="text-align: center; font-weight: bold">
+                <span style="color: green"  v-if="student[1] == 3"
+                >{{ student[1] }}rd Term</span>
+                 <span style="color: green"  v-else-if="student[1] == 2"
+                >{{ student[1] }}nd Term</span>
+                 <span style="color: green" v-else
+                >{{ student[1] }}st Term</span>
+                Tabulation sheet
+              </h2>
               <table class="table table-responsive table-striped">
                 <thead>
                   <tr>
                     <th>S/N</th>
-                    <th>Na</th>
-                    <th>1st Term Total</th>
-                    <th>2nd Term Total</th>
-                    <th>3rd Term Total</th>
-                    <th style="color: darkred">Cum Total</th>
-                    <th style="color: darkblue">Cum Average</th>
+                    <th>Full Name</th>
 
-                    <th style="color: darkred">Total</th>
-                    <th style="color: darkblue">Average</th>
+                    <th
+                      v-if="student[1] == 1 || student[1] == 2"
+                      style="color: darkred"
+                    >
+                      Total
+                    </th>
+                    <th
+                      v-if="student[1] == 1 || student[1] == 2"
+                      style="color: darkblue"
+                    >
+                      Average
+                    </th>
+                    <th v-if="student[1] == 3" style="color: darkblue">
+                      Cum Total
+                    </th>
+                    <th v-if="student[1] == 3" style="color: darkblue">
+                      Cum Avg
+                    </th>
                     <th style="color: darkgreen">Position</th>
+
+                    <th v-if="student[1] == 3" style="color: darkgreen">
+                      Status
+                    </th>
+                    <th style="color: darkgreen">Published Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -76,7 +66,41 @@
                       {{ record.student.first_name }}
                       {{ record.student.last_name }}
                     </td>
-
+                    <td
+                      v-if="student[1] == 1 || student[1] == 2"
+                      style="color: darkblue"
+                    >
+                      {{ record.total }}
+                    </td>
+                    <td
+                      v-if="student[1] == 1 || student[1] == 2"
+                      style="color: darkblue"
+                    >
+                      {{ record.avg }}
+                    </td>
+                    <td v-if="student[1] == 3" style="color: darkblue">
+                      {{ record.cum_total }}
+                    </td>
+                    <td v-if="student[1] == 3" style="color: darkblue">
+                      {{ record.cum_avg }}
+                    </td>
+                    <td
+                      style="color: darkgreen"
+                      v-html="postion(record.position)"
+                    ></td>
+                    <td v-if="student[1] == 3">
+                      {{ record.ps }}
+                    </td>
+                    <td
+                      v-if="record.status == 'published'"
+                      style="color: green; font-weight: bold"
+                    >
+                      {{ record.status }}
+                    </td>
+                    <td v-else style="color: darkblue; font-weight: bold">
+                      Unpublished
+                    </td>
+                    <!-- 
                     <td v-for="first in firstTerm" :key="first.id">
                       {{ first.cum_avg }}
                     </td>
@@ -87,14 +111,9 @@
 
                     <td v-for="third in thirdTerm" :key="third.id">
                       {{ third.cum_avg }}
-                    </td>
+                    </td> -->
 
                     <!-- <td style="color: darkred">{{ record.total }}</td> -->
-                    <td style="color: darkblue">{{ record.avg }}</td>
-                    <td
-                      style="color: darkgreen"
-                      v-html="postion(record.position)"
-                    ></td>
                   </tr>
                 </tbody>
               </table>
@@ -115,9 +134,6 @@
 </template>
 
 <script>
-import { UPDATE_PUBLISH_RESULT_MUTATION } from '@/graphql/examRecord/mutations'
-import { PUBLISH_RESULT_QUERY } from '~/graphql/examRecord/queries'
-import Swal from 'sweetalert2'
 export default {
   props: {
     records: Array,
@@ -125,7 +141,7 @@ export default {
     firstTerm: Array,
     secoundTerm: Array,
     thirdTerm: Array,
-    publishResult: Object,
+    // publishResult: Object,
     student: Array,
   },
   data() {
@@ -133,70 +149,8 @@ export default {
   },
 
   methods: {
-    resulStatus(item) {
-      alert(item)
-      const klase = parseInt(this.student[0])
-      const term = parseInt(this.student[1])
-      const session = parseInt(this.student[2])
-      this.busy = true
-      this.$apollo
-        .mutate({
-          mutation: UPDATE_PUBLISH_RESULT_MUTATION,
-          variables: {
-            klase_id: parseInt(this.student[0]),
-            term_id: parseInt(this.student[1]),
-            session_id: parseInt(this.student[2]),
-            status: item,
-          },
-          update: (store, { data: { updatePublishResult } }) => {
-            // Read the data from our cache for this query.
-            const data = store.readQuery({
-              query: PUBLISH_RESULT_QUERY,
-              variables: {
-                klase_id: parseInt(klase),
-                term_id: parseInt(term),
-                session_id: parseInt(session),
-                status: 'published',
-              },
-            })
-
-            data.publishResult.status != updatePublishResult
-
-            store.writeQuery({
-              query: PUBLISH_RESULT_QUERY,
-              variables: {
-                klase_id: parseInt(klase),
-                term_id: parseInt(term),
-                session_id: parseInt(session),
-              },
-
-              data,
-            })
-          },
-        })
-        .then(({ data }) => {
-          if (data.updatePublishResult.lenght == 0) {
-            return false
-          } else {
-            this.busy = false
-            Swal.fire({
-              title: 'Good',
-              icon: 'success',
-              text: 'Done!',
-              position: 'center',
-              color: '#fff',
-              background: '#4bb543',
-              toast: false,
-              backdrop: false,
-              timer: 1500,
-              showConfirmButton: false,
-            })
-          }
-        })
-    },
-
     postion(i) {
-      var j = i % 10
+      const j = i % 10
       const k = i % 100
       if (j == 1 && k != 11) {
         return i + '<sup>st</sup>'

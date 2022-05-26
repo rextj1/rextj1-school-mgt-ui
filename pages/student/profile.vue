@@ -1,15 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!user">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 20rem; height: 20rem"
-            type="grow"
-            variant="success"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!user"> <div></div></template>
     <template v-else>
       <div v-for="student in user.students" :key="student.id">
         {{ student }}
@@ -118,13 +109,6 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
 
   .first-detail p {
     display: block;

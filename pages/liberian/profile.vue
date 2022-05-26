@@ -1,15 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!user">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 20rem; height: 20rem"
-            type="grow"
-            variant="success"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!user"> <div></div></template>
     <template v-else>
       <div v-for="libarian in user.libarians" :key="libarian.id">
         {{ libarian }}
@@ -17,7 +8,7 @@
           <h1 class="d-flex align-items-center">
             Salary Status: <b-badge variant="success">Paid</b-badge>
           </h1>
-        
+
           <div class="d-flex justify-content-center mb-4">
             <div v-if="libarian.photo == 'null'">
               <b-img
@@ -62,7 +53,6 @@
               <p>{{ libarian.birthday }}</p>
 
               <p>{{ user.blood_group.name }}</p>
-   
             </b-col>
           </b-row>
         </b-jumbotron>
@@ -91,13 +81,6 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
 
   .first-detail p {
     display: block;

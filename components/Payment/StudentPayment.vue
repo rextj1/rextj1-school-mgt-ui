@@ -41,8 +41,8 @@
                   <td>80,000</td>
                   <td>
                     <input
-                      type="number"
                       v-model="form.amount"
+                      type="number"
                       style="width: 50%"
                     />
                   </td>

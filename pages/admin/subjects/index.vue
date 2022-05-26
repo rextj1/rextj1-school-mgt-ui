@@ -1,15 +1,6 @@
 <template>
   <div class="p-4">
-    <template v-if="!subjects">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!subjects"> <div></div></template>
     <template v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -31,8 +22,8 @@
                         <b-row no-gutters>
                           <b-col md="4">
                             <input
-                              style="width: 10rem"
                               v-model="form.subjects"
+                              style="width: 10rem"
                               type="text"
                               required
                               size="lg"
@@ -175,15 +166,15 @@
                         >Subjects:</label
                       >
                     </b-col>
-                 
+
                     <b-col md="8">
                       <b-form-group>
                         <b-form-select
                           id="subjects"
+                          v-model="subjectx"
                           style="height: 20rem"
                           value-field="id"
                           text-field="subject"
-                          v-model="subjectx"
                           :options="subjects"
                           multiple
                           required
@@ -205,9 +196,9 @@
                       <b-form-group label="">
                         <b-form-select
                           id="teachers"
+                          v-model="form.teacher"
                           value-field="id"
                           text-field="first_name"
-                          v-model="form.teacher"
                           :options="teachers"
                           class="mb-3"
                           size="lg"
@@ -254,6 +245,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import { SUBJECT_QUERIES, SUBJECT_QUERY } from '@/graphql/subjects/queries'
 import {
   UPDATE_SUBJECT_MUTATION,
@@ -262,7 +254,6 @@ import {
   ASSIGN_SUBJECT_TO_TEACHER_MUTATION,
 } from '@/graphql/subjects/mutations'
 import { TEACHER_QUERIES } from '~/graphql/teachers/queries'
-import Swal from 'sweetalert2'
 export default {
   middleware: 'auth',
   data() {
@@ -401,7 +392,7 @@ export default {
       }
     },
 
-    //------delete ----------/
+    // ------delete ----------/
     deleteSubject(item) {
       const deleteId = item
       this.$apollo
@@ -428,7 +419,7 @@ export default {
           },
         })
         .then(({ data }) => {
-           Swal.fire({
+          Swal.fire({
             timer: 1000,
             text: 'subject removed successfully',
             position: 'top-right',

@@ -21,7 +21,7 @@
         >
           <div class="d-flex flex-column align-items-center mb-4">
             <div class="profile-avatar mb-2">
-              <div class="photo-preview" v-if="preview_url == null">
+              <div v-if="preview_url == null" class="photo-preview">
                 <img
                   :src="`http://sms.test/storage/teacher/${form.photo}`"
                   alt=""
@@ -141,7 +141,9 @@
                   name="email"
                   trim
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userLib.email')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userLib.email')"
+                >
                   {{ form.errors.get('userLib.email') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -239,9 +241,9 @@
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
+                  v-model="form.userLib.bloodGroup"
                   value-field="id"
                   text-field="name"
-                  v-model="form.userLib.bloodGroup"
                   :options="bloodGroups"
                   class="mb-3"
                   size="lg"
@@ -262,9 +264,9 @@
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
+                  v-model="form.userLib.country"
                   value-field="id"
                   text-field="name"
-                  v-model="form.userLib.country"
                   :options="countries"
                   class="mb-3"
                   size="lg"
@@ -296,8 +298,8 @@
                   <b-form-select v-model="form.userLib.state" class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>
@@ -319,8 +321,8 @@
                   <b-form-select v-model="form.userLib.city" class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
-                      :value="k.id"
                       :key="k.id"
+                      :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
                   </b-form-select>
@@ -376,6 +378,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
   COUNTRY_QUERIES,
@@ -384,7 +387,6 @@ import {
 } from '~/graphql/users/queries'
 import { UPDATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
 import { TEACHER_QUERY } from '~/graphql/teachers/queries'
-import Swal from 'sweetalert2'
 
 export default {
   middleware: 'auth',
@@ -548,7 +550,6 @@ export default {
                 query: TEACHER_QUERY,
                 variables: { slug: slugName },
               })
-              console.log(data)
               data.teacher = updateTeacher
 
               // Mutate cache result

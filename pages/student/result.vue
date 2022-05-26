@@ -1,14 +1,7 @@
 <template>
   <div class="p-4 view-payment">
     <template v-if="!klases && !terms && !sessions && !user">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
+      <div></div
     ></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
@@ -18,9 +11,9 @@
               <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
+                  v-model="form.class"
                   value-field="id"
                   text-field="name"
-                  v-model="form.class"
                   :options="klases"
                   class="mb-3"
                   size="lg"
@@ -41,9 +34,9 @@
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
+                  v-model="form.term"
                   value-field="id"
                   text-field="name"
-                  v-model="form.term"
                   :options="terms"
                   class="mb-3"
                   size="lg"
@@ -64,9 +57,9 @@
               <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
+                  v-model="form.session"
                   value-field="id"
                   text-field="name"
-                  v-model="form.session"
                   :options="sessions"
                   class="mb-3"
                   size="lg"
@@ -93,11 +86,11 @@
         </b-form>
       </b-card>
 
-      <div class="libarian__wrapper" v-show="timetableDropdownClass">
+      <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamSingleStudentResult
-          :klaseResults="klaseResults"
-          :studentExamResult="studentExamResult"
-          :studentMarkResult="studentMarkResult"
+          :klase-results="klaseResults"
+          :student-exam-result="studentExamResult"
+          :student-mark-result="studentMarkResult"
           :student="[form.class, form.term, form.session]"
         />
       </div>
@@ -240,12 +233,7 @@ export default {
   .custom-select:focus {
     box-shadow: none;
   }
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
+
   .custom-select,
   .form-control,
   .mb-3 {

@@ -2,6 +2,7 @@
   <div class="student">
     <!-- header -->
     <vue-html2pdf
+      ref="html2Pdf"
       :show-layout="true"
       :float-layout="false"
       :enable-download="false"
@@ -13,7 +14,6 @@
       pdf-format="a4"
       pdf-orientation="portrait"
       pdf-content-width="100%"
-      ref="html2Pdf"
     >
       <section slot="pdf-content">
         <div class="student__wrapper" style="padding: 3rem 4rem">

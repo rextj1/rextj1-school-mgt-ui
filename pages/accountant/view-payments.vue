@@ -27,9 +27,9 @@
     </b-card>
 
     <div
+      v-show="paymentDropdownClass"
       class="libarian__wrapper"
       @click.prevent="hideMenu"
-      v-show="paymentDropdownClass"
     >
       <b-card no-body @click="hideMenu">
         <b-tabs card style="font-size: 1.4rem">
@@ -38,10 +38,10 @@
               <strong>All Classes</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
             </template>
-            <PaymentIncompleteSchoolFee :currentYear="form.year" />
+            <PaymentIncompleteSchoolFee :current-year="form.year" />
           </b-tab>
 
-          <b-tab @click.prevent="registrationMenu" lazy>
+          <b-tab lazy @click.prevent="registrationMenu">
             <template #title>
               <strong>Class Payment</strong>
               <b-icon scale="0.8" icon="caret-down-fill" />
@@ -49,8 +49,8 @@
 
             <div class="menu" style="background-color: #fff">
               <ul
-                class="shadow"
                 v-show="registerMenu"
+                class="shadow"
                 :class="registrationMenuClass"
               >
                 <li
@@ -107,7 +107,7 @@
 
             <component
               :is="activeTab"
-              :currentClassYear="[this.form.year, dynamicClass]"
+              :current-class-year="[form.year, dynamicClass]"
             />
           </b-tab>
         </b-tabs>

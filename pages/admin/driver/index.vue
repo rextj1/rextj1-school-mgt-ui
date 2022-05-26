@@ -1,16 +1,7 @@
   <template>
   <div class="fonts">
-    <template v-if="!drivers">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
-    <template v-else>
+    <div v-if="!drivers"></div>
+    <div v-else>
       <b-button
         to="/admin/driver/add-driver"
         variant="primary"
@@ -110,8 +101,8 @@
 
                 <!-- Info modal -->
                 <b-modal
-                  class="modal"
                   :id="infoModal"
+                  class="modal"
                   :hide-backdrop="true"
                   body-bg-variant="info"
                   title="Edit Driver Data"
@@ -164,7 +155,7 @@
           </div>
         </b-col>
       </b-row>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -296,12 +287,7 @@ export default {
 .modal {
   background-color: rgba(0, 0, 0, 0.295) !important;
 }
-.grow {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-}
+
 .fonts {
   font-size: 1.4rem !important;
   padding: 2rem;

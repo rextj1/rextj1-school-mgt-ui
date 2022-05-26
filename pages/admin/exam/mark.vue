@@ -34,10 +34,10 @@
               <td scope="row">
                 <input
                   v-model="mark.ca1"
-                  @input="sendText(mark, $event.target.value, 'ca1')"
                   type="number"
                   min="0"
                   max="20"
+                  @input="sendText(mark, $event.target.value, 'ca1')"
                 />
               </td>
               <td scope="row">
@@ -52,10 +52,10 @@
               <td scope="row">
                 <input
                   v-model="mark.exam_total"
-                  @input="sendText(mark, $event.target.value, 'exam')"
                   type="number"
                   min="0"
                   max="60"
+                  @input="sendText(mark, $event.target.value, 'exam')"
                 />
               </td>
             </tr>

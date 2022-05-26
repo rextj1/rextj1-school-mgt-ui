@@ -2,21 +2,12 @@
   <div class="p-4 view-payment">
     <template>
       <div class="fonts">
-        <template v-if="!klases">
-          <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-            <div class="grow">
-              <b-spinner
-                style="width: 20rem; height: 20rem"
-                type="grow"
-                variant="danger"
-              ></b-spinner>
-            </div></div
-        ></template>
+        <template v-if="!klases"> <div></div></template>
         <template v-else>
           <div class="libarian__wrapper">
             <b-card no-body @click="hideMenu">
               <b-tabs card style="font-size: 1.4rem">
-                <b-tab @click="registrationMenu" lazy>
+                <b-tab lazy @click="registrationMenu">
                   <template #title>
                     <strong>Exam Timetable</strong>
                     <b-icon scale="0.8" icon="caret-down-fill" />
@@ -24,8 +15,8 @@
 
                   <div class="menu" style="background-color: #fff">
                     <ul
-                      class="shadow"
                       v-show="registerMenu"
+                      class="shadow"
                       :class="registrationMenuClass"
                     >
                       <span v-for="klase in klases" :key="klase.id">
@@ -43,7 +34,7 @@
 
                   <component
                     :is="activeTab"
-                    :editCurrentClass="[dynamicClass, klaseName]"
+                    :edit-current-class="[dynamicClass, klaseName]"
                   />
                 </b-tab>
               </b-tabs>
@@ -273,13 +264,6 @@ export default {
 
   .custom-select:focus {
     box-shadow: none;
-  }
-
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
   }
 
   .custom-select,

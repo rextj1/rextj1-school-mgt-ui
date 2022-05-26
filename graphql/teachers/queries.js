@@ -3,6 +3,14 @@ import { KLASE_FIELDS_FRAGMENT } from '../klases/fragments'
 
 import { TEACHER_FIELDS_FRAGMENT, TEACHERS_FIELDS_FRAGMENT } from './fragments'
 // dashboard
+export const TEACHER_DASHBOARD_QUERIES = gql`
+  query TeachersDashboardQueries {
+    teachersDashboard {
+      id
+    }
+  }
+`
+// used by subject
 export const TEACHER_QUERIES = gql`
   query TeachersQueries {
     teachers {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card">
+    <!-- <div class="card">
       <div class="card-header"></div>
 
       <div class="card">
@@ -56,133 +56,133 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
-<script>
-import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
-import { STUDENT_MARK_RESULT_QUERIES } from '~/graphql/marks/queries'
-export default {
-  props: {
-    klaseResults: Array,
-    student: Array,
-  },
-  data() {
-    return {
-      students: [],
-      studentExamResult: [],
-      studentMarkResult: [],
-      resultsModal: 'pop-up',
-      fields: [
-        {
-          key: '#',
-          sortable: false,
-        },
-        {
-          key: 'student',
-          label: 'Full Name',
-          sortable: false,
-        },
-        {
-          key: 'adm_no',
-          label: 'Adm_no.',
-        },
-        {
-          key: 'klase',
-          label: 'Class',
-        },
-        {
-          key: 'term',
-          label: 'Term.',
-        },
-        {
-          key: 'session',
-          label: 'Session.',
-        },
+// <script>
+// import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
+// import { STUDENT_MARK_RESULT_QUERIES } from '~/graphql/marks/queries'
+// export default {
+//   props: {
+//     klaseResults: Array,
+//     student: Array,
+//   },
+//   data() {
+//     return {
+//       students: [],
+//       studentExamResult: [],
+//       studentMarkResult: [],
+//       resultsModal: 'pop-up',
+//       fields: [
+//         {
+//           key: '#',
+//           sortable: false,
+//         },
+//         {
+//           key: 'student',
+//           label: 'Full Name',
+//           sortable: false,
+//         },
+//         {
+//           key: 'adm_no',
+//           label: 'Adm_no.',
+//         },
+//         {
+//           key: 'klase',
+//           label: 'Class',
+//         },
+//         {
+//           key: 'term',
+//           label: 'Term.',
+//         },
+//         {
+//           key: 'session',
+//           label: 'Session.',
+//         },
 
-        {
-          key: '',
-          sortable: false,
-        },
-        {
-          key: 'actions',
-          label: 'Actions',
-          sortable: false,
-        },
-      ],
-    }
-  },
+//         {
+//           key: '',
+//           sortable: false,
+//         },
+//         {
+//           key: 'actions',
+//           label: 'Actions',
+//           sortable: false,
+//         },
+//       ],
+//     }
+//   },
 
-  methods: {
-    position(i) {
-      var j = i % 10
-      const k = i % 100
-      if (j == 1 && k != 11) {
-        return i + '<sup>st</sup>'
-      }
-      if (j == 2 && k != 12) {
-        return i + `<sup>nd</sup>`
-      }
-      if (j == 3 && k != 13) {
-        return i + '<sup>rd</sup>'
-      }
-      if (i > 3) {
-        return i + '<sup>th</sup>'
-      }
-    },
-    resultModal(item) {
-      this.$bvModal.show(this.resultsModal)
+//   methods: {
+//     position(i) {
+//       const j = i % 10
+//       const k = i % 100
+//       if (j == 1 && k != 11) {
+//         return i + '<sup>st</sup>'
+//       }
+//       if (j == 2 && k != 12) {
+//         return i + `<sup>nd</sup>`
+//       }
+//       if (j == 3 && k != 13) {
+//         return i + '<sup>rd</sup>'
+//       }
+//       if (i > 3) {
+//         return i + '<sup>th</sup>'
+//       }
+//     },
+//     resultModal(item) {
+//       this.$bvModal.show(this.resultsModal)
 
-      setTimeout(() => {
-        this.$apollo.addSmartQuery('studentExamResult', {
-          query: STUDENT_EXAM_RESULT_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.student[0]),
-              student_id: parseInt(item),
-              term_id: parseInt(this.student[1]),
-              session_id: parseInt(this.student[2]),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.studentExamResult = data.studentExamResult
-            }
-          },
-        })
-      }, 100)
-      setTimeout(() => {
-        this.$apollo.addSmartQuery('studentMarkResult', {
-          query: STUDENT_MARK_RESULT_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.student[0]),
-              student_id: parseInt(item),
-              term_id: parseInt(this.student[1]),
-              session_id: parseInt(this.student[2]),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.studentMarkResult = data.studentMarkResult
-            }
-          },
-        })
-      }, 100)
-    },
-    generateReport() {
-      this.$refs.html2Pdf.generatePdf()
-    },
-  },
-}
-</script>
+//       setTimeout(() => {
+//         this.$apollo.addSmartQuery('studentExamResult', {
+//           query: STUDENT_EXAM_RESULT_QUERIES,
+//           variables() {
+//             return {
+//               klase_id: parseInt(this.student[0]),
+//               student_id: parseInt(item),
+//               term_id: parseInt(this.student[1]),
+//               session_id: parseInt(this.student[2]),
+//             }
+//           },
+//           result({ loading, data }, key) {
+//             if (!loading) {
+//               this.studentExamResult = data.studentExamResult
+//             }
+//           },
+//         })
+//       }, 100)
+//       setTimeout(() => {
+//         this.$apollo.addSmartQuery('studentMarkResult', {
+//           query: STUDENT_MARK_RESULT_QUERIES,
+//           variables() {
+//             return {
+//               klase_id: parseInt(this.student[0]),
+//               student_id: parseInt(item),
+//               term_id: parseInt(this.student[1]),
+//               session_id: parseInt(this.student[2]),
+//             }
+//           },
+//           result({ loading, data }, key) {
+//             if (!loading) {
+//               this.studentMarkResult = data.studentMarkResult
+//             }
+//           },
+//         })
+//       }, 100)
+//     },
+//     generateReport() {
+//       this.$refs.html2Pdf.generatePdf()
+//     },
+//   },
+// }
+// </script>
 
-<style lang="scss" scoped>
-.card {
-  font-size: 1.5rem;
-  .text-center {
-    border: 2px solid #000;
-  }
-}
-</style>
+// <style lang="scss" scoped>
+// .card {
+//   font-size: 1.5rem;
+//   .text-center {
+//     border: 2px solid #000;
+//   }
+// }
+// </style>

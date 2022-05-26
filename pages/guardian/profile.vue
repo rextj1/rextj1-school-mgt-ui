@@ -2,14 +2,13 @@
   <div class="profile">
     <template v-if="!user"> <div></div></template>
     <template v-else>
-      {{ user.teachers }}
-      <div v-for="teacher in user.teachers" :key="teacher.id">
-        {{ teacher }}
-        <b-jumbotron header="" class="teacher shadow">
-          <h1>About {{ teacher.last_name }}</h1>
+      {{ user.guardian.students[0] }}
+      <div v-for="students in user.guardian.students" :key="students.id">
+        <b-jumbotron header="" class="students shadow">
+          <h1>About {{ students.last_name }}</h1>
           <div class="d-flex justify-content-center mb-4">
             <b-img
-              :src="`${$config.APIRoot}/storage/teacher/${teacher.photo}`"
+              :src="`${$config.APIRoot}/storage/students/${students.photo}`"
               thumbnail
               fluid
               alt="Responsive image"
@@ -37,19 +36,19 @@
             </b-col>
             <b-col md="6" class="first-details p-4">
               <p>
-                {{ teacher.last_name }} {{ teacher.first_name }}
-                {{ teacher.middle_name }}
+                {{ students.last_name }} {{ students.first_name }}
+                {{ students.middle_name }}
               </p>
-              <p>{{ teacher.phone }}</p>
-              <p>{{ teacher.qualification }}</p>
-              <p>{{ teacher.code }}</p>
+              <p>{{ students.phone }}</p>
+              <p>{{ students.qualification }}</p>
+              <p>{{ students.code }}</p>
 
-              <p>{{ teacher.gender }}</p>
-              <p>
+              <p>{{ students.klase.name }}</p>
+              <!-- <p>
                 {{ user.blood_group.name }}
-              </p>
+              </p> -->
 
-              <h3 v-for="klase in teacher.klases" :key="klase.id">
+              <h3 v-for="klase in students.klases" :key="klase.id">
                 <p>
                   <b-badge
                     :id="klase.id"
@@ -70,18 +69,6 @@
                   </b-nav>
                 </b-popover>
               </h3>
-
-              <h3 v-for="subject in teacher.subjects" :key="subject.id">
-                <p>
-                  <b-badge
-                    :id="subject.id"
-                    style="line-height: 1.6"
-                    variant="warning"
-                    class="px-2"
-                    >{{ subject.subject }}</b-badge
-                  >
-                </p>
-              </h3>
             </b-col>
           </b-row>
         </b-jumbotron>
@@ -91,11 +78,11 @@
 </template>
 
 <script>
-import { USER_TEACHER_QUERY } from '@/graphql/teachers/queries'
+import { USER_GUARDIAN_QUERY } from '@/graphql/guardians/queries'
 export default {
   apollo: {
     user: {
-      query: USER_TEACHER_QUERY,
+      query: USER_GUARDIAN_QUERY,
       variables() {
         return {
           id: parseInt(this.$auth.user.id),

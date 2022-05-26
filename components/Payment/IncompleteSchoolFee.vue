@@ -13,13 +13,13 @@
               <b-row>
                 <b-col lg="6" class="my-1">
                   <b-form-group
+                    v-slot="{ ariaDescribedby }"
                     label="Sort"
                     label-for="sort-by-select"
                     label-cols-sm="3"
                     label-align-sm="right"
                     label-size="md"
                     class="mb-0"
-                    v-slot="{ ariaDescribedby }"
                   >
                     <b-input-group size="md">
                       <b-form-select
@@ -96,6 +96,7 @@
 
                 <b-col lg="6" class="my-1">
                   <b-form-group
+                    v-slot="{ ariaDescribedby }"
                     v-model="sortDirection"
                     label="Filter On"
                     description="Leave all unchecked to filter on all data"
@@ -103,7 +104,6 @@
                     label-align-sm="right"
                     label-size="sm"
                     class="mb-0"
-                    v-slot="{ ariaDescribedby }"
                   >
                     <b-form-checkbox-group
                       v-model="filterOn"
@@ -155,11 +155,11 @@
                 stacked="md"
                 show-empty
                 small
-                @filtered="onFiltered"
                 striped
                 hover
                 style="font-size: 1.3rem"
                 :responsive="true"
+                @filtered="onFiltered"
               >
                 <template #cell(name)="row">
                   {{ row.value.first }} {{ row.value.last }}
@@ -188,8 +188,8 @@
                   <b-button
                     size="smd"
                     variant="info"
-                    @click="info(row.item, row.index, $event.target)"
                     class="mr-1"
+                    @click="info(row.item, row.index, $event.target)"
                   >
                     <b-icon icon="eye-fill"></b-icon>
                   </b-button>

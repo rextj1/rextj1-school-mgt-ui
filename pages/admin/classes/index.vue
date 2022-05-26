@@ -1,16 +1,7 @@
 <template>
   <div class="p-4">
-    <template v-if="!klases">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
-    <template v-else>
+    <div v-if="!klases"></div>
+    <div v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
           <b-tabs card style="font-size: 1.4rem">
@@ -31,8 +22,8 @@
                         <b-row no-gutters>
                           <b-col md="4">
                             <input
-                              style="width: 10rem"
                               v-model="form.names"
+                              style="width: 10rem"
                               type="text"
                               required
                               size="lg"
@@ -181,9 +172,9 @@
                       <b-form-group label="">
                         <b-form-select
                           id="klases"
+                          v-model="form.klase"
                           value-field="id"
                           text-field="name"
-                          v-model="form.klase"
                           :options="klases"
                           class="mb-3"
                           size="lg"
@@ -209,9 +200,9 @@
                     <b-col md="8">
                       <b-form-group label="">
                         <b-form-select
+                          v-model="teacherx"
                           value-field="id"
                           text-field="first_name"
-                          v-model="teacherx"
                           :options="teachers"
                           multiple
                           required
@@ -248,11 +239,12 @@
           </b-tabs>
         </b-card>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import { KLASE_QUERIES, KLASE_QUERY } from '~/graphql/klases/queries'
 import {
   ASSIGN_KLASE_TO_TEACHER_MUTATION,
@@ -261,7 +253,6 @@ import {
   UPDATE_KLASE_MUTATION,
 } from '@/graphql/klases/mutations'
 import { TEACHER_QUERIES } from '~/graphql/teachers/queries'
-import Swal from 'sweetalert2'
 export default {
   middleware: 'auth',
   data() {
@@ -438,7 +429,6 @@ export default {
             toast: false,
             backdrop: false,
           })
-        
         })
         .catch((erre) => {
           error
@@ -495,7 +485,7 @@ export default {
               background: '#4bb543',
               toast: false,
               backdrop: false,
-              showConfirmButton: false
+              showConfirmButton: false,
             })
           })
 
@@ -517,13 +507,6 @@ export default {
 </script>
 
 <style lang="scss">
-.grow {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-}
-
 .libarian__wrapper {
   padding: 2rem;
   font-size: 1.4rem;

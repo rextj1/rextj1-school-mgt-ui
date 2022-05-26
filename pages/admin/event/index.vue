@@ -1,16 +1,7 @@
 <template>
   <div class="p-4">
-    <template v-if="!events">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
-    <template v-else>
+    <div v-if="!events"></div>
+    <div v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
           <b-tabs card style="font-size: 1.4rem">
@@ -108,11 +99,11 @@
                   <template #cell(actions)="row" class="d-flex">
                     <div class="d-flex">
                       <b-button
+                        v-show="showPublished"
                         size="smd"
                         variant="primary"
                         class="mr-1"
                         @click="published(row.item.id)"
-                        v-show="showPublished"
                       >
                         <b-spinner
                           v-if="busyPublished"
@@ -124,11 +115,11 @@
 
                       <!-- unpublished -->
                       <b-button
+                        v-show="showUnPblished"
                         size="smd"
                         variant="primary"
                         class="mr-1"
                         @click="unPublished(row.item.id)"
-                        v-show="showUnPblished"
                       >
                         <b-spinner
                           v-if="busyUnPublished"
@@ -161,22 +152,21 @@
             </b-tab>
           </b-tabs>
         </b-card>
-         <!-- Info modal -->
-      <b-modal
-        class="modal"
-        :id="infoModal"
-        :hide-backdrop="true"
-        body-bg-variant="info"
-        scrollable
-        title="Edit Student Data"
-        size="lg"
-        :hide-footer="true"
-      >
-        <AdminEditEventModal :slug="id" />
-      </b-modal>
+        <!-- Info modal -->
+        <b-modal
+          :id="infoModal"
+          class="modal"
+          :hide-backdrop="true"
+          body-bg-variant="info"
+          scrollable
+          title="Edit Student Data"
+          size="lg"
+          :hide-footer="true"
+        >
+          <AdminEditEventModal :slug="id" />
+        </b-modal>
       </div>
-     
-    </template>
+    </div>
   </div>
 </template>
 
@@ -201,7 +191,7 @@ export default {
       showUnPblished: false,
       busyPublished: false,
       busyUnPublished: false,
-      infoModal: 'info-modal' ,
+      infoModal: 'info-modal',
       id: '',
       show: true,
 
@@ -239,7 +229,7 @@ export default {
   methods: {
     // published mutation
     editInfo(item) {
-       this.$root.$emit('bv::show::modal', this.infoModal)
+      this.$root.$emit('bv::show::modal', this.infoModal)
       // this.$bvModal.show(this.infoModal)
       this.id = item
     },
@@ -331,12 +321,6 @@ export default {
 </script>
 
 <style lang="scss">
-.grow {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-}
 .libarian__wrapper {
   padding: 2rem;
   font-size: 1.6rem;

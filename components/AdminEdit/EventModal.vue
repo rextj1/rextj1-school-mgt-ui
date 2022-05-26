@@ -22,7 +22,7 @@
         >
           <div class="d-flex flex-column align-items-center mb-4">
             <div class="profile-avatar mb-2">
-              <div class="photo-preview" v-if="preview_url == null">
+              <div v-if="preview_url == null" class="photo-preview">
                 <img
                   src="@/assets/svg/graduate-student.svg"
                   alt=""

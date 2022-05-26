@@ -1,6 +1,6 @@
 /* This file is based on WebProfilerBundle/Resources/views/Profiler/base_js.html.twig.
    If you make any change in this file, verify the same change is needed in the other file. */
-/*<![CDATA[*/
+/* <![CDATA[ */
 if (typeof Sfjs === 'undefined') {
     Sfjs = (function() {
         "use strict";
@@ -17,9 +17,9 @@ if (typeof Sfjs === 'undefined') {
             var toggleClass = function(el, cssClass) { hasClass(el, cssClass) ? removeClass(el, cssClass) : addClass(el, cssClass); };
         }
 
-        var addEventListener;
+        let addEventListener;
 
-        var el = document.createElement('div');
+        const el = document.createElement('div');
         if (!('addEventListener' in el)) {
             addEventListener = function (element, eventName, callback) {
                 element.attachEvent('on' + eventName, callback);
@@ -31,30 +31,30 @@ if (typeof Sfjs === 'undefined') {
         }
 
         return {
-            addEventListener: addEventListener,
+            addEventListener,
 
-            createTabs: function() {
-                var tabGroups = document.querySelectorAll('.sf-tabs:not([data-processed=true])');
+            createTabs() {
+                const tabGroups = document.querySelectorAll('.sf-tabs:not([data-processed=true])');
 
                 /* create the tab navigation for each group of tabs */
                 for (var i = 0; i < tabGroups.length; i++) {
-                    var tabs = tabGroups[i].querySelectorAll(':scope > .tab');
+                    const tabs = tabGroups[i].querySelectorAll(':scope > .tab');
                     var tabNavigation = document.createElement('ul');
                     tabNavigation.className = 'tab-navigation';
 
-                    var selectedTabId = 'tab-' + i + '-0'; /* select the first tab by default */
+                    let selectedTabId = 'tab-' + i + '-0'; /* select the first tab by default */
                     for (var j = 0; j < tabs.length; j++) {
                         var tabId = 'tab-' + i + '-' + j;
-                        var tabTitle = tabs[j].querySelector('.tab-title').innerHTML;
+                        const tabTitle = tabs[j].querySelector('.tab-title').innerHTML;
 
-                        var tabNavigationItem = document.createElement('li');
+                        const tabNavigationItem = document.createElement('li');
                         tabNavigationItem.setAttribute('data-tab-id', tabId);
                         if (hasClass(tabs[j], 'active')) { selectedTabId = tabId; }
                         if (hasClass(tabs[j], 'disabled')) { addClass(tabNavigationItem, 'disabled'); }
                         tabNavigationItem.innerHTML = tabTitle;
                         tabNavigation.appendChild(tabNavigationItem);
 
-                        var tabContent = tabs[j].querySelector('.tab-content');
+                        const tabContent = tabs[j].querySelector('.tab-content');
                         tabContent.parentElement.setAttribute('id', tabId);
                     }
 
@@ -77,7 +77,7 @@ if (typeof Sfjs === 'undefined') {
                         }
 
                         tabNavigation[j].addEventListener('click', function(e) {
-                            var activeTab = e.target || e.srcElement;
+                            let activeTab = e.target || e.srcElement;
 
                             /* needed because when the tab contains HTML contents, user can click */
                             /* on any of those elements instead of their parent '<li>' element */
@@ -86,15 +86,15 @@ if (typeof Sfjs === 'undefined') {
                             }
 
                             /* get the full list of tabs through the parent of the active tab element */
-                            var tabNavigation = activeTab.parentNode.children;
-                            for (var k = 0; k < tabNavigation.length; k++) {
-                                var tabId = tabNavigation[k].getAttribute('data-tab-id');
+                            const tabNavigation = activeTab.parentNode.children;
+                            for (let k = 0; k < tabNavigation.length; k++) {
+                                const tabId = tabNavigation[k].getAttribute('data-tab-id');
                                 document.getElementById(tabId).className = 'hidden';
                                 removeClass(tabNavigation[k], 'active');
                             }
 
                             addClass(activeTab, 'active');
-                            var activeTabId = activeTab.getAttribute('data-tab-id');
+                            const activeTabId = activeTab.getAttribute('data-tab-id');
                             document.getElementById(activeTabId).className = 'block';
                         });
                     }
@@ -103,12 +103,12 @@ if (typeof Sfjs === 'undefined') {
                 }
             },
 
-            createToggles: function() {
-                var toggles = document.querySelectorAll('.sf-toggle:not([data-processed=true])');
+            createToggles() {
+                const toggles = document.querySelectorAll('.sf-toggle:not([data-processed=true])');
 
-                for (var i = 0; i < toggles.length; i++) {
-                    var elementSelector = toggles[i].getAttribute('data-toggle-selector');
-                    var element = document.querySelector(elementSelector);
+                for (let i = 0; i < toggles.length; i++) {
+                    const elementSelector = toggles[i].getAttribute('data-toggle-selector');
+                    const element = document.querySelector(elementSelector);
 
                     addClass(element, 'sf-toggle-content');
 
@@ -123,12 +123,12 @@ if (typeof Sfjs === 'undefined') {
                     addEventListener(toggles[i], 'click', function(e) {
                         e.preventDefault();
 
-                        if ('' !== window.getSelection().toString()) {
+                        if (window.getSelection().toString() !== '') {
                             /* Don't do anything on text selection */
                             return;
                         }
 
-                        var toggle = e.target || e.srcElement;
+                        let toggle = e.target || e.srcElement;
 
                         /* needed because when the toggle contains HTML contents, user can click */
                         /* on any of those elements instead of their parent '.sf-toggle' element */
@@ -136,7 +136,7 @@ if (typeof Sfjs === 'undefined') {
                             toggle = toggle.parentNode;
                         }
 
-                        var element = document.querySelector(toggle.getAttribute('data-toggle-selector'));
+                        const element = document.querySelector(toggle.getAttribute('data-toggle-selector'));
 
                         toggleClass(toggle, 'sf-toggle-on');
                         toggleClass(toggle, 'sf-toggle-off');
@@ -152,15 +152,15 @@ if (typeof Sfjs === 'undefined') {
                             toggle.setAttribute('data-toggle-original-content', toggle.innerHTML);
                         }
 
-                        var currentContent = toggle.innerHTML;
-                        var originalContent = toggle.getAttribute('data-toggle-original-content');
-                        var altContent = toggle.getAttribute('data-toggle-alt-content');
+                        const currentContent = toggle.innerHTML;
+                        const originalContent = toggle.getAttribute('data-toggle-original-content');
+                        const altContent = toggle.getAttribute('data-toggle-alt-content');
                         toggle.innerHTML = currentContent !== altContent ? altContent : originalContent;
                     });
 
                     /* Prevents from disallowing clicks on links inside toggles */
-                    var toggleLinks = toggles[i].querySelectorAll('a');
-                    for (var j = 0; j < toggleLinks.length; j++) {
+                    const toggleLinks = toggles[i].querySelectorAll('a');
+                    for (let j = 0; j < toggleLinks.length; j++) {
                         addEventListener(toggleLinks[j], 'click', function(e) {
                             e.stopPropagation();
                         });
@@ -170,18 +170,18 @@ if (typeof Sfjs === 'undefined') {
                 }
             },
 
-            createFilters: function() {
+            createFilters() {
                 document.querySelectorAll('[data-filters] [data-filter]').forEach(function (filter) {
-                    var filters = filter.closest('[data-filters]'),
-                        type = 'choice',
-                        name = filter.dataset.filter,
-                        ucName = name.charAt(0).toUpperCase()+name.slice(1),
-                        list = document.createElement('ul'),
-                        values = filters.dataset['filter'+ucName] || filters.querySelectorAll('[data-filter-'+name+']'),
-                        labels = {},
-                        defaults = null,
-                        indexed = {},
-                        processed = {};
+                    const filters = filter.closest('[data-filters]');
+                        let type = 'choice';
+                        const name = filter.dataset.filter;
+                        const ucName = name.charAt(0).toUpperCase()+name.slice(1);
+                        const list = document.createElement('ul');
+                        let values = filters.dataset['filter'+ucName] || filters.querySelectorAll('[data-filter-'+name+']');
+                        let labels = {};
+                        let defaults = null;
+                        const indexed = {};
+                        const processed = {};
                     if (typeof values === 'string') {
                         type = 'level';
                         labels = values.split(',');
@@ -197,28 +197,28 @@ if (typeof Sfjs === 'undefined') {
                         if (value in processed) {
                             return;
                         }
-                        var option = document.createElement('li'),
-                            label = i in labels ? labels[i] : value,
-                            active = false,
-                            matches;
-                        if ('' === label) {
+                        const option = document.createElement('li');
+                            const label = i in labels ? labels[i] : value;
+                            let active = false;
+                            let matches;
+                        if (label === '') {
                             option.innerHTML = '<em>(none)</em>';
                         } else {
                             option.innerText = label;
                         }
                         option.dataset.filter = value;
-                        option.setAttribute('title', 1 === (matches = filters.querySelectorAll('[data-filter-'+name+'="'+value+'"]').length) ? 'Matches 1 row' : 'Matches '+matches+' rows');
+                        option.setAttribute('title', (matches = filters.querySelectorAll('[data-filter-'+name+'="'+value+'"]').length) === 1 ? 'Matches 1 row' : 'Matches '+matches+' rows');
                         indexed[value] = i;
                         list.appendChild(option);
                         addEventListener(option, 'click', function () {
-                            if ('choice' === type) {
+                            if (type === 'choice') {
                                 filters.querySelectorAll('[data-filter-'+name+']').forEach(function (row) {
                                     if (option.dataset.filter === row.dataset['filter'+ucName]) {
                                         toggleClass(row, 'filter-hidden-'+name);
                                     }
                                 });
                                 toggleClass(option, 'active');
-                            } else if ('level' === type) {
+                            } else if (type === 'level') {
                                 if (i === this.parentNode.querySelectorAll('.active').length - 1) {
                                     return;
                                 }
@@ -244,9 +244,9 @@ if (typeof Sfjs === 'undefined') {
                                 });
                             }
                         });
-                        if ('choice' === type) {
-                            active = null === defaults || 0 <= defaults.indexOf(value);
-                        } else if ('level' === type) {
+                        if (type === 'choice') {
+                            active = defaults === null || defaults.includes(value);
+                        } else if (type === 'level') {
                             active = i <= defaults;
                             if (active && i === defaults) {
                                 addClass(option, 'last-active');
@@ -262,7 +262,7 @@ if (typeof Sfjs === 'undefined') {
                         processed[value] = true;
                     });
 
-                    if (1 < list.childNodes.length) {
+                    if (list.childNodes.length > 1) {
                         filter.appendChild(list);
                         filter.dataset.filtered = '';
                     }
@@ -277,4 +277,4 @@ if (typeof Sfjs === 'undefined') {
         Sfjs.createFilters();
     });
 }
-/*]]>*/
+/* ]]> */

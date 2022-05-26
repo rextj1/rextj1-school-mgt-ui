@@ -1,15 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!libarian || !libarian.user">
-      <div style="background-color: #f1f9ae; width: 100%; min-height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!libarian || !libarian.user"> <div></div></template>
     <template v-else>
       <b-button
         to="/admin/libarian"
@@ -22,25 +13,24 @@
       <b-jumbotron header="" class="libarian shadow">
         <h1>About {{ libarian.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
-          <span v-if=" libarian.gender == 'Female' && libarian.photo == null">
+          <span v-if="libarian.gender == 'Female' && libarian.photo == null">
             <b-img
-            src="~/assets/images/teacher.jpeg"
-            thumbnail
-            fluid
-            alt="Responsive image"
-            width="230"
-          ></b-img>
+              src="~/assets/images/teacher.jpeg"
+              thumbnail
+              fluid
+              alt="Responsive image"
+              width="230"
+            ></b-img>
           </span>
           <span v-else>
             <b-img
-            :src="`http://sms.test/storage/libarian/${libarian.photo}`"
-            thumbnail
-            fluid
-            alt="image"
-            width="230"
-          ></b-img>
+              :src="`http://sms.test/storage/libarian/${libarian.photo}`"
+              thumbnail
+              fluid
+              alt="image"
+              width="230"
+            ></b-img>
           </span>
-          
         </div>
         <b-row no-gutters class="sm-query">
           <b-col md="6" class="first-detail p-4">
@@ -139,12 +129,7 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
+
   .first-detail p {
     display: block;
     margin-left: 40%;
