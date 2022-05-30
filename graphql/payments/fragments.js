@@ -1,35 +1,60 @@
 import gql from 'graphql-tag'
-import { MYCLASSES_FIELDS_FRAGMENT } from '~/graphql/klases/fragments'
 
 export const PAYMENT_FIELDS_FRAGMENT = gql`
   fragment PaymentFields on Payment {
     id
-    slug
-    ref_no
-    description
-    expense_type
-    method
+    title
     amount
-    session
-    my_class {
-      ...MyclassesFields
+    ref_no
+    method
+    description
+    term {
+      id
+      name
+    }
+    session {
+      id
+      name
+    }
+    klase {
+      id
+      name
     }
   }
-  ${MYCLASSES_FIELDS_FRAGMENT}
 `
-export const INCOMPLETE_FIELDS_FRAGMENT = gql`
-  fragment IncompletePaymentFields on IncompletePayment {
+export const PAYMENT_RECORD_FIELDS_FRAGMENT = gql`
+  fragment PaymentRecordFields on PaymentRecord {
     id
-    slug
     ref_no
-    description
-    expense_type
-    method
     amount
-    session
-    my_class {
-      ...MyclassesFields
+    amt_paid
+    balance
+    status
+    receipt
+    title
+    student {
+      id
+      first_name
+      last_name
+      photo
+      phone
+    }
+    term {
+      id
+      name
+    }
+    payment {
+      id
+      title
+      description
+    }
+    session {
+      id
+      name
+    }
+    klase {
+      id
+      name
     }
   }
-  ${MYCLASSES_FIELDS_FRAGMENT}
 `

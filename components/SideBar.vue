@@ -2,7 +2,7 @@
   <div v-if="!user"></div>
   <div v-else class="fixed">
     <div
-      class="shadow aside"
+      class="aside"
       style="font-size: 1.6rem"
       :class="`${is_expanded ? 'is-expanded' : 'not_expanded'}`"
     >
@@ -177,12 +177,8 @@
             </nuxt-link>
 
             <nuxt-link to="/student/exam" class="button">
-              <b-icon
-                icon="vector-pen"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
-              <span class="text" @click="ToggleMenus">Examination</span>
+              <b-icon icon="pen" class="material-icons" @click="ToggleMenus" />
+              <span class="text" @click="ToggleMenus"> Examination</span>
             </nuxt-link>
 
             <nuxt-link to="/student/result" class="button">
@@ -193,6 +189,73 @@
               />
               <span class="text" @click="ToggleMenus">Result</span>
             </nuxt-link>
+
+              <!-- collapse -->
+            <nuxt-link
+              v-b-toggle.accordion-4
+              block
+              event=""
+              to="admin"
+              class="button"
+            >
+              <b-icon
+                icon="vector-pen"
+                class="material-icons"
+                @click="ToggleMenus()"
+              />
+              <span class="text" @click="ToggleMenus()"
+                >Payment
+                <b-icon
+                  style="margin-left: 6rem"
+                  scale="0.8"
+                  class="caret-down"
+                  icon="caret-down"
+              /></span>
+            </nuxt-link>
+
+            <b-collapse
+              id="accordion-4"
+              accordion="my-accordion"
+              role="tabpanel"
+              class="mt-2 dropMenuClose"
+            >
+              <b-card bg-variant="light">
+                <nuxt-link to="/student/payment" class="button">
+                  <b-icon
+                    icon="person-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Pay Fee</span>
+                </nuxt-link>
+
+                <!-- <nuxt-link to="/admin/student" class="button">
+                  <b-icon
+                    icon="people-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Student</span>
+                </nuxt-link>
+                <nuxt-link to="/admin/accountant" class="button">
+                  <b-icon
+                    icon="people-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Accountant</span>
+                </nuxt-link>
+
+                <nuxt-link to="/admin/libarian" class="button">
+                  <b-icon
+                    icon="people-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Libarian</span> -->
+                </nuxt-link>
+              </b-card>
+            </b-collapse>
           </div>
         </span>
 
@@ -255,7 +318,7 @@
             </nuxt-link>
             <nuxt-link to="/admin/roles" class="button">
               <b-icon
-                icon="person-fill"
+                icon="person-plus"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -278,7 +341,7 @@
               <span class="text" @click="ToggleMenus()"
                 >Users
                 <b-icon
-                  style="margin-left: 4rem"
+                  style="margin-left: 6rem"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -295,7 +358,7 @@
                 <nuxt-link to="/admin/teacher" class="button">
                   <b-icon
                     icon="person-fill"
-                    class="material-icons"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
                   <span class="text" @click="ToggleMenus">Teacher</span>
@@ -304,7 +367,7 @@
                 <nuxt-link to="/admin/student" class="button">
                   <b-icon
                     icon="people-fill"
-                    class="material-icons"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
                   <span class="text" @click="ToggleMenus">Student</span>
@@ -312,7 +375,7 @@
                 <nuxt-link to="/admin/accountant" class="button">
                   <b-icon
                     icon="people-fill"
-                    class="material-icons"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
                   <span class="text" @click="ToggleMenus">Accountant</span>
@@ -321,7 +384,7 @@
                 <nuxt-link to="/admin/libarian" class="button">
                   <b-icon
                     icon="people-fill"
-                    class="material-icons"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
                   <span class="text" @click="ToggleMenus">Libarian</span>
@@ -338,14 +401,14 @@
               class="button"
             >
               <b-icon
-                icon="vector-pen"
+                icon="pen"
                 class="material-icons"
                 @click="ToggleMenus()"
               />
               <span class="text" @click="ToggleMenus()"
                 >Exam
                 <b-icon
-                  style="margin-left: 4rem"
+                  style="margin-left: 6rem"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -360,26 +423,61 @@
             >
               <b-card bg-variant="light">
                 <nuxt-link to="/admin/exam/timetable" class="button">
+                  <b-icon
+                    icon="alarm"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
                   <span class="text">Timetable</span>
                 </nuxt-link>
 
-                <nuxt-link to="/admin/exam/tabulation" class="button">
-                  <span class="text">Tabulation Sheet</span>
-                </nuxt-link>
                 <nuxt-link to="/admin/exam/marksheet" class="button">
+                  <b-icon
+                    icon="file-earmark-ruled"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
                   <span class="text">Marksheet</span>
                 </nuxt-link>
                 <nuxt-link to="/admin/exam/result" class="button">
+                  <b-icon
+                    icon="file-text"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
                   <span class="text">Results</span>
                 </nuxt-link>
-                <nuxt-link to="/admin/exam/session" class="button">
-                  <span class="text">Session</span>
+
+                <nuxt-link to="/admin/exam/tabulation" class="button">
+                  <b-icon
+                    icon="newspaper"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text">Tabulation Sheet</span>
                 </nuxt-link>
 
                 <nuxt-link to="/admin/exam/promotion" class="button">
+                  <b-icon
+                    icon="arrow-right-circle"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
                   <span class="text">promotion</span>
                 </nuxt-link>
+
                 <nuxt-link to="/admin/exam/reset" class="button">
+                  <b-icon
+                    icon="arrow-left-circle"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
                   <span class="text">Reset Promotion</span>
                 </nuxt-link>
                 <!-- <nuxt-link to="/admin/exam/publish" class="button">
@@ -425,17 +523,18 @@
               <span class="text" @click="ToggleMenus">Drivers</span>
             </nuxt-link>
 
-            <!-- <nuxt-link to="/admin/result" class="button">
+            <nuxt-link to="/admin/session" class="button">
               <b-icon
-                @click="ToggleMenus"
-                icon="file-text"
+                icon="layers"
                 class="material-icons"
+                @click="ToggleMenus"
               />
-              <span @click="ToggleMenus" class="text">Result</span>
-            </nuxt-link> -->
+              <span class="text" @click="ToggleMenus">Session</span>
+            </nuxt-link>
+
             <nuxt-link to="/admin/classes" class="button">
               <b-icon
-                icon="envelope"
+                icon="layers"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -443,7 +542,7 @@
             </nuxt-link>
             <nuxt-link to="/admin/subjects" class="button">
               <b-icon
-                icon="envelope"
+                icon="text-indent-left"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -511,7 +610,7 @@ export default {
   width: 20.5rem;
   top: 0;
   background-color: #fff;
-  z-index: 2;
+  z-index: 3;
 
   .aside {
     // position: sticky !important;
@@ -547,13 +646,15 @@ export default {
 
       .menu-toggle {
         transition: 0.3s ease-out;
-        .material-icons {
+        .material-icons,
+        .material-icon {
           font-size: 3rem;
           transition: 0.2s ease-out;
         }
 
         &:hover {
-          .material-icons {
+          .material-icons,
+          .material-icon {
             color: rgba(0, 0, 0, 0.473);
             transform: translateX(0.5rem);
           }
@@ -606,11 +707,18 @@ export default {
           transition: 0.1s ease-out;
           margin-top: 0.3rem;
         }
+        .material-icon {
+          padding-right: 2.5rem;
+          color: var(--color-body);
+          transition: 0.1s ease-out;
+          margin-top: -0.3rem;
+        }
         &.nuxt-link-exact-active {
           border-radius: 0 2rem 2rem 0;
           border-left: 5px solid limegreen;
 
-          .material-icons {
+          .material-icons,
+          .material-icon {
             transition: 0.2s ease-out;
           }
 
@@ -674,10 +782,14 @@ export default {
           .material-icons {
             margin-right: 1rem;
           }
+          .material-icon {
+            margin-right: 0;
+          }
 
           &:hover {
             background-color: var(--color-primary);
             border-radius: 0 2rem 2rem 0;
+            .material-icon,
             .material-icons,
             .text {
               color: var(--color-white);
@@ -691,6 +803,7 @@ export default {
           border-left: 5px solid limegreen;
 
           .material-icons,
+          .material-icon,
           .text {
             color: var(--color-white);
           }

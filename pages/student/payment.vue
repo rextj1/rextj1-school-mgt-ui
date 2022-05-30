@@ -1,34 +1,11 @@
 <template>
-  <div class="student-paayment p-4">
-    <div v-if="!klases && !terms && !sessions"></div>
+  <div class="p-4 view-payment">
+    <div v-if="!terms && !sessions"></div>
     <div v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
-            <b-col md="2">
-              <b-form-group label="Classes">
-                <b-form-select
-                  id="klases"
-                  v-model="form.class"
-                  value-field="id"
-                  text-field="name"
-                  :options="klases"
-                  class="mb-3"
-                  size="lg"
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- Select class --</b-form-select-option
-                    >
-                  </template>
-
-                  <!-- These options will appear after the ones from 'options' prop -->
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="2">
+            <b-col md="4">
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
@@ -51,7 +28,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="2">
+            <b-col md="4">
               <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
@@ -85,42 +62,38 @@
         </b-form>
       </b-card>
 
-      <b-card v-show="paymentDropdownClass" class="p-4">
-        <PaymentStudentPayment
-          :paymentRecords="paymentRecords"
-          :paidPaymentRecords="paidPaymentRecords"
-          :student="[form.class, form.term, form.session]"
+      <div v-show="timetableDropdownClass" class="libarian__wrapper">
+        <PaymentStudentFeePayment
+          :marks="marks"
+          :student="[form.term, form.session]"
         />
-      </b-card>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { KLASES_QUERIES } from '~/graphql/klases/queries'
+import { CREATE_FIELD_MUTATION } from '~/graphql/marks/mutations'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
-import {
-  PAID_PAYMENT_RECORD_QUERIES,
-  PAYMENT_RECORD_QUERIES,
-} from '~/graphql/payments/queries'
+import { STUDENT_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
-      paymentRecords: [],
-      paidPaymentRecords: [],
-      paymentDropdownClass: false,
+      marks: [],
+      timetableDropdownClass: true,
       form: {
-        class: null,
-        term: null,
         session: null,
+        term: null,
       },
+
+      dynamicClass: '',
+      activeTab: '',
+      registerMenu: false,
+      registrationMenuClass: '',
     }
   },
   apollo: {
-    klases: {
-      query: KLASES_QUERIES,
-    },
     terms: {
       query: TERM_QUERIES,
     },
@@ -129,41 +102,43 @@ export default {
     },
   },
   methods: {
+    dynamicStudentClass(item) {
+      this.dynamicClass = item
+    },
     markSubmit() {
       if (
-        this.form.class === null ||
         this.form.term === null ||
         this.form.session === null
       ) {
         return false
       } else {
-        this.paymentDropdownClass = true
+        this.timetableDropdownClass = true
       }
-      this.$apollo.addSmartQuery('paymentRecords', {
-        query: PAYMENT_RECORD_QUERIES,
-        variables: {
-          klase_id: parseInt(this.form.class),
-          session_id: parseInt(this.form.session),
-          term_id: parseInt(this.form.term),
-        },
-        result({ loading, data }, key) {
-          if (!loading) {
-            this.paymentRecords = data.paymentRecords
-          }
-        },
-      })
+      this.$apollo
+        .mutate({
+          mutation: CREATE_FIELD_MUTATION,
+          variables: {
+            session: parseInt(this.form.session),
+            term: parseInt(this.form.term),
+          },
+        })
+        .then(({ data }) => {})
+        .catch((err) => {
+          err
+        })
 
       setTimeout(() => {
-        this.$apollo.addSmartQuery('paidPaymentRecords', {
-          query: PAID_PAYMENT_RECORD_QUERIES,
+        this.$apollo.addSmartQuery('marks', {
+          query: STUDENT_PAYMENT_RECORD_QUERIES,
           variables: {
             klase_id: parseInt(this.form.class),
+            subject_id: parseInt(this.form.subject),
             session_id: parseInt(this.form.session),
             term_id: parseInt(this.form.term),
           },
           result({ loading, data }, key) {
             if (!loading) {
-              this.paidPaymentRecords = data.paidPaymentRecords
+              this.marks = data.marks
             }
           },
         })
@@ -173,20 +148,58 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.student-paayment {
+<style lang="scss">
+.view-payment {
   font-size: 1.6rem;
 
   .custom-select:focus {
     box-shadow: none;
   }
-
   .custom-select,
   .form-control,
   .mb-3 {
     height: 4rem;
     font-size: 1.4rem;
     color: #000;
+  }
+  .custom-select {
+    option {
+      font-size: 1.5rem !important;
+    }
+  }
+
+  .libarian__wrapper {
+    padding: 2rem;
+    font-size: 1.4rem;
+    background-color: var(--color-white);
+    border-radius: 0.5rem;
+    border: none;
+
+    .nav-link.active {
+      border-top: 5px solid limegreen;
+    }
+
+    .menu {
+      ul {
+        z-index: 999;
+        position: absolute;
+        border: none;
+        top: -3.5rem;
+        left: 14.2rem;
+        background-color: #fff;
+      }
+
+      li:not(:last-child) {
+        background-color: #fff;
+        padding: 1rem 4.8rem;
+        border-bottom: 1px solid gray;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--color-input);
+        }
+      }
+    }
   }
 }
 </style>

@@ -88,8 +88,8 @@ export default {
       variables() {
         return { id: parseInt(this.$auth.user.id) }
       },
-      fetchPolicy: 'no-cache',
-      pollInterval: 15000,
+      // fetchPolicy: 'no-cache',
+      // pollInterval: 15000,
     },
   },
   methods: {
@@ -120,7 +120,6 @@ export default {
 
 <style lang="scss" scoped>
 .top {
-  //  position: fixed;
   nav {
     position: fixed;
     width: 100% !important;
@@ -130,7 +129,7 @@ export default {
     height: 6.8rem;
     justify-content: flex-end;
     flex: 1;
-    z-index: 1;
+    z-index: 2;
      top: 0;
 
     .bell {
