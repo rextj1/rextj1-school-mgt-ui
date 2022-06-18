@@ -1,11 +1,7 @@
 import Swal from 'sweetalert2'
 import { ApolloLink } from 'apollo-link'
 import { onError } from 'apollo-link-error'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-
-const inProduction = process.env.NODE_ENV === 'production'
-const tld = inProduction ? 'com' : 'test'
-const protocol = inProduction ? 'https' : 'http'
+import { omitDeep } from '~/utils/helpers'
 
 const errorLink = ({ redirect, route }) => {
   return onError(({ graphQLErrors, networkError }) => {
@@ -14,7 +10,8 @@ const errorLink = ({ redirect, route }) => {
       if (statusCode === 402 && result.message === 'NoSubscriptionOrExpired') {
         return false // Do not retry request
       } else {
-        // console.log(`[Network error]: ${networkError}`)
+        // eslint-disable-next-line no-console
+        console.log(`[Network error]: ${networkError}`)
       }
     }
 
@@ -45,13 +42,23 @@ const errorLink = ({ redirect, route }) => {
   })
 }
 
+const cleanTypenameLink = new ApolloLink((operation, forward) => {
+  if (operation.variables) {
+    operation.variables = omitDeep(operation.variables, '__typename')
+  }
+  return forward(operation).map((data) => {
+    return data
+  })
+})
+
 export default function DefaultConfig(ctx) {
-  const cache = new InMemoryCache()
+  const { $config } = ctx
+
   return {
-    link: ApolloLink.from([errorLink(ctx)]),
-    cache,
+    link: ApolloLink.from([errorLink(ctx), cleanTypenameLink]),
+
     // required
-    httpEndpoint: `${protocol}://sms.${tld}/graphql`,
+    httpEndpoint: `${$config.APIRoot}/graphql`,
 
     // optional
     // See https://www.apollographql.com/docs/link/links/http.html#options

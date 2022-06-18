@@ -1,12 +1,12 @@
 const inProduction = process.env.NODE_ENV === 'production'
 const host = inProduction ? '127.0.0.1' : `sms.test`
-const apiRoot = process.env.APP_API_ROOT || `http://sms.test`
+const apiRoot = process.env.APP_API_ROOT || 'http://api.sms-api.test'
 
 export default {
-  universal: true,
+  ssr: false,
   server: {
     host,
-    port: 3000,
+    port: process.env.APP_PORT || 5000,
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -96,6 +96,13 @@ export default {
         domain: `.${host}`,
       },
     },
+
+    // cookie: {
+    //   options: {
+    //     path: '/',
+    //     domain: apiRoot.substring(apiRoot.indexOf('.')),
+    //   },
+    // },
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   // build: { extend(config, ctx) {} },
@@ -149,7 +156,7 @@ export default {
        * Define the domain where the cookie is available. Defaults to
        * the domain of the page where the cookie was created.
        */
-      domain: `.${host}`,
+      domain: `.${host}`, // optional
       /**
        * A Boolean indicating if the cookie transmission requires a
        * secure protocol (https). Defaults to false.
@@ -174,4 +181,9 @@ export default {
       default: '~/graphql/apollo/default-client.js',
     },
   },
+  // pwa: {
+  //   manifest: {
+  //     lang: 'en',
+  //   },
+  // },
 }
