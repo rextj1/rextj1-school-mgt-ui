@@ -1,85 +1,99 @@
 <template>
-  <div v-if="!user"></div>
-  <div v-else class="top">
-    <nav class="" @click="hideTopNav">
-      <ul class="d-flex align-items-center">
-        <li>
-          <span class="mainNotification">
-            <b-icon
-              class="h1 bell"
-              scale="1.1"
-              variant="light"
-              icon="bell-fill"
-            />
-            <div v-if="!user"></div>
-            <div v-if="user.unreadNotifications.length === 0"></div>
+  <div>
+    <template>
+      <div class="top">
+        <nav class="" @click="hideTopNav">
+          <ul class="d-flex align-items-center">
+            <li>
+              <span class="mainNotification">
+                <b-icon
+                  class="h1 bell"
+                  scale="1.1"
+                  variant="light"
+                  icon="bell-fill"
+                />
 
-            <div v-else class="userNotification" @click="notificationModal">
-              {{ user.unreadNotifications.length }}
-            </div>
-          </span>
-        </li>
-        <li>
-          <span
-            v-if="$auth.loggedIn"
-            class="profile-image"
-            @click="profileImage"
-          >
-            <div class="nav-image">
-              <img src="@/assets/images/background.jpg" alt="" />
-              <h5>
-                {{ $auth.user.first_name
-                }}<b-icon icon="caret-down-fill" style="color: #fff"></b-icon>
-              </h5>
-            </div>
-            <transition class="leave-cancelled">
-              <div v-show="profileBody" class="profile" :class="topNavClass">
-                <div class="align-content">
-                  <img src="@/assets/images/background.jpg" alt="" />
-                  <p>{{ $auth.user.first_name }}</p>
-                  <p>{{ $auth.user.email }}</p>
+                <div v-if="user.notifications.length === 0"></div>
+
+                <div v-else class="userNotification" @click="notificationModal">
+                  {{ user.notifications.length }}
                 </div>
+              </span>
+            </li>
+            <li>
+              <span
+                v-if="$auth.loggedIn"
+                class="profile-image"
+                @click="profileImage"
+              >
+                <div class="nav-image">
+                  <img src="@/assets/images/background.jpg" alt="" />
+                  <h5>
+                    {{ $auth.user.first_name
+                    }}<b-icon
+                      icon="caret-down-fill"
+                      style="color: #fff"
+                    ></b-icon>
+                  </h5>
+                </div>
+                <transition class="leave-cancelled">
+                  <div
+                    v-show="profileBody"
+                    class="profile"
+                    :class="topNavClass"
+                  >
+                    <div class="align-content">
+                      <img src="@/assets/images/background.jpg" alt="" />
+                      <p>{{ $auth.user.first_name }}</p>
+                      <p>{{ $auth.user.email }}</p>
+                    </div>
 
-                <ul>
-                  <li>
-                    <nuxt-link to="/user/profile">
-                      <span class="nav-profile"><b-icon icon="person" /></span
-                      >Profile
-                    </nuxt-link>
-                  </li>
-                  <li @click="logout">
-                    <span class="nav-profile"><b-icon icon="power" /></span
-                    >Logout
-                  </li>
-                </ul>
-              </div>
-            </transition>
-          </span>
-        </li>
-      </ul>
-      <b-modal
-        :id="notice"
-        class="modal"
-        :hide-backdrop="true"
-        title="Edit Accountant Data"
-        scrollable
-        size="md"
-        :hide-footer="true"
-      >
-        <Notification :notify-now="[$auth.user.id, notice]" />
-      </b-modal>
-    </nav>
+                    <ul>
+                      <li>
+                        <nuxt-link to="/user/profile">
+                          <span class="nav-profile"
+                            ><b-icon icon="person" /></span
+                          >Profile
+                        </nuxt-link>
+                      </li>
+                      <li @click="logout">
+                        <span class="nav-profile"><b-icon icon="power" /></span
+                        >Logout
+                      </li>
+                    </ul>
+                  </div>
+                </transition>
+              </span>
+            </li>
+          </ul>
+          <b-modal
+            :id="notice"
+            class="modal"
+            :hide-backdrop="true"
+            title="Edit Accountant Data"
+            scrollable
+            size="md"
+            :hide-footer="true"
+          >
+            <Notification :notify-now="[$auth.user.id, notice]" />
+          </b-modal>
+        </nav>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import { USER_NOTIFICATION_QUERIES } from '@/graphql/notifications/queries'
+import { USER_NOTIFICATION_QUERIES } from '~/graphql/notifications/queries'
 export default {
   data() {
     return {
       profileBody: false,
       topNavClass: '',
       notice: 'info',
+      user: {
+        notifications: [],
+      },
     }
   },
   apollo: {
@@ -92,6 +106,7 @@ export default {
       // pollInterval: 15000,
     },
   },
+
   methods: {
     profileImage(e) {
       if (this.topNavClass === '') {
@@ -125,12 +140,12 @@ export default {
     width: 100% !important;
     font-size: 1.6rem;
     display: flex;
-    background-color: var(--color-primary);
+    background: linear-gradient(to right, #5142f5, #047edf 99%);
     height: 6.8rem;
     justify-content: flex-end;
     flex: 1;
     z-index: 2;
-     top: 0;
+    top: 0;
 
     .bell {
       margin-top: 1.4rem;

@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <template v-if="!sessions"> <div></div></template>
+    <template v-if="$apollo.queries.sessions.loading"><Preload/></template>
     <template v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -89,6 +89,7 @@
                         v-if="form.busy"
                         variant="light"
                         class="mr-1 mb-1"
+                        small
                       />Add Session</b-button
                     >
                   </div>
@@ -182,11 +183,20 @@ export default {
             name: this.form.names,
           },
         })
-        .then(({ data }) => {
+        .then(() => {
+           Swal.fire({
+            timer: 1000,
+            text: 'sussion updated successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+          })
           this.sessionEditingId = ''
         })
-        .catch((error) => {
-          error
+        .catch((e) => {
+          console.log(e);
         })
     },
 
@@ -220,7 +230,17 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
+             Swal.fire({
+            timer: 1000,
+            text: 'session saved successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            confirmButtonColor: false,
+            backdrop: false,
+          })
             this.form.session = ''
           })
 

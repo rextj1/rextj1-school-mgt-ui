@@ -53,3 +53,8 @@ export const UPDATE_TEACHER_MUTATION = gql`
   }
   ${TEACHERS_FIELDS_FRAGMENT}
 `
+export const DELETE_TEACHER_MUTATION = gql`
+  mutation DeleteTeacherMutation($id: Int!) {
+    deleteTeacher(id: $id)
+  }
+`

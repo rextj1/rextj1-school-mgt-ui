@@ -37,18 +37,6 @@ export default {
           key: 'date',
           label: 'Date',
         },
-        //   {
-        //   key: 'title',
-        //   label: 'Title',
-        // },
-        // {
-        //   key: 'published',
-        //   label: 'Published',
-        // },
-        // {
-        //   key: 'photo',
-        //   label: 'Photo',
-        // },
       ],
       form: {
         text: '',

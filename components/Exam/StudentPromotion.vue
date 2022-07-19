@@ -75,7 +75,6 @@ export default {
   data() {
     return {
       busy: false,
-      promotioMark: '',
       set: null,
       avg: '',
       fields: [
@@ -117,9 +116,10 @@ export default {
       ],
     }
   },
-  beforeUpdate() {
-    const promotioMark = this.setPromotion[0].name
-    this.promotioMark = promotioMark
+  computed: {
+    promotioMark() {
+      return this.setPromotion[0].name
+    },
   },
 
   methods: {
@@ -166,7 +166,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.busy = false
             Swal.fire({
               title: 'Good',
@@ -181,17 +181,22 @@ export default {
               showConfirmButton: false,
             })
           })
-        this.$apollo
-          .mutate({
-            mutation: UPDATE_PUBLISH_RESULT_MUTATION,
-            variables: {
-              klase_id: parseInt(this.student[0]),
-              term_id: 3,
-              session_id: parseInt(this.student[2]),
-              status: 'published',
-            },
-          })
-          .then(({ data }) => {})
+          .catch((e) => {
+            console.log(e)
+          }),
+          this.$apollo
+            .mutate({
+              mutation: UPDATE_PUBLISH_RESULT_MUTATION,
+              variables: {
+                klase_id: parseInt(this.student[0]),
+                term_id: 3,
+                session_id: parseInt(this.student[2]),
+                section_id: parseInt(this.student[3]),
+                status: 'published',
+              },
+            })
+            .then(() => {})
+            .catch((e) => console.log(e))
       } else {
         Swal.fire({
           title: 'Ooops...',

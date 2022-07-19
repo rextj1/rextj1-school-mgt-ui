@@ -1,9 +1,7 @@
- <template>
-  <div>
-    <div
-      v-if="!studentsDashboard || !teachersDashboard || !guardiansDashboard"
-    ></div>
-    <div v-else class="home main">
+<template>
+  <div class="home main">
+    <!-- <template v-if="nowLoading"><Preload/></template> -->
+    <template>
       <b-row no-gutters>
         <b-col md="4" class="p-3">
           <div class="card card1 shadow p-3">
@@ -16,8 +14,7 @@
               />
 
               <div class="xxx">
-                <h3 v-if="!studentsDashboard"></h3>
-                <h3 v-else>{{ studentsDashboard.length }}</h3>
+                <h3>{{ studentsDashboard.length }}</h3>
                 <h2>Total Students</h2>
               </div>
             </div>
@@ -34,8 +31,7 @@
                 alt=""
               />
               <div class="xxx">
-                <h3 v-if="!teachersDashboard"></h3>
-                <h3 v-else>{{ teachersDashboard.length }}</h3>
+                <h3>{{ teachersDashboard.length }}</h3>
                 <h2>Total Teachers</h2>
               </div>
             </div>
@@ -52,8 +48,7 @@
                 alt=""
               />
               <div class="xxx">
-                <h3 v-if="!guardiansDashboard"></h3>
-                <h3 v-else>{{ guardiansDashboard.length }}</h3>
+                <h3>{{ guardiansDashboard.length }}</h3>
                 <h2>Total Parents</h2>
               </div>
             </div>
@@ -79,9 +74,9 @@
             <div class="card-body">
               <apexchart
                 width="410"
-                type="bar"
+                type="donut"
                 :options="options"
-                :series="seriess"
+                :series="admin"
               ></apexchart>
             </div>
           </div>
@@ -111,7 +106,7 @@
             </div>
           </div> </b-col
       ></b-row>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -124,27 +119,9 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      admin: [1, 2, 6],
-      // chartOptions: {
-      //   chart: {
-      //     width: 380,
-      //     type: 'pie',
-      //   },
-      // },
-      // labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-      // responsive: [
-      //   {
-      //     breakpoint: 480,
-      //     options: {
-      //       chart: {
-      //         width: 200,
-      //       },
-      //     },
-      //   },
-      // ],
-      // lagend: {
-      //   position: 'bottom',
-      // },
+      studentsDashboard: [],
+      teachersDashboard: [],
+      guardiansDashboard: [],
 
       options: {
         chart: {
@@ -160,6 +137,22 @@ export default {
       // colors: ['#206bc4', '#79a6dc', '#d2e1f3', '#e9ecf1'],
     }
   },
+  computed: {
+    // nowLoading() {
+    //   return (
+    //     this.$apollo.queries.studentsDashboard.loading &&
+    //     this.$apollo.queries.teachersDashboard.loading &&
+    //     this.$apollo.queries.guardiansDashboard.loading
+    //   )
+    // },
+    admin() {
+      return [
+        this.studentsDashboard.length,
+        this.teachersDashboard.length,
+        this.guardiansDashboard.length,
+      ]
+    },
+  },
 
   apollo: {
     studentsDashboard: {
@@ -172,17 +165,6 @@ export default {
       query: GUARDIAN_DASHBOARD_QUERIES,
     },
   },
-  // beforeUpdate() {
-  //   if (!this.students || !this.teachers || !this.guardians) {
-  //     return
-  //   } else {
-  //     this.admin = [
-  //       this.students.length,
-  //       this.teachers.length,
-  //       this.guardians.length,
-  //     ]
-  //   }
-  // },
 }
 </script>
 
@@ -265,9 +247,6 @@ export default {
         opacity: 1;
       }
     }
-    // img {
-    //   vertical-align: middle;
-    // }
   }
   .cardA {
     border: none;

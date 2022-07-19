@@ -53,3 +53,8 @@ export const UPDATE_LIBARIAN_MUTATION = gql`
   }
   ${LIBARIAN_FIELDS_FRAGMENT}
 `
+export const DELETE_LIBARIAN_MUTATION = gql`
+  mutation DeleteLibarianMutation($id: Int!) {
+    deleteLibarian(id: $id)
+  }
+`

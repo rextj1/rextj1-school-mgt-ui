@@ -112,9 +112,10 @@ export const USERS_QUERY = gql`
 
 // roles and permission
 export const ROLEX_QUERIEX = gql`
-  query UserRoleQuery($id: ID!) {
+  query UserRoleQuery($id: ID) {
     user(id: $id) {
       roles {
+        id
         name
       }
     }

@@ -1,9 +1,7 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !subjects && !sessions">
-      <div></div
-    ></template>
-    <template v-else>
+    <div v-if="nowLoading"><Preload /></div>
+    <div v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
@@ -45,6 +43,29 @@
                   <template #first>
                     <b-form-select-option :value="null" disabled
                       >-- Select term--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="2">
+              <b-form-group label="Sections">
+                <b-form-select
+                  id="sections"
+                  v-model="form.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Section term--</b-form-select-option
                     >
                   </template>
 
@@ -112,10 +133,16 @@
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamEditExamScores
           :marks="marks"
-          :student="[form.class, form.subject, form.term, form.session]"
+          :student="[
+            form.class,
+            form.subject,
+            form.term,
+            form.session,
+            form.section,
+          ]"
         />
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -127,6 +154,7 @@ import {
   SESSION_QUERIES,
   TERM_QUERIES,
 } from '~/graphql/marks/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SUBJECTS_QUERIES } from '~/graphql/subjects/queries'
 export default {
   middleware: 'auth',
@@ -138,6 +166,7 @@ export default {
         class: null,
         subject: null,
         session: null,
+        section: null,
         term: null,
       },
 
@@ -157,8 +186,22 @@ export default {
     terms: {
       query: TERM_QUERIES,
     },
+    sections: {
+      query: SECTION_QUERIES,
+    },
     sessions: {
       query: SESSION_QUERIES,
+    },
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.subjects.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.sessions.loading &&
+        this.$apollo.queries.sections.loading
+      )
     },
   },
   methods: {
@@ -169,7 +212,9 @@ export default {
       if (
         this.form.class === null ||
         this.form.term === null ||
-        this.form.session === null
+        this.form.session === null ||
+        this.form.subject === null ||
+        this.form.section === null
       ) {
         return false
       } else {
@@ -182,12 +227,13 @@ export default {
             klase: parseInt(this.form.class),
             subject: parseInt(this.form.subject),
             session: parseInt(this.form.session),
+            section: parseInt(this.form.section),
             term: parseInt(this.form.term),
           },
         })
-        .then(({ data }) => {})
-        .catch((err) => {
-          err
+        .then(() => {})
+        .catch((e) => {
+          console.log(e)
         })
 
       setTimeout(() => {
@@ -197,6 +243,7 @@ export default {
             klase_id: parseInt(this.form.class),
             subject_id: parseInt(this.form.subject),
             session_id: parseInt(this.form.session),
+            section_id: parseInt(this.form.section),
             term_id: parseInt(this.form.term),
           },
           result({ loading, data }, key) {

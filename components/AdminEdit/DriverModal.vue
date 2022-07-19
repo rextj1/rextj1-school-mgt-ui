@@ -1,15 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="!countries && !bloodGroups"> </template>
     <template v-else>
       <div class="p-4 student__wrapper">
         <b-form
@@ -252,15 +243,15 @@
                   class="mb-3"
                   size="lg"
                 > -->
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <!-- <template #first>
+            <!-- This slot appears above the options from 'options' prop -->
+            <!-- <template #first>
                     <b-form-select-option :value="null" disabled
                       >-- Please select blood Group--</b-form-select-option
                     >
                   </template> -->
 
-                  <!-- These options will appear after the ones from 'options' prop -->
-                <!-- </b-form-select>
+            <!-- These options will appear after the ones from 'options' prop -->
+            <!-- </b-form-select>
               </b-form-group>
             </b-col> -->
 
@@ -398,7 +389,6 @@ export default {
   },
   data() {
     return {
-    
       form: new this.$form({
         first_name: '',
         last_name: '',
@@ -564,7 +554,7 @@ export default {
               data.drives = updateDriver
 
               // Mutate cache result
-             
+
               console.log(updateDriver)
               store.writeQuery({
                 query: DRIVER_QUERIES,
@@ -572,7 +562,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.$bvModal.hide(this.slug[1])
           })
 

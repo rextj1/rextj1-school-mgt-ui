@@ -144,9 +144,6 @@ export default {
     // publishResult: Object,
     student: Array,
   },
-  data() {
-    return {}
-  },
 
   methods: {
     postion(i) {

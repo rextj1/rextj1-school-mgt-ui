@@ -1,6 +1,6 @@
-  <template>
+<template>
   <div class="fonts">
-    <div v-if="!drivers"></div>
+    <div v-if="$apollo.queries.drivers.loading"><Preload /></div>
     <div v-else>
       <b-button
         to="/admin/driver/add-driver"

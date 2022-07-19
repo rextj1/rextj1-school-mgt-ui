@@ -54,3 +54,8 @@ export const UPDATE_ACCOUNTANT_MUTATION = gql`
   }
   ${ACCOUNTANT_FIELDS_FRAGMENT}
 `
+export const DELETE_ACCOUNTANT_MUTATION = gql`
+  mutation DeleteAccountantMutation($id: Int!) {
+    deleteAccountant(id: $id)
+  }
+`

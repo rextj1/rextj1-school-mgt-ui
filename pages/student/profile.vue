@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!user"> <div></div></template>
+    <template v-if="$apollo.queries.user.loading"><Preload /></template>
     <template v-else>
       <div v-for="student in user.students" :key="student.id">
         {{ student }}

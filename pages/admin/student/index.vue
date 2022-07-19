@@ -1,283 +1,317 @@
-  <template>
+<template>
   <div class="fonts">
-    <b-button
-      to="/admin/student/add-student"
-      variant="primary"
-      pill
-      size="md"
-      class="add-student mb-4"
-    >
-      <b-icon icon="plus" />Register Student
-    </b-button>
+    <template v-if="$apollo.queries.students.loading"><Preload /></template>
+    <template v-else>
+      <b-button
+        to="/admin/student/add-student"
+        variant="primary"
+        pill
+        size="md"
+        class="add-student mb-4"
+      >
+        <b-icon icon="plus" />Register Student
+      </b-button>
 
-    <b-row no-gutters>
-      <b-col md="12">
-        <div class="card-body">
-          <div class="card-student shadow p-3" style="background-color: #fff">
-            <h2 class="d-flex justify-content-center mb-4 mt-4">All Student</h2>
-            <hr />
+      <b-row no-gutters>
+        <b-col md="12">
+          <div class="card-body">
+            <div class="card-student shadow p-3" style="background-color: #fff">
+              <h2 class="d-flex justify-content-center mb-4 mt-4">
+                All Student
+              </h2>
+              <hr />
 
-            <b-container fluid>
-              <!-- User Interface controls -->
-              <b-row>
-                <b-col lg="6" class="my-1">
-                  <b-form-group
-                    v-slot="{ ariaDescribedby }"
-                    label="Sort"
-                    label-for="sort-by-select"
-                    label-cols-sm="3"
-                    label-align-sm="right"
-                    label-size="md"
-                    class="mb-0"
-                  >
-                    <b-input-group size="md">
-                      <b-form-select
-                        id="sort-by-select"
-                        v-model="sortBy"
-                        :options="sortOptions"
-                        :aria-describedby="ariaDescribedby"
-                        class="w-75"
-                        style="background-color: #f9f9f9"
-                      >
-                        <template #first>
-                          <option value="">-- none --</option>
-                        </template>
-                      </b-form-select>
-
-                      <b-form-select
-                        v-model="sortDesc"
-                        :disabled="!sortBy"
-                        :aria-describedby="ariaDescribedby"
-                        size="md"
-                        class="w-10"
-                      >
-                        <option :value="false">Asc</option>
-                        <option :value="true">Desc</option>
-                      </b-form-select>
-                    </b-input-group>
-                  </b-form-group>
-                </b-col>
-
-                <b-col lg="6" class="my-1">
-                  <b-form-group
-                    label="Initial sort"
-                    label-for="initial-sort-select"
-                    label-cols-sm="3"
-                    label-align-sm="right"
-                    label-size="md"
-                    class="mb-0"
-                  >
-                    <b-form-select
-                      id="initial-sort-select"
-                      v-model="sortDirection"
-                      :options="['asc', 'desc', 'last']"
-                      size="sm"
-                    ></b-form-select>
-                  </b-form-group>
-                </b-col>
-
-                <b-col lg="6" class="my-1">
-                  <b-form-group
-                    label="Filter"
-                    label-for="filter-input"
-                    label-cols-sm="3"
-                    label-align-sm="right"
-                    label-size="md"
-                    class="mb-0"
-                  >
-                    <b-input-group size="md">
-                      <b-form-input
-                        id="filter-input"
-                        v-model="filter"
-                        type="search"
-                        placeholder="Type to Search"
-                        style="background-color: #f9f9f9"
-                      ></b-form-input>
-
-                      <b-input-group-append>
-                        <b-button :disabled="!filter" @click="filter = ''"
-                          >Clear</b-button
-                        >
-                      </b-input-group-append>
-                    </b-input-group>
-                  </b-form-group>
-                </b-col>
-
-                <b-col lg="6" class="my-1">
-                  <b-form-group
-                    v-slot="{ ariaDescribedby }"
-                    v-model="sortDirection"
-                    label="Filter On"
-                    description="Leave all unchecked to filter on all data"
-                    label-cols-sm="3"
-                    label-align-sm="right"
-                    label-size="sm"
-                    class="mb-0"
-                  >
-                    <b-form-checkbox-group
-                      v-model="filterOn"
-                      :aria-describedby="ariaDescribedby"
-                      class="mt-1"
+              <b-container fluid>
+                <!-- User Interface controls -->
+                <b-row>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      v-slot="{ ariaDescribedby }"
+                      label="Sort"
+                      label-for="sort-by-select"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
                     >
-                      <b-form-checkbox value="name">Name</b-form-checkbox>
-                      <b-form-checkbox value="photo">Photo</b-form-checkbox>
-                      <b-form-checkbox value="paid">Paid Fee</b-form-checkbox>
-                      <b-form-checkbox value="gender">Gender</b-form-checkbox>
-                    </b-form-checkbox-group>
-                  </b-form-group>
-                </b-col>
-              </b-row>
+                      <b-input-group size="md">
+                        <b-form-select
+                          id="sort-by-select"
+                          v-model="sortBy"
+                          :options="sortOptions"
+                          :aria-describedby="ariaDescribedby"
+                          class="w-75"
+                          style="background-color: #f9f9f9"
+                        >
+                          <template #first>
+                            <option value="">-- none --</option>
+                          </template>
+                        </b-form-select>
 
-              <b-row>
-                <b-col md="1"></b-col>
-                <b-col sm="6" md="2" class="my-1">
-                  <b-form-group
-                    label="Show"
-                    label-for="per-page-select"
-                    label-cols-sm="6"
-                    label-cols-md="4"
-                    label-cols-lg="3"
-                    label-align-sm="right"
-                    label-size="md"
-                    class="mb-0"
-                  >
-                    <b-form-select
-                      id="per-page-select"
-                      v-model="perPage"
-                      :options="pageOptions"
-                      size="lg"
-                      style="background-color: #f9f9f9"
-                    ></b-form-select>
-                  </b-form-group> </b-col
-              ></b-row>
+                        <b-form-select
+                          v-model="sortDesc"
+                          :disabled="!sortBy"
+                          :aria-describedby="ariaDescribedby"
+                          size="md"
+                          class="w-10"
+                        >
+                          <option :value="false">Asc</option>
+                          <option :value="true">Desc</option>
+                        </b-form-select>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
 
-              <br /><br />
-              <!-- Main table element -->
-              <b-table
-                :items="students"
-                :fields="fields"
-                :current-page="currentPage"
-                :per-page="perPage"
-                :filter="filter"
-                :filter-included-fields="filterOn"
-                :sort-by.sync="sortBy"
-                :sort-desc.sync="sortDesc"
-                :sort-direction="sortDirection"
-                stacked="md"
-                show-empty
-                small
-                striped
-                hover
-                style="font-size: 1.3rem"
-                :responsive="true"
-                @filtered="onFiltered"
-              >
-                <template #cell(index)="data">
-                  {{ data.index + 1 }}
-                </template>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      label="Initial sort"
+                      label-for="initial-sort-select"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
+                    >
+                      <b-form-select
+                        id="initial-sort-select"
+                        v-model="sortDirection"
+                        :options="['asc', 'desc', 'last']"
+                        size="sm"
+                      ></b-form-select>
+                    </b-form-group>
+                  </b-col>
 
-                <template #cell(adm_no)="data">
-                  <div>{{ data.value }}</div>
-                </template>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      label="Filter"
+                      label-for="filter-input"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
+                    >
+                      <b-input-group size="md">
+                        <b-form-input
+                          id="filter-input"
+                          v-model="filter"
+                          type="search"
+                          placeholder="Type to Search"
+                          style="background-color: #f9f9f9"
+                        ></b-form-input>
 
-                <template #cell(klase)="data">
-                  <b-badge
-                    :id="`klase-${data.index}`"
-                    style="line-height: 1.6"
-                    variant="success"
-                    class="px-2"
-                  >
-                    <div>{{ data.value.name }}</div>
-                  </b-badge>
-                </template>
+                        <b-input-group-append>
+                          <b-button :disabled="!filter" @click="filter = ''"
+                            >Clear</b-button
+                          >
+                        </b-input-group-append>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
 
-                <template #cell(photo)="data">
-                  
-                  <b-avatar
-                    variant="primary"
-                    :src="`http://sms.test/storage/student/${data.value}`"
-                  >
-                  </b-avatar
-                  >
-                </template>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      v-slot="{ ariaDescribedby }"
+                      v-model="sortDirection"
+                      label="Filter On"
+                      description="Leave all unchecked to filter on all data"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="sm"
+                      class="mb-0"
+                    >
+                      <b-form-checkbox-group
+                        v-model="filterOn"
+                        :aria-describedby="ariaDescribedby"
+                        class="mt-1"
+                      >
+                        <b-form-checkbox value="name">Name</b-form-checkbox>
+                        <b-form-checkbox value="photo">Photo</b-form-checkbox>
+                        <b-form-checkbox value="paid">Paid Fee</b-form-checkbox>
+                        <b-form-checkbox value="gender">Gender</b-form-checkbox>
+                      </b-form-checkbox-group>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
 
-                <template #cell(paid)="row">
-                  <div v-if="row.item.paid">
-                    <b-badge variant="warning">{{ row.value }}</b-badge>
-                  </div>
-                  <div v-else>
-                    <b-badge variant="danger">{{ row.value }}</b-badge>
-                  </div>
-                </template>
+                <b-row>
+                  <b-col md="1"></b-col>
+                  <b-col sm="6" md="2" class="my-1">
+                    <b-form-group
+                      label="Show"
+                      label-for="per-page-select"
+                      label-cols-sm="6"
+                      label-cols-md="4"
+                      label-cols-lg="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
+                    >
+                      <b-form-select
+                        id="per-page-select"
+                        v-model="perPage"
+                        :options="pageOptions"
+                        size="lg"
+                        style="background-color: #f9f9f9"
+                      ></b-form-select>
+                    </b-form-group> </b-col
+                ></b-row>
 
-                <!-- view modal -->
-                <template #cell(actions)="data">
-                  <b-button
-                    variant="primary"
-                    :to="{
-                      name: 'admin-student-slug',
-                      params: { slug: data.item.slug },
-                    }"
-                  >
-                    <b-icon icon="eye" class="mr-1"></b-icon>
-                    View
-                  </b-button>
+                <br /><br />
+                <!-- Main table element -->
+                <b-table
+                  :items="students"
+                  :fields="fields"
+                  :current-page="currentPage"
+                  :per-page="perPage"
+                  :filter="filter"
+                  :filter-included-fields="filterOn"
+                  :sort-by.sync="sortBy"
+                  :sort-desc.sync="sortDesc"
+                  :sort-direction="sortDirection"
+                  stacked="md"
+                  show-empty
+                  small
+                  striped
+                  hover
+                  style="font-size: 1.3rem"
+                  :responsive="true"
+                  @filtered="onFiltered"
+                >
+                  <template #cell(index)="data">
+                    {{ data.index + 1 }}
+                  </template>
 
-                  <b-button
-                    variant="info"
-                    size="md"
-                    class="px-3"
-                    @click="info(data.item.slug)"
-                  >
-                    Edit
-                  </b-button>
+                  <template #cell(adm_no)="data">
+                    <div>{{ data.value }}</div>
+                  </template>
 
-                  <b-button variant="danger" size="md" class="px-3">
-                    <b-icon icon="trash" class="mr-1"></b-icon>
-                    Delete
-                  </b-button>
-                </template>
+                  <template #cell(klase)="data">
+                    <b-badge
+                      :id="`klase-${data.index}`"
+                      style="line-height: 1.6"
+                      variant="success"
+                      class="px-2"
+                    >
+                      <div>{{ data.value.name }}</div>
+                    </b-badge>
+                  </template>
 
-                <template #row-details="row">
-                  <b-card>
-                    <ul>
-                      <li v-for="(value, key) in row.item" :key="key">
-                        {{ key }}: {{ value }}
-                      </li>
-                    </ul>
-                  </b-card>
-                </template>
-              </b-table>
+                  <template #cell(photo)="data">
+                    <b-avatar
+                      variant="primary"
+                      :src="`http://sms.test/storage/student/${data.value}`"
+                    >
+                    </b-avatar>
+                  </template>
 
-              <!-- Info modal -->
-              <b-modal
-                :id="infoModal"
-                class="modal"
-                :hide-backdrop="true"
-                body-bg-variant="info"
-                scrollable
-                title="Edit Student Data"
-                size="xl"
-                :hide-footer="true"
-              >
-                <AdminEditStudentModal :slug="[slug, infoModal]" />
-              </b-modal>
-            </b-container>
+                  <template #cell(paid)="row">
+                    <div v-if="row.item.paid">
+                      <b-badge variant="warning">{{ row.value }}</b-badge>
+                    </div>
+                    <div v-else>
+                      <b-badge variant="danger">{{ row.value }}</b-badge>
+                    </div>
+                  </template>
+
+                  <!-- view modal -->
+                  <template #cell(actions)="data">
+                    <b-button
+                      variant="primary"
+                      :to="{
+                        name: 'admin-student-slug',
+                        params: { slug: data.item.slug },
+                      }"
+                    >
+                      <b-icon icon="eye" class="mr-1"></b-icon>
+                      View
+                    </b-button>
+
+                    <b-button
+                      variant="info"
+                      size="md"
+                      class="px-3"
+                      @click="info(data.item.slug)"
+                    >
+                      Edit
+                    </b-button>
+
+                    <b-button variant="danger" size="md" class="px-3" @click="handleDeleteModal(data.item)">
+                      <b-icon icon="trash" class="mr-1" />
+                      Delete
+                    </b-button>
+                  </template>
+
+                  <template #row-details="row">
+                    <b-card>
+                      <ul>
+                        <li v-for="(value, key) in row.item" :key="key">
+                          {{ key }}: {{ value }}
+                        </li>
+                      </ul>
+                    </b-card>
+                  </template>
+                </b-table>
+
+                <!-- Info modal -->
+                <b-modal
+                  :id="infoModal"
+                  class="modal"
+                  :hide-backdrop="false"
+                  scrollable
+                  title="Edit Student Data"
+                  size="lg"
+                  :hide-footer="true"
+                >
+                  <AdminEditStudentModal :slug="[slug, infoModal]" />
+                </b-modal>
+              </b-container>
+            </div>
           </div>
-        </div>
-      </b-col>
-    </b-row>
+        </b-col>
+      </b-row>
+    </template>
+
+    <!-- delete modal -->
+    <b-modal id="DeleteModal" centered hide-header hide-footer>
+      <div class="p-5 text-center">
+        <Spinner v-if="isDeleting" size="4" />
+        <template v-else>
+          <h5>Confirm delete student?</h5>
+          <p>This action cannot be undone.</p>
+
+          <div>
+            <b-button
+              variant="light"
+              class="px-4 mr-2 border"
+              @click="handleCancelDelete"
+            >
+              Cancel
+            </b-button>
+
+            <b-button
+              variant="danger"
+              class="px-4"
+              @click="deleteInvokedTeacher"
+            >
+              Delete
+            </b-button>
+          </div>
+        </template>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+import { DELETE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { STUDENT_QUERIES } from '~/graphql/students/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
       items: [],
-
+      isDeleting: false,
+      invokedForDelete: null,
       fields: [
         {
           key: 'index',
@@ -404,8 +438,69 @@ export default {
       this.infoModal.title = ''
       this.infoModal.content = ''
     },
-    deleteItem() {
-      console.log('yes')
+      handleCancelDelete() {
+      this.$bvModal.hide('DeleteModal')
+    },
+    handleDeleteModal(item) {
+      this.invokedForDelete = item
+      this.$bvModal.show('DeleteModal')
+    },
+    deleteInvokedTeacher() {
+      this.isDeleting = true
+      this.$apollo
+        .mutate({
+          mutation: DELETE_STUDENT_MUTATION,
+          variables: {
+            id: parseInt(this.invokedForDelete.id),
+          },
+          update: (store, { data: { deleteStudent } }) => {
+            try {
+              const data = store.readQuery({
+                query: STUDENT_QUERIES,
+              })
+
+              const studentIndex = data.students.findIndex(
+                (m) => m.id === this.invokedForDelete.id
+              )
+             
+
+              if (studentIndex !== -1) {
+                data.students.splice(studentIndex, 1)
+              }
+
+              // Write our data back to the cache.
+              store.writeQuery({
+                query: STUDENT_QUERIES,
+
+                data,
+              })
+            } catch (e) {
+              // Do something with this error
+            }
+          },
+        })
+        .then(() => {
+          Swal.fire({
+            icon: 'success',
+
+            text: 'student deleted successfully',
+            color: '#5cb85c',
+          })
+        })
+        .catch(({ graphQLErrors: errors, ...rest }) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops..',
+            text: `An error occurred while processing your request.`,
+            color: '#716add',
+            backdrop: '#7a7d7f',
+          })
+        })
+        .finally(() => {
+          this.$bvModal.hide('DeleteModal')
+
+          this.isDeleting = false
+        })
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering

@@ -1,15 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups && !accountant">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="nowLoading"> </template>
     <template v-else>
       <div class="p-4 student__wrapper">
         <b-form
@@ -425,6 +416,15 @@ export default {
       show: true,
     }
   },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.accountant.loading
+      )
+    },
+  },
   apollo: {
     countries: {
       query: COUNTRY_QUERIES,
@@ -463,14 +463,12 @@ export default {
           this.form.lib.phone = data.accountant.phone
           this.form.lib.gender = data.accountant.gender
 
-        
-
           this.form.id = parseInt(data.accountant.id)
           this.form.userLib.country = data.accountant.user.country.id
           this.form.userLib.state = data.accountant.user.state.id
           this.form.userLib.city = data.accountant.user.city.id
           this.form.userLib.religion = data.accountant.user.religion
-           this.form.userLib.email = data.accountant.user.email
+          this.form.userLib.email = data.accountant.user.email
           this.form.userLib.bloodGroup = data.accountant.user.blood_group.id
 
           this.form.userLib.lga = data.accountant.user.lga
@@ -563,7 +561,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             Swal.fire({
               title: 'Done...',
               icon: 'success',

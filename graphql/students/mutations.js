@@ -25,3 +25,8 @@ export const UPDATE_STUDENT_MUTATION = gql`
   }
   ${SINGLE_STUDENT_FIELD_FRAGMENT}
 `
+export const DELETE_STUDENT_MUTATION = gql`
+  mutation DeleteStudentMutation($id: Int!) {
+    deleteStudent(id: $id)
+  }
+`

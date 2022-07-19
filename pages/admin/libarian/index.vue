@@ -1,6 +1,6 @@
-  <template>
+<template>
   <div class="fonts">
-    <template v-if="!libarians"> <div></div></template>
+    <template v-if="$apollo.queries.libarians.loading"><Preload /></template>
     <template v-else>
       <b-button
         to="/admin/libarian/add-libarian"
@@ -221,8 +221,13 @@
                       Edit
                     </b-button>
 
-                    <b-button variant="danger" size="md" class="px-3">
-                      <b-icon icon="trash" class="mr-1"></b-icon>
+                    <b-button
+                      variant="danger"
+                      size="md"
+                      class="px-3"
+                      @click="handleDeleteModal(data.item)"
+                    >
+                      <b-icon icon="trash" class="mr-1" />
                       Delete
                     </b-button>
                   </template>
@@ -242,8 +247,7 @@
                 <b-modal
                   :id="infoModal"
                   class="modal"
-                  :hide-backdrop="true"
-                  body-bg-variant="info"
+                  :hide-backdrop="false"
                   title="Edit Libarian Data"
                   scrollable
                   size="lg"
@@ -257,10 +261,40 @@
         </b-col>
       </b-row>
     </template>
+    <!-- delete modal -->
+    <b-modal id="DeleteModal" centered hide-header hide-footer>
+      <div class="p-5 text-center">
+        <Spinner v-if="isDeleting" size="4" />
+        <template v-else>
+          <h5>Confirm delete libarian?</h5>
+          <p>This action cannot be undone.</p>
+
+          <div>
+            <b-button
+              variant="light"
+              class="px-4 mr-2 border"
+              @click="handleCancelDelete"
+            >
+              Cancel
+            </b-button>
+
+            <b-button
+              variant="danger"
+              class="px-4"
+              @click="deleteInvokedLibarian"
+            >
+              Delete
+            </b-button>
+          </div>
+        </template>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+import { DELETE_LIBARIAN_MUTATION } from '~/graphql/libarians/mutations'
 import { LIBARIAN_QUERIES } from '~/graphql/libarians/queries'
 export default {
   middleware: 'auth',
@@ -268,6 +302,9 @@ export default {
     return {
       lib: [],
       items: [],
+      libarians: [],
+      isDeleting: false,
+      invokedForDelete: null,
 
       fields: [
         {
@@ -367,8 +404,68 @@ export default {
       this.infoModal.title = ''
       this.infoModal.content = ''
     },
-    deleteItem() {
-      console.log('yes')
+    handleCancelDelete() {
+      this.$bvModal.hide('DeleteModal')
+    },
+    handleDeleteModal(item) {
+      this.invokedForDelete = item
+      this.$bvModal.show('DeleteModal')
+    },
+    deleteInvokedLibarian() {
+      this.isDeleting = true
+      this.$apollo
+        .mutate({
+          mutation: DELETE_LIBARIAN_MUTATION,
+          variables: {
+            id: parseInt(this.invokedForDelete.id),
+          },
+          update: (store, { data: { deleteLibarian } }) => {
+            try {
+              const data = store.readQuery({
+                query: LIBARIAN_QUERIES,
+              })
+
+              const libarianIndex = data.libarians.findIndex(
+                (m) => m.id === this.invokedForDelete.id
+              )
+
+              if (libarianIndex !== -1) {
+                data.libarians.splice(libarianIndex, 1)
+              }
+
+              // Write our data back to the cache.
+              store.writeQuery({
+                query: LIBARIAN_QUERIES,
+
+                data,
+              })
+            } catch (e) {
+              // Do something with this error
+            }
+          },
+        })
+        .then(() => {
+          Swal.fire({
+            icon: 'success',
+
+            text: 'libarian deleted successfully',
+            color: '#5cb85c',
+          })
+        })
+        .catch(({ graphQLErrors: errors, ...rest }) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops..',
+            text: `An error occurred while processing your request.`,
+            color: '#716add',
+            backdrop: '#7a7d7f',
+          })
+        })
+        .finally(() => {
+          this.$bvModal.hide('DeleteModal')
+
+          this.isDeleting = false
+        })
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -380,10 +477,6 @@ export default {
 </script>
 
 <style lang="scss">
-.modal {
-  background-color: rgba(0, 0, 0, 0.295) !important;
-}
-
 .fonts {
   font-size: 1.4rem !important;
   padding: 2rem;

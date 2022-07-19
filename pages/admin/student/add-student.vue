@@ -1,7 +1,7 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups">
-      <div></div>
+    <template v-if="nowLoading">
+      <Preload />
     </template>
     <template v-else>
       <b-button
@@ -392,6 +392,30 @@
               </b-form-group>
             </b-col>
 
+             <b-col md="3">
+              <b-form-group label="Section">
+                <b-form-select
+                  id="sections"
+                  v-model="form.student.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  required
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select section--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
             <b-col md="3">
               <b-form-group label="Session">
                 <b-form-select
@@ -588,11 +612,14 @@ import {
 import { CREATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 
 export default {
   middleware: 'auth',
   data() {
     return {
+      countries: [],
+      bloodGroups: [],
       form: new this.$form({
         userStudent: {
           country: null,
@@ -618,6 +645,7 @@ export default {
           guardian_address: null,
           adm_no: null,
           term: null,
+          section: null,
           session: null,
           address: null,
           admitted_year: null,
@@ -628,6 +656,16 @@ export default {
       genders: ['Male', 'Female'],
       show: true,
     }
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.klases.loading
+      )
+    },
   },
 
   apollo: {
@@ -656,6 +694,9 @@ export default {
     },
     terms: {
       query: TERM_QUERIES,
+    },
+    sections: {
+      query: SECTION_QUERIES,
     },
     sessions: {
       query: SESSION_QUERIES,
@@ -727,7 +768,7 @@ export default {
               student: this.form.student,
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.$router.push('/admin/student')
           })
 

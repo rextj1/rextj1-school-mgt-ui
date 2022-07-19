@@ -16,6 +16,7 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     adm_no
     code
     cum_avg
+    promotion_term_id
     status
     address
     admitted_year
@@ -24,6 +25,10 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     guardian_email
     guardian_address
     term {
+      id
+      name
+    }
+    section {
       id
       name
     }

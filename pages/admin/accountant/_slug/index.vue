@@ -1,6 +1,8 @@
 <template>
   <div class="profile">
-    <div v-if="!accountant || !accountant.user"></div>
+    <div v-if="$apollo.queries.accountant.loading" class="preload">
+      <Preload />
+    </div>
     
     <div v-else>
       <b-button
@@ -113,7 +115,6 @@ import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 export default {
   data() {
     return {
-      accountant: [],
     }
   },
   apollo: {

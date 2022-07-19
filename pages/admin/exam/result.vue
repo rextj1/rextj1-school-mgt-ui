@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !sessions"> <div></div></template>
+    <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
@@ -52,6 +52,29 @@
             </b-col>
 
             <b-col md="2">
+              <b-form-group label="Sections">
+                <b-form-select
+                  id="sections"
+                  v-model="form.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select section--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="2">
               <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
@@ -80,7 +103,6 @@
               style="height: 3.85rem; margin-top: 2.85rem"
               >Submit</b-button
             >
-           
           </b-row>
         </b-form>
       </b-card>
@@ -148,6 +170,7 @@
 import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -158,6 +181,7 @@ export default {
       timetableDropdownClass: false,
       form: {
         class: null,
+        section: null,
         session: null,
         term: null,
       },
@@ -212,8 +236,21 @@ export default {
     terms: {
       query: TERM_QUERIES,
     },
+    sections: {
+      query: SECTION_QUERIES,
+    },
     sessions: {
       query: SESSION_QUERIES,
+    },
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.sessions.loading &&
+        this.$apollo.queries.sections.loading
+      )
     },
   },
   methods: {
@@ -224,7 +261,8 @@ export default {
       if (
         this.form.class === null ||
         this.form.term === null ||
-        this.form.session === null
+        this.form.session === null ||
+        this.form.section === null
       ) {
         return false
       } else {
@@ -232,7 +270,12 @@ export default {
       }
 
       setTimeout(() => {
-        this.student = [this.form.class, this.form.term, this.form.session]
+        this.student = [
+          this.form.class,
+          this.form.term,
+          this.form.session,
+          this.form.section,
+        ]
         this.$apollo.addSmartQuery('klaseResults', {
           query: EXAM_RECORD_QUERIES,
           variables() {
@@ -240,17 +283,15 @@ export default {
               klase_id: parseInt(this.form.class),
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
+              section_id: parseInt(this.form.section),
             }
           },
           result({ loading, data }, key) {
             if (!loading) {
               this.klaseResults = data.klaseResults
 
-              
-              const numStudents = Object.keys(this.klaseResults).length;
-              this.numStudents = numStudents;
-
-            
+              const numStudents = Object.keys(this.klaseResults).length
+              this.numStudents = numStudents
             }
           },
         })
