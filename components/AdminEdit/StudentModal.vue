@@ -1,25 +1,7 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups && !student && !sessions && !terms">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 15rem; height: 15rem"
-            type="grow"
-            variant="success"
-          ></b-spinner>
-        </div>
-      </div>
-    </template>
+    <template v-if="nowLoading"></template>
     <template v-else>
-      <b-button
-        to="/admin/student"
-        variant="primary"
-        size="lg"
-        class="add-student mb-4"
-      >
-        <b-icon icon="arrow-left" /> Back
-      </b-button>
       <div class="p-4 student__wrapper">
         <b-form
           v-if="show"
@@ -402,6 +384,29 @@
             </b-col>
 
             <b-col md="3" class="p-4">
+              <b-form-group label="Section">
+                <b-form-select
+                  v-model="form.student.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  class="mb-3"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select section--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3" class="p-4">
               <b-form-group label="Session">
                 <b-form-select
                   v-model="form.student.session"
@@ -596,6 +601,7 @@ import { STUDENT_QUERY } from '@/graphql/students/queries'
 import { UPDATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 
 export default {
   props: {
@@ -630,6 +636,7 @@ export default {
           guardian_address: null,
           adm_no: null,
           term: null,
+          section: null,
           session: null,
           address: null,
           admitted_year: null,
@@ -640,6 +647,17 @@ export default {
       genders: ['Male', 'Female'],
       show: true,
     }
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.student.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.sessions.loading &&
+        this.$apollo.queries.sections.loading
+      )
+    },
   },
 
   apollo: {
@@ -672,6 +690,9 @@ export default {
     terms: {
       query: TERM_QUERIES,
     },
+    sections: {
+      query: SECTION_QUERIES,
+    },
     sessions: {
       query: SESSION_QUERIES,
     },
@@ -693,6 +714,7 @@ export default {
           this.form.student.address = data.student.address
           this.form.student.gender = data.student.gender
           this.form.student.term = data.student.term.id
+          this.form.student.section = data.student.section.id
           this.form.student.session = data.student.session.id
           this.form.student.adm_no = data.student.adm_no
           this.form.student.klase = data.student.klase.id
@@ -715,6 +737,7 @@ export default {
       },
     },
   },
+
   methods: {
     selectImage() {
       this.$refs.Avatar.click()
@@ -798,7 +821,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             Swal.fire({
               title: 'Done...',
               icon: 'success',

@@ -1,13 +1,31 @@
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+import Swal from 'sweetalert2'
 
-export default ({ graphQLErrors }, context) => {
+export default ({ graphQLErrors }, { route, app, redirect }) => {
   if (graphQLErrors) {
-    graphQLErrors.map(({ message }) => {
-      console.warn(message)
-      if (message === 'Unauthorized') {
-        // Show Swal and redirect to login
-      }
-    })
+    const unauthed = graphQLErrors.find(
+      (err) => err.message === 'Unauthenticated.'
+    )
+
+    const guestRoutes = ['login', 'signup']
+
+    if (unauthed && !guestRoutes.includes(route.name)) {
+      app.$auth.setUser(null)
+
+      redirect({
+        name: 'login',
+        query: { next: route.path },
+      })
+
+      Swal.fire({
+        icon: 'info',
+        title: 'Session Expired!',
+        text: 'Please log in again to continue.',
+        confirmButtonText: 'Okay',
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'btn btn-primary px-5 mt-2 mb-5',
+        },
+      })
+    }
   }
-  context.error({ statusCode: 304, message: 'Server error' })
 }

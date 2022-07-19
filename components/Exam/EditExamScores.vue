@@ -127,10 +127,11 @@ export default {
             subject_id: parseInt(this.student[1]),
             term_id: parseInt(this.student[2]),
             session_id: parseInt(this.student[3]),
+            section_id: parseInt(this.student[4])
           },
         })
-        .then(({ data }) => {
-          console.log(data)
+        .then(() => {
+          
           Swal.fire({
             title: 'Good',
             icon: 'success',

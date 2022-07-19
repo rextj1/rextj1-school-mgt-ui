@@ -1,15 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups && !teacher">
-      <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-        <div class="grow">
-          <b-spinner
-            style="width: 30rem; height: 30rem"
-            type="grow"
-            variant="danger"
-          ></b-spinner>
-        </div></div
-    ></template>
+    <template v-if="nowLoading"> </template>
     <template v-else>
       <div class="p-4 student__wrapper">
         <b-form
@@ -427,6 +418,15 @@ export default {
       show: true,
     }
   },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.teacher.loading
+      )
+    },
+  },
   apollo: {
     countries: {
       query: COUNTRY_QUERIES,
@@ -562,7 +562,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             Swal.fire({
               title: 'Done...',
               icon: 'success',

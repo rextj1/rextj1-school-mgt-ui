@@ -1,81 +1,13 @@
 <template>
   <div class="p-4">
-    <div v-if="!events"></div>
+    <div v-if="$apollo.queries.events.loading" class="preload">
+      <Preload />
+    </div>
     <div v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
           <b-tabs card style="font-size: 1.4rem">
             <b-tab active>
-              <template #title>
-                <b-icon icon="plus" /><strong>Add Events</strong>
-              </template>
-              <b-form
-                v-if="show"
-                method="POST"
-                @submit.prevent="onSubmit"
-                @keydown="form.onKeydown($event)"
-                @reset.prevent="onReset"
-              >
-                <b-row class="p-4">
-                  <b-col md="10" class="p-4">
-                    <b-form-group label="School Event">
-                      <b-form-textarea
-                        id="textarea"
-                        v-model="form.description"
-                        placeholder="Enter something..."
-                        rows="10"
-                        cols="10"
-                        size="lg"
-                        required
-                      ></b-form-textarea>
-                    </b-form-group>
-                  </b-col>
-
-                  <b-col md="3" class="p-4">
-                    <b-form-group label="Date">
-                      <b-form-datepicker
-                        id="datepicker-buttons"
-                        v-model="form.date"
-                        today-button
-                        reset-button
-                        close-button
-                        locale="en"
-                        size="lg"
-                        required
-                      ></b-form-datepicker>
-                    </b-form-group>
-                  </b-col>
-
-                  <b-col md="12" class="p-4">
-                    <b-button
-                      type="submit"
-                      pill
-                      variant="primary"
-                      class="mr-4"
-                      size="lg"
-                    >
-                      <b-spinner
-                        v-if="form.busy"
-                        variant="light"
-                        small
-                        class="mr-1 mb-1"
-                      />Register</b-button
-                    >
-                    <b-button
-                      pill
-                      class="ml-4"
-                      style="font-size: 1.4rem"
-                      size="lg"
-                      type="reset"
-                      variant="danger"
-                      >Reset</b-button
-                    >
-                  </b-col>
-                </b-row>
-              </b-form>
-            </b-tab>
-
-            <b-tab lazy>
               <template #title>
                 <strong>School Notice</strong>
                 <b-icon scale="0.8" icon="caret-down-fill" />
@@ -150,6 +82,75 @@
                 </b-table>
               </b-col>
             </b-tab>
+            <b-tab lazy>
+              <template #title>
+                <b-icon icon="plus" /><strong>Add Events</strong>
+              </template>
+              <b-form
+                v-if="show"
+                method="POST"
+                @submit.prevent="onSubmit"
+                @keydown="form.onKeydown($event)"
+                @reset.prevent="onReset"
+              >
+                <b-row class="p-4">
+                  <b-col md="10" class="p-4">
+                    <b-form-group label="School Event">
+                      <b-form-textarea
+                        id="textarea"
+                        v-model="form.description"
+                        placeholder="Enter something..."
+                        rows="10"
+                        cols="10"
+                        size="lg"
+                        required
+                      ></b-form-textarea>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="3" class="p-4">
+                    <b-form-group label="Date">
+                      <b-form-datepicker
+                        id="datepicker-buttons"
+                        v-model="form.date"
+                        today-button
+                        reset-button
+                        close-button
+                        locale="en"
+                        size="lg"
+                        required
+                      ></b-form-datepicker>
+                    </b-form-group>
+                  </b-col>
+
+                  <b-col md="12" class="p-4">
+                    <b-button
+                      type="submit"
+                      pill
+                      variant="primary"
+                      class="mr-4"
+                      size="lg"
+                    >
+                      <b-spinner
+                        v-if="form.busy"
+                        variant="light"
+                        small
+                        class="mr-1 mb-1"
+                      />Register</b-button
+                    >
+                    <b-button
+                      pill
+                      class="ml-4"
+                      style="font-size: 1.4rem"
+                      size="lg"
+                      type="reset"
+                      variant="danger"
+                      >Reset</b-button
+                    >
+                  </b-col>
+                </b-row>
+              </b-form>
+            </b-tab>
           </b-tabs>
         </b-card>
         <!-- Info modal -->
@@ -180,6 +181,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      events: [],
       form: new this.$form({
         description: null,
         title: null,
@@ -241,17 +243,18 @@ export default {
         .mutate({
           mutation: CREATE_PUBLISHED_MUTATION,
           variables: {
-            id: item,
+            id: parseInt(item),
             published: true,
           },
         })
-        .then(({ data }) => {
-          console.log(data)
+        .then(() => {
+          
           this.showPublished = false
           this.showUnPblished = true
           // this.$router.push('/admin/teacher')
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           this.form.busy = false
         })
     },
@@ -263,17 +266,18 @@ export default {
         .mutate({
           mutation: CREATE_PUBLISHED_MUTATION,
           variables: {
-            id: item,
+            id: parseInt(item),
             published: false,
           },
         })
-        .then(({ data }) => {
-          console.log(data)
+        .then(() => {
+        
           this.showPublished = true
           this.showUnPblished = false
           // this.$router.push('/admin/teacher')
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           this.form.busy = false
         })
     },
@@ -287,8 +291,9 @@ export default {
             mutation: CREATE_EVENT_MUTATION,
             variables: this.form.data(),
           })
-          .then(({ data }) => {
-            this.$router.push('/')
+          .then(() => {
+          this.form.description = null
+          this.form.date = null
           })
 
         this.form.busy = false
@@ -321,6 +326,12 @@ export default {
 </script>
 
 <style lang="scss">
+.preload {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 .libarian__wrapper {
   padding: 2rem;
   font-size: 1.6rem;

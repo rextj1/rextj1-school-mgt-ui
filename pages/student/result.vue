@@ -1,8 +1,8 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !sessions && !user">
-      <div></div
-    ></template>
+    <template v-if="nowLoading">
+      <Preload />
+    </template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
@@ -148,6 +148,15 @@ export default {
           id: parseInt(this.$auth.user.id),
         }
       },
+    },
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.terms.klases.loading &&
+        this.$apollo.queries.sessions.loading
+      )
     },
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups"> <div></div></template>
+    <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-button
         to="/admin/teacher"
@@ -390,6 +390,8 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      countries: [],
+      bloodGroups: [],
       k: null,
       form: new this.$form({
         first_name: '',
@@ -414,6 +416,15 @@ export default {
       show: true,
     }
   },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.countries.loading
+      )
+    },
+  },
+
   apollo: {
     countries: {
       query: COUNTRY_QUERIES,
@@ -518,7 +529,7 @@ export default {
               },
             }
           )
-          .then(({ data }) => {
+          .then(() => {
             Swal.fire({
               title: 'Done...',
               icon: 'success',

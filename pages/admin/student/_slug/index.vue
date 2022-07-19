@@ -1,6 +1,8 @@
 <template>
   <div class="profile">
-    <template v-if="!student || !student.user"> <div></div></template>
+    <template v-if="$apollo.queries.student.loading">
+      <Preload />
+    </template>
     <template v-else>
       <b-button
         to="/admin/student"

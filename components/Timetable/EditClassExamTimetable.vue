@@ -1,17 +1,8 @@
-  <template>
+<template>
   <div class="font">
     <template>
       <div class="fonts">
-        <template v-if="!examTimetables">
-          <div style="background-color: #f1f9ae; width: 100%; height: 100vh">
-            <div class="grow">
-              <b-spinner
-                style="width: 30rem; height: 30rem"
-                type="grow"
-                variant="danger"
-              ></b-spinner>
-            </div></div
-        ></template>
+        <template v-if="$apollo.queries.examTimetables.loading"> </template>
         <template v-else>
           <div v-if="examTimetables.length == 0">
             <h2 style="text-align: center">No record found</h2>
@@ -24,7 +15,6 @@
                 @click.prevent="generateReport"
                 >PDF</b-button
               >
-          
             </div>
 
             <vue-html2pdf
@@ -48,7 +38,7 @@
                       <!-- <div v-for="klase in examTimetables[0]" :key="klase.id">
                         {{ klase.name }}
                       </div> -->
-                     {{editCurrentClass[1]}} (Exam Timetable)
+                      {{ editCurrentClass[1] }} (Exam Timetable)
                     </h3>
                     <div class="card-body">
                       <div class="card-student p-3">
@@ -88,96 +78,8 @@ export default {
     return {
       klaseId: '',
       klaseName: '',
-      items: [
-        {
-          Time: '7:30 AM - 8:00 AM',
-          _rowVariant: 'danger',
-          Monday: 'Assembly',
-          Tuesday: 'Assembly',
-          Wednesday: 'Assembly',
-          Thursday: 'Assembly',
-          Friday: 'Assembly',
-        },
-        {
-          Time: '8:10 AM - 8:45 AM',
-          Monday: 'Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-        },
-        {
-          Time: '9:00 AM - 9:45 AM',
-          Monday: 'Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-          _cellVariants: { Monday: 'info', Friday: 'success' },
-        },
-        {
-          Time: '9:45 - 9:50 AM',
-          Monday: 'Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-          _cellVariants: { Monday: 'light', Friday: 'success' },
-        },
-        {
-          Time: '10:00 AM - 11:30 AM',
-          Monday: 'Maths / Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-          _cellVariants: { Monday: 'light', Friday: 'success' },
-        },
-        {
-          Time: '11:30 AM - 12:00 PM ',
-          Monday: 'Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-          _cellVariants: { Monday: 'light', Friday: 'danger' },
-        },
-        {
-          Time: '12:05 PM - 12:45 PM',
-          Monday: 'Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-          _cellVariants: { Monday: 'info', Friday: 'danger' },
-        },
-        {
-          Time: '12: 45 - 1:30 PM',
-          Monday: 'Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-          _cellVariants: { Monday: 'danger', Friday: 'success' },
-        },
-        {
-          Time: '12: 45 - 1:30 PM',
-          Monday: 'Maths',
-          Tuesday: 'EngLish Language',
-          Wednesday: 'Home Economics',
-          Thursday: 'Basic Scince',
-          Friday: 'Social Studies',
-          // _rowVariant: 'success',
-          _cellVariants: { Monday: 'light', Friday: 'primary' },
-        },
-      ],
+      examTimetables: [],
+
       fields: [
         { key: 'time', label: 'Time' },
         { key: 'monday', label: 'Monday' },

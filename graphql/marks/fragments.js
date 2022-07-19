@@ -19,6 +19,10 @@ export const MARK_FIELDS_FRAGMENT = gql`
       id
       name
     }
+    section {
+      id
+      name
+    }
     cum
     student {
       id

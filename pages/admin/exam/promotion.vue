@@ -1,8 +1,8 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !sessions && !setPromotion">
-      <div></div
-    ></template>
+    <template v-if="nowLoading">
+      <Preload />
+    </template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <!-- setPromotion -->
@@ -43,6 +43,29 @@
                   <template #first>
                     <b-form-select-option :value="null" disabled
                       >-- select class--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="2">
+              <b-form-group label="Section">
+                <b-form-select
+                  id="sections"
+                  v-model="form.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select section--</b-form-select-option
                     >
                   </template>
 
@@ -134,7 +157,7 @@
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamStudentPromotion
           :promote-students="promoteStudents"
-          :student="[form.class, form.classTo, form.session, form.sessionTo]"
+          :student="[form.class, form.classTo, form.session, form.sessionTo,form.section]"
           :set-promotion="setPromotion"
         />
       </div>
@@ -151,6 +174,7 @@ import {
   SET_PROMOTION_QUERIES,
 } from '@/graphql/promotions/queries'
 import { CREATE_SET_PROMOTION_MUTATION } from '@/graphql/promotions/mutations'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -162,6 +186,7 @@ export default {
         session: null,
         classTo: null,
         sessionTo: null,
+        section: null,
       },
 
       dynamicClass: '',
@@ -174,6 +199,9 @@ export default {
     klases: {
       query: KLASES_QUERIES,
     },
+    sections: {
+      query: SECTION_QUERIES,
+    },
     sessions: {
       query: SESSION_QUERIES,
     },
@@ -181,18 +209,27 @@ export default {
       query: SET_PROMOTION_QUERIES,
     },
   },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.setPromotion.loading &&
+        this.$apollo.queries.sessions.loading &&
+        this.$apollo.queries.sections.loading
+      )
+    },
+  },
   methods: {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
     studenSetPromotion(item) {
-      console.log(item)
       this.$apollo
         .mutate({
           mutation: CREATE_SET_PROMOTION_MUTATION,
           variables: { id: 1, name: parseInt(item) },
         })
-        .then(({ data }) => {
+        .then(() => {
           Swal.fire({
             title: 'Good',
             icon: 'success',
@@ -206,12 +243,16 @@ export default {
             showConfirmButton: false,
           })
         })
+        .catch((e) => {
+          console.log(e)
+        })
     },
     markSubmit() {
       if (
         this.form.class === null ||
         this.form.classTo === null ||
         this.form.session === null ||
+        this.form.section === null ||
         this.form.sessionTo === null ||
         this.form.class === this.form.classTo ||
         this.form.class > this.form.classTo ||
@@ -240,10 +281,12 @@ export default {
                 klase_id: parseInt(this.form.class),
                 status: true,
                 session_id: parseInt(this.form.session),
+                section_id: parseInt(this.form.section),
               }
             },
             result({ loading, data }, key) {
               if (!loading) {
+                console.log(data)
                 this.promoteStudents = data.promoteStudents
               }
             },

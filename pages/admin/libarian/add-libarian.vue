@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="!countries && !bloodGroups"> <div></div></template>
+    <template v-if="nowLoading"><Preload/></template>
     <template v-else>
       <b-button
         to="/admin/libarian"
@@ -434,6 +434,14 @@ export default {
       },
     },
   },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading
+      )
+    },
+  },
   methods: {
     selectImage() {
       this.$refs.Avatar.click()
@@ -518,7 +526,7 @@ export default {
               },
             }
           )
-          .then(({ data }) => {
+          .then(() => {
             Swal.fire({
               title: 'Done...',
               icon: 'success',

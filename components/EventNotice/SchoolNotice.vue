@@ -9,9 +9,12 @@
             <template #cell(date)="row">
               <div class="d-flex flex-column">
                 <div>
-                  <b-badge style="font-size:1.4rem" class="d-inline-block" variant="danger">{{
-                    row.item.date
-                  }}</b-badge>
+                  <b-badge
+                    style="font-size: 1.4rem"
+                    class="d-inline-block"
+                    variant="danger"
+                    >{{ row.item.date }}</b-badge
+                  >
                 </div>
 
                 <div>{{ row.item.description }}</div>
@@ -34,18 +37,6 @@ export default {
           key: 'date',
           label: 'Date',
         },
-        //   {
-        //   key: 'title',
-        //   label: 'Title',
-        // },
-        // {
-        //   key: 'published',
-        //   label: 'Published',
-        // },
-        // {
-        //   key: 'photo',
-        //   label: 'Photo',
-        // },
       ],
       form: {
         text: '',

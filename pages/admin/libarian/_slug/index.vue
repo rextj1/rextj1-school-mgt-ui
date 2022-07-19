@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <template v-if="!libarian || !libarian.user"> <div></div></template>
+    <template v-if="$apollo.queries.libarian.loading"><Preload /></template>
     <template v-else>
       <b-button
         to="/admin/libarian"

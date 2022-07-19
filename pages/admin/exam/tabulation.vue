@@ -1,11 +1,11 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !sessions"> <div></div></template>
+    <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Clases">
                 <b-form-select
                   id="klases"
@@ -28,7 +28,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
@@ -51,7 +51,30 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="2">
+              <b-form-group label="Section">
+                <b-form-select
+                  id="sections"
+                  v-model="form.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select section--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="2">
               <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
@@ -91,7 +114,7 @@
           :first-term="firstTerm"
           :secound-term="secoundTerm"
           :third-term="thirdTerm"
-          :student="[form.class, form.term, form.session]"
+          :student="[form.class, form.term, form.session, form.section]"
         />
       </div>
     </template>
@@ -109,6 +132,7 @@ import {
 } from '~/graphql/examRecord/queries'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
 import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -124,6 +148,7 @@ export default {
         class: null,
         session: null,
         term: null,
+        section: null,
       },
 
       dynamicClass: '',
@@ -140,8 +165,21 @@ export default {
     terms: {
       query: TERM_QUERIES,
     },
+    sections: {
+      query: SECTION_QUERIES,
+    },
     sessions: {
       query: SESSION_QUERIES,
+    },
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.sessions.loading &&
+        this.$apollo.queries.sections.loading
+      )
     },
   },
   methods: {
@@ -152,7 +190,8 @@ export default {
       if (
         this.form.class === null ||
         this.form.term === null ||
-        this.form.session === null
+        this.form.session === null ||
+        this.form.section === null
       ) {
         return false
       } else {
@@ -167,6 +206,7 @@ export default {
               klase_id: parseInt(this.form.class),
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
+              section_id: parseInt(this.form.section),
             }
           },
           result({ loading, data }, key) {
@@ -183,6 +223,7 @@ export default {
             return {
               klase_id: parseInt(this.form.class),
               session_id: parseInt(this.form.term),
+              section_id: parseInt(this.form.section),
             }
           },
           result({ loading, data }, key) {
@@ -201,6 +242,7 @@ export default {
               klase_id: parseInt(this.form.class),
               term_id: 1,
               session_id: parseInt(this.form.session),
+              section_id: parseInt(this.form.section),
             }
           },
           result({ loading, data }, key) {
@@ -218,6 +260,7 @@ export default {
               klase_id: parseInt(this.form.class),
               term_id: 2,
               session_id: parseInt(this.form.session),
+              section_id: parseInt(this.form.section),
             }
           },
           result({ loading, data }, key) {
@@ -236,6 +279,7 @@ export default {
               klase_id: parseInt(this.form.class),
               term_id: 3,
               session_id: parseInt(this.form.session),
+              section_id: parseInt(this.form.section),
             }
           },
           result({ loading, data }, key) {

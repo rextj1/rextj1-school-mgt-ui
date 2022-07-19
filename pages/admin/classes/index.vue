@@ -1,6 +1,8 @@
 <template>
   <div class="p-4">
-    <div v-if="!klases"></div>
+    <div v-if="nowLoading">
+      <Preload />
+    </div>
     <div v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -77,15 +79,6 @@
                         <b-icon icon="pencil" class="mr-1"> </b-icon>
                         Edit
                       </b-button>
-                      <b-button
-                        variant="danger"
-                        size="sm"
-                        class="px-3"
-                        @click="deleteKlase(data.item.id)"
-                      >
-                        <b-icon icon="trash" class="mr-1"></b-icon>
-                        Delete
-                      </b-button>
                     </template>
                   </b-table>
                 </div>
@@ -136,6 +129,7 @@
                             v-if="form.busy"
                             variant="light"
                             class="mr-1 mb-1"
+                            small
                           />Add Class</b-button
                         >
                       </div>
@@ -260,6 +254,8 @@ export default {
       id: 0,
       klaseEditingId: '',
       klase: {},
+      klases: [],
+      teachers: [],
       teacherx: [],
       busy: false,
       form: new this.$form({
@@ -299,7 +295,14 @@ export default {
       query: TEACHER_QUERIES,
     },
   },
-
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.teachers.loading
+      )
+    },
+  },
   methods: {
     // inline editing
     setToEditing(item) {
@@ -336,11 +339,11 @@ export default {
             name: this.form.names,
           },
         })
-        .then(({ data }) => {
+        .then(() => {
           this.klaseEditingId = ''
         })
-        .catch((error) => {
-          error
+        .catch((e) => {
+          console.log(e)
         })
     },
 
@@ -373,7 +376,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.form.busy = false
             this.form.name = ''
           })
@@ -390,49 +393,6 @@ export default {
           })
         }
       }
-    },
-
-    // ----- delete ------- //
-    deleteKlase(item) {
-      const deleteId = item
-      alert(deleteId)
-      this.$apollo
-        .mutate({
-          mutation: DELETE_KLASE_MUTATION,
-          variables: {
-            id: parseInt(deleteId),
-          },
-          update: (store, { data: { deleteKlase } }) => {
-            const data = store.readQuery({
-              query: KLASE_QUERIES,
-            })
-
-            const index = data.klases.findIndex((m) => m.id == deleteId)
-            if (index !== -1) {
-              // Mutate cache result
-              data.klases.splice(index, 1)
-
-              store.readQuery({
-                query: KLASE_QUERIES,
-                data,
-              })
-            }
-          },
-        })
-        .then(({ data }) => {
-          Swal.fire({
-            timer: 1000,
-            text: 'class removed successfully',
-            position: 'top-right',
-            color: '#fff',
-            background: '#4bb543',
-            toast: false,
-            backdrop: false,
-          })
-        })
-        .catch((erre) => {
-          error
-        })
     },
 
     // assign class to teacher
@@ -471,7 +431,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.busy = false
             this.form.klase = ''
             this.form.teacher = []

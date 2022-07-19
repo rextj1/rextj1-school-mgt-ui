@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!studentExamResult && !studentMarkResult"></div>
+    <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <div class="card">
         <div class="card-header">
@@ -69,7 +69,6 @@
                           <div class="d-flex flex-column align-items-center">
                             <h2><em>Ronazon Academy International</em></h2>
                             <h4>Result sheet {{ first.klase.name }}</h4>
-
                           </div>
                           <div class="student-picture">
                             <img
@@ -116,9 +115,18 @@
                           >
                             <h4>Term:</h4>
 
-                            <h4 style="margin-left: 0.5rem" v-if="term== 1">First Term</h4>
-                             <h4 style="margin-left: 0.5rem" v-else-if="term== 2">Secound Term</h4>
-                              <h4 style="margin-left: 0.5rem" v-else>Third Term</h4>
+                            <h4 style="margin-left: 0.5rem" v-if="term == 1">
+                              First Term
+                            </h4>
+                            <h4
+                              style="margin-left: 0.5rem"
+                              v-else-if="term == 2"
+                            >
+                              Secound Term
+                            </h4>
+                            <h4 style="margin-left: 0.5rem" v-else>
+                              Third Term
+                            </h4>
                           </div>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -263,8 +271,8 @@
                           </tr>
 
                           <tr
-                            v-for="third in studentExamResult"
-                            :key="third.id"
+                            v-for="(third, index) in studentExamResult"
+                            :key="index"
                             style="color: #1c0988"
                           >
                             <th style="padding: 0.5rem" colspan="3">
@@ -350,11 +358,32 @@ import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
 import { STUDENT_MARK_RESULT_QUERIES } from '~/graphql/marks/queries'
 export default {
   middleware: 'auth',
-  data() {
-    return {
-      numStudents: this.$route.query.numStudents,
-      term: this.$route.query.student[1]
-    }
+
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.studentExamResult.loading &&
+        this.$apollo.queries.studentMarkResult.loading
+      )
+    },
+    numStudents() {
+      return this.$route.query.numStudents
+    },
+    term() {
+      return this.$route.query.student[1]
+    },
+    studentId() {
+      return this.$route.params.slug
+    },
+    klaseId() {
+      return this.$route.query.student[0]
+    },
+    sessionId() {
+      return this.$route.query.student[2]
+    },
+    sectionId() {
+      return this.$route.query.student[3]
+    },
   },
 
   apollo: {
@@ -362,10 +391,11 @@ export default {
       query: STUDENT_EXAM_RESULT_QUERIES,
       variables() {
         return {
-          klase_id: parseInt(this.$route.query.student[0]),
-          student_id: parseInt(this.$route.params.slug),
-          term_id: parseInt(this.$route.query.student[1]),
-          session_id: parseInt(this.$route.query.student[2]),
+          klase_id: parseInt(this.klaseId),
+          student_id: parseInt(this.studentId),
+          term_id: parseInt(this.term),
+          session_id: parseInt(this.sessionId),
+          section_id: parseInt(this.sectionId),
         }
       },
     },
@@ -374,10 +404,11 @@ export default {
       query: STUDENT_MARK_RESULT_QUERIES,
       variables() {
         return {
-          klase_id: parseInt(this.$route.query.student[0]),
-          student_id: parseInt(this.$route.params.slug),
-          term_id: parseInt(this.$route.query.student[1]),
-          session_id: parseInt(this.$route.query.student[2]),
+          klase_id: parseInt(this.klaseId),
+          student_id: parseInt(this.studentId),
+          term_id: parseInt(this.term),
+          session_id: parseInt(this.sessionId),
+          section_id: parseInt(this.sectionId),
         }
       },
     },

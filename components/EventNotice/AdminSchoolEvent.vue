@@ -1,11 +1,11 @@
 <template>
   <div class="liberian">
     <div class="shadow p-4 liberian__wrapper mt-4">
-      <h1 class="d-flex justify-content-center mb-4 mt-4">Notice Board</h1>
+      <h1 class="d-flex justify-content-center mb-4 mt-4">Event Board</h1>
 
       <b-row no-gutters>
         <b-col md="12">
-          <b-table striped responsive hover :items="notices" :fields="fields">
+          <b-table striped responsive hover :items="events" :fields="fields">
             <template #cell(date)="date">
               <b-badge class="d-inline-block" variant="danger">{{
                 date.value
@@ -37,11 +37,11 @@
 </template>
 
 <script>
-import { NOTICE_QUERIES } from '@/graphql/notices/queries'
+import { EVENT_QUERIES } from '~/graphql/events/queries'
 export default {
   data() {
     return {
-
+      events: [],
 
       fields: [
         {
@@ -52,7 +52,7 @@ export default {
           key: 'description',
           label: 'Description',
         },
-          {
+        {
           key: 'title',
           label: 'Title',
         },
@@ -65,7 +65,6 @@ export default {
           label: 'Photo',
         },
 
-
         { key: 'actions', label: 'Actions' },
       ],
       form: {
@@ -75,8 +74,8 @@ export default {
     }
   },
   apollo: {
-    notices: {
-      query: NOTICE_QUERIES,
+    events: {
+      query: EVENT_QUERIES,
     },
   },
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <template v-if="!notices"> <div></div></template>
+    <template v-if="$apollo.queries.notices.loading"><Preload /></template>
     <template v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -131,6 +131,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      notices: [],
       form: new this.$form({
         description: null,
         title: null,
@@ -182,9 +183,7 @@ export default {
             mutation: CREATE_NOTICE_MUTATION,
             variables: this.form.data(),
           })
-          .then(({ data }) => {
-            this.$router.push('/')
-          })
+          .then(() => {})
 
         this.form.busy = false
       } catch ({ graphQLErrors: errors }) {

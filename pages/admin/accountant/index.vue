@@ -1,6 +1,8 @@
-  <template>
+<template>
   <div class="fonts">
-    <div v-if="!accountants"></div>
+    <div v-if="$apollo.queries.accountants.loading">
+      <Preload />
+    </div>
     <div v-else>
       <b-button
         to="/admin/accountant/add-accountant"
@@ -220,8 +222,13 @@
                       Edit
                     </b-button>
 
-                    <b-button variant="danger" size="md" class="px-3">
-                      <b-icon icon="trash" class="mr-1"></b-icon>
+                    <b-button
+                      variant="danger"
+                      size="md"
+                      class="px-3"
+                      @click="handleDeleteModal(data.item)"
+                      >
+                      <b-icon icon="trash" class="mr-1" />
                       Delete
                     </b-button>
                   </template>
@@ -242,7 +249,6 @@
                   :id="infoModal"
                   class="modal"
                   :hide-backdrop="true"
-                  body-bg-variant="info"
                   title="Edit Accountant Data"
                   scrollable
                   size="lg"
@@ -256,38 +262,47 @@
         </b-col>
       </b-row>
     </div>
+    <!-- delete modal -->
+    <b-modal id="DeleteModal" centered hide-header hide-footer>
+      <div class="p-5 text-center">
+        <Spinner v-if="isDeleting" size="4" />
+        <template v-else>
+          <h5>Confirm delete accountant?</h5>
+          <p>This action cannot be undone.</p>
+
+          <div>
+            <b-button
+              variant="light"
+              class="px-4 mr-2 border"
+              @click="handleCancelDelete"
+            >
+              Cancel
+            </b-button>
+
+            <b-button
+              variant="danger"
+              class="px-4"
+              @click="deleteInvokedAccountant"
+            >
+              Delete
+            </b-button>
+          </div>
+        </template>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import { DELETE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
 import { ACCOUNTANT_QUERIES } from '~/graphql/accountants/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
-      items: [
-        {
-          paid: true,
-          '#': 1,
-          code: 12345,
-          photo: 40,
-          name: { first: 'Dickerson', last: 'Macdonald' },
-          gender: true,
-          phone: 810000112,
-          // _cellVariants: { paid: 'success' },
-        },
-
-        {
-          paid: false,
-          '#': 2,
-          code: 12346,
-          photo: 21,
-          name: { first: 'Larsen', last: 'Shaw' },
-          gender: false,
-          phone: 810000112,
-          // _cellVariants: { paid: 'success' },
-        },
-      ],
+      isDeleting: false,
+      invokedForDelete: null,
+      items: [],
 
       fields: [
         {
@@ -391,8 +406,68 @@ export default {
       this.infoModal.title = ''
       this.infoModal.content = ''
     },
-    deleteItem() {
-      console.log('yes')
+    handleCancelDelete() {
+      this.$bvModal.hide('DeleteModal')
+    },
+    handleDeleteModal(item) {
+      this.invokedForDelete = item
+      this.$bvModal.show('DeleteModal')
+    },
+    deleteInvokedAccountant() {
+      this.isDeleting = true
+      this.$apollo
+        .mutate({
+          mutation: DELETE_ACCOUNTANT_MUTATION,
+          variables: {
+            id: parseInt(this.invokedForDelete.id),
+          },
+          update: (store, { data: { deleteAccountant } }) => {
+            try {
+              const data = store.readQuery({
+                query: ACCOUNTANT_QUERIES,
+              })
+
+              const accountantIndex = data.accountants.findIndex(
+                (m) => m.id === this.invokedForDelete.id
+              )
+
+              if (accountantIndex !== -1) {
+                data.accountants.splice(accountantIndex, 1)
+              }
+
+              // Write our data back to the cache.
+              store.writeQuery({
+                query: ACCOUNTANT_QUERIES,
+
+                data,
+              })
+            } catch (e) {
+              // Do something with this error
+            }
+          },
+        })
+        .then(() => {
+          Swal.fire({
+            icon: 'success',
+
+            text: 'accountant deleted successfully',
+            color: '#5cb85c',
+          })
+        })
+        .catch(({ graphQLErrors: errors, ...rest }) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops..',
+            text: `An error occurred while processing your request.`,
+            color: '#716add',
+            backdrop: '#7a7d7f',
+          })
+        })
+        .finally(() => {
+          this.$bvModal.hide('DeleteModal')
+
+          this.isDeleting = false
+        })
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -404,9 +479,6 @@ export default {
 </script>
 
 <style lang="scss">
-.modal {
-  background-color: rgba(0, 0, 0, 0.295) !important;
-}
 .fonts {
   font-size: 1.4rem !important;
   padding: 2rem;

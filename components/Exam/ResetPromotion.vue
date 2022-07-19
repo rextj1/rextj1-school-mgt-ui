@@ -150,7 +150,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.busy = false
             Swal.fire({
               title: 'Good',
@@ -164,7 +164,7 @@ export default {
               timer: 1500,
               showConfirmButton: false,
             })
-          })
+          }).catch((e)=>{console.log(e)})
             this.$apollo
           .mutate({
             mutation: UPDATE_PUBLISH_RESULT_MUTATION,
@@ -175,7 +175,7 @@ export default {
               status: 'unpublished',
             },
           })
-          .then(({ data }) => {})
+          .then(() => {}).catch((e)=>{console.log(e)})
       } else {
         Swal.fire({
           title: 'Ooops...',

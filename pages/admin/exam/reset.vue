@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !sessions && !resetPromotion">
-      <div></div>
+    <template v-if="nowLoading">
+      <Preload/>
     </template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
@@ -68,8 +68,8 @@
 
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamResetPromotion
-          :reset-promotion="resetPromotion"
-          :reset-klase="resetKlase"
+          :resetPromotion="resetPromotion"
+          :resetKlase="resetKlase"
           :student="[form.class, form.session]"
         />
       </div>
@@ -80,7 +80,7 @@
 <script>
 import Swal from 'sweetalert2'
 import { KLASES_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { SESSION_QUERIES } from '~/graphql/marks/queries'
 import {
   RESET_KLASE_QUERIES,
   RESET_PROMOTE_QUERIES,
@@ -109,6 +109,14 @@ export default {
     },
     sessions: {
       query: SESSION_QUERIES,
+    },
+  },
+   computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.sessions.loading
+      )
     },
   },
   methods: {

@@ -1,6 +1,5 @@
 <template>
-  <div v-if="!user"></div>
-  <div v-else>
+  <div>
     <div v-for="data in user.notifications" :key="data.id">
       <!-- {{ data.data.data }} -->
       <!-- notice -->
@@ -27,6 +26,9 @@ export default {
   props: {
     notifyNow: Array,
   },
+  data: () => ({
+    user: [],
+  }),
   apollo: {
     user: {
       query: USER_NOTIFICATION_QUERIES,
@@ -42,7 +44,7 @@ export default {
           mutation: MARK_AS_READ,
           variables: { notifiable_id: parseInt(this.notifyNow[0]) },
         })
-        .then(({ data }) => {
+        .then(() => {
           this.$bvModal.hide(this.notifyNow[1])
         })
     },
@@ -50,5 +52,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

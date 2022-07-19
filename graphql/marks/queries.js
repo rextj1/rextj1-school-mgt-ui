@@ -7,12 +7,14 @@ export const MARK_QUERIES = gql`
     $subject_id: Int!
     $term_id: Int!
     $session_id: Int!
+    $section_id: Int!
   ) {
     marks(
       klase_id: $klase_id
       subject_id: $subject_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
     ) {
       ...MarkFields
     }
@@ -26,12 +28,14 @@ export const STUDENT_MARK_RESULT_QUERIES = gql`
     $student_id: Int!
     $term_id: Int!
     $session_id: Int!
+    $section_id: Int!
   ) {
     studentMarkResult(
       klase_id: $klase_id
       student_id: $student_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
     ) {
       ...MarkFields
     }
@@ -85,6 +89,7 @@ export const MAIN_STUDENT_MARK_RESULT_QUERIES = gql`
     $student_id: Int!
     $term_id: Int!
     $session_id: Int!
+    $section_id: Int!
     $status: String!
   ) {
     MainStudentMarkResult(
@@ -92,6 +97,7 @@ export const MAIN_STUDENT_MARK_RESULT_QUERIES = gql`
       student_id: $student_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
       status: $status
     ) {
       ...MarkFields

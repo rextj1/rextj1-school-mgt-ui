@@ -2,11 +2,17 @@ import gql from 'graphql-tag'
 import { EXAM_RECORD_FIELDS_FRAGMENT } from './fragments'
 
 export const EXAM_RECORD_QUERIES = gql`
-  query KlaseResultsQuery($klase_id: Int!, $term_id: Int!, $session_id: Int!) {
+  query KlaseResultsQuery(
+    $klase_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+    $section_id: Int!
+  ) {
     klaseResults(
       klase_id: $klase_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
     ) {
       ...ExamRecordFields
     }
@@ -15,8 +21,12 @@ export const EXAM_RECORD_QUERIES = gql`
 `
 
 export const EXAM_RECORDS_QUERIES = gql`
-  query examRecordQuery($klase_id: Int!, $session_id: Int!) {
-    examRecords(klase_id: $klase_id, session_id: $session_id) {
+  query examRecordQuery($klase_id: Int!, $session_id: Int!, $section_id: Int!) {
+    examRecords(
+      klase_id: $klase_id
+      session_id: $session_id
+      section_id: $section_id
+    ) {
       ...ExamRecordFields
     }
   }
@@ -28,12 +38,14 @@ export const STUDENT_EXAM_RESULT_QUERIES = gql`
     $student_id: Int!
     $term_id: Int!
     $session_id: Int!
+    $section_id: Int!
   ) {
     studentExamResult(
       klase_id: $klase_id
       student_id: $student_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
     ) {
       ...ExamRecordFields
     }
@@ -46,12 +58,14 @@ export const PUBLISH_RESULT_QUERY = gql`
     $klase_id: Int!
     $term_id: Int!
     $session_id: Int!
+    $section_id: Int!
     $status: String!
   ) {
     publishResult(
       klase_id: $klase_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
       status: $status
     ) {
       id
@@ -67,6 +81,7 @@ export const MAIN_STUDENT_EXAM_RESULT_QUERIES = gql`
     $student_id: Int!
     $term_id: Int!
     $session_id: Int!
+    $section_id: Int!
     $status: String!
   ) {
     MainStudentExamResult(
@@ -74,6 +89,7 @@ export const MAIN_STUDENT_EXAM_RESULT_QUERIES = gql`
       student_id: $student_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
       status: $status
     ) {
       ...ExamRecordFields
@@ -84,8 +100,18 @@ export const MAIN_STUDENT_EXAM_RESULT_QUERIES = gql`
 
 // cum term
 export const FIRST_TERM_QUERIES = gql`
-  query firstTermQuery($klase_id: Int!, $term_id: Int!, $session_id: Int!) {
-    firstTerm(klase_id: $klase_id, term_id: $term_id, session_id: $session_id) {
+  query firstTermQuery(
+    $klase_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+    $section_id: Int!
+  ) {
+    firstTerm(
+      klase_id: $klase_id
+      term_id: $term_id
+      session_id: $session_id
+      section_id: $section_id
+    ) {
       id
       cum_avg
     }
@@ -93,11 +119,17 @@ export const FIRST_TERM_QUERIES = gql`
 `
 
 export const SECOUND_TERM_QUERIES = gql`
-  query secounTermQuery($klase_id: Int!, $term_id: Int!, $session_id: Int!) {
+  query secounTermQuery(
+    $klase_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+    $section_id: Int!
+  ) {
     secoundTerm(
       klase_id: $klase_id
       term_id: $term_id
       session_id: $session_id
+      section_id: $section_id
     ) {
       id
       cum_avg
@@ -105,8 +137,18 @@ export const SECOUND_TERM_QUERIES = gql`
   }
 `
 export const THIRD_TERM_QUERIES = gql`
-  query thirdTermQuery($klase_id: Int!, $term_id: Int!, $session_id: Int!) {
-    thirdTerm(klase_id: $klase_id, term_id: $term_id, session_id: $session_id) {
+  query thirdTermQuery(
+    $klase_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+    $section_id: Int!
+  ) {
+    thirdTerm(
+      klase_id: $klase_id
+      term_id: $term_id
+      session_id: $session_id
+      section_id: $section_id
+    ) {
       id
       cum_avg
     }

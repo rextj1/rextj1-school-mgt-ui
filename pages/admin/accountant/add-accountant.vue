@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-    <div v-if="!countries && !bloodGroups"></div>
+    <div v-if="nowLoading"><Preload/></div>
     <div v-else>
       <b-button
         to="/admin/accountant"
@@ -413,6 +413,14 @@ export default {
       genders: ['Male', 'Female'],
       show: true,
     }
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading
+      )
+    },
   },
   apollo: {
     countries: {

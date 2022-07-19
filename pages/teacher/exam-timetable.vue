@@ -2,7 +2,7 @@
   <div class="p-4 view-payment">
     <template>
       <div class="fonts">
-        <template v-if="!klases"> <div></div></template>
+        <template v-if="$apollo.queries.klases.loading"> <Preload /></template>
         <template v-else>
           <div class="libarian__wrapper">
             <b-card no-body @click="hideMenu">

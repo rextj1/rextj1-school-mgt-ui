@@ -5,11 +5,13 @@ export const PROMOTESTUDENTS_QUERIES = gql`
     $status: Boolean!
     $klase_id: Int!
     $session_id: Int!
+    $section_id: Int!
   ) {
     promoteStudents(
       status: $status
       klase_id: $klase_id
       session_id: $session_id
+      section_id: $section_id
     ) {
       id
       first_name

@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <template v-if="!subjects"> <div></div></template>
+    <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -85,8 +85,7 @@
                         class="px-3"
                         @click="deleteSubject(data.item.id)"
                       >
-                        <b-icon icon="trash" class="mr-1"></b-icon>
-                        Delete
+                        Revoke teacher
                       </b-button>
                     </template>
                   </b-table>
@@ -134,6 +133,7 @@
                             v-if="form.busy"
                             variant="light"
                             class="mr-1 mb-1"
+                            small
                           />Add Subject</b-button
                         >
                       </div>
@@ -230,6 +230,7 @@
                           v-if="busy"
                           variant="light"
                           class="mr-1 mb-1"
+                          small
                         />Submit</b-button
                       >
                     </b-col>
@@ -259,6 +260,8 @@ export default {
   data() {
     return {
       id: 0,
+      subjects: [],
+      teachers: [],
       subjectEditingId: '',
       editSlug: '',
       subject: {},
@@ -299,6 +302,14 @@ export default {
       query: TEACHER_QUERIES,
     },
   },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.subjects.loading &&
+        this.$apollo.queries.teachers.loading
+      )
+    },
+  },
 
   methods: {
     // inline editing
@@ -336,11 +347,11 @@ export default {
             subject: this.form.subjects,
           },
         })
-        .then(({ data }) => {
+        .then(() => {
           this.subjectEditingId = ''
         })
-        .catch((error) => {
-          error
+        .catch((e) => {
+          console.log(e)
         })
     },
 
@@ -374,7 +385,7 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.form.subject = ''
           })
 
@@ -418,7 +429,7 @@ export default {
             }
           },
         })
-        .then(({ data }) => {
+        .then(() => {
           Swal.fire({
             timer: 1000,
             text: 'subject removed successfully',
@@ -429,7 +440,8 @@ export default {
             backdrop: false,
           })
         })
-        .catch((err) => {
+        .catch((e) => {
+          console.log(e)
           // this.klase_id =
         })
     },
@@ -454,21 +466,8 @@ export default {
               subjects: this.form.subjects,
               teacher: parseInt(this.form.teacher),
             },
-            // update: (store, { data: { assignKlaseToTeacherassignKlaseToTeacher } }) => {
-            //   // Read the data from our cache for this query.
-            //   const data = store.readQuery({
-            //     query: KLASE_QUERIES,
-            //   })
-
-            //   data.klases.push(assignKlaseToTeacher)
-
-            //   store.writeQuery({
-            //     query: KLASE_QUERIES,
-            //     data,
-            //   })
-            // },
           })
-          .then(({ data }) => {
+          .then(() => {
             this.busy = false
             this.form.subjects = []
             this.form.teacher = ''
