@@ -3,10 +3,10 @@ import gql from 'graphql-tag'
 import { SINGLE_SUBJECTS_FIELDS_FRAGMENT } from './fragments'
 
 export const SUBJECT_QUERIES = gql`
-  query subjectsQuery {
-    subjects {
+  query subjectsQuery($slug: String) {
+    subjects(slug: $slug) {
       ...SingleSubjectsFields
-      teachers{
+      teachers {
         id
         first_name
         last_name
@@ -17,8 +17,8 @@ export const SUBJECT_QUERIES = gql`
   ${SINGLE_SUBJECTS_FIELDS_FRAGMENT}
 `
 export const SUBJECT_QUERY = gql`
-  query subjectQuey($id: ID!) {
-    subject(id: $id) {
+  query subjectQuey($id: ID!, $slug: String) {
+    subject(id: $id, slug: $slug) {
       ...SingleSubjectsFields
     }
   }
@@ -29,8 +29,6 @@ export const SUBJECTS_QUERIES = gql`
     subjects {
       id
       subject
-
     }
   }
-
 `

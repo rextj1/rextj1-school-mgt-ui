@@ -40,6 +40,12 @@ export const UXER_FIELDS_FRAGMENT = gql`
       id
       name
     }
+    workspace {
+      id
+      name
+      slug
+      logo
+    }
   }
 `
 
@@ -108,6 +114,12 @@ export const USERS_FIELDS_FRAGMENT = gql`
     city {
       id
       name
+    }
+    workspace {
+      id
+      name
+      slug
+      logo
     }
   }
 `

@@ -1,226 +1,170 @@
 <template>
-  <div class="student">
-    <div class="p-4 student__wrapper">
+  <div>
+    <b-modal
+      size="md"
+      centered
+      :value="value"
+      :visible="value"
+      hide-footer
+      title="Edit Event"
+      :hide-backdrop="false"
+      @change="$emit('input', $event)"
+    >
       <b-form
-        v-if="show"
         method="POST"
-        @submit.prevent="onSubmit"
+        @submit.prevent="editEvent"
         @keydown="form.onKeydown($event)"
-        @reset.prevent="onReset"
       >
-        <b-row class="p-4">
-          <b-col md="10" class="p-4">
-            <b-form-group label="School Notice">
-              <b-form-textarea
-                id="textarea"
-                v-model="form.description"
-                placeholder="Enter something..."
-                rows="20"
-                size="lg"
-                required
-              ></b-form-textarea>
-            </b-form-group>
-          </b-col>
+        <div class="bg-white rounded p-4 edit-lead-modal">
+          <b-form-group label="School Event">
+            <b-form-textarea
+              id="textarea"
+              v-model="form.description"
+              placeholder="Enter something..."
+              rows="3"
+              size="lg"
+              required
+            ></b-form-textarea>
+          </b-form-group>
 
-          <b-col md="4" class="p-4">
-            <b-form-group label="Date">
-              <b-form-datepicker
-                id="datepicker-buttons"
-                v-model="form.date"
-                today-button
-                reset-button
-                close-button
-                locale="en"
-                size="lg"
-                required
-              ></b-form-datepicker>
-            </b-form-group>
-          </b-col>
+          <b-form-group label="Date">
+            <b-form-datepicker
+              id="datepicker-buttons"
+              v-model="form.date"
+              today-button
+              reset-button
+              close-button
+              locale="en"
+              size="lg"
+              required
+            ></b-form-datepicker>
+          </b-form-group>
 
-          <b-col md="12" class="p-4">
+          <div class="mt-4 text-right">
             <b-button
               type="submit"
-              pill
               variant="primary"
-              class="mr-4"
-              size="lg"
+              size="sm"
+              class="px-3 py-1 blue-shadow"
+              :disabled="form.busy"
             >
-              <b-spinner
-                v-if="form.busy"
-                variant="light"
-                small
-                class="mr-1 mb-1"
-              />Register</b-button
-            >
-            <b-button
-              pill
-              class="ml-4"
-              style="font-size: 1.4rem"
-              size="lg"
-              type="reset"
-              variant="danger"
-              >Reset</b-button
-            >
-          </b-col>
-        </b-row>
+              <b-spinner v-if="form.busy" small class="mr-1" />
+              Update Event
+            </b-button>
+          </div>
+        </div>
       </b-form>
-    </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { UPDATE_EVENT_MUTATION } from '~/graphql/events/mutations'
-import { EVENT_QUERIES, EVENT_QUERY } from '~/graphql/events/queries'
-
+import Swal from 'sweetalert2'
 export default {
   props: {
-    slug: String,
-  },
-  data() {
-    return {
-      events: [],
-      form: new this.$form({
-        description: '',
-        date: null,
-        busy: false,
-      }),
-      preview_url: null,
-      show: true,
-    }
-  },
-  apollo: {
-    events: {
-      query: EVENT_QUERIES,
+    value: {
+      type: Boolean,
+      default: true,
     },
     event: {
-      query: EVENT_QUERY,
-      variables() {
-        return {
-          id: parseInt(this.slug),
-        }
-      },
-      result({ data, loading }) {
-        if (!loading) {
-          const event = data.event
-          this.form.keys().forEach((key) => {
-            if (event[key]) {
-              //  if (key === 'image') {
-              //   return true
-              // }
-              this.form[key] = event[key]
-            }
-          })
-          this.form.id = parseInt(data.event.id)
-          this.form.description = data.event.description
-          this.form.date = data.event.date
-        }
-      },
+      type: Object,
+      required: true,
     },
   },
-  methods: {
-    // update
-    async onSubmit() {
-      this.form.busy = true
-      // submit exam
-      try {
-        await this.$apollo
-          .mutate({
-            mutation: UPDATE_EVENT_MUTATION,
-            variables: {
-              id: parseInt(this.form.id),
-              description: this.form.description,
-              date: this.form.date,
-            },
-          })
-          .then(() => {})
 
-        this.form.busy = false
-      } catch ({ graphQLErrors: errors }) {
-        this.form.busy = false
-        if (errors && errors.length > 0) {
-          const validationErrors = errors.filter(
-            (err) => err.extensions.category === 'validation'
-          )
-          validationErrors.forEach((err) => {
-            this.form.errors.set(err.extensions.validation)
+  data() {
+    return {
+      form: new this.$form({
+        id: null,
+        description: '',
+        date: null,
+      }),
+    }
+  },
+
+  created() {
+    this.form.id = this.event.id
+    this.form.description = this.event.description
+    this.form.date = this.event.date
+  },
+
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
+
+  watch: {
+    event(value) {
+      this.setEvent(value)
+    },
+  },
+
+  methods: {
+    editEvent() {
+      this.form.busy = true
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_EVENT_MUTATION,
+          variables: {
+            workspace: this.mainWorkspace.slug,
+            ...this.form,
+          },
+        })
+        .then(() => {
+          this.form.busy = false
+
+          Swal.fire({
+            text: `event updated successfully!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#5cb85c',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
           })
-        }
-      }
+          this.$emit('input', false)
+        })
+        .catch(({ graphQLErrors }) => {
+          this.form.busy = false
+
+          Swal.fire({
+            icon: 'warning',
+            text: `There's error proccessing this page!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#cc3300',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
+        })
     },
 
-    onReset(event) {
-      event.preventDefault()
-      // Reset our form values
-      this.form = ''
-      // this.form.photo = null
-      // Trick to reset/clear native browser form validation state
-      this.show = false
-      this.$nextTick(() => {
-        this.show = true
-      })
+    setLead(event) {
+      this.form.id = event.id
+      this.form.description = event.description
+      this.form.date = event.date
     },
   },
 }
 </script>
 
-<style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
-  .form-control,
-  .mb-3 {
-    background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
-  }
-  .grow {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-  }
-  .profile-avatar {
-    position: relative;
-    text-align: center;
-    width: 10rem;
-    height: 10rem;
+<style lang="scss">
+@import '~@/assets/scss/variables';
 
-    .photo-preview {
-      width: 100px;
-      height: 100px;
-      background-size: cover;
-      background-repeat: no-repeat;
-      border-radius: 50%;
-    }
+.edit-lead-modal {
+  padding: 4rem;
+  font-size: 17px;
 
-    .file-upload {
-      position: absolute;
-      display: block;
-      cursor: pointer;
-      bottom: 0;
-      right: -5px;
-      padding: 4px;
-      background: white;
-      border-radius: 50%;
-
-      .btn {
-        background-color: white;
-        border: 1px solid $gray-200;
-      }
-    }
-
-    .file-upload__input {
-      display: none;
-    }
-    .img-round {
-      border-radius: 50%;
-    }
-  }
-
-  .student__wrapper {
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
+  .form-control {
+    border-radius: 10px;
+    font-size: 15px;
   }
 }
 </style>

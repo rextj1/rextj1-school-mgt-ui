@@ -9,6 +9,7 @@ export const CREATE_TIMETABLE_MUTATION = gql`
     $friday: String
     $time: String
     $klase_id: Int!
+    $workspace: String
   ) {
     createTimetable(
       monday: $monday
@@ -18,6 +19,7 @@ export const CREATE_TIMETABLE_MUTATION = gql`
       friday: $friday
       time: $time
       klase_id: $klase_id
+      workspace: $workspace
     ) {
       id
       monday
@@ -40,6 +42,7 @@ export const UPDATE_TIMETABLE_MUTATION = gql`
     $friday: String
     $time: String
     $klase_id: Int!
+    $workspace: String
   ) {
     updateTimetable(
       id: $id
@@ -50,6 +53,7 @@ export const UPDATE_TIMETABLE_MUTATION = gql`
       friday: $friday
       time: $time
       klase_id: $klase_id
+      workspace: $workspace
     ) {
       id
       monday
@@ -62,8 +66,8 @@ export const UPDATE_TIMETABLE_MUTATION = gql`
   }
 `
 export const DELETE_TIMETABLE_MUTATION = gql`
-  mutation deleteTimetableMutation($id: ID!) {
-    deleteTimetable(id: $id) {
+  mutation deleteTimetableMutation($id: Int!, $workspace: String) {
+    deleteTimetable(id: $id, workspace: $workspace) {
       id
     }
   }

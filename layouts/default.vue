@@ -11,10 +11,12 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { GUARDIAN_DASHBOARD_QUERIES } from '~/graphql/guardians/queries'
 import { STUDENT_DASHBOARD_QUERIEX } from '~/graphql/students/queries'
 import { TEACHER_DASHBOARD_QUERIES } from '~/graphql/teachers/queries'
-import { ROLEX_QUERIEX } from '~/graphql/users/queries'
+import { ROLEX_QUERIEX, USER_WORKSPACE_QUERY } from '~/graphql/users/queries'
 export default {
   async fetch() {
     const { app, route, redirect } = this.$nuxt.context
@@ -30,31 +32,77 @@ export default {
       query: ROLEX_QUERIEX,
       variables: { id: parseInt(this.$auth.user.id) },
     })
-     const {
+    const {
+      data: { userWorkspace },
+    } = await apolloClient.query({
+      query: USER_WORKSPACE_QUERY,
+      variables: { id: parseInt(this.$auth.user.id) },
+    })
+    console.log(userWorkspace)
+    const {
       data: { guardiansDashboard },
     } = await apolloClient.query({
-      query: GUARDIAN_DASHBOARD_QUERIES
+      query: GUARDIAN_DASHBOARD_QUERIES,
     })
-     const {
+    const {
       data: { teachersDashboard },
     } = await apolloClient.query({
-      query: TEACHER_DASHBOARD_QUERIES
- 
+      query: TEACHER_DASHBOARD_QUERIES,
     })
-     const {
+    const {
       data: { studentsDashboard },
     } = await apolloClient.query({
-      query: STUDENT_DASHBOARD_QUERIEX
-     
+      query: STUDENT_DASHBOARD_QUERIEX,
     })
 
-    // if (this.$auth.user.email === 'tojurex@yahoo.om') {
-    //   return redirect({
-    //     name: 'admin-timetable',
-    //   })
-    // }
+    if (
+      this.$auth.user.email === 'tojurex@yahoo.com' &&
+      userWorkspace.workspace.name === 'defaultWorkspac'
+    ) {
+      return redirect({
+        name: 'workspace-dashboard',
+        params: { workspace: userWorkspace.workspace.nam },
+      })
+    }else {
+      return redirect({
+        name: 'workspace-dashboard',
+        params: { workspace: userWorkspace.workspace.name },
+      })
+    }
   },
   // fetchDelay: 9000,
+
+  watch: {
+    userWorkspace(value) {
+      this.setWorkspaces(value)
+    },
+  },
+
+  apollo: {
+    userWorkspace: {
+      query: USER_WORKSPACE_QUERY,
+      variables() {
+        return { id: parseInt(this.$auth.user.id) }
+      },
+    },
+  },
+
+  methods: {
+    ...mapActions(useWorkspaceStore, ['setWorkspace']),
+    async setWorkspaces() {
+      const {
+        apolloProvider: { defaultClient: apolloClient },
+      } = this.$nuxt.context.app
+
+      const {
+        data: { userWorkspace },
+      } = await apolloClient.query({
+        query: USER_WORKSPACE_QUERY,
+        variables: { id: parseInt(this.$auth.user.id) },
+      })
+      this.setWorkspace(userWorkspace.workspace)
+    },
+  },
 }
 </script>
 

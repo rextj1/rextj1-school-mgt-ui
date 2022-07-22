@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const CREATE_SUBJECT_MUTATION = gql`
-  mutation CreateSubjectMutation($subject: String!) {
-    createSubject(subject: $subject) {
+  mutation CreateSubjectMutation($subject: String!, $workspace: String) {
+    createSubject(subject: $subject, workspace: $workspace) {
       id
       subject
       teachers {
@@ -16,8 +16,8 @@ export const CREATE_SUBJECT_MUTATION = gql`
 `
 
 export const UPDATE_SUBJECT_MUTATION = gql`
-  mutation UpdateSubjectMutation($id: ID!, $subject: String!) {
-    updateSubject(id: $id, subject: $subject) {
+  mutation UpdateSubjectMutation($id: ID!, $subject: String!, $workspace: String) {
+    updateSubject(id: $id, subject: $subject, workspace: $workspace) {
       id
       subject
     }

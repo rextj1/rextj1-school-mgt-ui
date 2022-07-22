@@ -174,7 +174,7 @@
 <script>
 import {
   CREATE_EVENT_MUTATION,
-  CREATE_PUBLISHED_MUTATION,
+  PUBLISH_EVENT_MUTATION,
 } from '~/graphql/events/mutations'
 import { EVENT_QUERIES } from '~/graphql/events/queries'
 export default {
@@ -241,7 +241,7 @@ export default {
       // submit exam
       this.$apollo
         .mutate({
-          mutation: CREATE_PUBLISHED_MUTATION,
+          mutation: PUBLISH_EVENT_MUTATION,
           variables: {
             id: parseInt(item),
             published: true,
