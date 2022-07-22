@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="font">
     <template>
       <div class="fonts">
@@ -24,7 +24,6 @@
                 @click.prevent="generateReport"
                 >PDF</b-button
               >
-          
             </div>
 
             <vue-html2pdf
@@ -48,7 +47,7 @@
                       <!-- <div v-for="klase in timetables[0]" :key="klase.id">
                         {{ klase.name }}
                       </div> -->
-                     {{editCurrentClass[1]}} (Timetable)
+                      {{ editCurrentClass[1] }} (Timetable)
                     </h3>
                     <div class="card-body">
                       <div class="card-student p-3">
@@ -79,6 +78,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { TIMETABLE_QUERIES } from '~/graphql/timetables/queries'
 export default {
   props: {
@@ -89,7 +90,7 @@ export default {
       timetables: [],
       klaseId: '',
       klaseName: '',
-   
+
       fields: [
         { key: 'time', label: 'Time' },
         { key: 'monday', label: 'Monday' },
@@ -110,9 +111,15 @@ export default {
       variables() {
         return {
           klase_id: parseInt(this.editCurrentClass[0]),
+          slug: this.mainWorkspace.slug,
         }
       },
     },
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     generateReport() {

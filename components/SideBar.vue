@@ -297,7 +297,9 @@
               <div class="menu">
                 <nuxt-link to="/dashboard" class="button">
                   <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Dashboard</span>
+                  <span class="text" @click="ToggleMenus"
+                    >Dashboard {{ mainWorkspace.slug }}</span
+                  >
                 </nuxt-link>
                 <nuxt-link to="/admin/roles" class="button">
                   <b-icon
@@ -470,16 +472,28 @@
                 </b-collapse>
                 <!-- end -->
 
-                <nuxt-link to="/admin/event" class="button" style="z-index: 1">
+                <nuxt-link
+                  class="button"
+                  :to="{
+                    name: 'workspace-admin-event',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                >
                   <b-icon
                     icon="calendar2-date"
                     class="material-icons"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Events</span>
+                  <span class="text" @click="ToggleMenus">Event</span>
                 </nuxt-link>
 
-                <nuxt-link to="/admin/notice" class="button">
+                <nuxt-link
+                  class="button"
+                  :to="{
+                    name: 'workspace-admin-notice',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                >
                   <b-icon
                     icon="calendar2-date"
                     class="material-icons"
@@ -488,7 +502,13 @@
                   <span class="text" @click="ToggleMenus">Notices</span>
                 </nuxt-link>
 
-                <nuxt-link to="/admin/timetable" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-timetable',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="alarm"
                     class="material-icons"
@@ -506,16 +526,28 @@
                   <span class="text" @click="ToggleMenus">Drivers</span>
                 </nuxt-link>
 
-                <nuxt-link to="/admin/session" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-session',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="layers"
                     class="material-icons"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Session</span>
+                  <span class="text" @click="ToggleMenus">Sessions</span>
                 </nuxt-link>
 
-                <nuxt-link to="/admin/section" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-section',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="layers"
                     class="material-icons"
@@ -524,7 +556,13 @@
                   <span class="text" @click="ToggleMenus">Section</span>
                 </nuxt-link>
 
-                <nuxt-link to="/admin/classes" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-classes',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="layers"
                     class="material-icons"
@@ -532,7 +570,13 @@
                   />
                   <span class="text" @click="ToggleMenus">Classes</span>
                 </nuxt-link>
-                <nuxt-link to="/admin/subjects" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-subjects',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="text-indent-left"
                     class="material-icons"
@@ -559,6 +603,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { ROLEX_QUERIEX } from '~/graphql/users/queries'
 export default {
   // mounted() {
@@ -570,6 +616,12 @@ export default {
       rotate: '',
       user: [],
     }
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    mainWorkspace() {
+      return this.currentWorkspace
+    },
   },
   apollo: {
     user: {

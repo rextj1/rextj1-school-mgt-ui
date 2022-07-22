@@ -79,8 +79,11 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { UPDATE_TIMETABLE_MUTATION } from '~/graphql/timetables/mutations'
 import { TIMETABLE_QUERY } from '~/graphql/timetables/queries'
+import Swal from 'sweetalert2'
 export default {
   props: {
     slug: Array,
@@ -114,6 +117,7 @@ export default {
       variables() {
         return {
           id: parseInt(this.id),
+          slug: this.mainWorkspace.slug,
         }
       },
       result({ data, loading }) {
@@ -130,6 +134,11 @@ export default {
         }
       },
     },
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     onSubmit() {
@@ -148,6 +157,7 @@ export default {
             thursday: this.form.thursday,
             friday: this.form.friday,
             klase_id: parseInt(this.klaseId),
+            workspace: this.mainWorkspace.slug,
           },
           update: (store, { data: { updateTimetable } }) => {
             // Read the data from our cache for this query.
@@ -155,30 +165,49 @@ export default {
               query: TIMETABLE_QUERY,
               variables: {
                 id: parseInt(updateId),
+                workspace: this.mainWorkspace.slug,
               },
             })
-            const index = data.timetable.id
 
-            if (index !== -1) {
-              // Mutate cache result
-              data.timetable = updateTimetable
+            // Mutate cache result
+            data.timetable = updateTimetable
 
-              store.writeQuery({
-                query: TIMETABLE_QUERY,
-                variables: {
-                  id: parseInt(updateId),
-                },
-                data,
-              })
-            }
+            store.writeQuery({
+              query: TIMETABLE_QUERY,
+              variables: {
+                id: parseInt(updateId),
+                workspace: this.mainWorkspace.slug,
+              },
+              data,
+            })
           },
         })
         .then(() => {
           this.form.busy = false
+          Swal.fire({
+            timer: 1000,
+            text: 'timetable updated successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+            showConfirmButton: false,
+          })
           this.$bvModal.hide(this.closeModal)
         })
-        .catch((e) => {
-          console.log(e)
+        .catch(() => {
+          Swal.fire({
+            icon: 'warning',
+            text: `There's error proccessing this page!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#cc3300',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
         })
     },
   },

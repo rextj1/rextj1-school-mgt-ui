@@ -183,7 +183,7 @@ export const USER_STUDENT_QUERY = gql`
         adm_no
         code
         status
-        klase{
+        klase {
           id
           name
         }
@@ -193,16 +193,30 @@ export const USER_STUDENT_QUERY = gql`
         guardian_no
         guardian_email
         guardian_address
-        term{
+        term {
           id
           name
         }
         cum_avg
-        session{
+        session {
           id
           name
         }
         birthday
+      }
+    }
+  }
+`
+export const USER_WORKSPACE_QUERY = gql`
+  query userWorkspace($id: ID) {
+    userWorkspace(id: $id) {
+      id
+      first_name
+      workspace {
+        id
+        name
+        slug
+        logo
       }
     }
   }

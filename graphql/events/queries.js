@@ -2,17 +2,17 @@ import gql from 'graphql-tag'
 
 import { EVENT_FIELDS_FRAGMENT } from './fragments'
 
+// export const NOTICE_QUERIES = gql`
+//   query NoticesQuery {
+//     notices {
+//       ...NoticeFields
+//     }
+//   }
+//   ${NOTICE_FIELDS_FRAGMENT}
+// `
 export const EVENT_QUERIES = gql`
-  query EventsQuery {
-    events {
-      ...EventFields
-    }
-  }
-  ${EVENT_FIELDS_FRAGMENT}
-`
-export const EVENT_QUERY = gql`
-  query EventQuery($id: ID!) {
-    event(id: $id) {
+  query EventsWorkspaceQuery($slug: String) {
+    events(slug: $slug) {
       ...EventFields
     }
   }

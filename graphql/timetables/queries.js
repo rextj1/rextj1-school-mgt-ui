@@ -15,8 +15,8 @@ import { SINGLE_TIMETABLE_FIELDS_FRAGMENT } from './fragments'
 //   ${SINGLE_TIMETABLE_FIELDS_FRAGMENT}
 // `
 export const TIMETABLE_QUERIES = gql`
-  query TimetablesQuery($klase_id: Int!) {
-    timetables(klase_id: $klase_id) {
+  query TimetablesQuery($klase_id: Int!, $slug: String) {
+    timetables(klase_id: $klase_id, slug: $slug) {
       ...SingleTimetableFields
       # klase {
       #   id
@@ -27,8 +27,8 @@ export const TIMETABLE_QUERIES = gql`
   ${SINGLE_TIMETABLE_FIELDS_FRAGMENT}
 `
 export const TIMETABLE_QUERY = gql`
-  query TimetableQuery($id: ID!) {
-    timetable(id: $id) {
+  query TimetableQuery($id: Int!, $slug: String) {
+    timetable(id: $id, slug: $slug) {
       ...SingleTimetableFields
       # klase {
       #   id
