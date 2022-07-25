@@ -7,6 +7,7 @@ export const UPDATE_PUBLISH_RESULT_MUTATION = gql`
     $section_id: Int!
     $session_id: Int!
     $term_id: Int!
+    $workspaceId: Int
   ) {
     updatePublishResult(
       klase_id: $klase_id
@@ -14,6 +15,7 @@ export const UPDATE_PUBLISH_RESULT_MUTATION = gql`
       session_id: $session_id
       section_id: $section_id
       term_id: $term_id
+      workspaceId: $workspaceId
     ) {
       id
       status

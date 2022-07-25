@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const SESSION_QUERIES = gql`
-  query SessionswQuery($slug: String) {
-    sessionsw(slug: $slug) {
+  query SessionsQuery($workspaceId: Int) {
+    sessions(workspaceId: $workspaceId) {
       id
       name
     }
@@ -10,8 +10,8 @@ export const SESSION_QUERIES = gql`
 `
 
 export const SESSION_QUERY = gql`
-  query SessionwQuery($id: Int!, $slug: String) {
-    sessionw(id: $id, slug: $slug) {
+  query SessionQuery($id: Int!, $workspaceId: Int) {
+    session(id: $id, workspaceId: $workspaceId) {
       id
       name
     }

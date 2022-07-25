@@ -6,8 +6,8 @@ import {
 } from './fragments'
 
 export const STUDENT_QUERIES = gql`
-  query StudentsQuery {
-    students {
+  query StudentsQuery($workspaceId: Int) {
+    students(workspaceId: $workspaceId) {
       ...StudentFields
     }
   }
@@ -23,8 +23,8 @@ export const STUDENT_DASHBOARD_QUERIEX = gql`
 `
 
 export const STUDENT_QUERY = gql`
-  query StudentQuery($slug: String!) {
-    student(slug: $slug) {
+  query StudentQuery($id: Int!, $workspaceId: Int) {
+    student(id: $id, workspaceId: $workspaceId) {
       ...StudentFields
     }
   }

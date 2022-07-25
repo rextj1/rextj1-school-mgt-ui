@@ -590,6 +590,8 @@
   </div>
 </template>
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
@@ -600,8 +602,9 @@ import {
 import { STUDENT_QUERY } from '@/graphql/students/queries'
 import { UPDATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 
 export default {
   props: {
@@ -655,9 +658,14 @@ export default {
         this.$apollo.queries.student.loading &&
         this.$apollo.queries.terms.loading &&
         this.$apollo.queries.sessions.loading &&
-        this.$apollo.queries.sections.loading
+        this.$apollo.queries.sections.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.country.loading
       )
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 
   apollo: {
@@ -665,9 +673,6 @@ export default {
     // $loadingKey: 'loading',
     countries: {
       query: COUNTRY_QUERIES,
-    },
-    bloodGroups: {
-      query: BLOOD_GROUP_QUERIES,
     },
     bloodGroups: {
       query: BLOOD_GROUP_QUERIES,
@@ -686,21 +691,42 @@ export default {
     },
     klases: {
       query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     terms: {
       query: TERM_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sections: {
       query: SECTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     student: {
       query: STUDENT_QUERY,
       variables() {
         return {
-          slug: this.slug[0],
+          id: parseInt(this.slug[0]),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
       result({ data, loading }) {
@@ -800,6 +826,7 @@ export default {
             mutation: UPDATE_STUDENT_MUTATION,
             variables: {
               id: parseInt(this.form.id),
+              workspaceId: parseInt(this.mainWorkspace.id),
               studentUser: this.form.userStudent,
               student: this.form.student,
             },
@@ -807,7 +834,10 @@ export default {
               // Read the data from our cache for this query.
               const data = store.readQuery({
                 query: STUDENT_QUERY,
-                variables: { slug: slugName },
+                variables: {
+                  id: parseInt(slugName),
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
               })
               data.updateStudent = updateStudent
 
@@ -815,7 +845,10 @@ export default {
 
               store.writeQuery({
                 query: STUDENT_QUERY,
-                variables: { slug: slugName },
+                variables: {
+                  id: parseInt(slugName),
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
 
                 data,
               })

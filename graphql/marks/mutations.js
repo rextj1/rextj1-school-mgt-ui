@@ -8,6 +8,7 @@ export const CREATE_FIELD_MUTATION = gql`
     $term: Int!
     $session: Int!
     $section: Int!
+    $workspaceId: Int
   ) {
     createQueries(
       klase: $klase
@@ -15,6 +16,7 @@ export const CREATE_FIELD_MUTATION = gql`
       term: $term
       session: $session
       section: $section
+      workspaceId: $workspaceId
     ) {
       id
       ca1
@@ -36,6 +38,7 @@ export const CREATE_ROW_MUTATION = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     updateMarks(
       marks: $marks
@@ -44,6 +47,7 @@ export const CREATE_ROW_MUTATION = gql`
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       id
     }

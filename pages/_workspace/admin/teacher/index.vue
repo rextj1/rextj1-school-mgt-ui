@@ -3,7 +3,10 @@
     <template v-if="$apollo.queries.teachers.loading"><Preload /></template>
     <template v-else>
       <b-button
-        to="/admin/teacher/add-teacher"
+        :to="{
+          name: 'workspace-admin-teacher-addTeacher',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         pill
         size="md"
@@ -231,8 +234,11 @@
                   <template #cell(actions)="data">
                     <b-button
                       :to="{
-                        name: 'admin-teacher-slug',
-                        params: { slug: data.item.slug },
+                        name: 'workspace-admin-teacher-id',
+                        params: {
+                          workspace: mainWorkspace.name,
+                          id: data.item.id,
+                        },
                       }"
                       variant="primary"
                       size="md"
@@ -246,7 +252,7 @@
                       variant="info"
                       size="md"
                       class="px-3"
-                      @click="info(data.item.slug)"
+                      @click="handleteacherEditModal(data.item)"
                     >
                       Edit
                     </b-button>
@@ -274,17 +280,12 @@
                 </b-table>
 
                 <!-- Info modal -->
-                <b-modal
-                  :id="infoModal"
-                  class="modal"
-                  :hide-backdrop="false"
-                  scrollable
-                  title="Edit Teacher Data"
-                  size="lg"
-                  :hide-footer="true"
-                >
-                  <AdminEditTeacherModal :slug="[slug, infoModal]" />
-                </b-modal>
+
+                <AdminEditTeacherModal
+                  v-if="invokedTeacherForEdit"
+                  v-model="isTeacherEditing"
+                  :teacher="invokedTeacherForEdit"
+                />
               </b-container>
             </div>
           </div>
@@ -324,6 +325,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { TEACHERS_QUERIES } from '@/graphql/teachers/queries'
 import { DELETE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
 import Swal from 'sweetalert2'
@@ -333,6 +336,8 @@ export default {
     return {
       items: [],
       teachers: [],
+      invokedTeacherForEdit: null,
+      isTeacherEditing: false,
       isDeleting: false,
       invokedForDelete: null,
 
@@ -412,6 +417,11 @@ export default {
   apollo: {
     teachers: {
       query: TEACHERS_QUERIES,
+      variables() {
+        return {
+           workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
   computed: {
@@ -423,6 +433,9 @@ export default {
           return { text: f.label, value: f.key }
         })
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   mounted() {
     // Set the initial number of items
@@ -430,9 +443,9 @@ export default {
   },
 
   methods: {
-    info(item, button) {
-      this.slug = item
-      this.$root.$emit('bv::show::modal', this.infoModal, button)
+    handleteacherEditModal(teacher) {
+      this.invokedTeacherForEdit = teacher
+      this.isTeacherEditing = true
     },
     resetInfoModal() {
       this.infoModal.title = ''
@@ -452,17 +465,20 @@ export default {
           mutation: DELETE_TEACHER_MUTATION,
           variables: {
             id: parseInt(this.invokedForDelete.id),
+             workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteTeacher } }) => {
             try {
               const data = store.readQuery({
                 query: TEACHERS_QUERIES,
+                variables: {
+                   workspaceId: parseInt(this.mainWorkspace.id),
+                },
               })
 
               const teacherIndex = data.teachers.findIndex(
                 (m) => m.id === this.invokedForDelete.id
               )
-              console.log(teacherIndex);
 
               if (teacherIndex !== -1) {
                 data.teachers.splice(teacherIndex, 1)
@@ -471,6 +487,9 @@ export default {
               // Write our data back to the cache.
               store.writeQuery({
                 query: TEACHERS_QUERIES,
+                variables: {
+                   workspaceId: parseInt(this.mainWorkspace.id),
+                },
 
                 data,
               })
@@ -481,10 +500,14 @@ export default {
         })
         .then(() => {
           Swal.fire({
-            icon: 'success',
-
-            text: 'teacher deleted successfully',
-            color: '#5cb85c',
+            text: `teacher updated successfully!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#5cb85c',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
           })
         })
         .catch(({ graphQLErrors: errors, ...rest }) => {

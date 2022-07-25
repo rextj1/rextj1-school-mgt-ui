@@ -2,16 +2,16 @@ import gql from 'graphql-tag'
 import { LIBARIAN_FIELDS_FRAGMENT } from './fragments'
 
 export const LIBARIAN_QUERIES = gql`
-  query LibariansQuery {
-    libarians {
+  query LibariansQuery($workspaceId: Int) {
+    libarians(workspaceId: $workspaceId) {
       ...LibarianFields
     }
   }
   ${LIBARIAN_FIELDS_FRAGMENT}
 `
 export const LIBARIAN_QUERY = gql`
-  query libarianQuery($slug: String!) {
-    libarian(slug: $slug) {
+  query libarianQuery($id: Int!, $workspaceId: Int) {
+    libarian(id: $id, workspaceId: $workspaceId) {
       ...LibarianFields
     }
   }

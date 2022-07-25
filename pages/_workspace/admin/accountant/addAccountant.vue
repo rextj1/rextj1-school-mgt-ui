@@ -1,9 +1,12 @@
 <template>
   <div class="student">
-    <template v-if="nowLoading"><Preload /></template>
-    <template v-else>
+    <div v-if="nowLoading"><Preload /></div>
+    <div v-else>
       <b-button
-        to="/admin/teacher"
+        :to="{
+          name: 'workspace-admin-accountant',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         size="lg"
         class="add-student mb-4"
@@ -12,7 +15,7 @@
       </b-button>
       <div class="p-4 student__wrapper">
         <h2 class="d-flex justify-content-center mb-4 mt-4">
-          Register Teacher
+          Register Accountant
         </h2>
         <hr />
         <b-form
@@ -86,19 +89,20 @@
 
           <b-row class="p-4">
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="First Name:">
+              <b-form-group label="First Name">
                 <b-form-input
-                  id="first_name"
-                  v-model="form.first_name"
-                  type="text"
-                  placeholder="Enter first name"
+                  id="firstName"
+                  v-model="form.teacherTable.first_name"
+                  debounce="500"
                   name="first_name"
+                  size="lg"
+                  placeholder="Enter First name"
                   trim
                 ></b-form-input>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('first_name')"
+                  :state="!form.errors.has('teacherTable.first_name')"
                 >
-                  {{ form.errors.get('first_name') }}
+                  {{ form.errors.get('teacherTable.first_name') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -107,7 +111,7 @@
               <b-form-group id="last_name" label="Last Name">
                 <b-form-input
                   id="first_name"
-                  v-model="form.last_name"
+                  v-model="form.teacherTable.last_name"
                   type="text"
                   placeholder="Enter last name"
                   name="last_name"
@@ -123,7 +127,7 @@
               <b-form-group id="input-group-1" label="middle Name (optional)">
                 <b-form-input
                   id="input-1"
-                  v-model="form.middle_name"
+                  v-model="form.teacherTable.middle_name"
                   type="text"
                   placeholder="Enter middle name"
                   name="last_name"
@@ -136,7 +140,7 @@
               <b-form-group id="input-group-1" label="Email:">
                 <b-form-input
                   id="input-1"
-                  v-model="form.email"
+                  v-model="form.userTable.email"
                   type="email"
                   placeholder="Enter email"
                   name="email"
@@ -152,7 +156,7 @@
               <b-form-group id="input-group-1" label="Phone no:">
                 <b-form-input
                   id="qualification"
-                  v-model="form.phone"
+                  v-model="form.teacherTable.phone"
                   type="number"
                   placeholder="Enter phone no."
                   name="phone"
@@ -168,7 +172,7 @@
               <b-form-group label="Qualification">
                 <b-form-input
                   id="qualification"
-                  v-model="form.qualification"
+                  v-model="form.teacherTable.qualification"
                   type="text"
                   placeholder="Enter qualification"
                   name="qualification"
@@ -185,7 +189,7 @@
               <b-form-group label="Religion">
                 <b-form-input
                   id="religion"
-                  v-model="form.religion"
+                  v-model="form.userTable.religion"
                   type="text"
                   placeholder="Enter religion"
                   name="religion"
@@ -200,7 +204,7 @@
             <b-col md="3" class="p-4">
               <b-form-group label="Gender">
                 <b-form-select
-                  v-model="form.gender"
+                  v-model="form.teacherTable.gender"
                   :options="genders"
                   class="mb-3"
                   size="lg"
@@ -222,7 +226,7 @@
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
-                  v-model="form.birthday"
+                  v-model="form.teacherTable.birthday"
                   today-button
                   reset-button
                   close-button
@@ -240,7 +244,7 @@
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
-                  v-model="form.bloodGroup"
+                  v-model="form.userTable.bloodGroup"
                   value-field="id"
                   text-field="name"
                   :options="bloodGroups"
@@ -263,7 +267,7 @@
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
-                  v-model="form.country"
+                  v-model="form.userTable.country"
                   value-field="id"
                   text-field="name"
                   :options="countries"
@@ -294,7 +298,7 @@
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.state" class="mb-3">
+                  <b-form-select v-model="form.userTable.state" class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
                       :key="k.id"
@@ -317,7 +321,7 @@
 
               <div v-else>
                 <b-form-group label="City">
-                  <b-form-select v-model="form.city" class="mb-3">
+                  <b-form-select v-model="form.userTable.city" class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
                       :key="k.id"
@@ -333,7 +337,7 @@
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
                   id="lga"
-                  v-model="form.lga"
+                  v-model="form.userTable.lga"
                   type="text"
                   placeholder="Enter L.G.A"
                   name="lga"
@@ -372,11 +376,13 @@
           </b-row>
         </b-form>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
@@ -384,7 +390,7 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
-import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
+import { CREATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
 
 export default {
   middleware: 'auth',
@@ -394,35 +400,32 @@ export default {
       bloodGroups: [],
       k: null,
       form: new this.$form({
-        first_name: '',
-        last_name: '',
-        middle_name: null,
-        email: null,
-        country: null,
-        phone: null,
-        state: null,
-        city: null,
-        lga: null,
-        photo: null,
-        religion: null,
-        bloodGroup: null,
-        qualification: null,
-        gender: null,
-        birthday: null,
+        userTable: {
+          country: null,
+          state: null,
+          city: null,
+          lga: null,
+          email: null,
+          bloodGroup: null,
+          religion: null,
+        },
+        teacherTable: {
+          first_name: '',
+          last_name: '',
+          middle_name: null,
+          gender: null,
+          birthday: null,
+          phone: null,
+          photo: null,
+          qualification: null,
+        },
         busy: false,
       }),
+
       preview_url: null,
       genders: ['Male', 'Female'],
       show: true,
     }
-  },
-  computed: {
-    nowLoading() {
-      return (
-        this.$apollo.queries.countries.loading &&
-        this.$apollo.queries.countries.loading
-      )
-    },
   },
 
   apollo: {
@@ -435,16 +438,28 @@ export default {
     country: {
       query: COUNTRY_QUERY,
       variables() {
-        return { id: this.form.country }
+        return { id: this.form.userTable.country }
       },
     },
     state: {
       query: STATE_QUERY,
       variables() {
-        return { id: this.form.state }
+        return { id: this.form.userTable.state }
       },
     },
   },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading
+      )
+    },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
+
   methods: {
     selectImage() {
       this.$refs.Avatar.click()
@@ -459,7 +474,7 @@ export default {
         this.preview_url = e.target.result
       }
       reader.readAsDataURL(file)
-      this.form.photo = file
+      this.form.teacherTable.photo = file
 
       this.isValidFile(file)
     },
@@ -504,23 +519,11 @@ export default {
         await this.$apollo
           .mutate(
             {
-              mutation: CREATE_TEACHER_MUTATION,
+              mutation: CREATE_ACCOUNTANT_MUTATION,
               variables: {
-                first_name: this.form.first_name,
-                last_name: this.form.last_name,
-                middle_name: this.form.middle_name,
-                email: this.form.email,
-                country_id: parseInt(this.form.country),
-                phone: this.form.phone,
-                state_id: parseInt(this.form.state),
-                city_id: parseInt(this.form.city),
-                lga: this.form.lga,
-                photo: this.form.photo,
-                birthday: this.form.birthday,
-                religion: this.form.religion,
-                blood_group_id: parseInt(this.form.bloodGroup),
-                qualification: this.form.qualification,
-                gender: this.form.gender,
+                workspaceId: parseInt(this.mainWorkspace.id),
+                userTable: this.form.userTable,
+                teacherTable: this.form.teacherTable,
               },
             },
             {
@@ -531,19 +534,20 @@ export default {
           )
           .then(() => {
             Swal.fire({
-              title: 'Done...',
-              icon: 'success',
               timer: 1500,
-              text: 'Your work has been saved',
-              position: 'center',
+              text: 'accountant added successfully',
+              position: 'top-right',
               color: '#fff',
               background: '#4bb543',
               toast: false,
               backdrop: false,
-              showConfirmButton: false,
+              showConfirmButton: false
             })
             this.form.busy = false
-            this.$router.push('/admin/teacher')
+            this.$router.push({
+              name: 'workspace-admin-accountant',
+              params: {    workspaceId: parseInt(this.mainWorkspace.id) },
+            })
           })
       } catch ({ graphQLErrors: errors }) {
         this.form.busy = false
@@ -583,7 +587,6 @@ export default {
     height: 4rem;
     font-size: 1.4rem;
   }
-
   .profile-avatar {
     position: relative;
     text-align: center;

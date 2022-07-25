@@ -1,41 +1,16 @@
 import gql from 'graphql-tag'
 import { ACCOUNTANT_FIELDS_FRAGMENT } from './fragments'
 
-
 export const CREATE_ACCOUNTANT_MUTATION = gql`
   mutation CreateAccountantMutation(
-    $first_name: String!
-    $last_name: String!
-    $gender: String!
-    $email: String
-    $country_id: Int!
-    $state_id: Int!
-    $city_id: Int!
-    $lga: String
-    $birthday: String
-    $middle_name: String
-    $photo: Upload
-    $phone: String
-    $qualification: String
-    $blood_group_id: Int
-    $religion: String
+    $workspaceId: Int
+    $userTable: UsersInput
+    $teacherTable: WorkersInput
   ) {
     createAccountant(
-      first_name: $first_name
-      last_name: $last_name
-      middle_name: $middle_name
-      email: $email
-      phone: $phone
-      gender: $gender
-      birthday: $birthday
-      photo: $photo
-      qualification: $qualification
-      blood_group_id: $blood_group_id
-      country_id: $country_id
-      state_id: $state_id
-      city_id: $city_id
-      lga: $lga
-      religion: $religion
+      workspaceId: $workspaceId
+      userTable: $userTable
+      teacherTable: $teacherTable
     ) {
       id
     }
@@ -45,17 +20,23 @@ export const CREATE_ACCOUNTANT_MUTATION = gql`
 export const UPDATE_ACCOUNTANT_MUTATION = gql`
   mutation UpdateAccountantMutation(
     $id: ID!
-    $userLib: LibarianUserInput
-    $lib: LibarianInput
+    $workspaceId: Int
+    $userTable: UsersInput
+    $teacherTable: WorkersInput
   ) {
-    updateAccountant(id: $id, userLib: $userLib, lib: $lib) {
+    updateAccountant(
+      id: $id
+      workspaceId: $workspaceId
+      userTable: $userTable
+      teacherTable: $teacherTable
+    ) {
       ...AccountantFields
     }
   }
   ${ACCOUNTANT_FIELDS_FRAGMENT}
 `
 export const DELETE_ACCOUNTANT_MUTATION = gql`
-  mutation DeleteAccountantMutation($id: Int!) {
-    deleteAccountant(id: $id)
+  mutation DeleteAccountantMutation($id: Int!, $workspaceId: Int) {
+    deleteAccountant(id: $id, workspaceId: $workspaceId)
   }
 `

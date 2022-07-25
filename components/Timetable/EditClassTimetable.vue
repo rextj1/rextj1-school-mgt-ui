@@ -111,7 +111,7 @@ export default {
       variables() {
         return {
           klase_id: parseInt(this.editCurrentClass[0]),
-          slug: this.mainWorkspace.slug,
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },

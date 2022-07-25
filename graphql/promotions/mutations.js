@@ -1,8 +1,11 @@
 import gql from 'graphql-tag'
 
 export const CREATE_SET_PROMOTION_MUTATION = gql`
-  mutation CreateSetPromotionMutation($id: ID!, $name: Int!) {
-    CreateSetPromotion(id: $id, name: $name) {
+  mutation CreateSetPromotionMutation(
+    $name: Int!
+    $workspaceId: Int
+  ) {
+    CreateSetPromotion(name: $name, workspaceId: $workspaceId) {
       id
       name
     }
@@ -16,6 +19,7 @@ export const CREATE_PROMOTION_MUTATION = gql`
     $session_id: Int!
     $sessionTo: Int!
     $from_term: Int!
+    $workspaceId: Int
   ) {
     createPromoteStudents(
       klase_id: $klase_id
@@ -23,6 +27,7 @@ export const CREATE_PROMOTION_MUTATION = gql`
       session_id: $session_id
       sessionTo: $sessionTo
       from_term: $from_term
+      workspaceId: $workspaceId
     ) {
       id
       first_name
@@ -48,12 +53,14 @@ export const CREATE_RESET_PROMOTION_MUTATION = gql`
     $status: Boolean!
     $from_session: Int!
     $from_term: Int!
+    $workspaceId: Int
   ) {
     createResetPromote(
       from_class: $from_class
       status: $status
       from_session: $from_session
       from_term: $from_term
+      workspaceId: $workspaceId
     ) {
       id
       from_class

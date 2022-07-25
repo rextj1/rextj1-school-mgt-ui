@@ -1,17 +1,22 @@
 <template>
   <div class="profile">
-    <template v-if="$apollo.queries.teacher.loading"><Preload /></template>
+    <template v-if="$apollo.queries.student.loading">
+      <Preload />
+    </template>
     <template v-else>
       <b-button
-        to="/admin/teacher"
+        :to="{
+          name: 'workspace-admin-student',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         size="lg"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="teacher shadow">
-        <h1>About {{ teacher.last_name }}</h1>
+      <b-jumbotron header="" class="student shadow">
+        <h1>About {{ student.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
           <b-img
             src="~/assets/images/teacher.jpeg"
@@ -28,11 +33,10 @@
             <p>Qualifications</p>
             <p>Code</p>
             <p>Gender</p>
-            <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
-            <p>city</p>
             <p>L.G.A</p>
+            <p>Social Media Links</p>
 
             <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
@@ -42,37 +46,44 @@
           </b-col>
           <b-col md="6" class="first-details p-4">
             <p>
-              {{ teacher.last_name }} {{ teacher.first_name }}
-              {{ teacher.middle_name }}
+              {{ student.last_name }} {{ student.first_name }}
+              {{ student.middle_name }}
             </p>
-            <p>{{ teacher.phone }}</p>
-            <p>{{ teacher.qualification }}</p>
-            <p>{{ teacher.code }}</p>
+            <p>{{ student.phone }}</p>
+            <!-- <p>{{ student.qualification }}</p> -->
+            <p>{{ student.code }}</p>
+            <p>{{ student.guardian_name }}</p>
+            <p>{{ student.guardian_no }}</p>
+            <p>{{ student.guardian_email }}</p>
 
-            <p>{{ teacher.gender }}</p>
+            <p>{{ student.gender }}</p>
             <p>
-              {{ teacher.user.blood_group.name }}
+              {{ student.user.email }}
             </p>
             <p>
-              {{ teacher.user.country.name }}
+              {{ student.user.religion }}
             </p>
             <p>
-              {{ teacher.user.state.name }}
+              {{ student.user.blood_group.name }}
+            </p>
+            <!-- <p>
+              {{ student.user.country.name }}
             </p>
             <p>
-              {{ teacher.user.city.name }}
-            </p>
+              {{ student.user.state.name }}
+            </p> -->
             <p>
-              {{ teacher.user.lga }}
+              {{ student.user.lga }}
             </p>
-
-            <h3 v-for="klase in teacher.klases" :key="klase.id">
+            <!-- <p>{{ student.facebook }}</p> -->
+            <p>{{ student.klase.name }}</p>
+            <!-- <h3 v-for="klase in student.klase" :key="klase">
               <p>
                 <b-badge
-                  :id="klase.id"
                   style="line-height: 1.6"
                   variant="warning"
                   class="px-2"
+                  :id="klase.id"
                   >{{ klase.name }}</b-badge
                 >
               </p>
@@ -86,7 +97,7 @@
                   </b-nav-item>
                 </b-nav>
               </b-popover>
-            </h3>
+            </h3> -->
           </b-col>
         </b-row>
       </b-jumbotron></template
@@ -95,17 +106,25 @@
 </template>
 
 <script>
-import { TEACHER_QUERY } from '@/graphql/teachers/queries'
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
+import { STUDENT_QUERY } from '~/graphql/students/queries'
 export default {
   apollo: {
-    teacher: {
-      query: TEACHER_QUERY,
+    student: {
+      query: STUDENT_QUERY,
       variables() {
         return {
-          slug: this.$route.params.slug,
+          id: parseInt(this.$route.params.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 }
 </script>

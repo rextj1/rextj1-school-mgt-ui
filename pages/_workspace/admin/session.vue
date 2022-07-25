@@ -118,7 +118,7 @@ export default {
     return {
       id: 0,
       sessionEditingId: '',
-      sessionw: {},
+      session: {},
       busy: false,
       form: new this.$form({
         id: 0,
@@ -144,11 +144,11 @@ export default {
     }
   },
   apollo: {
-    sessionsw: {
+    sessions: {
       query: SESSION_QUERIES,
       variables() {
         return {
-          slug: this.mainWorkspace.slug,
+           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -167,18 +167,18 @@ export default {
       this.id = item
 
       if (this.id > 0) {
-        this.$apollo.addSmartQuery('sessionw', {
+        this.$apollo.addSmartQuery('session', {
           query: SESSION_QUERY,
           variables() {
             return {
               id: parseInt(this.id),
-              slug: this.mainWorkspace.slug,
+               workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ data, loading }) {
             if (!loading) {
-              this.form.id = parseInt(data.sessionw.id)
-              this.form.names = data.sessionw.name
+              this.form.id = parseInt(data.session.id)
+              this.form.names = data.session.name
             }
           },
         })
@@ -196,7 +196,7 @@ export default {
           variables: {
             id: parseInt(item),
             name: this.form.names,
-            workspace: this.mainWorkspace.slug,
+             workspaceId: parseInt(this.mainWorkspace.id),
           },
         })
         .then(() => {
@@ -208,6 +208,7 @@ export default {
             background: '#4bb543',
             toast: false,
             backdrop: false,
+            showConfirmButton: false
           })
           this.sessionEditingId = ''
         })
@@ -239,14 +240,14 @@ export default {
             mutation: CREATE_SESSION_MUTATION,
             variables: {
               name: this.form.name,
-              workspace: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createSessionw } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
                 query: SESSION_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
               // console.log(this.form.class);
@@ -260,7 +261,7 @@ export default {
               store.writeQuery({
                 query: SESSION_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })

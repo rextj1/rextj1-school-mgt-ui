@@ -98,10 +98,16 @@
             </b-col>
             <b-button
               type="submit"
-              variant="danger"
+              variant="primary"
               size="lg"
               style="height: 3.8rem; margin-top: 2.8rem"
-              >Submit</b-button
+              :disabled="isBusy"
+              ><b-spinner
+                class="mr-1 mb-1"
+                small
+                variant="light"
+                v-if="isBusy"
+              />Submit</b-button
             >
           </b-row>
         </b-form>
@@ -122,6 +128,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import {
   EXAM_RECORDS_QUERIES,
   EXAM_RECORD_QUERIES,
@@ -130,9 +138,10 @@ import {
   SECOUND_TERM_QUERIES,
   THIRD_TERM_QUERIES,
 } from '~/graphql/examRecord/queries'
-import { KLASES_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -155,11 +164,17 @@ export default {
       activeTab: '',
       registerMenu: false,
       registrationMenuClass: '',
+      isBusy: false,
     }
   },
   apollo: {
     klases: {
-      query: KLASES_QUERIES,
+      query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
 
     terms: {
@@ -167,9 +182,19 @@ export default {
     },
     sections: {
       query: SECTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
   computed: {
@@ -181,12 +206,17 @@ export default {
         this.$apollo.queries.sections.loading
       )
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
     markSubmit() {
+      this.timetableDropdownClass = false
+
       if (
         this.form.class === null ||
         this.form.term === null ||
@@ -195,10 +225,7 @@ export default {
       ) {
         return false
       } else {
-        this.timetableDropdownClass = true
-      }
-
-      setTimeout(() => {
+        this.isBusy = true
         this.$apollo.addSmartQuery('klaseResults', {
           query: EXAM_RECORD_QUERIES,
           variables() {
@@ -207,16 +234,17 @@ export default {
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
               section_id: parseInt(this.form.section),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
             if (!loading) {
+              console.log(data)
               this.records = data.klaseResults
             }
           },
         })
-      }, 100)
-      setTimeout(() => {
+
         this.$apollo.addSmartQuery('examRecords', {
           query: EXAM_RECORDS_QUERIES,
           variables() {
@@ -224,6 +252,7 @@ export default {
               klase_id: parseInt(this.form.class),
               session_id: parseInt(this.form.term),
               section_id: parseInt(this.form.section),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
@@ -232,9 +261,7 @@ export default {
             }
           },
         })
-      }, 100)
 
-      setTimeout(() => {
         this.$apollo.addSmartQuery('firstTerm', {
           query: FIRST_TERM_QUERIES,
           variables() {
@@ -243,6 +270,7 @@ export default {
               term_id: 1,
               session_id: parseInt(this.form.session),
               section_id: parseInt(this.form.section),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
@@ -251,8 +279,7 @@ export default {
             }
           },
         })
-      }, 101)
-      setTimeout(() => {
+
         this.$apollo.addSmartQuery('secoundTerm', {
           query: SECOUND_TERM_QUERIES,
           variables() {
@@ -261,6 +288,7 @@ export default {
               term_id: 2,
               session_id: parseInt(this.form.session),
               section_id: parseInt(this.form.section),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
@@ -269,26 +297,30 @@ export default {
             }
           },
         })
-      }, 101)
 
-      setTimeout(() => {
-        this.$apollo.addSmartQuery('thirdTerm', {
-          query: THIRD_TERM_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.form.class),
-              term_id: 3,
-              session_id: parseInt(this.form.session),
-              section_id: parseInt(this.form.section),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.thirdTerm = data.thirdTerm
-            }
-          },
-        })
-      }, 101)
+        setTimeout(() => {
+          this.isBusy = true
+          this.$apollo.addSmartQuery('thirdTerm', {
+            query: THIRD_TERM_QUERIES,
+            variables() {
+              return {
+                klase_id: parseInt(this.form.class),
+                term_id: 3,
+                session_id: parseInt(this.form.session),
+                section_id: parseInt(this.form.section),
+                workspaceId: parseInt(this.mainWorkspace.id),
+              }
+            },
+            result({ loading, data }, key) {
+              if (!loading) {
+                this.thirdTerm = data.thirdTerm
+                this.isBusy = false
+                this.timetableDropdownClass = true
+              }
+            },
+          })
+        }, 100)
+      }
     },
   },
 }

@@ -8,6 +8,7 @@ export const MARK_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     marks(
       klase_id: $klase_id
@@ -15,6 +16,7 @@ export const MARK_QUERIES = gql`
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       ...MarkFields
     }
@@ -29,6 +31,7 @@ export const STUDENT_MARK_RESULT_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     studentMarkResult(
       klase_id: $klase_id
@@ -36,6 +39,8 @@ export const STUDENT_MARK_RESULT_QUERIES = gql`
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
+      
     ) {
       ...MarkFields
     }
@@ -91,6 +96,7 @@ export const MAIN_STUDENT_MARK_RESULT_QUERIES = gql`
     $session_id: Int!
     $section_id: Int!
     $status: String!
+    $workspaceId: Int
   ) {
     MainStudentMarkResult(
       klase_id: $klase_id
@@ -99,6 +105,7 @@ export const MAIN_STUDENT_MARK_RESULT_QUERIES = gql`
       session_id: $session_id
       section_id: $section_id
       status: $status
+      workspaceId: $workspaceId
     ) {
       ...MarkFields
     }

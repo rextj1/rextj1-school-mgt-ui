@@ -72,7 +72,7 @@
                             <b-button
                               variant="primary"
                               size="lg"
-                              @click="timetableEdit(data.item.id)"
+                              @click="timetableEdit(data.item)"
                               >Edit</b-button
                             >
 
@@ -84,9 +84,10 @@
                               ><b-spinner
                                 variant="light"
                                 small
-                                 class="mr-1 mb-1"
+                                class="mr-1 mb-1"
                                 v-if="isDelete == data.item.id"
-                              /> Delete</b-button
+                              />
+                              Delete</b-button
                             >
                           </div>
                         </template>
@@ -94,18 +95,14 @@
                     </div>
                   </div>
                   <!-- Info modal -->
-                  <b-modal
-                    :id="infoModal"
-                    class="modal"
-                    :hide-backdrop="false"
-                    title="Edit  Data"
-                    size="lg"
-                    :hide-footer="true"
-                  >
-                    <AdminEditTimetableModal
-                      :slug="[slug, form.class, infoModal]"
-                    />
-                  </b-modal>
+
+                  <AdminEditTimetableModal
+                    v-if="invokedForEdit"
+                    v-model="isEditTimetabledModal"
+                    :slug="[slug, form.class, infoModal]"
+                    :timetable="invokedForEdit"
+                  />
+
                   <!-- end modal -->
                 </b-col>
               </b-row>
@@ -243,6 +240,8 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      isEditTimetabledModal: false,
+      invokedForEdit: null,
       timetables: [],
       klases: [],
       isDelete: null,
@@ -287,7 +286,7 @@ export default {
       query: KLASE_QUERIES,
       variables() {
         return {
-          slug: this.mainWorkspace.slug,
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -301,8 +300,10 @@ export default {
   methods: {
     // modal
     timetableEdit(item) {
-      this.$bvModal.show(this.infoModal)
-      this.slug = item
+      // this.$bvModal.show(this.infoModal)
+      this.invokedForEdit = item
+      this.slug = item.id
+      this.isEditTimetabledModal = true
     },
     // end modal
     dynamicStudentClass(item, itemName) {
@@ -331,7 +332,7 @@ export default {
         variables() {
           return {
             klase_id: parseInt(this.form.class),
-            slug: this.mainWorkspace.slug,
+            workspaceId: parseInt(this.mainWorkspace.id),
           }
         },
         result({ data, loading }) {
@@ -372,7 +373,7 @@ export default {
               thursday: this.form.thursday,
               friday: this.form.friday,
               klase_id: parseInt(this.form.class),
-              workspace: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createTimetable } }) => {
               // Read the data from our cache for this query.
@@ -380,7 +381,7 @@ export default {
                 query: TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
               // console.log(this.form.class);
@@ -394,7 +395,7 @@ export default {
                 query: TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })
@@ -448,14 +449,14 @@ export default {
           mutation: DELETE_TIMETABLE_MUTATION,
           variables: {
             id: parseInt(item),
-            workspace: this.mainWorkspace.slug,
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteTimetable } }) => {
             const data = store.readQuery({
               query: TIMETABLE_QUERIES,
               variables: {
                 klase_id: parseInt(klaseId),
-                slug: this.mainWorkspace.slug,
+                workspaceId: parseInt(this.mainWorkspace.id),
               },
             })
 
@@ -468,7 +469,7 @@ export default {
                 query: TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })

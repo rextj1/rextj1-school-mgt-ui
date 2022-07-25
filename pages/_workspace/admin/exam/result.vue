@@ -98,10 +98,16 @@
             </b-col>
             <b-button
               type="submit"
-              variant="danger"
+              variant="primary"
               size="lg"
               style="height: 3.85rem; margin-top: 2.85rem"
-              >Submit</b-button
+              :disabled="isBusy"
+              ><b-spinner
+                class="mr-1 mb-1"
+                small
+                variant="light"
+                v-if="isBusy"
+              />Submit</b-button
             >
           </b-row>
         </b-form>
@@ -142,11 +148,15 @@
               </template>
 
               <template #cell(actions)="data">
-                <router-link
-                  variant="primary"
+                <b-button
+                  variant="warning"
+                  style="font-weight: bold"
                   :to="{
-                    name: 'admin-exam-slug',
-                    params: { slug: data.item.student.id },
+                    name: 'workspace-admin-exam-slug',
+                    params: {
+                      workspace: mainWorkspace.slug,
+                      slug: data.item.student.id,
+                    },
                     query: {
                       student,
                       klaseResults,
@@ -154,9 +164,9 @@
                     },
                   }"
                 >
-                  <b-icon icon="eye" class="mr-1"></b-icon>
+                  <b-icon icon="eye" class="mr-1" />
                   View Result
-                </router-link>
+                </b-button>
               </template>
             </b-table>
           </div>
@@ -167,16 +177,20 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
-import { KLASES_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
       klaseResults: [],
       student: [],
+      isBusy: false,
       numStudents: null,
       timetableDropdownClass: false,
       form: {
@@ -231,16 +245,31 @@ export default {
   },
   apollo: {
     klases: {
-      query: KLASES_QUERIES,
+      query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     terms: {
       query: TERM_QUERIES,
     },
     sections: {
       query: SECTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
   computed: {
@@ -252,12 +281,16 @@ export default {
         this.$apollo.queries.sections.loading
       )
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
     markSubmit() {
+      this.timetableDropdownClass = false
       if (
         this.form.class === null ||
         this.form.term === null ||
@@ -266,10 +299,10 @@ export default {
       ) {
         return false
       } else {
-        this.timetableDropdownClass = true
       }
 
       setTimeout(() => {
+        this.isBusy = true
         this.student = [
           this.form.class,
           this.form.term,
@@ -284,6 +317,7 @@ export default {
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
               section_id: parseInt(this.form.section),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
@@ -292,6 +326,8 @@ export default {
 
               const numStudents = Object.keys(this.klaseResults).length
               this.numStudents = numStudents
+              this.isBusy = false
+              this.timetableDropdownClass = true
             }
           },
         })

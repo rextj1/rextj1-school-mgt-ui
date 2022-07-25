@@ -354,6 +354,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
 import { STUDENT_MARK_RESULT_QUERIES } from '~/graphql/marks/queries'
 export default {
@@ -384,6 +386,9 @@ export default {
     sectionId() {
       return this.$route.query.student[3]
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 
   apollo: {
@@ -396,6 +401,7 @@ export default {
           term_id: parseInt(this.term),
           session_id: parseInt(this.sessionId),
           section_id: parseInt(this.sectionId),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -409,6 +415,7 @@ export default {
           term_id: parseInt(this.term),
           session_id: parseInt(this.sessionId),
           section_id: parseInt(this.sectionId),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
