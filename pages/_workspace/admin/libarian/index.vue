@@ -3,7 +3,10 @@
     <template v-if="$apollo.queries.libarians.loading"><Preload /></template>
     <template v-else>
       <b-button
-        to="/admin/libarian/add-libarian"
+        :to="{
+          name: 'workspace-admin-libarian-addLibarian',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         pill
         size="md"
@@ -201,8 +204,11 @@
                   <template #cell(actions)="data">
                     <b-button
                       :to="{
-                        name: 'admin-libarian-slug',
-                        params: { slug: data.item.slug },
+                        name: 'workspace-admin-libarian-id',
+                        params: {
+                          id: data.item.id,
+                          workspace: mainWorkspace.slug,
+                        },
                       }"
                       variant="primary"
                       size="md"
@@ -216,7 +222,7 @@
                       variant="info"
                       size="md"
                       class="px-3"
-                      @click="info(data.item.slug)"
+                      @click="handleEditModal(data.item)"
                     >
                       Edit
                     </b-button>
@@ -243,18 +249,11 @@
                   </template>
                 </b-table>
 
-                <!-- Info modal -->
-                <b-modal
-                  :id="infoModal"
-                  class="modal"
-                  :hide-backdrop="false"
-                  title="Edit Libarian Data"
-                  scrollable
-                  size="lg"
-                  :hide-footer="true"
-                >
-                  <AdminEditLibarianModal :slug="[slug, infoModal]" />
-                </b-modal>
+                <AdminEditLibarianModal
+                  v-if="invokedAccountantForEdit"
+                  v-model="isAccountantEditing"
+                  :libarian="invokedAccountantForEdit"
+                />
               </b-container>
             </div>
           </div>
@@ -293,6 +292,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { DELETE_LIBARIAN_MUTATION } from '~/graphql/libarians/mutations'
 import { LIBARIAN_QUERIES } from '~/graphql/libarians/queries'
@@ -302,6 +303,8 @@ export default {
     return {
       lib: [],
       items: [],
+      invokedAccountantForEdit: null,
+      isAccountantEditing: false,
       libarians: [],
       isDeleting: false,
       invokedForDelete: null,
@@ -375,6 +378,11 @@ export default {
   apollo: {
     libarians: {
       query: LIBARIAN_QUERIES,
+      variables() {
+        return {
+           workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
 
@@ -387,6 +395,9 @@ export default {
           return { text: f.label, value: f.key }
         })
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   mounted() {
     // Set the initial number of items
@@ -395,11 +406,11 @@ export default {
   },
 
   methods: {
-    info(item, button) {
-      this.slug = item
-      this.slug = item
-      this.$root.$emit('bv::show::modal', this.infoModal, button)
+    handleEditModal(accountant) {
+      this.invokedAccountantForEdit = accountant
+      this.isAccountantEditing = true
     },
+
     resetInfoModal() {
       this.infoModal.title = ''
       this.infoModal.content = ''
@@ -418,11 +429,15 @@ export default {
           mutation: DELETE_LIBARIAN_MUTATION,
           variables: {
             id: parseInt(this.invokedForDelete.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteLibarian } }) => {
             try {
               const data = store.readQuery({
                 query: LIBARIAN_QUERIES,
+                variables: {
+                   workspaceId: parseInt(this.mainWorkspace.id),
+                },
               })
 
               const libarianIndex = data.libarians.findIndex(
@@ -436,6 +451,9 @@ export default {
               // Write our data back to the cache.
               store.writeQuery({
                 query: LIBARIAN_QUERIES,
+                variables: {
+                   workspaceId: parseInt(this.mainWorkspace.id),
+                },
 
                 data,
               })
@@ -446,10 +464,14 @@ export default {
         })
         .then(() => {
           Swal.fire({
-            icon: 'success',
-
+            timer: 1500,
             text: 'libarian deleted successfully',
-            color: '#5cb85c',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+            showConfirmButton: false,
           })
         })
         .catch(({ graphQLErrors: errors, ...rest }) => {

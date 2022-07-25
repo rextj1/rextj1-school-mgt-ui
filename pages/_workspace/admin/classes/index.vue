@@ -294,12 +294,17 @@ export default {
       query: KLASE_QUERIES,
       variables() {
         return {
-          slug: this.mainWorkspace.slug,
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
     teachers: {
       query: TEACHER_QUERIES,
+      variables(){
+        return{
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      }
     },
   },
   computed: {
@@ -325,7 +330,7 @@ export default {
           variables() {
             return {
               id: parseInt(this.id),
-              slug: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ data, loading }) {
@@ -348,7 +353,7 @@ export default {
           variables: {
             id: parseInt(this.id),
             name: this.form.names,
-            workspace: this.mainWorkspace.slug,
+           workspaceId: parseInt(this.mainWorkspace.id),
           },
         })
         .then(() => {
@@ -389,14 +394,14 @@ export default {
             mutation: CREATE_KLASE_MUTATION,
             variables: {
               name: this.form.name,
-              workspace: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createKlase } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
                 query: KLASE_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
               // console.log(this.form.class);
@@ -409,7 +414,7 @@ export default {
               store.writeQuery({
                 query: KLASE_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })

@@ -7,12 +7,14 @@ export const EXAM_RECORD_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     klaseResults(
       klase_id: $klase_id
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       ...ExamRecordFields
     }
@@ -21,11 +23,17 @@ export const EXAM_RECORD_QUERIES = gql`
 `
 
 export const EXAM_RECORDS_QUERIES = gql`
-  query examRecordQuery($klase_id: Int!, $session_id: Int!, $section_id: Int!) {
+  query examRecordQuery(
+    $klase_id: Int!
+    $session_id: Int!
+    $section_id: Int!
+    $workspaceId: Int
+  ) {
     examRecords(
       klase_id: $klase_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       ...ExamRecordFields
     }
@@ -39,6 +47,7 @@ export const STUDENT_EXAM_RESULT_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     studentExamResult(
       klase_id: $klase_id
@@ -46,6 +55,7 @@ export const STUDENT_EXAM_RESULT_QUERIES = gql`
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       ...ExamRecordFields
     }
@@ -60,6 +70,7 @@ export const PUBLISH_RESULT_QUERY = gql`
     $session_id: Int!
     $section_id: Int!
     $status: String!
+    $workspaceId: Int
   ) {
     publishResult(
       klase_id: $klase_id
@@ -67,6 +78,7 @@ export const PUBLISH_RESULT_QUERY = gql`
       session_id: $session_id
       section_id: $section_id
       status: $status
+      workspaceId: $workspaceId
     ) {
       id
       status
@@ -83,6 +95,7 @@ export const MAIN_STUDENT_EXAM_RESULT_QUERIES = gql`
     $session_id: Int!
     $section_id: Int!
     $status: String!
+    $workspaceId: Int
   ) {
     MainStudentExamResult(
       klase_id: $klase_id
@@ -90,6 +103,7 @@ export const MAIN_STUDENT_EXAM_RESULT_QUERIES = gql`
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
       status: $status
     ) {
       ...ExamRecordFields
@@ -105,12 +119,14 @@ export const FIRST_TERM_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     firstTerm(
       klase_id: $klase_id
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       id
       cum_avg
@@ -124,12 +140,14 @@ export const SECOUND_TERM_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     secoundTerm(
       klase_id: $klase_id
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       id
       cum_avg
@@ -142,12 +160,14 @@ export const THIRD_TERM_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     thirdTerm(
       klase_id: $klase_id
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       id
       cum_avg

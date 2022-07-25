@@ -1,24 +1,22 @@
 <template>
   <div class="profile">
-    <div v-if="$apollo.queries.accountant.loading" class="preload">
-      <Preload />
-    </div>
-    
-    <div v-else>
+    <template v-if="$apollo.queries.libarian.loading"><Preload /></template>
+    <template v-else>
       <b-button
-        to="/admin/accountant"
+        :to="{
+          name: 'workspace-admin-libarian',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         size="lg"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="accountant shadow">
-        <h1>About {{ accountant.last_name }}</h1>
+      <b-jumbotron header="" class="libarian shadow">
+        <h1>About {{ libarian.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
-          <span
-            v-if="accountant.gender == 'Female' && accountant.photo == null"
-          >
+          <span v-if="libarian.gender == 'Female' && libarian.photo == null">
             <b-img
               src="~/assets/images/teacher.jpeg"
               thumbnail
@@ -29,7 +27,7 @@
           </span>
           <span v-else>
             <b-img
-              :src="`http://sms.test/storage/accountant/${accountant.photo}`"
+              :src="`http://sms.test/storage/libarian/${libarian.photo}`"
               thumbnail
               fluid
               alt="image"
@@ -57,31 +55,31 @@
             </p> -->
           </b-col>
           <b-col md="6" class="first-details p-4">
-            <p>
-              {{ accountant.last_name }} {{ accountant.first_name }}
-              {{ accountant.middle_name }}
+            <!-- <p>
+              {{ libarian.last_name }} {{ libarian.first_name }}
+              {{ libarian.middle_name }}
             </p>
-            <p>{{ accountant.phone }}</p>
-            <p>{{ accountant.qualification }}</p>
-            <p>{{ accountant.code }}</p>
+            <p>{{ libarian.phone }}</p>
+            <p>{{ libarian.qualification }}</p>
+            <p>{{ libarian.code }}</p>
 
-            <p>{{ accountant.gender }}</p>
+            <p>{{ libarian.gender }}</p> -->
+            <!-- <p>
+              {{ libarian.user.blood_group.name }}
+            </p> -->
             <p>
-              {{ accountant.user.blood_group.name }}
+              {{ libarian.user.country.name }}
             </p>
             <p>
-              {{ accountant.user.country.name }}
+              {{ libarian.user.state.name }}
             </p>
             <p>
-              {{ accountant.user.state.name }}
+              {{ libarian.user.city.name }}
             </p>
             <p>
-              {{ accountant.user.city.name }}
+              {{ libarian.user.lga }}
             </p>
-            <p>
-              {{ accountant.user.lga }}
-            </p>
-            <!-- <h3 v-for="klase in accountant.klases" :key="klase">
+            <!-- <h3 v-for="klase in libarian.klases" :key="klase">
               <p>
                 <b-badge
                   style="line-height: 1.6"
@@ -104,28 +102,36 @@
             </h3> -->
           </b-col>
         </b-row>
-      </b-jumbotron></div
+      </b-jumbotron></template
     >
-    
   </div>
 </template>
 
 <script>
-import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
+import { LIBARIAN_QUERY } from '~/graphql/libarians/queries'
 export default {
-  data() {
-    return {
-    }
-  },
   apollo: {
-    accountant: {
-      query: ACCOUNTANT_QUERY,
+    libarian: {
+      query: LIBARIAN_QUERY,
       variables() {
         return {
-          slug: this.$route.params.slug,
+          id: parseInt(this.$route.params.id),
+           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
+  },
+  data() {
+    return {
+      libarian: [],
+    }
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 }
 </script>
@@ -134,6 +140,7 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
+
   .first-detail p {
     display: block;
     margin-left: 40%;

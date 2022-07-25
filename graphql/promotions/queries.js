@@ -6,12 +6,14 @@ export const PROMOTESTUDENTS_QUERIES = gql`
     $klase_id: Int!
     $session_id: Int!
     $section_id: Int!
+    $workspaceId: Int
   ) {
     promoteStudents(
       status: $status
       klase_id: $klase_id
       session_id: $session_id
       section_id: $section_id
+      workspaceId: $workspaceId
     ) {
       id
       first_name
@@ -31,8 +33,8 @@ export const PROMOTESTUDENTS_QUERIES = gql`
   }
 `
 export const SET_PROMOTION_QUERIES = gql`
-  query SetPromotionQuery {
-    setPromotion {
+  query SetPromotionQuery($workspaceId: Int) {
+    setPromotion(workspaceId: $workspaceId) {
       id
       name
     }
@@ -45,12 +47,14 @@ export const RESET_PROMOTE_QUERIES = gql`
     $from_class: Int!
     $from_session: Int!
     $from_term: Int!
+    $workspaceId: Int
   ) {
     resetPromotion(
       status: $status
       from_class: $from_class
       from_session: $from_session
       from_term: $from_term
+      workspaceId: $workspaceId
     ) {
       id
       from_class
@@ -78,8 +82,8 @@ export const RESET_PROMOTE_QUERIES = gql`
 `
 
 export const RESET_KLASE_QUERIES = gql`
-  query resetKlaseQuery($id: ID!) {
-    resetKlase(id: $id) {
+  query resetKlaseQuery($id: ID!, $workspaceId: Int) {
+    resetKlase(id: $id, workspaceId: $workspaceId) {
       id
       name
     }

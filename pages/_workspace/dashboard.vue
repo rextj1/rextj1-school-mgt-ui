@@ -111,6 +111,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { GUARDIAN_DASHBOARD_QUERIES } from '@/graphql/guardians/queries'
 import { TEACHER_DASHBOARD_QUERIES } from '@/graphql/teachers/queries'
 import { STUDENT_DASHBOARD_QUERIEX } from '@/graphql/students/queries'
@@ -137,22 +139,6 @@ export default {
       // colors: ['#206bc4', '#79a6dc', '#d2e1f3', '#e9ecf1'],
     }
   },
-  computed: {
-    // nowLoading() {
-    //   return (
-    //     this.$apollo.queries.studentsDashboard.loading &&
-    //     this.$apollo.queries.teachersDashboard.loading &&
-    //     this.$apollo.queries.guardiansDashboard.loading
-    //   )
-    // },
-    admin() {
-      return [
-        this.studentsDashboard.length,
-        this.teachersDashboard.length,
-        this.guardiansDashboard.length,
-      ]
-    },
-  },
 
   apollo: {
     studentsDashboard: {
@@ -163,7 +149,24 @@ export default {
     },
     guardiansDashboard: {
       query: GUARDIAN_DASHBOARD_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id)
+        }
+      },
     },
+  },
+  computed: {
+    admin() {
+      return [
+        this.studentsDashboard.length,
+        this.teachersDashboard.length,
+        this.guardiansDashboard.length,
+      ]
+    },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 }
 </script>

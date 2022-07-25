@@ -21,8 +21,8 @@ export const TEACHER_QUERIES = gql`
 `
 
 export const TEACHER_QUERY = gql`
-  query TeacherQuery($slug: String!) {
-    teacher(slug: $slug) {
+  query TeacherQuery($id: Int!, $workspaceId: Int) {
+    teacher(id: $id, workspaceId: $workspaceId) {
       ...TeachersFields
     }
   }
@@ -30,8 +30,8 @@ export const TEACHER_QUERY = gql`
 `
 // used by all
 export const TEACHERS_QUERIES = gql`
-  query TeachersQuery {
-    teachers {
+  query TeachersQuery($workspaceId: Int) {
+    teachers(workspaceId: $workspaceId) {
       ...TeachersFields
     }
   }

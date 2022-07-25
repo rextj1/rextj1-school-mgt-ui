@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="$fetchState.pending"><Preload /></div>
-    <div v-else-if="$fetchState.error">Error Message</div>
+    <div v-else-if="$fetchState.error">Error Message {{mainWorkspace}}</div>
     <div v-else>
       <SideBar />
       <div class="ty"><TopNav /></div>
@@ -39,11 +39,16 @@ export default {
       variables: { id: parseInt(this.$auth.user.id) },
     })
     console.log(userWorkspace)
-    const {
-      data: { guardiansDashboard },
-    } = await apolloClient.query({
-      query: GUARDIAN_DASHBOARD_QUERIES,
-    })
+    // const {
+    //   data: { guardiansDashboard },
+    // } = await apolloClient.query({
+    //   query: GUARDIAN_DASHBOARD_QUERIES,
+    //   variables() {
+    //     return {
+    //       workspaceId: parseInt(this.mainWorkspace.id),
+    //     }
+    //   },
+    // })
     const {
       data: { teachersDashboard },
     } = await apolloClient.query({
@@ -57,13 +62,13 @@ export default {
 
     if (
       this.$auth.user.email === 'tojurex@yahoo.com' &&
-      userWorkspace.workspace.name === 'defaultWorkspac'
+      userWorkspace.workspace.name === 'defaultWorkspace'
     ) {
       return redirect({
         name: 'workspace-dashboard',
-        params: { workspace: userWorkspace.workspace.nam },
+        params: { workspace: userWorkspace.workspace.name },
       })
-    }else {
+    } else {
       return redirect({
         name: 'workspace-dashboard',
         params: { workspace: userWorkspace.workspace.name },

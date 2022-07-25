@@ -295,11 +295,15 @@
               <h3 class="h3-memu">Admin</h3>
 
               <div class="menu">
-                <nuxt-link to="/dashboard" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-dashboard',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus"
-                    >Dashboard {{ mainWorkspace.slug }}</span
-                  >
+                  <span class="text" @click="ToggleMenus">Dashboard</span>
                 </nuxt-link>
                 <nuxt-link to="/admin/roles" class="button">
                   <b-icon
@@ -340,7 +344,13 @@
                   class="mt-2 dropMenuClose"
                 >
                   <b-card bg-variant="light">
-                    <nuxt-link to="/admin/teacher" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-teacher',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="person-fill"
                         class="material-icon"
@@ -349,7 +359,13 @@
                       <span class="text" @click="ToggleMenus">Teacher</span>
                     </nuxt-link>
 
-                    <nuxt-link to="/admin/student" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-student',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="people-fill"
                         class="material-icon"
@@ -357,7 +373,13 @@
                       />
                       <span class="text" @click="ToggleMenus">Student</span>
                     </nuxt-link>
-                    <nuxt-link to="/admin/accountant" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-accountant',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="people-fill"
                         class="material-icon"
@@ -366,7 +388,13 @@
                       <span class="text" @click="ToggleMenus">Accountant</span>
                     </nuxt-link>
 
-                    <nuxt-link to="/admin/libarian" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-libarian',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="people-fill"
                         class="material-icon"
@@ -407,7 +435,13 @@
                   class="mt-2 dropMenuClose"
                 >
                   <b-card bg-variant="light">
-                    <nuxt-link to="/admin/exam/timetable" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-exam-timetable',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="alarm"
                         scale="0.85"
@@ -417,7 +451,13 @@
                       <span class="text">Timetable</span>
                     </nuxt-link>
 
-                    <nuxt-link to="/admin/exam/marksheet" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-exam-marksheet',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="file-earmark-ruled"
                         scale="0.85"
@@ -426,7 +466,13 @@
                       />
                       <span class="text">Marksheet</span>
                     </nuxt-link>
-                    <nuxt-link to="/admin/exam/result" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-exam-result',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="file-text"
                         scale="0.85"
@@ -436,7 +482,13 @@
                       <span class="text">Results</span>
                     </nuxt-link>
 
-                    <nuxt-link to="/admin/exam/tabulation" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-exam-tabulation',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="newspaper"
                         scale="0.85"
@@ -446,7 +498,13 @@
                       <span class="text">Tabulation Sheet</span>
                     </nuxt-link>
 
-                    <nuxt-link to="/admin/exam/promotion" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-exam-promotion',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="arrow-right-circle"
                         scale="0.85"
@@ -456,7 +514,13 @@
                       <span class="text">promotion</span>
                     </nuxt-link>
 
-                    <nuxt-link to="/admin/exam/reset" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-exam-reset',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <b-icon
                         icon="arrow-left-circle"
                         scale="0.85"
@@ -517,7 +581,13 @@
                   <span class="text" @click="ToggleMenus">Timetable</span>
                 </nuxt-link>
 
-                <nuxt-link to="/admin/driver" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-driver',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="truck"
                     class="material-icons"

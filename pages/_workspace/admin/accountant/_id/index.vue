@@ -1,27 +1,44 @@
 <template>
   <div class="profile">
-    <template v-if="$apollo.queries.student.loading">
+    <div v-if="$apollo.queries.accountant.loading" class="preload">
       <Preload />
-    </template>
-    <template v-else>
+    </div>
+
+    <div v-else>
       <b-button
-        to="/admin/student"
+        :to="{
+          name: 'workspace-admin-accountant',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         size="lg"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="student shadow">
-        <h1>About {{ student.last_name }}</h1>
+      <b-jumbotron header="" class="accountant shadow">
+        <h1>About {{ accountant.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
-          <b-img
-            src="~/assets/images/teacher.jpeg"
-            thumbnail
-            fluid
-            alt="Responsive image"
-            width="230"
-          ></b-img>
+          <span
+            v-if="accountant.gender == 'Female' && accountant.photo == null"
+          >
+            <b-img
+              src="~/assets/images/teacher.jpeg"
+              thumbnail
+              fluid
+              alt="Responsive image"
+              width="230"
+            ></b-img>
+          </span>
+          <span v-else>
+            <b-img
+              :src="`${$config.APIRoot}/storage/accountant/${accountant.photo}`"
+              thumbnail
+              fluid
+              alt="image"
+              width="230"
+            ></b-img>
+          </span>
         </div>
         <b-row no-gutters class="sm-query">
           <b-col md="6" class="first-detail p-4">
@@ -30,51 +47,44 @@
             <p>Qualifications</p>
             <p>Code</p>
             <p>Gender</p>
+            <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
+            <p>City</p>
             <p>L.G.A</p>
-            <p>Social Media Links</p>
 
-            <p>
+            <!-- <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
                 >Subjects Assigned</b-badge
               >
-            </p>
+            </p> -->
           </b-col>
           <b-col md="6" class="first-details p-4">
             <p>
-              {{ student.last_name }} {{ student.first_name }}
-              {{ student.middle_name }}
+              {{ accountant.last_name }} {{ accountant.first_name }}
+              {{ accountant.middle_name }}
             </p>
-            <p>{{ student.phone }}</p>
-            <!-- <p>{{ student.qualification }}</p> -->
-            <p>{{ student.code }}</p>
-            <p>{{ student.guardian_name }}</p>
-            <p>{{ student.guardian_no }}</p>
-            <p>{{ student.guardian_email }}</p>
+            <p>{{ accountant.phone }}</p>
+            <p>{{ accountant.qualification }}</p>
+            <p>{{ accountant.code }}</p>
 
-            <p>{{ student.gender }}</p>
+            <p>{{ accountant.gender }}</p>
             <p>
-              {{ student.user.email }}
+              {{ accountant.user.blood_group.name }}
             </p>
             <p>
-              {{ student.user.religion }}
+              {{ accountant.user.country.name }}
             </p>
             <p>
-              {{ student.user.blood_group.name }}
-            </p>
-            <!-- <p>
-              {{ student.user.country.name }}
+              {{ accountant.user.state.name }}
             </p>
             <p>
-              {{ student.user.state.name }}
-            </p> -->
-            <p>
-              {{ student.user.lga }}
+              {{ accountant.user.city.name }}
             </p>
-            <!-- <p>{{ student.facebook }}</p> -->
-            <p>{{ student.klase.name }}</p>
-            <!-- <h3 v-for="klase in student.klase" :key="klase">
+            <p>
+              {{ accountant.user.lga }}
+            </p>
+            <!-- <h3 v-for="klase in accountant.klases" :key="klase">
               <p>
                 <b-badge
                   style="line-height: 1.6"
@@ -97,23 +107,35 @@
             </h3> -->
           </b-col>
         </b-row>
-      </b-jumbotron></template
-    >
+      </b-jumbotron>
+    </div>
   </div>
 </template>
 
 <script>
-import { STUDENT_QUERY } from '~/graphql/students/queries'
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
+import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 export default {
+  middleware: 'auth',
+  data() {
+    return {}
+  },
   apollo: {
-    student: {
-      query: STUDENT_QUERY,
+    accountant: {
+      query: ACCOUNTANT_QUERY,
       variables() {
         return {
-          slug: this.$route.params.slug,
+          id: parseInt(this.$route.params.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 }
 </script>
@@ -122,7 +144,6 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-
   .first-detail p {
     display: block;
     margin-left: 40%;

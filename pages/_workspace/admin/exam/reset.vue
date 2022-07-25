@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 view-payment">
     <template v-if="nowLoading">
-      <Preload/>
+      <Preload />
     </template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
@@ -78,13 +78,15 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
-import { KLASES_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES } from '~/graphql/marks/queries'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import {
   RESET_KLASE_QUERIES,
   RESET_PROMOTE_QUERIES,
 } from '@/graphql/promotions/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -105,19 +107,32 @@ export default {
   },
   apollo: {
     klases: {
-      query: KLASES_QUERIES,
+      query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
-   computed: {
+  computed: {
     nowLoading() {
       return (
         this.$apollo.queries.klases.loading &&
         this.$apollo.queries.sessions.loading
       )
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     dynamicStudentClass(item) {
@@ -147,7 +162,9 @@ export default {
                 from_class: parseInt(this.form.class),
                 status: true,
                 from_session: parseInt(this.form.session),
+                workspaceId: parseInt(this.mainWorkspace.id),
                 from_term: 3,
+                
               }
             },
             result({ loading, data }, key) {
@@ -165,6 +182,7 @@ export default {
             variables() {
               return {
                 id: parseInt(this.form.class),
+                workspaceId: parseInt(this.mainWorkspace.id)
               }
             },
             result({ loading, data }, key) {

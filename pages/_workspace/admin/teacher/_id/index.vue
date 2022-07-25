@@ -1,36 +1,28 @@
 <template>
   <div class="profile">
-    <template v-if="$apollo.queries.libarian.loading"><Preload /></template>
+    <template v-if="$apollo.queries.teacher.loading"><Preload /></template>
     <template v-else>
       <b-button
-        to="/admin/libarian"
+      :to="{
+          name: 'workspace-admin-teacher',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         size="lg"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="libarian shadow">
-        <h1>About {{ libarian.last_name }}</h1>
+      <b-jumbotron header="" class="teacher shadow">
+        <h1>About {{ teacher.last_name }}</h1>
         <div class="d-flex justify-content-center mb-4">
-          <span v-if="libarian.gender == 'Female' && libarian.photo == null">
-            <b-img
-              src="~/assets/images/teacher.jpeg"
-              thumbnail
-              fluid
-              alt="Responsive image"
-              width="230"
-            ></b-img>
-          </span>
-          <span v-else>
-            <b-img
-              :src="`http://sms.test/storage/libarian/${libarian.photo}`"
-              thumbnail
-              fluid
-              alt="image"
-              width="230"
-            ></b-img>
-          </span>
+          <b-img
+            src="~/assets/images/teacher.jpeg"
+            thumbnail
+            fluid
+            alt="Responsive image"
+            width="230"
+          ></b-img>
         </div>
         <b-row no-gutters class="sm-query">
           <b-col md="6" class="first-detail p-4">
@@ -42,47 +34,48 @@
             <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
-            <p>City</p>
+            <p>city</p>
             <p>L.G.A</p>
 
-            <!-- <p>
+            <p>
               <b-badge style="font-size: 1.6rem" variant="warning"
                 >Subjects Assigned</b-badge
               >
-            </p> -->
+            </p>
           </b-col>
           <b-col md="6" class="first-details p-4">
             <p>
-              {{ libarian.last_name }} {{ libarian.first_name }}
-              {{ libarian.middle_name }}
+              {{ teacher.last_name }} {{ teacher.first_name }}
+              {{ teacher.middle_name }}
             </p>
-            <p>{{ libarian.phone }}</p>
-            <p>{{ libarian.qualification }}</p>
-            <p>{{ libarian.code }}</p>
+            <p>{{ teacher.phone }}</p>
+            <p>{{ teacher.qualification }}</p>
+            <p>{{ teacher.code }}</p>
 
-            <p>{{ libarian.gender }}</p>
+            <p>{{ teacher.gender }}</p>
             <p>
-              {{ libarian.user.blood_group.name }}
+              {{ teacher.user.blood_group.name }}
             </p>
             <p>
-              {{ libarian.user.country.name }}
+              {{ teacher.user.country.name }}
             </p>
             <p>
-              {{ libarian.user.state.name }}
+              {{ teacher.user.state.name }}
             </p>
             <p>
-              {{ libarian.user.city.name }}
+              {{ teacher.user.city.name }}
             </p>
             <p>
-              {{ libarian.user.lga }}
+              {{ teacher.user.lga }}
             </p>
-            <!-- <h3 v-for="klase in libarian.klases" :key="klase">
+
+            <h3 v-for="klase in teacher.klases" :key="klase.id">
               <p>
                 <b-badge
+                  :id="klase.id"
                   style="line-height: 1.6"
                   variant="warning"
                   class="px-2"
-                  :id="klase.id"
                   >{{ klase.name }}</b-badge
                 >
               </p>
@@ -96,7 +89,7 @@
                   </b-nav-item>
                 </b-nav>
               </b-popover>
-            </h3> -->
+            </h3>
           </b-col>
         </b-row>
       </b-jumbotron></template
@@ -105,22 +98,25 @@
 </template>
 
 <script>
-import { LIBARIAN_QUERY } from '~/graphql/libarians/queries'
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
+import { TEACHER_QUERY } from '@/graphql/teachers/queries'
 export default {
   apollo: {
-    libarian: {
-      query: LIBARIAN_QUERY,
+    teacher: {
+      query: TEACHER_QUERY,
       variables() {
         return {
-          slug: this.$route.params.slug,
+          id: parseInt(this.$route.params.id),
+           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
   },
-  data() {
-    return {
-      libarian: [],
-    }
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 }
 </script>

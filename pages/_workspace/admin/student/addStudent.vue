@@ -5,7 +5,10 @@
     </template>
     <template v-else>
       <b-button
-        to="/admin/student"
+        :to="{
+          name: 'workspace-admin-student',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         size="lg"
         class="add-student mb-4"
@@ -58,10 +61,9 @@
                     @change="handleFileUpload()"
                   />
                 </div>
-
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
+                <b-form-invalid-feedback :state="!form.errors.has('photo')">
                   {{ form.errors.get('photo') }}
-                </b-form-invalid-feedback> -->
+                </b-form-invalid-feedback>
               </b-form-group>
             </div>
 
@@ -360,7 +362,7 @@
                   <!-- This slot appears above the options from 'options' prop -->
                   <template #first>
                     <b-form-select-option :value="null" disabled
-                      >-- Please select blood Group--</b-form-select-option
+                      >-- Please select class--</b-form-select-option
                     >
                   </template>
 
@@ -392,7 +394,7 @@
               </b-form-group>
             </b-col>
 
-             <b-col md="3">
+            <b-col md="3">
               <b-form-group label="Section">
                 <b-form-select
                   id="sections"
@@ -602,6 +604,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
@@ -611,8 +615,9 @@ import {
 } from '~/graphql/users/queries'
 import { CREATE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 
 export default {
   middleware: 'auth',
@@ -657,16 +662,6 @@ export default {
       show: true,
     }
   },
-  computed: {
-    nowLoading() {
-      return (
-        this.$apollo.queries.countries.loading &&
-        this.$apollo.queries.bloodGroups.loading &&
-        this.$apollo.queries.terms.loading &&
-        this.$apollo.queries.klases.loading
-      )
-    },
-  },
 
   apollo: {
     // Simple query that will update the 'hello' vue property
@@ -691,16 +686,49 @@ export default {
     },
     klases: {
       query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     terms: {
       query: TERM_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sections: {
       query: SECTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
+  },
+  computed: {
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.klases.loading
+      )
+    },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     selectImage() {
@@ -709,19 +737,16 @@ export default {
     handleFileUpload() {
       const input = this.$refs.Avatar
       const file = input.files[0]
-      this.isValidFile(file)
+      if (!file) return
+      const reader = new FileReader()
 
-      if (!file) {
-        return false
-      } else {
-        const reader = new FileReader()
-
-        reader.onload = (e) => {
-          this.preview_url = e.target.result
-        }
-        reader.readAsDataURL(file)
-        this.form.student.photo = file
+      reader.onload = (e) => {
+        this.preview_url = e.target.result
       }
+      reader.readAsDataURL(file)
+      this.form.photo = file
+
+      this.isValidFile(file)
     },
 
     isValidFile(file) {
@@ -764,12 +789,26 @@ export default {
           .mutate({
             mutation: CREATE_STUDENT_MUTATION,
             variables: {
+              workspaceId: parseInt(this.mainWorkspace.id),
               studentUser: this.form.userStudent,
               student: this.form.student,
             },
           })
           .then(() => {
-            this.$router.push('/admin/student')
+            Swal.fire({
+              timer: 1500,
+              text: 'student added has been saved',
+              position: 'top-right',
+              color: '#fff',
+              background: '#4bb543',
+              toast: false,
+              backdrop: false,
+              showConfirmButton: false,
+            })
+            // this.$router.push({
+            //   name: 'workspace-admin-student',
+            //   params: { workspace: this.mainWorkspace.slug },
+            // })
           })
 
         this.form.busy = false

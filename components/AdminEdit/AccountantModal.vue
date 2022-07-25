@@ -1,7 +1,15 @@
 <template>
   <div class="student">
-    <template v-if="nowLoading"> </template>
-    <template v-else>
+    <b-modal
+      :value="value"
+      :visible="value"
+      :hide-backdrop="false"
+      scrollable
+      title="Edit Accountant Data"
+      size="lg"
+      :hide-footer="true"
+      @change="$emit('input', $event)"
+    >
       <div class="p-4 student__wrapper">
         <b-form
           v-if="show"
@@ -73,22 +81,22 @@
           </div>
 
           <!--  -->
-
-          <b-row class="p-4">
+          <b-row class="p-4" style="font-size: 1.6rem">
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="First Name:">
+              <b-form-group label="First Name">
                 <b-form-input
-                  id="first_name"
-                  v-model="form.lib.first_name"
-                  type="text"
-                  placeholder="Enter first name"
+                  id="firstName"
+                  v-model="form.teacherTable.first_name"
+                  debounce="500"
                   name="first_name"
+                  size="lg"
+                  placeholder="Enter First name"
                   trim
                 ></b-form-input>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('first_name')"
+                  :state="!form.errors.has('teacherTable.first_name')"
                 >
-                  {{ form.errors.get('first_name') }}
+                  {{ form.errors.get('teacherTable.first_name') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -97,7 +105,7 @@
               <b-form-group id="last_name" label="Last Name">
                 <b-form-input
                   id="first_name"
-                  v-model="form.lib.last_name"
+                  v-model="form.teacherTable.last_name"
                   type="text"
                   placeholder="Enter last name"
                   name="last_name"
@@ -113,7 +121,7 @@
               <b-form-group id="input-group-1" label="middle Name (optional)">
                 <b-form-input
                   id="input-1"
-                  v-model="form.lib.middle_name"
+                  v-model="form.teacherTable.middle_name"
                   type="text"
                   placeholder="Enter middle name"
                   name="last_name"
@@ -126,7 +134,7 @@
               <b-form-group id="input-group-1" label="Email:">
                 <b-form-input
                   id="input-1"
-                  v-model="form.userLib.email"
+                  v-model="form.userTable.email"
                   type="email"
                   placeholder="Enter email"
                   name="email"
@@ -142,7 +150,7 @@
               <b-form-group id="input-group-1" label="Phone no:">
                 <b-form-input
                   id="qualification"
-                  v-model="form.lib.phone"
+                  v-model="form.teacherTable.phone"
                   type="number"
                   placeholder="Enter phone no."
                   name="phone"
@@ -158,7 +166,7 @@
               <b-form-group label="Qualification">
                 <b-form-input
                   id="qualification"
-                  v-model="form.lib.qualification"
+                  v-model="form.teacherTable.qualification"
                   type="text"
                   placeholder="Enter qualification"
                   name="qualification"
@@ -175,7 +183,7 @@
               <b-form-group label="Religion">
                 <b-form-input
                   id="religion"
-                  v-model="form.userLib.religion"
+                  v-model="form.userTable.religion"
                   type="text"
                   placeholder="Enter religion"
                   name="religion"
@@ -187,10 +195,10 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="3" class="p-4">
               <b-form-group label="Gender">
                 <b-form-select
-                  v-model="form.lib.gender"
+                  v-model="form.teacherTable.gender"
                   :options="genders"
                   class="mb-3"
                   size="lg"
@@ -208,11 +216,11 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="3" class="p-4">
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
-                  v-model="form.lib.birthday"
+                  v-model="form.teacherTable.birthday"
                   today-button
                   reset-button
                   close-button
@@ -226,11 +234,11 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="3" class="p-4">
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
-                  v-model="form.userLib.bloodGroup"
+                  v-model="form.userTable.bloodGroup"
                   value-field="id"
                   text-field="name"
                   :options="bloodGroups"
@@ -253,7 +261,7 @@
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
-                  v-model="form.userLib.country"
+                  v-model="form.userTable.country"
                   value-field="id"
                   text-field="name"
                   :options="countries"
@@ -284,7 +292,7 @@
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.userLib.state" class="mb-3">
+                  <b-form-select v-model="form.userTable.state" class="mb-3">
                     <b-form-select-option
                       v-for="k in country.state"
                       :key="k.id"
@@ -307,7 +315,7 @@
 
               <div v-else>
                 <b-form-group label="City">
-                  <b-form-select v-model="form.userLib.city" class="mb-3">
+                  <b-form-select v-model="form.userTable.city" class="mb-3">
                     <b-form-select-option
                       v-for="k in state.cities"
                       :key="k.id"
@@ -323,7 +331,7 @@
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
                   id="lga"
-                  v-model="form.userLib.lga"
+                  v-model="form.userTable.lga"
                   type="text"
                   placeholder="Enter L.G.A"
                   name="lga"
@@ -362,11 +370,13 @@
           </b-row>
         </b-form>
       </div>
-    </template>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
@@ -375,20 +385,47 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { UPDATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
-import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
+import { ACCOUNTANT_QUERIES } from '~/graphql/accountants/queries'
 
 export default {
   middleware: 'auth',
   props: {
-    slug: Array,
+    value: {
+      type: Boolean,
+      default: true,
+    },
+    accountant: {
+      type: Object,
+      required: true,
+    },
+  },
+  created() {
+    this.form.teacherTable.first_name = this.accountant.first_name
+    this.form.teacherTable.last_name = this.accountant.last_name
+    this.form.teacherTable.middle_name = this.accountant.middle_name
+    this.form.teacherTable.birthday = this.accountant.birthday
+    this.form.teacherTable.qualification = this.accountant.qualification
+    this.form.image = this.accountant.photo
+    this.form.teacherTable.phone = this.accountant.phone
+    this.form.teacherTable.gender = this.accountant.gender
+
+    this.form.id = parseInt(this.accountant.id)
+    this.form.userTable.country = this.accountant.user.country.id
+    this.form.userTable.state = this.accountant.user.state.id
+    this.form.userTable.city = this.accountant.user.city.id
+    this.form.userTable.religion = this.accountant.user.religion
+    this.form.userTable.bloodGroup = this.accountant.user.blood_group.id
+    this.form.userTable.email = this.accountant.user.email
+
+    this.form.userTable.lga = this.accountant.user.lga
   },
   data() {
     return {
       k: null,
-      accountants: [],
+      teachers: [],
       form: new this.$form({
-        photo: null,
-        userLib: {
+        image: null,
+        userTable: {
           country: null,
           state: null,
           city: null,
@@ -397,13 +434,13 @@ export default {
           bloodGroup: null,
           religion: null,
         },
-        lib: {
+        teacherTable: {
           first_name: '',
           last_name: '',
           middle_name: null,
           gender: null,
 
-          image: null,
+          photo: null,
           birthday: null,
           phone: null,
           qualification: null,
@@ -416,15 +453,17 @@ export default {
       show: true,
     }
   },
-  computed: {
-    nowLoading() {
-      return (
-        this.$apollo.queries.countries.loading &&
-        this.$apollo.queries.bloodGroups.loading &&
-        this.$apollo.queries.accountant.loading
-      )
+  watch: {
+    accountant(value) {
+      this.setAccountant(value)
     },
   },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
+
   apollo: {
     countries: {
       query: COUNTRY_QUERIES,
@@ -435,48 +474,46 @@ export default {
     country: {
       query: COUNTRY_QUERY,
       variables() {
-        return { id: parseInt(this.form.userLib.country) }
+        return { id: parseInt(this.form.userTable.country) }
       },
     },
     state: {
       query: STATE_QUERY,
       variables() {
-        return { id: parseInt(this.form.userLib.state) }
+        return { id: parseInt(this.form.userTable.state) }
       },
     },
-
-    accountant: {
-      query: ACCOUNTANT_QUERY,
+    accountants: {
+      query: ACCOUNTANT_QUERIES,
       variables() {
         return {
-          slug: this.slug[0],
-        }
-      },
-      result({ data, loading }) {
-        if (!loading) {
-          this.form.lib.first_name = data.accountant.first_name
-          this.form.lib.last_name = data.accountant.last_name
-          this.form.lib.middle_name = data.accountant.middle_name
-          this.form.lib.birthday = data.accountant.birthday
-          this.form.lib.qualification = data.accountant.qualification
-          this.form.photo = data.accountant.photo
-          this.form.lib.phone = data.accountant.phone
-          this.form.lib.gender = data.accountant.gender
-
-          this.form.id = parseInt(data.accountant.id)
-          this.form.userLib.country = data.accountant.user.country.id
-          this.form.userLib.state = data.accountant.user.state.id
-          this.form.userLib.city = data.accountant.user.city.id
-          this.form.userLib.religion = data.accountant.user.religion
-          this.form.userLib.email = data.accountant.user.email
-          this.form.userLib.bloodGroup = data.accountant.user.blood_group.id
-
-          this.form.userLib.lga = data.accountant.user.lga
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
   },
   methods: {
+    setAccountant(accountant) {
+      this.form.teacherTable.first_name = accountant.first_name
+      this.form.teacherTable.last_name = accountant.last_name
+      this.form.teacherTable.middle_name = accountant.middle_name
+      this.form.teacherTable.birthday = accountant.birthday
+      this.form.teacherTable.qualification = accountant.qualification
+      this.form.image = accountant.photo
+      this.form.teacherTable.phone = accountant.phone
+      this.form.teacherTable.gender = accountant.gender
+
+      this.form.id = parseInt(accountant.id)
+      this.form.userTable.country = accountant.user.country.id
+      this.form.userTable.state = accountant.user.state.id
+      this.form.userTable.city = accountant.user.city.id
+      this.form.userTable.religion = accountant.user.religion
+      this.form.userTable.bloodGroup = accountant.user.blood_group.id
+      this.form.userTable.email = accountant.user.email
+
+      this.form.userTable.lga = accountant.user.lga
+    },
+
     selectImage() {
       this.$refs.Avatar.click()
     },
@@ -490,7 +527,7 @@ export default {
         this.preview_url = e.target.result
       }
       reader.readAsDataURL(file)
-      this.form.lib.image = file
+      this.form.teacherTable.photo = file
 
       this.isValidFile(file)
     },
@@ -530,7 +567,6 @@ export default {
 
     // update
     async onSubmit() {
-      const slugName = this.slug[0]
       this.form.busy = true
       // submit exam
       try {
@@ -539,23 +575,27 @@ export default {
             mutation: UPDATE_ACCOUNTANT_MUTATION,
             variables: {
               id: parseInt(this.form.id),
-              userLib: this.form.userLib,
-              lib: this.form.lib,
+              userTable: this.form.userTable,
+              teacherTable: this.form.teacherTable,
+              workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { updateAccountant } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
-                query: ACCOUNTANT_QUERY,
-                variables: { slug: slugName },
+                query: ACCOUNTANT_QUERIES,
+                variables: { workspaceId: parseInt(this.mainWorkspace.id) },
               })
 
-              data.accountant = updateAccountant
+              let accountantData = data.accountants.filter(
+                (t) => t.id == this.form.id
+              )
+              accountantData = updateAccountant
 
               // Mutate cache result
 
               store.writeQuery({
-                query: ACCOUNTANT_QUERY,
-                variables: { slug: slugName },
+                query: ACCOUNTANT_QUERIES,
+                variables: {    workspaceId: parseInt(this.mainWorkspace.id) },
 
                 data,
               })
@@ -563,11 +603,9 @@ export default {
           })
           .then(() => {
             Swal.fire({
-              title: 'Done...',
-              icon: 'success',
               timer: 1500,
               text: 'Your work has been successfully edited ',
-              position: 'center',
+              position: 'top-right',
               color: '#fff',
               background: '#4bb543',
               toast: false,
@@ -575,7 +613,7 @@ export default {
               showConfirmButton: false,
             })
             this.form.busy = false
-            this.$bvModal.hide(this.slug[1])
+            this.$emit('input', false)
           })
 
         this.form.busy = false

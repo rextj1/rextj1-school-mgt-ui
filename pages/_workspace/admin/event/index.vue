@@ -191,9 +191,9 @@
 
     <!-- edit modal -->
     <AdminEditEventModal
+      v-if="isEditEventModal"
       v-model="isEditEventModal"
       :event="invokedForEdit"
-      v-if="isEditEventModal"
     />
   </div>
 </template>
@@ -215,7 +215,7 @@ export default {
       isPublished: null,
       events: [],
       isEditEventModal: false,
-      isEditEventModal: false,
+      // isEditEventModal: false,
       invokedForEdit: null,
       form: new this.$form({
         description: null,

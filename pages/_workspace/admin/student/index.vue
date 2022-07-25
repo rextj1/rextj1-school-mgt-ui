@@ -3,7 +3,10 @@
     <template v-if="$apollo.queries.students.loading"><Preload /></template>
     <template v-else>
       <b-button
-        to="/admin/student/add-student"
+        :to="{
+          name: 'workspace-admin-student-addStudent',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         pill
         size="md"
@@ -217,8 +220,11 @@
                     <b-button
                       variant="primary"
                       :to="{
-                        name: 'admin-student-slug',
-                        params: { slug: data.item.slug },
+                        name: 'workspace-admin-student-id',
+                        params: {
+                          workspace: mainWorkspace.slug,
+                          id: data.item.id,
+                        },
                       }"
                     >
                       <b-icon icon="eye" class="mr-1"></b-icon>
@@ -229,12 +235,17 @@
                       variant="info"
                       size="md"
                       class="px-3"
-                      @click="info(data.item.slug)"
+                      @click="info(data.item.id)"
                     >
                       Edit
                     </b-button>
 
-                    <b-button variant="danger" size="md" class="px-3" @click="handleDeleteModal(data.item)">
+                    <b-button
+                      variant="danger"
+                      size="md"
+                      class="px-3"
+                      @click="handleDeleteModal(data.item)"
+                    >
                       <b-icon icon="trash" class="mr-1" />
                       Delete
                     </b-button>
@@ -261,7 +272,7 @@
                   size="lg"
                   :hide-footer="true"
                 >
-                  <AdminEditStudentModal :slug="[slug, infoModal]" />
+                  <AdminEditStudentModal :slug="[id, infoModal]" />
                 </b-modal>
               </b-container>
             </div>
@@ -290,7 +301,7 @@
             <b-button
               variant="danger"
               class="px-4"
-              @click="deleteInvokedTeacher"
+              @click="deleteInvokedStudent"
             >
               Delete
             </b-button>
@@ -302,6 +313,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { DELETE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { STUDENT_QUERIES } from '~/graphql/students/queries'
@@ -396,7 +409,7 @@ export default {
         // },
         { key: 'actions', label: 'Actions' },
       ],
-      slug: '',
+      id: '',
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
@@ -412,6 +425,11 @@ export default {
   apollo: {
     students: {
       query: STUDENT_QUERIES,
+      variables() {
+        return {
+           workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
   computed: {
@@ -423,6 +441,9 @@ export default {
           return { text: f.label, value: f.key }
         })
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   mounted() {
     // Set the initial number of items
@@ -431,38 +452,41 @@ export default {
 
   methods: {
     info(item, button) {
-      this.slug = item
+      this.id = item
       this.$root.$emit('bv::show::modal', this.infoModal, button)
     },
     resetInfoModal() {
       this.infoModal.title = ''
       this.infoModal.content = ''
     },
-      handleCancelDelete() {
+    handleCancelDelete() {
       this.$bvModal.hide('DeleteModal')
     },
     handleDeleteModal(item) {
       this.invokedForDelete = item
       this.$bvModal.show('DeleteModal')
     },
-    deleteInvokedTeacher() {
+    deleteInvokedStudent() {
       this.isDeleting = true
       this.$apollo
         .mutate({
           mutation: DELETE_STUDENT_MUTATION,
           variables: {
             id: parseInt(this.invokedForDelete.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteStudent } }) => {
             try {
               const data = store.readQuery({
                 query: STUDENT_QUERIES,
+                variables: {
+                   workspaceId: parseInt(this.mainWorkspace.id),
+                },
               })
 
               const studentIndex = data.students.findIndex(
                 (m) => m.id === this.invokedForDelete.id
               )
-             
 
               if (studentIndex !== -1) {
                 data.students.splice(studentIndex, 1)
@@ -471,6 +495,9 @@ export default {
               // Write our data back to the cache.
               store.writeQuery({
                 query: STUDENT_QUERIES,
+                variables: {
+                   workspaceId: parseInt(this.mainWorkspace.id),
+                },
 
                 data,
               })
@@ -480,11 +507,15 @@ export default {
           },
         })
         .then(() => {
-          Swal.fire({
-            icon: 'success',
-
-            text: 'student deleted successfully',
-            color: '#5cb85c',
+           Swal.fire({
+            timer: 1000,
+            text: 'student added successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+            showConfirmButton: false
           })
         })
         .catch(({ graphQLErrors: errors, ...rest }) => {

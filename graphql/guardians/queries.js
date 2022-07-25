@@ -70,12 +70,11 @@ export const USER_GUARDIAN_QUERY = gql`
   }
 `
 
-
 // dashboard
 
 export const GUARDIAN_DASHBOARD_QUERIES = gql`
-  query GuardianDashboardQuery {
-    guardiansDashboard {
+  query GuardianDashboardQuery($workspaceId: Int) {
+    guardiansDashboard(workspaceId: $workspaceId) {
       id
     }
   }

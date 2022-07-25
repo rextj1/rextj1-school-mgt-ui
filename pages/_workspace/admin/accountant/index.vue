@@ -5,7 +5,10 @@
     </div>
     <div v-else>
       <b-button
-        to="/admin/accountant/add-accountant"
+        :to="{
+          name: 'workspace-admin-accountant-addAccountant',
+          params: { workspace: mainWorkspace.slug },
+        }"
         variant="primary"
         pill
         size="md"
@@ -184,7 +187,7 @@
                   <template #cell(photo)="data">
                     <b-avatar
                       variant="primary"
-                      :src="`http://sms.test/storage/accountant/${data.value}`"
+                      :src="`${$config.APIRoot}/storage/${mainWorkspace.slug}/accountant/${data.value}`"
                     >
                     </b-avatar>
                   </template>
@@ -202,8 +205,11 @@
                   <template #cell(actions)="data">
                     <b-button
                       :to="{
-                        name: 'admin-accountant-slug',
-                        params: { slug: data.item.slug },
+                        name: 'workspace-admin-accountant-id',
+                        params: {
+                          workspace: mainWorkspace.slug,
+                          id: data.item.id,
+                        },
                       }"
                       variant="primary"
                       size="md"
@@ -217,7 +223,7 @@
                       variant="info"
                       size="md"
                       class="px-3"
-                      @click="info(data.item.slug)"
+                      @click="handleEditModal(data.item)"
                     >
                       Edit
                     </b-button>
@@ -227,7 +233,7 @@
                       size="md"
                       class="px-3"
                       @click="handleDeleteModal(data.item)"
-                      >
+                    >
                       <b-icon icon="trash" class="mr-1" />
                       Delete
                     </b-button>
@@ -244,24 +250,18 @@
                   </template>
                 </b-table>
 
-                <!-- Info modal -->
-                <b-modal
-                  :id="infoModal"
-                  class="modal"
-                  :hide-backdrop="true"
-                  title="Edit Accountant Data"
-                  scrollable
-                  size="lg"
-                  :hide-footer="true"
-                >
-                  <AdminEditAccountantModal :slug="[slug, infoModal]" />
-                </b-modal>
+                <AdminEditAccountantModal
+                  v-if="invokedAccountantForEdit"
+                  v-model="isAccountantEditing"
+                  :accountant="invokedAccountantForEdit"
+                />
               </b-container>
             </div>
           </div>
         </b-col>
       </b-row>
     </div>
+
     <!-- delete modal -->
     <b-modal id="DeleteModal" centered hide-header hide-footer>
       <div class="p-5 text-center">
@@ -294,12 +294,17 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { DELETE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
 import { ACCOUNTANT_QUERIES } from '~/graphql/accountants/queries'
+import Swal from 'sweetalert2'
 export default {
   middleware: 'auth',
   data() {
     return {
+      invokedAccountantForEdit: null,
+      isAccountantEditing: false,
       isDeleting: false,
       invokedForDelete: null,
       items: [],
@@ -380,6 +385,11 @@ export default {
   apollo: {
     accountants: {
       query: ACCOUNTANT_QUERIES,
+      variables() {
+        return {
+             workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
   computed: {
@@ -391,6 +401,9 @@ export default {
           return { text: f.label, value: f.key }
         })
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   mounted() {
     // Set the initial number of items
@@ -398,9 +411,9 @@ export default {
   },
 
   methods: {
-    info(item, button) {
-      this.slug = item
-      this.$root.$emit('bv::show::modal', this.infoModal, button)
+    handleEditModal(accountant) {
+      this.invokedAccountantForEdit = accountant
+      this.isAccountantEditing = true
     },
     resetInfoModal() {
       this.infoModal.title = ''
@@ -420,11 +433,15 @@ export default {
           mutation: DELETE_ACCOUNTANT_MUTATION,
           variables: {
             id: parseInt(this.invokedForDelete.id),
+              workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteAccountant } }) => {
             try {
               const data = store.readQuery({
                 query: ACCOUNTANT_QUERIES,
+                variables: {
+                     workspaceId: parseInt(this.mainWorkspace.id),
+                },
               })
 
               const accountantIndex = data.accountants.findIndex(
@@ -438,7 +455,9 @@ export default {
               // Write our data back to the cache.
               store.writeQuery({
                 query: ACCOUNTANT_QUERIES,
-
+                variables: {
+                     workspaceId: parseInt(this.mainWorkspace.id),
+                },
                 data,
               })
             } catch (e) {
@@ -448,10 +467,14 @@ export default {
         })
         .then(() => {
           Swal.fire({
-            icon: 'success',
-
+            timer: 1500,
             text: 'accountant deleted successfully',
-            color: '#5cb85c',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+            showConfirmButton: false,
           })
         })
         .catch(({ graphQLErrors: errors, ...rest }) => {

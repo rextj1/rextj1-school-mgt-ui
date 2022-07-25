@@ -10,17 +10,15 @@
         <h3>Set promotion mark</h3>
         <b-row>
           <b-col md="3" class="mb-4">
-            <div v-for="set in setPromotion" :key="set.id">
-              <input
-                v-model="set.name"
-                type="number"
-                class="mb-3"
-                size="lg"
-                required
-                style="width: 40%; text-align: center"
-                @keydown.enter="studenSetPromotion($event.target.value)"
-              />
-            </div>
+            <input
+              v-model="setPromotion.name"
+              type="number"
+              class="mb-3"
+              size="lg"
+              required
+              style="width: 40%; text-align: center"
+              @keydown.enter="studenSetPromotion($event.target.value)"
+            />
           </b-col>
         </b-row>
 
@@ -157,7 +155,13 @@
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamStudentPromotion
           :promote-students="promoteStudents"
-          :student="[form.class, form.classTo, form.session, form.sessionTo,form.section]"
+          :student="[
+            form.class,
+            form.classTo,
+            form.session,
+            form.sessionTo,
+            form.section,
+          ]"
           :set-promotion="setPromotion"
         />
       </div>
@@ -166,20 +170,24 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
-import { KLASES_QUERIES } from '~/graphql/klases/queries'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import { TERM_QUERIES } from '~/graphql/marks/queries'
 import {
   PROMOTESTUDENTS_QUERIES,
   SET_PROMOTION_QUERIES,
 } from '@/graphql/promotions/queries'
 import { CREATE_SET_PROMOTION_MUTATION } from '@/graphql/promotions/mutations'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
       promoteStudents: [],
+      setPromotion: {},
       timetableDropdownClass: false,
       form: {
         class: null,
@@ -197,16 +205,36 @@ export default {
   },
   apollo: {
     klases: {
-      query: KLASES_QUERIES,
+      query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sections: {
       query: SECTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     setPromotion: {
       query: SET_PROMOTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
   computed: {
@@ -215,9 +243,13 @@ export default {
         this.$apollo.queries.klases.loading &&
         this.$apollo.queries.setPromotion.loading &&
         this.$apollo.queries.sessions.loading &&
-        this.$apollo.queries.sections.loading
+        this.$apollo.queries.sections.loading &&
+        this.$apollo.queries.setPromotion.loading
       )
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     dynamicStudentClass(item) {
@@ -227,7 +259,10 @@ export default {
       this.$apollo
         .mutate({
           mutation: CREATE_SET_PROMOTION_MUTATION,
-          variables: { id: 1, name: parseInt(item) },
+          variables: {
+            name: parseInt(item),
+            workspaceId: parseInt(this.mainWorkspace.id),
+          },
         })
         .then(() => {
           Swal.fire({
@@ -282,6 +317,7 @@ export default {
                 status: true,
                 session_id: parseInt(this.form.session),
                 section_id: parseInt(this.form.section),
+                workspaceId: parseInt(this.mainWorkspace.id),
               }
             },
             result({ loading, data }, key) {

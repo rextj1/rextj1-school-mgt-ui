@@ -12,8 +12,8 @@ import { KLASE_FIELDS_FRAGMENT } from './fragments'
 // `
 
 export const KLASE_QUERIES = gql`
-  query myclassQuery($slug: String) {
-    klases(slug: $slug) {
+  query klasesQuery($workspaceId: Int) {
+    klases(workspaceId: $workspaceId) {
       id
       name
       teachers {
@@ -27,8 +27,8 @@ export const KLASE_QUERIES = gql`
 `
 
 export const KLASE_QUERY = gql`
-  query klaseQuery($id: ID!, $slug: String) {
-    klase(id: $id, slug: $slug) {
+  query klaseQuery($id: ID!, $workspaceId: Int) {
+    klase(id: $id, workspaceId: $workspaceId) {
       id
       name
     }

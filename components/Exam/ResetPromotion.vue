@@ -88,6 +88,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { CREATE_RESET_PROMOTION_MUTATION } from '~/graphql/promotions/mutations'
 import { RESET_PROMOTE_QUERIES } from '~/graphql/promotions/queries'
@@ -104,6 +106,11 @@ export default {
       resetSpinner: false,
     }
   },
+   computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
 
   methods: {
     createPromoteStudents() {
@@ -118,6 +125,7 @@ export default {
               from_class: parseInt(this.student[0]),
               status: true,
               from_session: parseInt(this.student[1]),
+               workspaceId: parseInt(this.mainWorkspace.id),
                from_term: 3,
             },
             update: (store, { data: { createResetPromote } }) => {
@@ -128,6 +136,7 @@ export default {
                   from_class: parseInt(klase),
                   status: true,
                   from_session: parseInt(session),
+                   workspaceId: parseInt(this.mainWorkspace.id),
                    from_term: 3,
                 },
               })
@@ -143,6 +152,7 @@ export default {
                   from_class: parseInt(klase),
                   status: true,
                   from_session: parseInt(session),
+                   workspaceId: parseInt(this.mainWorkspace.id),
                   from_term: 3
                 },
 
@@ -172,6 +182,7 @@ export default {
               klase_id: parseInt(this.student[0]),
               term_id: 3,
               session_id: parseInt(this.student[1]),
+               workspaceId: parseInt(this.mainWorkspace.id),
               status: 'unpublished',
             },
           })

@@ -148,7 +148,7 @@ export default {
       query: SECTION_QUERIES,
       variables() {
         return {
-          slug: this.mainWorkspace.slug,
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -171,7 +171,7 @@ export default {
           variables() {
             return {
               id: parseInt(this.id),
-              slug: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ data, loading }) {
@@ -194,7 +194,7 @@ export default {
           variables: {
             id: parseInt(item),
             name: this.form.names,
-            workspace: this.mainWorkspace.slug,
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
         })
         .then(() => {
@@ -238,13 +238,13 @@ export default {
             mutation: CREATE_SECTION_MUTATION,
             variables: {
               name: this.form.name,
-              workspace: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createSection } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
                 query: SECTION_QUERIES,
-                variables: { slug: this.mainWorkspace.slug },
+                variables: { workspaceId: parseInt(this.mainWorkspace.id) },
               })
               // console.log(this.form.class);
 
@@ -255,7 +255,7 @@ export default {
               // Write back to the cache
               store.writeQuery({
                 query: SECTION_QUERIES,
-                variables: { slug: this.mainWorkspace.slug },
+                variables: { workspaceId: parseInt(this.mainWorkspace.id) },
                 data,
               })
             },

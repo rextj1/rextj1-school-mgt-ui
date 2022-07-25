@@ -4,10 +4,15 @@ import { SINGLE_STUDENT_FIELD_FRAGMENT } from './fragments'
 
 export const CREATE_STUDENT_MUTATION = gql`
   mutation CreateStudentMutation(
+    $workspaceId: Int
     $studentUser: StudentUserInput
     $student: StudentInput
   ) {
-    createStudent(studentUser: $studentUser, student: $student) {
+    createStudent(
+      workspaceId: $workspaceId
+      studentUser: $studentUser
+      student: $student
+    ) {
       id
     }
   }
@@ -16,17 +21,23 @@ export const CREATE_STUDENT_MUTATION = gql`
 export const UPDATE_STUDENT_MUTATION = gql`
   mutation UpdateStudentMutation(
     $id: ID!
+    $workspaceId: Int
     $studentUser: EditStudentUserInput
     $student: EditStudentInput
   ) {
-    updateStudent(id: $id, studentUser: $studentUser, student: $student) {
+    updateStudent(
+      id: $id
+      workspaceId: $workspaceId
+      studentUser: $studentUser
+      student: $student
+    ) {
       ...SingleStudentField
     }
   }
   ${SINGLE_STUDENT_FIELD_FRAGMENT}
 `
 export const DELETE_STUDENT_MUTATION = gql`
-  mutation DeleteStudentMutation($id: Int!) {
-    deleteStudent(id: $id)
+  mutation DeleteStudentMutation($id: Int!,$workspaceId: Int) {
+    deleteStudent(id: $id, workspaceId:$workspaceId)
   }
 `

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const CREATE_KLASE_MUTATION = gql`
-  mutation CreateKlaseMutation($name: String!, $workspace: String) {
-    createKlase(name: $name, workspace: $workspace) {
+  mutation CreateKlaseMutation($name: String!, $workspaceId: Int) {
+    createKlase(name: $name, workspaceId: $workspaceId) {
       id
       name
       teachers {
@@ -16,8 +16,8 @@ export const CREATE_KLASE_MUTATION = gql`
 `
 
 export const UPDATE_KLASE_MUTATION = gql`
-  mutation UpdateKlaseMutation($id: ID!, $name: String!, $workspace: String) {
-    updateKlase(id: $id, name: $name, workspace: $workspace) {
+  mutation UpdateKlaseMutation($id: ID!, $name: String!, $workspaceId: Int) {
+    updateKlase(id: $id, name: $name, workspaceId: $workspaceId) {
       id
       name
     }

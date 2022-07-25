@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { CREATE_PROMOTION_MUTATION } from '~/graphql/promotions/mutations'
 import { PROMOTESTUDENTS_QUERIES } from '~/graphql/promotions/queries'
@@ -70,7 +72,7 @@ export default {
   props: {
     promoteStudents: Array,
     student: Array,
-    setPromotion: Array,
+    setPromotion: Object,
   },
   data() {
     return {
@@ -118,8 +120,11 @@ export default {
   },
   computed: {
     promotioMark() {
-      return this.setPromotion[0].name
+      return this.setPromotion.name
     },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
 
   methods: {
@@ -136,6 +141,7 @@ export default {
               klaseTo: parseInt(this.student[1]),
               session_id: parseInt(this.student[2]),
               sessionTo: parseInt(this.student[3]),
+              workspaceId: parseInt(this.mainWorkspace.id),
               from_term: 3,
             },
             update: (store, { data: { createPromoteStudents } }) => {
@@ -146,6 +152,7 @@ export default {
                   klase_id: parseInt(klase),
                   status: true,
                   session_id: parseInt(session),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -160,6 +167,7 @@ export default {
                   klase_id: parseInt(klase),
                   status: true,
                   session_id: parseInt(session),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
 
                 data,
@@ -192,6 +200,7 @@ export default {
                 term_id: 3,
                 session_id: parseInt(this.student[2]),
                 section_id: parseInt(this.student[3]),
+                workspaceId: parseInt(this.mainWorkspace.id),
                 status: 'published',
               },
             })
