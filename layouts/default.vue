@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="$fetchState.pending"><Preload /></div>
-    <div v-else-if="$fetchState.error">Error Message {{mainWorkspace}}</div>
+    <div v-else-if="$fetchState.error">Error Message</div>
     <div v-else>
       <SideBar />
       <div class="ty"><TopNav /></div>
@@ -39,25 +39,29 @@ export default {
       variables: { id: parseInt(this.$auth.user.id) },
     })
     console.log(userWorkspace)
-    // const {
-    //   data: { guardiansDashboard },
-    // } = await apolloClient.query({
-    //   query: GUARDIAN_DASHBOARD_QUERIES,
-    //   variables() {
-    //     return {
-    //       workspaceId: parseInt(this.mainWorkspace.id),
-    //     }
-    //   },
-    // })
+    const {
+      data: { guardiansDashboard },
+    } = await apolloClient.query({
+      query: GUARDIAN_DASHBOARD_QUERIES,
+      variables: {
+        workspaceId: parseInt(userWorkspace.workspace.id),
+      },
+    })
     const {
       data: { teachersDashboard },
     } = await apolloClient.query({
       query: TEACHER_DASHBOARD_QUERIES,
+      variables: {
+        workspaceId: parseInt(userWorkspace.workspace.id),
+      },
     })
     const {
       data: { studentsDashboard },
     } = await apolloClient.query({
       query: STUDENT_DASHBOARD_QUERIEX,
+      variables: {
+        workspaceId: parseInt(userWorkspace.workspace.id),
+      },
     })
 
     if (
@@ -75,7 +79,7 @@ export default {
       })
     }
   },
-  // fetchDelay: 9000,
+  // fetchDelay: 8000,
 
   watch: {
     userWorkspace(value) {

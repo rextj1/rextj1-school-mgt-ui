@@ -13,6 +13,7 @@ export const GUARDIANS_FIELDS_FRAGMENT = gql`
       email
     }
   }
+  ${SINGLE_STUDENT_FIELD_FRAGMENT}
 `
 export const SINLE_GUARDIANS_FIELDS_FRAGMENT = gql`
   fragment GuardianFields on Guardian {

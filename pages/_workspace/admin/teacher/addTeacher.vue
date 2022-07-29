@@ -535,7 +535,7 @@ export default {
             Swal.fire({
               timer: 1500,
               text: 'teacher added successfully',
-              position: 'top-rightr',
+              position: 'top-right',
               color: '#fff',
               background: '#4bb543',
               toast: false,

@@ -5,16 +5,16 @@ import {
 } from './fragments'
 
 export const PAYMENT_QUERIES = gql`
-  query paymentQueries {
-    payments {
+  query paymentQueries($workspaceId: Int) {
+    payments(workspaceId: $workspaceId) {
       ...PaymentFields
     }
   }
   ${PAYMENT_FIELDS_FRAGMENT}
 `
 export const PAYMENT_QUERY = gql`
-  query paymentQuery($id: ID!) {
-    payment(id: $id) {
+  query paymentQuery($id: ID!, $workspaceId: Int) {
+    payment(id: $id, workspaceId: $workspaceId) {
       id
       amount
     }
@@ -25,11 +25,13 @@ export const PAYMENT_RECORD_QUERIES = gql`
     $klase_id: Int!
     $session_id: Int!
     $term_id: Int!
+    $workspaceId: Int
   ) {
     paymentRecords(
       klase_id: $klase_id
       session_id: $session_id
       term_id: $term_id
+      workspaceId: $workspaceId
     ) {
       ...PaymentRecordFields
     }
@@ -41,11 +43,13 @@ export const PAID_PAYMENT_RECORD_QUERIES = gql`
     $klase_id: Int!
     $session_id: Int!
     $term_id: Int!
+    $workspaceId: Int
   ) {
     paidPaymentRecords(
       klase_id: $klase_id
       session_id: $session_id
       term_id: $term_id
+      workspaceId: $workspaceId
     ) {
       ...PaymentRecordFields
     }
@@ -60,14 +64,63 @@ export const STUDENT_PAYMENT_RECORD_QUERIES = gql`
     $session_id: Int!
     $term_id: Int!
     $status: String!
+    $workspaceId: Int
   ) {
     studentPaymentRecords(
       klase_id: $klase_id
       session_id: $session_id
       term_id: $term_id
       status: $status
+      workspaceId: $workspaceId
     ) {
       ...PaymentRecordFields
+    }
+  }
+  ${PAYMENT_RECORD_FIELDS_FRAGMENT}
+`
+
+// export const STUDENT_PAYMENT_RECORD_QUERIES = gql`
+//   query StudentPaymentRecordQueries(
+//     $student_id: Int!
+//     $session_id: Int!
+//     $term_id: Int!
+//     $status: String!
+//     $workspaceId: Int
+//     $klase_id: Int
+//   ) {
+//     studentPaymentRecords(
+//       klase_id: $klase_id
+//       session_id: $session_id
+//       term_id: $term_id
+//       status: $status
+//       klase_id: $klase_id
+//       workspaceId: $workspaceId
+//     ) {
+//       ...PaymentRecordFields
+//     }
+//   }
+//   ${PAYMENT_RECORD_FIELDS_FRAGMENT}
+// `
+export const ALL_DUE_PAYMENT_QUERY = gql`
+  query AllDuePaymentRecordsQuery(
+    $workspaceId: Int
+    $search: String
+    $first: Int!
+    $page: Int!
+  ) {
+    allDuePaymentRecords(workspaceId: $workspaceId, search: $search, first: $first, page: $page) {
+      data {
+        ...PaymentRecordFields
+      }
+      paginatorInfo {
+        currentPage
+        lastPage
+        count
+        hasMorePages
+        lastItem
+        perPage
+        total
+      }
     }
   }
   ${PAYMENT_RECORD_FIELDS_FRAGMENT}

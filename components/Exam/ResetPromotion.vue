@@ -72,7 +72,7 @@
             class="d-flex justify-content-center"
             @click="createPromoteStudents"
           >
-            <b-button variant="success" size="lg">
+            <b-button variant="success" :disabled="busy" size="lg">
               <b-spinner
                 v-if="busy"
                 variant="light"
@@ -182,6 +182,7 @@ export default {
               klase_id: parseInt(this.student[0]),
               term_id: 3,
               session_id: parseInt(this.student[1]),
+              section_id: parseInt(this.student[2]),
                workspaceId: parseInt(this.mainWorkspace.id),
               status: 'unpublished',
             },

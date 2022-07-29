@@ -47,7 +47,7 @@
           class="d-flex justify-content-center"
           @click="createPromoteStudents"
         >
-          <b-button variant="danger" size="lg">
+          <b-button :disabled="busy" variant="success" size="lg">
             <b-spinner
               v-if="busy"
               variant="light"
@@ -151,21 +151,27 @@ export default {
                 variables: {
                   klase_id: parseInt(klase),
                   status: true,
+                  section_id: parseInt(this.student[4]),
                   session_id: parseInt(session),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
               data.promoteStudents = data.promoteStudents.filter((t) => {
-                return t.status === true
-              })
-              data.promoteStudents = createPromoteStudents
+                  return t.status !== true
+                })
+              // data.leads.data = data.leads.data.filter(
+              //   (lead) => !this.deleteLeads.includes(lead.id)
+              // )
+             
+              // data.promoteStudents = createPromoteStudents
 
               store.writeQuery({
                 query: PROMOTESTUDENTS_QUERIES,
                 variables: {
                   klase_id: parseInt(klase),
                   status: true,
+                  section_id: parseInt(this.student[4]),
                   session_id: parseInt(session),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },

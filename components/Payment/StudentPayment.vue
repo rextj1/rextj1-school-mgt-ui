@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="fonts">
     <b-card no-body>
       <b-tabs card style="font-size: 1.4rem">
@@ -271,8 +271,12 @@
                                 "
                               >
                                 <h2 align="center">Ronazon International</h2>
-                                <h3 align="center">{{data.item.term.name}} Payment Receipt</h3>
-                                <h3 align="center">{{data.item.session.name}} Session</h3>
+                                <h3 align="center">
+                                  {{ data.item.term.name }} Payment Receipt
+                                </h3>
+                                <h3 align="center">
+                                  {{ data.item.session.name }} Session
+                                </h3>
                                 <h3>
                                   Receipt Reference Number:
                                   {{ data.item.receipt }}
@@ -722,6 +726,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import {
   CREATE_PAYMENT_RECORD_MUTATION,
@@ -837,6 +843,10 @@ export default {
           return { text: f.label, value: f.key }
         })
     },
+    ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    mainWorkspace() {
+      return this.currentWorkspace
+    },
   },
   mounted() {
     // Set the initial number of items
@@ -859,12 +869,13 @@ export default {
       this.$bvModal.show(this.infoModal)
     },
     resetPayment() {
-      this.resetBusy =true
+      this.resetBusy = true
       this.$apollo
         .mutate({
           mutation: RESET_PAYMENT_RECORD_MUTATION,
           variables: {
             id: parseInt(this.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { createPaymentRecord } }) => {
             // Read the data from our cache for this query.
@@ -874,6 +885,7 @@ export default {
                 klase_id: parseInt(this.student[0]),
                 session_id: parseInt(this.student[2]),
                 term_id: parseInt(this.student[1]),
+                workspaceId: parseInt(this.mainWorkspace.id),
               },
             })
 
@@ -887,15 +899,15 @@ export default {
                 klase_id: parseInt(this.student[0]),
                 session_id: parseInt(this.student[2]),
                 term_id: parseInt(this.student[1]),
+                workspaceId: parseInt(this.mainWorkspace.id),
               },
               data,
             })
           },
         })
         .then(({ data }) => {
-        
-         this.$bvModal.hide(this.infoModal)
-          this.resetBusy =false
+          this.$bvModal.hide(this.infoModal)
+          this.resetBusy = false
         })
     },
 
@@ -924,6 +936,7 @@ export default {
             variables: {
               id: parseInt(payId),
               amt_paid: parseInt(payValue),
+              workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createPaymentRecord } }) => {
               // Read the data from our cache for this query.
@@ -933,6 +946,7 @@ export default {
                   klase_id: parseInt(this.student[0]),
                   session_id: parseInt(this.student[2]),
                   term_id: parseInt(this.student[1]),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -946,6 +960,7 @@ export default {
                   klase_id: parseInt(this.student[0]),
                   session_id: parseInt(this.student[2]),
                   term_id: parseInt(this.student[1]),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })
@@ -1010,5 +1025,3 @@ export default {
   }
 }
 </style>
-
-

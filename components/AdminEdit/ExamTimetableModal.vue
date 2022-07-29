@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { UPDATE_EXAM_TIMETABLE_MUTATION } from '~/graphql/examTimetables/mutations'
 import { EXAM_TIMETABLE_QUERY } from '~/graphql/examTimetables/queries'
 export default {
@@ -118,6 +120,10 @@ export default {
     closeModal() {
       return this.slug[2]
     },
+
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   apollo: {
     examTimetable: {
@@ -125,6 +131,7 @@ export default {
       variables() {
         return {
           id: parseInt(this.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
       result({ data, loading }) {
@@ -160,6 +167,7 @@ export default {
             thursday: this.form.thursday,
             friday: this.form.friday,
             klase_id: parseInt(this.klaseId),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { updateExamTimetable } }) => {
             // Read the data from our cache for this query.
@@ -167,6 +175,7 @@ export default {
               query: EXAM_TIMETABLE_QUERY,
               variables: {
                 id: parseInt(updateId),
+                workspaceId: parseInt(this.mainWorkspace.id),
               },
             })
 
@@ -181,6 +190,7 @@ export default {
                 query: EXAM_TIMETABLE_QUERY,
                 variables: {
                   id: parseInt(updateId),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })
@@ -189,6 +199,14 @@ export default {
         })
         .then(() => {
           this.form.busy = false
+           Swal.fire({
+          text: 'timetable updated successfully',
+          position: 'top-right',
+          color: '#fff',
+          background: '#d9534f',
+          toast: false,
+          backdrop: false,
+        })
 
           this.$bvModal.hide(this.closeModal)
         })

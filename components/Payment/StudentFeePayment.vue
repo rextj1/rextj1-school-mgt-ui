@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { CREATE_STUDENT_PAYMENT_MUTATION } from '~/graphql/payments/mutations'
 export default {
@@ -32,6 +34,12 @@ export default {
         amount: 600000,
       },
     }
+  },
+  computed: {
+      ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    mainWorkspace() {
+      return this.currentWorkspace
+    },
   },
   methods: {
     initializePaystack() {
@@ -50,6 +58,7 @@ export default {
                 term_id: 2,
                 session_id: 1,
                 amt_paid: parseInt(this.form.amount),
+                 workspaceId: parseInt(this.mainWorkspace.id),
               },
               // update: (store, { data: { createPaymentRecord } }) => {
               //   // Read the data from our cache for this query.
@@ -59,6 +68,7 @@ export default {
               //       klase_id: parseInt(this.student[0]),
               //       session_id: parseInt(this.student[2]),
               //       term_id: parseInt(this.student[1]),
+              //        workspaceId: parseInt(this.mainWorkspace.id),
               //     },
               //   })
 
@@ -72,6 +82,7 @@ export default {
               //       klase_id: parseInt(this.student[0]),
               //       session_id: parseInt(this.student[2]),
               //       term_id: parseInt(this.student[1]),
+              //        workspaceId: parseInt(this.mainWorkspace.id),
               //     },
               //     data,
               //   })
