@@ -143,10 +143,16 @@
 
             <b-button
               type="submit"
-              variant="danger"
+              variant="primary"
               size="lg"
               style="height: 3.75rem; margin-top: 2.9rem"
-              >Submit</b-button
+              :disabled="isBusy"
+              ><b-spinner
+                class="mr-1 mb-1"
+                small
+                variant="light"
+                v-if="isBusy"
+              />Submit</b-button
             >
           </b-row>
         </b-form>
@@ -186,6 +192,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      isBusy: false,
       promoteStudents: [],
       setPromotion: {},
       timetableDropdownClass: false,
@@ -306,9 +313,11 @@ export default {
         })
         return false
       } else {
-        this.timetableDropdownClass = true
+        
 
         setTimeout(() => {
+          this.isBusy = true
+            this.timetableDropdownClass = false
           this.$apollo.addSmartQuery('promoteStudents', {
             query: PROMOTESTUDENTS_QUERIES,
             variables() {
@@ -322,8 +331,10 @@ export default {
             },
             result({ loading, data }, key) {
               if (!loading) {
-                console.log(data)
+               
                 this.promoteStudents = data.promoteStudents
+                this.isBusy = false
+                this.timetableDropdownClass = true
               }
             },
           })

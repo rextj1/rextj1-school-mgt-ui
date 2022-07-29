@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <template v-if="$apollo.queries.sessionsw.loading"><Preload /></template>
+    <template v-if="$apollo.queries.sessions.loading"><Preload /></template>
     <template v-else>
       <div class="libarian__wrapper">
         <b-card no-body>
@@ -276,7 +276,7 @@ export default {
               color: '#fff',
               background: '#4bb543',
               toast: false,
-              confirmButtonColor: false,
+              showConfirmButton: false,
               backdrop: false,
             })
             this.form.session = ''

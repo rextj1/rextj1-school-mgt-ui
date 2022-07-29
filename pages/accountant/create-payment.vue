@@ -1,432 +1,437 @@
 <template>
-  <div class="p-4">
-    <div class="libarian__wrapper">
-      <div v-if="!klases && !terms && !sessions"></div>
-      <b-card no-body v-else>
-        <b-tabs card style="font-size: 1.4rem">
-          <b-tab active>
-            <template #title>
-              <strong>All Fees</strong>
-            </template>
-            <div class="table-down">
-              <b-row no-gutters>
-                <b-col md="12">
-                  <div class="card-body">
-                    <div class="card-student" style="background-color: #fff">
-                      <hr />
-                      <b-container fluid>
-                        <!-- User Interface controls -->
-                        <b-row>
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              v-slot="{ ariaDescribedby }"
-                              label="Sort"
-                              label-for="sort-by-select"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-input-group size="md">
-                                <b-form-select
-                                  id="sort-by-select"
-                                  v-model="sortBy"
-                                  :options="sortOptions"
-                                  :aria-describedby="ariaDescribedby"
-                                  class="w-75"
-                                  style="background-color: #f9f9f9"
-                                >
-                                  <template #first>
-                                    <option value="">-- none --</option>
-                                  </template>
-                                </b-form-select>
-
-                                <b-form-select
-                                  v-model="sortDesc"
-                                  :disabled="!sortBy"
-                                  :aria-describedby="ariaDescribedby"
-                                  size="md"
-                                  class="w-10"
-                                >
-                                  <option :value="false">Asc</option>
-                                  <option :value="true">Desc</option>
-                                </b-form-select>
-                              </b-input-group>
-                            </b-form-group>
-                          </b-col>
-
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              label="Initial sort"
-                              label-for="initial-sort-select"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-form-select
-                                id="initial-sort-select"
-                                v-model="sortDirection"
-                                :options="['asc', 'desc', 'last']"
-                                size="sm"
-                              ></b-form-select>
-                            </b-form-group>
-                          </b-col>
-
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              label="Filter"
-                              label-for="filter-input"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-input-group size="md">
-                                <b-form-input
-                                  id="filter-input"
-                                  v-model="filter"
-                                  type="search"
-                                  placeholder="Type to Search"
-                                  style="background-color: #f9f9f9"
-                                ></b-form-input>
-
-                                <b-input-group-append>
-                                  <b-button
-                                    :disabled="!filter"
-                                    @click="filter = ''"
-                                    >Clear</b-button
-                                  >
-                                </b-input-group-append>
-                              </b-input-group>
-                            </b-form-group>
-                          </b-col>
-
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              v-slot="{ ariaDescribedby }"
-                              v-model="sortDirection"
-                              label="Filter On"
-                              description="Leave all unchecked to filter on all data"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="sm"
-                              class="mb-0"
-                            >
-                              <b-form-checkbox-group
-                                v-model="filterOn"
-                                :aria-describedby="ariaDescribedby"
-                                class="mt-1"
+    <div class="libarian__wrapper p-4">
+      <template v-if="nowLoading"><Preload /></template>
+      <template v-else>
+        <b-card no-body>
+          <b-tabs card style="font-size: 1.4rem">
+            <b-tab active>
+              <template #title>
+                <strong>All Fees</strong>
+              </template>
+              <div class="table-down">
+                <b-row no-gutters>
+                  <b-col md="12">
+                    <div class="card-body">
+                      <div class="card-student" style="background-color: #fff">
+                        <hr />
+                        <b-container fluid>
+                          <!-- User Interface controls -->
+                          <b-row>
+                            <b-col lg="6" class="my-1">
+                              <b-form-group
+                                v-slot="{ ariaDescribedby }"
+                                label="Sort"
+                                label-for="sort-by-select"
+                                label-cols-sm="3"
+                                label-align-sm="right"
+                                label-size="md"
+                                class="mb-0"
                               >
-                                <b-form-checkbox value="name"
-                                  >Name</b-form-checkbox
+                                <b-input-group size="md">
+                                  <b-form-select
+                                    id="sort-by-select"
+                                    v-model="sortBy"
+                                    :options="sortOptions"
+                                    :aria-describedby="ariaDescribedby"
+                                    class="w-75"
+                                    style="background-color: #f9f9f9"
+                                  >
+                                    <template #first>
+                                      <option value="">-- none --</option>
+                                    </template>
+                                  </b-form-select>
+
+                                  <b-form-select
+                                    v-model="sortDesc"
+                                    :disabled="!sortBy"
+                                    :aria-describedby="ariaDescribedby"
+                                    size="md"
+                                    class="w-10"
+                                  >
+                                    <option :value="false">Asc</option>
+                                    <option :value="true">Desc</option>
+                                  </b-form-select>
+                                </b-input-group>
+                              </b-form-group>
+                            </b-col>
+
+                            <b-col lg="6" class="my-1">
+                              <b-form-group
+                                label="Initial sort"
+                                label-for="initial-sort-select"
+                                label-cols-sm="3"
+                                label-align-sm="right"
+                                label-size="md"
+                                class="mb-0"
+                              >
+                                <b-form-select
+                                  id="initial-sort-select"
+                                  v-model="sortDirection"
+                                  :options="['asc', 'desc', 'last']"
+                                  size="sm"
+                                ></b-form-select>
+                              </b-form-group>
+                            </b-col>
+
+                            <b-col lg="6" class="my-1">
+                              <b-form-group
+                                label="Filter"
+                                label-for="filter-input"
+                                label-cols-sm="3"
+                                label-align-sm="right"
+                                label-size="md"
+                                class="mb-0"
+                              >
+                                <b-input-group size="md">
+                                  <b-form-input
+                                    id="filter-input"
+                                    v-model="filter"
+                                    type="search"
+                                    placeholder="Type to Search"
+                                    style="background-color: #f9f9f9"
+                                  ></b-form-input>
+
+                                  <b-input-group-append>
+                                    <b-button
+                                      :disabled="!filter"
+                                      @click="filter = ''"
+                                      >Clear</b-button
+                                    >
+                                  </b-input-group-append>
+                                </b-input-group>
+                              </b-form-group>
+                            </b-col>
+
+                            <b-col lg="6" class="my-1">
+                              <b-form-group
+                                v-slot="{ ariaDescribedby }"
+                                v-model="sortDirection"
+                                label="Filter On"
+                                description="Leave all unchecked to filter on all data"
+                                label-cols-sm="3"
+                                label-align-sm="right"
+                                label-size="sm"
+                                class="mb-0"
+                              >
+                                <b-form-checkbox-group
+                                  v-model="filterOn"
+                                  :aria-describedby="ariaDescribedby"
+                                  class="mt-1"
                                 >
-                                <b-form-checkbox value="photo"
-                                  >Photo</b-form-checkbox
-                                >
-                                <b-form-checkbox value="paid"
-                                  >Paid Fee</b-form-checkbox
-                                >
-                                <b-form-checkbox value="gender"
-                                  >Gender</b-form-checkbox
-                                >
-                              </b-form-checkbox-group>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
+                                  <b-form-checkbox value="name"
+                                    >Name</b-form-checkbox
+                                  >
+                                  <b-form-checkbox value="photo"
+                                    >Photo</b-form-checkbox
+                                  >
+                                  <b-form-checkbox value="paid"
+                                    >Paid Fee</b-form-checkbox
+                                  >
+                                  <b-form-checkbox value="gender"
+                                    >Gender</b-form-checkbox
+                                  >
+                                </b-form-checkbox-group>
+                              </b-form-group>
+                            </b-col>
+                          </b-row>
 
-                        <b-row>
-                          <b-col md="1"></b-col>
-                          <b-col sm="5" md="3" class="my-1">
-                            <b-form-group
-                              label="Show"
-                              label-for="per-page-select"
-                              label-cols-sm="6"
-                              label-cols-md="4"
-                              label-cols-lg="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-form-select
-                                id="per-page-select"
-                                v-model="perPage"
-                                :options="pageOptions"
-                                size="lg"
-                                style="background-color: #f9f9f9"
-                              ></b-form-select>
-                            </b-form-group> </b-col
-                        ></b-row>
+                          <b-row>
+                            <b-col md="1"></b-col>
+                            <b-col sm="5" md="3" class="my-1">
+                              <b-form-group
+                                label="Show"
+                                label-for="per-page-select"
+                                label-cols-sm="6"
+                                label-cols-md="4"
+                                label-cols-lg="3"
+                                label-align-sm="right"
+                                label-size="md"
+                                class="mb-0"
+                              >
+                                <b-form-select
+                                  id="per-page-select"
+                                  v-model="perPage"
+                                  :options="pageOptions"
+                                  size="lg"
+                                  style="background-color: #f9f9f9"
+                                ></b-form-select>
+                              </b-form-group> </b-col
+                          ></b-row>
 
-                        <br /><br />
-                        <!-- Main table element -->
-                        <b-table
-                          :items="payments"
-                          :fields="fields"
-                          :current-page="currentPage"
-                          :per-page="perPage"
-                          :filter="filter"
-                          :filter-included-fields="filterOn"
-                          :sort-by.sync="sortBy"
-                          :sort-desc.sync="sortDesc"
-                          :sort-direction="sortDirection"
-                          stacked="md"
-                          show-empty
-                          small
-                          striped
-                          hover
-                          style="font-size: 1.3rem"
-                          :responsive="true"
-                          @filtered="onFiltered"
-                        >
-                          <template #cell(index)="data">
-                            {{ data.index + 1 }}
-                          </template>
+                          <br /><br />
+                          <!-- Main table element -->
+                          <b-table
+                            :items="payments"
+                            :fields="fields"
+                            :current-page="currentPage"
+                            :per-page="perPage"
+                            :filter="filter"
+                            :filter-included-fields="filterOn"
+                            :sort-by.sync="sortBy"
+                            :sort-desc.sync="sortDesc"
+                            :sort-direction="sortDirection"
+                            stacked="md"
+                            show-empty
+                            small
+                            striped
+                            hover
+                            style="font-size: 1.3rem"
+                            :responsive="true"
+                            @filtered="onFiltered"
+                          >
+                            <template #cell(index)="data">
+                              {{ data.index + 1 }}
+                            </template>
 
-                          <template #cell(klase)="data">
-                            {{ data.item.klase.name }}
-                          </template>
-                          <template #cell(term)="data">
-                            {{ data.item.term.name }}
-                          </template>
-                          <template #cell(session)="data">
-                            {{ data.item.session.name }}
-                          </template>
+                            <template #cell(klase)="data">
+                              {{ data.item.klase.name }}
+                            </template>
+                            <template #cell(term)="data">
+                              {{ data.item.term.name }}
+                            </template>
+                            <template #cell(session)="data">
+                              {{ data.item.session.name }}
+                            </template>
 
-                          <template #cell(amount)="data">
-                            <div v-if="amountId == data.item.id">
-                              <b-row no-gutters>
-                                <b-col md="4">
-                                  <input
-                                    v-model="form.amounts"
-                                    style="width: 10rem"
-                                    type="text"
-                                    required
-                                    size="lg"
-                                    @blur="updatingAmount(data.value)"
-                                    @keydown.enter="editField(data.item.id)"
-                                  />
-                                </b-col>
-                              </b-row>
-                            </div>
+                            <template #cell(amount)="data">
+                              <div v-if="amountId == data.item.id">
+                                <b-row no-gutters>
+                                  <b-col md="4">
+                                    <input
+                                      v-model="form.amounts"
+                                      style="width: 10rem"
+                                      type="text"
+                                      required
+                                      size="lg"
+                                      @blur="updatingAmount(data.value)"
+                                      @keydown.enter="editField(data.item.id)"
+                                    />
+                                  </b-col>
+                                </b-row>
+                              </div>
 
-                            <div v-else @click="setToEditing(data.item.id)">
-                              {{ data.value }}
-                            </div>
-                          </template>
+                              <div v-else @click="setToEditing(data.item.id)">
+                                {{ data.value }}
+                              </div>
+                            </template>
 
-                          <!-- view modal -->
-                          <template #cell(actions)="data">
-                            <b-button
-                              variant="info"
-                              size="md"
-                              class="px-3"
-                              @click="setToEditing(data.item.id)"
-                            >
-                              Edit
-                            </b-button>
+                            <!-- view modal -->
+                            <template #cell(actions)="data">
+                              <b-button
+                                variant="info"
+                                size="md"
+                                class="px-3"
+                                @click="setToEditing(data.item.id)"
+                              >
+                                Edit
+                              </b-button>
 
-                            <b-button variant="danger" size="md" class="px-3">
-                              <b-icon icon="trash" class="mr-1"></b-icon>
-                              Delete
-                            </b-button>
-                          </template>
+                              <b-button variant="danger" size="md" class="px-3">
+                                <b-icon icon="trash" class="mr-1"></b-icon>
+                                Delete
+                              </b-button>
+                            </template>
 
-                          <template #row-details="row">
-                            <b-card>
-                              <ul>
-                                <li v-for="(value, key) in row.item" :key="key">
-                                  {{ key }}: {{ value }}
-                                </li>
-                              </ul>
-                            </b-card>
-                          </template>
-                        </b-table>
-                      </b-container>
+                            <template #row-details="row">
+                              <b-card>
+                                <ul>
+                                  <li
+                                    v-for="(value, key) in row.item"
+                                    :key="key"
+                                  >
+                                    {{ key }}: {{ value }}
+                                  </li>
+                                </ul>
+                              </b-card>
+                            </template>
+                          </b-table>
+                        </b-container>
+                      </div>
                     </div>
-                  </div>
-                </b-col>
-              </b-row>
-            </div>
-          </b-tab>
-
-          <b-tab lazy>
-            <template #title>
-              <b-icon icon="plus" /><strong>Create Payment</strong>
-            </template>
-
-            <div class="margin-down px-4">
-              <!-- expense type -->
-
-              <b-form
-                method="POST"
-                @submit.prevent="onSubmit"
-                @keydown="form.onKeydown($event)"
-                @reset.prevent="onReset"
-              >
-                <b-row>
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding"
-                      >Title:</label
-                    >
                   </b-col>
+                </b-row>
+              </div>
+            </b-tab>
 
-                  <b-col md="8">
-                    <b-form-group>
-                      <b-form-select v-model="title" class="mb-3" size="lg">
-                        <!-- This slot appears above the options from 'options' prop -->
+            <b-tab lazy>
+              <template #title>
+                <b-icon icon="plus" /><strong>Create Payment</strong>
+              </template>
+
+              <div class="margin-down px-4">
+                <!-- expense type -->
+
+                <b-form
+                  method="POST"
+                  @submit.prevent="onSubmit"
+                  @keydown="form.onKeydown($event)"
+                  @reset.prevent="onReset"
+                >
+                  <b-row>
+                    <b-col md="2">
+                      <label for="input-small" class="label-padding"
+                        >Title:</label
+                      >
+                    </b-col>
+
+                    <b-col md="8">
+                      <b-form-group>
+                        <b-form-select v-model="title" class="mb-3" size="lg">
+                          <!-- This slot appears above the options from 'options' prop -->
+                          <template #first>
+                            <b-form-select-option :value="null"
+                              >School Fee</b-form-select-option
+                            >
+                          </template>
+
+                          <!-- These options will appear after the ones from 'options' prop -->
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+
+                  <!-- class -->
+                  <b-row>
+                    <b-col md="2">
+                      <label for="input-small" class="label-padding"
+                        >Class:</label
+                      >
+                    </b-col>
+
+                    <b-col md="8">
+                      <b-form-select v-model="form.class" required class="mb-3">
                         <template #first>
-                          <b-form-select-option :value="null"
-                            >School Fee</b-form-select-option
+                          <b-form-select-option :value="null" disabled
+                            >--- select class ---</b-form-select-option
                           >
                         </template>
 
-                        <!-- These options will appear after the ones from 'options' prop -->
-                      </b-form-select>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-
-                <!-- class -->
-                <b-row>
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding"
-                      >Class:</label
-                    >
-                  </b-col>
-
-                  <b-col md="8">
-                    <b-form-select v-model="form.class" required class="mb-3">
-                      <template #first>
-                        <b-form-select-option :value="null" disabled
-                          >--- select class ---</b-form-select-option
+                        <b-form-select-option
+                          :value="`${klase.id}`"
+                          v-for="klase in klases"
+                          :key="klase.id"
+                          >{{ klase.name }}</b-form-select-option
                         >
-                      </template>
-
-                      <b-form-select-option
-                        :value="`${klase.id}`"
-                        v-for="klase in klases"
-                        :key="klase.id"
-                        >{{ klase.name }}</b-form-select-option
-                      >
-                    </b-form-select>
-                  </b-col>
-                </b-row>
-
-                <b-row>
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding">Term:</label>
-                  </b-col>
-
-                  <b-col md="8">
-                    <b-form-group>
-                      <b-form-select
-                        id="terms"
-                        v-model="form.term"
-                        value-field="id"
-                        text-field="name"
-                        :options="terms"
-                        class="mb-3"
-                        size="lg"
-                        required
-                      >
-                        <!-- This slot appears above the options from 'options' prop -->
-                        <template #first>
-                          <b-form-select-option :value="null" disabled
-                            >-- Select term--</b-form-select-option
-                          >
-                        </template>
-
-                        <!-- These options will appear after the ones from 'options' prop -->
                       </b-form-select>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
+                    </b-col>
+                  </b-row>
 
-                <b-row>
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding"
-                      >Session:</label
-                    >
-                  </b-col>
-
-                  <b-col md="8">
-                    <b-form-group>
-                      <b-form-select
-                        id="sessions"
-                        v-model="form.session"
-                        value-field="id"
-                        text-field="name"
-                        :options="sessions"
-                        class="mb-3"
-                        size="lg"
-                        required
+                  <b-row>
+                    <b-col md="2">
+                      <label for="input-small" class="label-padding"
+                        >Term:</label
                       >
-                        <!-- This slot appears above the options from 'options' prop -->
-                        <template #first>
-                          <b-form-select-option :value="null" disabled
-                            >-- Select session--</b-form-select-option
-                          >
-                        </template>
+                    </b-col>
 
-                        <!-- These options will appear after the ones from 'options' prop -->
-                      </b-form-select>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
+                    <b-col md="8">
+                      <b-form-group>
+                        <b-form-select
+                          id="terms"
+                          v-model="form.term"
+                          value-field="id"
+                          text-field="name"
+                          :options="terms"
+                          class="mb-3"
+                          size="lg"
+                          required
+                        >
+                          <!-- This slot appears above the options from 'options' prop -->
+                          <template #first>
+                            <b-form-select-option :value="null" disabled
+                              >-- Select term--</b-form-select-option
+                            >
+                          </template>
 
-                <b-row>
-                  <b-col md="2">
-                    <label for="input-small" class="label-padding"
-                      >Amount(&#x20A6;):</label
-                    >
-                  </b-col>
+                          <!-- These options will appear after the ones from 'options' prop -->
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
 
-                  <b-col md="8">
-                    <b-form-input
-                      id="amount"
-                      v-model="form.amount"
-                      name="amount"
-                      placeholder="Enter the Amount"
-                      trim
-                      type="number"
-                      size="lg"
-                    ></b-form-input>
-                    <b-form-invalid-feedback
-                      :state="!form.errors.has('amount')"
-                    >
-                      {{ form.errors.get('amount') }}
-                    </b-form-invalid-feedback>
-                  </b-col>
-                </b-row>
-                <!-- description -->
+                  <b-row>
+                    <b-col md="2">
+                      <label for="input-small" class="label-padding"
+                        >Session:</label
+                      >
+                    </b-col>
 
-                <b-row>
-                  <b-col
-                    md="10"
-                    class="d-flex justify-content-center p-4 mt-2 mb-4"
-                    ><b-button
-                      type="submit"
-                      variant="primary"
-                      class="mr-4"
-                      size="lg"
-                    >
-                      <b-spinner
-                        v-if="form.busy"
-                        variant="light"
-                        small
-                        class="mr-1 mb-1"
-                      />Submit</b-button
-                    >
-                  </b-col>
-                </b-row>
-              </b-form>
-            </div>
-          </b-tab>
-        </b-tabs>
-      </b-card>
+                    <b-col md="8">
+                      <b-form-group>
+                        <b-form-select
+                          id="sessions"
+                          v-model="form.session"
+                          value-field="id"
+                          text-field="name"
+                          :options="sessions"
+                          class="mb-3"
+                          size="lg"
+                          required
+                        >
+                          <!-- This slot appears above the options from 'options' prop -->
+                          <template #first>
+                            <b-form-select-option :value="null" disabled
+                              >-- Select session--</b-form-select-option
+                            >
+                          </template>
+
+                          <!-- These options will appear after the ones from 'options' prop -->
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+
+                  <b-row>
+                    <b-col md="2">
+                      <label for="input-small" class="label-padding"
+                        >Amount(&#x20A6;):</label
+                      >
+                    </b-col>
+
+                    <b-col md="8">
+                      <b-form-input
+                        id="amount"
+                        v-model="form.amount"
+                        name="amount"
+                        placeholder="Enter the Amount"
+                        trim
+                        type="number"
+                        size="lg"
+                      ></b-form-input>
+                      <b-form-invalid-feedback
+                        :state="!form.errors.has('amount')"
+                      >
+                        {{ form.errors.get('amount') }}
+                      </b-form-invalid-feedback>
+                    </b-col>
+                  </b-row>
+                  <!-- description -->
+
+                  <b-row>
+                    <b-col
+                      md="10"
+                      class="d-flex justify-content-center p-4 mt-2 mb-4"
+                      ><b-button
+                        type="submit"
+                        variant="primary"
+                        class="mr-4"
+                        size="lg"
+                      >
+                        <b-spinner
+                          v-if="form.busy"
+                          variant="light"
+                          small
+                          class="mr-1 mb-1"
+                        />Submit</b-button
+                      >
+                    </b-col>
+                  </b-row>
+                </b-form>
+              </div>
+            </b-tab>
+          </b-tabs>
+        </b-card></template
+      >
     </div>
-  </div>
 </template>
 
 <script>
@@ -523,6 +528,12 @@ export default {
     },
   },
   computed: {
+    nowloading() {
+      this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.sessions.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.payments.loading
+    },
     sortOptions() {
       // Create an options list from our fields
       return this.fields

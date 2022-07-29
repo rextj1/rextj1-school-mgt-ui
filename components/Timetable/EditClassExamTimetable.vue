@@ -5,7 +5,9 @@
         <template v-if="$apollo.queries.examTimetables.loading"> </template>
         <template v-else>
           <div v-if="examTimetables.length == 0">
-            <h2 style="text-align: center">No record found</h2>
+            <h3 style="text-align: center; padding: 13rem 0">
+              There are no records to show
+            </h3>
           </div>
           <div v-else>
             <div class="d-flex justify-content-end mb-4">
@@ -69,6 +71,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
 export default {
   props: {
@@ -100,9 +104,15 @@ export default {
       variables() {
         return {
           klase_id: parseInt(this.editCurrentClass[0]),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     generateReport() {

@@ -10,6 +10,7 @@ export const CREATE_EXAM_TIMETABLE_MUTATION = gql`
     $time: String
     $date: String
     $klase_id: Int!
+    $workspaceId: Int
   ) {
     createExamTimetable(
       monday: $monday
@@ -20,6 +21,7 @@ export const CREATE_EXAM_TIMETABLE_MUTATION = gql`
       time: $time
       date: $date
       klase_id: $klase_id
+      workspaceId: $workspaceId
     ) {
       id
       monday
@@ -44,6 +46,7 @@ export const UPDATE_EXAM_TIMETABLE_MUTATION = gql`
     $time: String
     $date: String
     $klase_id: Int!
+    $workspaceId: Int
   ) {
     updateExamTimetable(
       id: $id
@@ -55,6 +58,7 @@ export const UPDATE_EXAM_TIMETABLE_MUTATION = gql`
       time: $time
       date: $date
       klase_id: $klase_id
+      workspaceId: $workspaceId
     ) {
       id
       monday
@@ -68,8 +72,8 @@ export const UPDATE_EXAM_TIMETABLE_MUTATION = gql`
   }
 `
 export const DELETE_EXAM_TIMETABLE_MUTATION = gql`
-  mutation deleteExamTimetableMutation($id: ID!) {
-    deleteExamTimetable(id: $id) {
+  mutation deleteExamTimetableMutation($id: ID!, $workspaceId: Int) {
+    deleteExamTimetable(id: $id, workspaceId: $workspaceId) {
       id
     }
   }

@@ -15,8 +15,8 @@ export const STUDENT_QUERIES = gql`
 `
 // DASHBOARD
 export const STUDENT_DASHBOARD_QUERIEX = gql`
-  query StudentxDashdashboardQuery {
-    studentsDashboard {
+  query StudentxDashdashboardQuery($workspaceId: Int) {
+    studentsDashboard(workspaceId: $workspaceId) {
       id
     }
   }

@@ -233,6 +233,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
 
@@ -286,7 +288,17 @@ export default {
   apollo: {
     klases: {
       query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
     // modal
@@ -321,6 +333,7 @@ export default {
         variables() {
           return {
             klase_id: parseInt(this.form.class),
+            workspaceId: parseInt(this.mainWorkspace.id),
           }
         },
         result({ data, loading }) {
@@ -363,12 +376,16 @@ export default {
               thursday: this.form.thursday,
               friday: this.form.friday,
               klase_id: parseInt(this.form.class),
+              workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createExamTimetable } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
                 query: EXAM_TIMETABLE_QUERIES,
-                variables: { klase_id: parseInt(klaseId) },
+                variables: {
+                  klase_id: parseInt(klaseId),
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
               })
               // console.log(this.form.class);
 
@@ -381,6 +398,7 @@ export default {
                 query: EXAM_TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })
@@ -399,7 +417,7 @@ export default {
             // this.$router.push('/admin/exam/timetable')
           })
           .catch((e) => {
-            console.log(e);
+            console.log(e)
             // this.klase_id =
           })
       }
@@ -416,11 +434,15 @@ export default {
           mutation: DELETE_EXAM_TIMETABLE_MUTATION,
           variables: {
             id: parseInt(item),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteExamTimetable } }) => {
             const data = store.readQuery({
               query: EXAM_TIMETABLE_QUERIES,
-              variables: { klase_id: parseInt(klaseId) },
+              variables: {
+                klase_id: parseInt(klaseId),
+                workspaceId: parseInt(this.mainWorkspace.id),
+              },
             })
 
             const index = data.examTimetables.findIndex((m) => m.id == deleteId)
@@ -432,6 +454,7 @@ export default {
                 query: EXAM_TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })
@@ -443,7 +466,7 @@ export default {
           // this.$router.push('/admin/teacher')
         })
         .catch((e) => {
-          console.log(e);
+          console.log(e)
           // this.klase_id =
         })
     },

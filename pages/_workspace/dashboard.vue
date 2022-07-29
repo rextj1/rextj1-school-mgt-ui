@@ -143,15 +143,25 @@ export default {
   apollo: {
     studentsDashboard: {
       query: STUDENT_DASHBOARD_QUERIEX,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     teachersDashboard: {
       query: TEACHER_DASHBOARD_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     guardiansDashboard: {
       query: GUARDIAN_DASHBOARD_QUERIES,
       variables() {
         return {
-          workspaceId: parseInt(this.mainWorkspace.id)
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },

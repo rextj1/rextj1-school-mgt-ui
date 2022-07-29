@@ -27,7 +27,7 @@ export default {
     color: '#0d8fff',
   },
   loadingIndicator: {
-    name: 'folding-cube',
+    name: 'three-bounce',
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

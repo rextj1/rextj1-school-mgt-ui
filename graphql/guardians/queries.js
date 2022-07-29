@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { SINGLE_STUDENT_FIELD_FRAGMENT } from '../students/fragments'
 
 import { GUARDIANS_FIELDS_FRAGMENT } from './fragments'
 
@@ -33,41 +34,12 @@ export const USER_GUARDIAN_QUERY = gql`
         id
         slug
         students {
-          id
-          slug
-          first_name
-          last_name
-          middle_name
-          phone
-          gender
-          photo
-          adm_no
-          code
-          status
-          klase {
-            id
-            name
-          }
-          address
-          admitted_year
-          guardian_name
-          guardian_no
-          guardian_email
-          guardian_address
-          term {
-            id
-            name
-          }
-          cum_avg
-          session {
-            id
-            name
-          }
-          birthday
+          ...SingleStudentField
         }
       }
     }
   }
+  ${SINGLE_STUDENT_FIELD_FRAGMENT}
 `
 
 // dashboard

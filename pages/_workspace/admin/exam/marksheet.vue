@@ -137,16 +137,23 @@
       </b-card>
 
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
-        <ExamEditExamScores
-          :marks="marks"
-          :student="[
-            form.class,
-            form.subject,
-            form.term,
-            form.session,
-            form.section,
-          ]"
-        />
+        <div v-if="klases.length == 0">
+          <h3 style="text-align: center; padding: 13rem 0">
+            There are no records to show
+          </h3>
+        </div>
+        <div v-else>
+          <ExamEditExamScores
+            :marks="marks"
+            :student="[
+              form.class,
+              form.subject,
+              form.term,
+              form.session,
+              form.section,
+            ]"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -239,7 +246,6 @@ export default {
     },
     markSubmit(e) {
       this.timetableDropdownClass = false
-      
 
       if (
         this.form.class === null ||
@@ -248,7 +254,6 @@ export default {
         this.form.subject === null ||
         this.form.section === null
       ) {
-
         return false
       } else {
         this.isBusy = true

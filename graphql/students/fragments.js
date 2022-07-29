@@ -109,5 +109,9 @@ export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
       name
     }
     birthday
+    klase {
+      id
+      name
+    }
   }
 `

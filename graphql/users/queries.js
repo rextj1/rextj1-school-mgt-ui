@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { ACCOUNTANT_USER_FRAGMENT } from '../accountants/fragments'
 
 import {
   PERMISSION_FIELDS_FRAGMENT,
@@ -207,6 +208,19 @@ export const USER_STUDENT_QUERY = gql`
     }
   }
 `
+
+export const USER_ACCOUNTANT_QUERY = gql`
+  query userAccountant($id: ID!) {
+    user(id: $id) {
+      id
+      accountant {
+        ...AccountantUserFields
+      }
+    }
+  }
+  ${ACCOUNTANT_USER_FRAGMENT}
+`
+
 export const USER_WORKSPACE_QUERY = gql`
   query userWorkspace($id: ID) {
     userWorkspace(id: $id) {

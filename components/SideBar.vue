@@ -22,12 +22,24 @@
               <h3 class="h3-memu">Accountant</h3>
 
               <div class="menu">
-                <nuxt-link to="/dashboard" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-dashboard',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon icon="columns-gap" class="material-icons" />
                   <span class="text" @click="ToggleMenus">Dashboard</span>
                 </nuxt-link>
 
-                <nuxt-link to="/accountant/profile" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-accountant-profile',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="person-fill"
                     class="material-icons"
@@ -56,20 +68,37 @@
 
                 <b-collapse
                   id="collapse-1"
-                  visible
                   accordion="my-accordion"
                   role="tabpanel"
                   class="mt-2 dropMenuClose"
                 >
                   <b-card bg-variant="light">
-                    <nuxt-link to="/accountant/create-payment" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-accountant-createPayment',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <span class="text">Create</span>
                     </nuxt-link>
 
-                    <nuxt-link to="/accountant/student-payment" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-accountant-studentPayment',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <span class="text">Payment</span>
                     </nuxt-link>
-                    <nuxt-link to="/accountant/view-payments" class="button">
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-accountant-viewPayments',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                      class="button"
+                    >
                       <span class="text">View</span>
                     </nuxt-link>
                   </b-card>
@@ -247,12 +276,24 @@
               <h3 class="h3-memu">Guardian</h3>
 
               <div class="menu">
-                <nuxt-link to="/dashboard" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-dashboard',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon icon="columns-gap" class="material-icons" />
                   <span class="text" @click="ToggleMenus">Dashboard</span>
                 </nuxt-link>
 
-                <nuxt-link to="/guardian/profile" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-guardian-profile',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="person-fill"
                     class="material-icons"
@@ -261,7 +302,13 @@
                   <span class="text" @click="ToggleMenus">Profile</span>
                 </nuxt-link>
 
-                <nuxt-link to="/guardian/timetable" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-guardian-timetable',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="alarm"
                     class="material-icons"
@@ -270,7 +317,13 @@
                   <span class="text" @click="ToggleMenus">Timetable</span>
                 </nuxt-link>
 
-                <nuxt-link to="/guardian/exam-timetable" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-guardian-examTimetable',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="vector-pen"
                     class="material-icons"
@@ -279,13 +332,34 @@
                   <span class="text" @click="ToggleMenus">Exam Timetable</span>
                 </nuxt-link>
 
-                <nuxt-link to="/guardian/result" class="button">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-guardian-result',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
                   <b-icon
                     icon="file-text"
                     class="material-icons"
                     @click="ToggleMenus"
                   />
                   <span class="text" @click="ToggleMenus">Result</span>
+                </nuxt-link>
+
+                 <nuxt-link
+                  :to="{
+                    name: 'workspace-guardian-feePayment',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="file-text"
+                    class="material-icons"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Fee Payment</span>
                 </nuxt-link>
               </div>
             </span>
