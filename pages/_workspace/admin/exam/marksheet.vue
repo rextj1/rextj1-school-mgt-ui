@@ -205,6 +205,7 @@ export default {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
           klase_id: parseInt(this.form.class),
+          section_id: parseInt(this.form.section),
         }
       },
     },
