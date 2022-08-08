@@ -7,7 +7,7 @@
           <div class="p-4">
             <div class="p-3">
               <h3 class="mb-3">All Sessions</h3>
-              <b-table :items="sessionsw" :fields="fields">
+              <b-table :items="sessions" :fields="fields">
                 <template #cell(#)="data">
                   {{ data.index + 1 }}
                 </template>
@@ -16,6 +16,7 @@
                     <b-row no-gutters>
                       <b-col md="4">
                         <input
+                          debounce="1000"
                           v-model="form.names"
                           style="width: 10rem"
                           type="text"
@@ -148,7 +149,7 @@ export default {
       query: SESSION_QUERIES,
       variables() {
         return {
-           workspaceId: parseInt(this.mainWorkspace.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -172,7 +173,7 @@ export default {
           variables() {
             return {
               id: parseInt(this.id),
-               workspaceId: parseInt(this.mainWorkspace.id),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ data, loading }) {
@@ -196,7 +197,7 @@ export default {
           variables: {
             id: parseInt(item),
             name: this.form.names,
-             workspaceId: parseInt(this.mainWorkspace.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
         })
         .then(() => {
@@ -208,7 +209,7 @@ export default {
             background: '#4bb543',
             toast: false,
             backdrop: false,
-            showConfirmButton: false
+            showConfirmButton: false,
           })
           this.sessionEditingId = ''
         })
@@ -247,12 +248,12 @@ export default {
               const data = store.readQuery({
                 query: SESSION_QUERIES,
                 variables: {
-                   workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
               // console.log(this.form.class);
 
-              data.sessionsw.push(createSessionw)
+              data.sessions.push(createSessionw)
 
               // console.log(dataCopy)
 
@@ -261,7 +262,7 @@ export default {
               store.writeQuery({
                 query: SESSION_QUERIES,
                 variables: {
-                   workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })

@@ -110,7 +110,7 @@ export default {
         .mutate({
           mutation: UPDATE_NOTICE_MUTATION,
           variables: {
-            workspace: this.mainWorkspace.slug,
+           workspaceId: parseInt(this.mainWorkspace.id),
             ...this.form,
           },
         })

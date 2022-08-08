@@ -50,7 +50,12 @@
 
                     <ul>
                       <li>
-                        <nuxt-link to="/user/profile">
+                        <nuxt-link
+                          :to="{
+                            name: 'workspace-admin-profile',
+                            params: { workspace: mainWorkspace.slug },
+                          }"
+                        >
                           <span class="nav-profile"
                             ><b-icon icon="person" /></span
                           >Profile
@@ -84,6 +89,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { USER_NOTIFICATION_QUERIES } from '~/graphql/notifications/queries'
 export default {
   data() {
@@ -95,6 +102,12 @@ export default {
         notifications: [],
       },
     }
+  },
+  computed: {
+    ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    mainWorkspace() {
+      return this.currentWorkspace
+    },
   },
   apollo: {
     user: {

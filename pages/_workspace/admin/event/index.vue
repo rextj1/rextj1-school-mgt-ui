@@ -259,7 +259,7 @@ export default {
       query: EVENT_QUERIES,
       variables() {
         return {
-          slug: this.mainWorkspace.slug,
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -279,7 +279,7 @@ export default {
           .mutate({
             mutation: CREATE_EVENT_MUTATION,
             variables: {
-              workspace: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
               ...this.form.data(),
             },
             update: (store, { data: { createEvent } }) => {
@@ -287,7 +287,7 @@ export default {
               const data = store.readQuery({
                 query: EVENT_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -299,7 +299,7 @@ export default {
               store.writeQuery({
                 query: EVENT_QUERIES,
                 variables: {
-                  slug: 'defaultworkspace',
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })
@@ -361,7 +361,7 @@ export default {
         .mutate({
           mutation: DELETE_EVENT_MUTATION,
           variables: {
-            workspace: this.mainWorkspace.slug,
+            workspaceId: parseInt(this.mainWorkspace.id),
             id: parseInt(this.invokedForDelete.id),
           },
           update: (store, { data: { deleteEvent } }) => {
@@ -369,7 +369,7 @@ export default {
               const data = store.readQuery({
                 query: EVENT_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -385,7 +385,7 @@ export default {
               store.writeQuery({
                 query: EVENT_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })
@@ -422,7 +422,7 @@ export default {
           .mutate({
             mutation: PUBLISH_EVENT_MUTATION,
             variables: {
-              workspace: this.mainWorkspace.slug,
+              workspaceId: parseInt(this.mainWorkspace.id),
               id: parseInt(eventId),
             },
             update: (store, { data: { publishEvent } }) => {
@@ -430,7 +430,7 @@ export default {
               const data = store.readQuery({
                 query: EVENT_QUERIES,
                 variables: {
-                  slug: this.mainWorkspace.slug,
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -445,7 +445,7 @@ export default {
               store.writeQuery({
                 query: EVENT_QUERIES,
                 variables: {
-                  slug: 'defaultworkspace',
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })

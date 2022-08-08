@@ -73,7 +73,9 @@ export const USER_QUERY = gql`
   query user($id: ID!) {
     user(id: $id) {
       id
-      name
+      first_name
+      last_name
+      user_type
     }
   }
 `
@@ -231,6 +233,8 @@ export const USER_WORKSPACE_QUERY = gql`
         name
         slug
         logo
+        stamp
+        paystack_secret_key
       }
     }
   }

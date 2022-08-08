@@ -323,6 +323,7 @@ export default {
     setToEditing(item) {
       this.klaseEditingId = item
       this.id = item
+
       if (this.id > 0) {
         this.$apollo.addSmartQuery('klase', {
           query: KLASE_QUERY,
@@ -382,6 +383,7 @@ export default {
           })
         })
     },
+
     // -------create -------- //
     async onSubmitCreate() {
       this.form.busy = true
@@ -403,8 +405,10 @@ export default {
                 },
               })
               // console.log(this.form.class);
+
               data.klases.push(createKlase)
               // console.log(dataCopy)
+
               // Write our data back to the cache.
               // Write back to the cache
               store.writeQuery({
@@ -430,6 +434,7 @@ export default {
               showConfirmButton: false,
             })
           })
+
         this.form.busy = false
       } catch ({ graphQLErrors: errors }) {
         this.form.busy = false
@@ -443,7 +448,9 @@ export default {
         }
       }
     },
+
     // assign class to teacher
+
     async onSubmitAssign() {
       if (this.form.klase === null && this.teacherx === []) {
         return false
@@ -453,6 +460,7 @@ export default {
           this.form.teacher.push(intValue)
         })
       }
+
       this.busy = true
       // submit exam
       try {
@@ -468,7 +476,9 @@ export default {
               const data = store.readQuery({
                 query: KLASE_QUERIES,
               })
+
               data.klases.push(assignKlaseToTeacher)
+
               store.writeQuery({
                 query: KLASE_QUERIES,
                 data,
@@ -492,6 +502,7 @@ export default {
               showConfirmButton: false,
             })
           })
+
         this.form.busy = false
       } catch ({ graphQLErrors: errors }) {
         this.form.busy = false
@@ -516,17 +527,21 @@ export default {
   background-color: var(--color-white);
   border-radius: 0.5rem;
   border: none;
+
   .margin-down {
     margin-top: 3rem;
+
     .label-padding {
       padding-right: 15rem;
       margin-bottom: 5rem;
     }
+
     .custom-select:focus,
     .form-control.focus,
     .form-control:focus {
       box-shadow: none;
     }
+
     .custom-select,
     .form-control,
     .mb-3 {
@@ -538,13 +553,14 @@ export default {
   }
   .table-down {
     padding: 4rem;
+
     .table {
       margin-bottom: 4rem;
     }
   }
+
   .custom-select-lg .nav-link.active {
     border-top: 5px solid limegreen;
   }
 }
 </style>
-Footer

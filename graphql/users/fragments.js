@@ -40,12 +40,6 @@ export const UXER_FIELDS_FRAGMENT = gql`
       id
       name
     }
-    workspace {
-      id
-      name
-      slug
-      logo
-    }
   }
 `
 

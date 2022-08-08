@@ -7,14 +7,14 @@ export const CREATE_NOTICE_MUTATION = gql`
     $title: String
     $photo: Upload
     $date: String!
-    $workspace: String
+    $workspaceId: Int!
   ) {
     createNotice(
       description: $description
       title: $title
       photo: $photo
       date: $date
-      workspace: $workspace
+      workspaceId: $workspaceId
     ) {
       ...NoticeFields
     }
@@ -29,7 +29,7 @@ export const UPDATE_NOTICE_MUTATION = gql`
     $title: String
     $photo: Upload
     $date: String!
-    $workspace: String
+    $workspaceId: Int!
   ) {
     updateNotice(
       id: $id
@@ -37,7 +37,7 @@ export const UPDATE_NOTICE_MUTATION = gql`
       title: $title
       photo: $photo
       date: $date
-      workspace: $workspace
+      workspaceId: $workspaceId
     ) {
       ...NoticeFields
     }
@@ -46,15 +46,15 @@ export const UPDATE_NOTICE_MUTATION = gql`
 `
 
 export const DELETE_NOTICE_MUTATION = gql`
-  mutation DeleteNoticeMutation($workspace: String!, $id: Int!) {
-    deleteNotice(workspace: $workspace, id: $id){
+  mutation DeleteNoticeMutation($workspaceId: Int!, $id: Int!) {
+    deleteNotice(workspaceId: $workspaceId, id: $id) {
       id
     }
   }
 `
 export const PUBLISH_NOTICE_MUTATION = gql`
-  mutation PublishNoticeMutation($workspace: String!, $id: Int!) {
-    publishNotice(workspace: $workspace, id: $id){
+  mutation PublishNoticeMutation($workspaceId: Int!, $id: Int!) {
+    publishNotice(workspaceId: $workspaceId, id: $id) {
       id
       published
     }

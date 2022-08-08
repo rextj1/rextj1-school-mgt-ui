@@ -69,13 +69,13 @@ export default {
       userWorkspace.workspace.name === 'defaultWorkspace'
     ) {
       return redirect({
-        name: 'workspace-dashboard',
+        name: 'workspace-school',
         params: { workspace: userWorkspace.workspace.name },
       })
     } else {
       return redirect({
         name: 'workspace-dashboard',
-        params: { workspace: userWorkspace.workspace.name },
+        params: { workspace: userWorkspace.workspace.slug },
       })
     }
   },

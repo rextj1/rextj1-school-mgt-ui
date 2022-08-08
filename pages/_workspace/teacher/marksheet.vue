@@ -166,14 +166,13 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { CREATE_FIELD_MUTATION } from '~/graphql/marks/mutations'
 import { MARK_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
-import { SUBJECT_QUERIES } from '~/graphql/subjects/queries'
+import { SUBJECTS_QUERIES } from '~/graphql/subjects/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
       marks: [],
-      klases: [],
       isBusy: false,
       timetableDropdownClass: false,
       form: {
@@ -200,11 +199,10 @@ export default {
       },
     },
     subjects: {
-      query: SUBJECT_QUERIES,
+      query: SUBJECTS_QUERIES,
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
-          klase_id: parseInt(this.form.class),
         }
       },
     },
@@ -232,10 +230,10 @@ export default {
     nowLoading() {
       return (
         this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.subjects.loading &&
         this.$apollo.queries.terms.loading &&
         this.$apollo.queries.sessions.loading &&
-        this.$apollo.queries.sections.loading &&
-        this.$apollo.queries.subjects.loading
+        this.$apollo.queries.sections.loading
       )
     },
     ...mapState(useWorkspaceStore, {
