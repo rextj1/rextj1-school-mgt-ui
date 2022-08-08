@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import { MARK_FIELDS_FRAGMENT } from './fragments'
 
 export const CREATE_FIELD_MUTATION = gql`
-  mutation UpdateMarkMutation(
+  mutation UpdateMarksMutation(
     $klase: Int!
     $subject: Int!
     $term: Int!

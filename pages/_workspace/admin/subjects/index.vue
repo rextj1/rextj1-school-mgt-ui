@@ -2,10 +2,81 @@
   <div class="p-4">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
-      <div class="libarian__wrapper">
-        <b-card no-body>
+      <b-card class="mb-4 d-flex">
+        <b-form @submit.prevent="timetableDropdown">
+          <b-row no-gutters>
+            <b-col md="4">
+              <b-form-group label="Current Class:">
+                <b-form-select
+                  id="klase"
+                  v-model="form.class"
+                  value-field="id"
+                  text-field="name"
+                  :options="klases"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select class --</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="4">
+              <b-form-group label="Current Section:">
+                <b-form-select
+                  id="klase"
+                  v-model="form.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select section --</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-button
+              type="submit"
+              variant="primary"
+              size="lg"
+              style="height: 3.75rem; margin-top: 2.9rem"
+              :disabled="isBusy"
+              ><b-spinner
+                class="mr-1 mb-1"
+                small
+                variant="light"
+                v-if="isBusy"
+              />Submit</b-button
+            >
+          </b-row>
+        </b-form>
+      </b-card>
+
+      <!--  -->
+      <div
+        v-show="timetableDropdownClass"
+        class="libarian__wrapper"
+        @click="hideMenu"
+      >
+        <b-card no-body @click="hideMenu">
           <b-tabs card style="font-size: 1.4rem">
-            <b-tab active>
+            <b-tab active @click="hideMenu">
               <template #title>
                 <b-icon icon="plus" /><strong>Create Subjects</strong>
               </template>
@@ -257,10 +328,13 @@ import {
   ASSIGN_SUBJECT_TO_TEACHER_MUTATION,
 } from '@/graphql/subjects/mutations'
 import { TEACHER_QUERIES } from '~/graphql/teachers/queries'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
+      isBusy: false,
       id: 0,
       subjects: [],
       teachers: [],
@@ -271,6 +345,8 @@ export default {
       busy: false,
       form: new this.$form({
         id: 0,
+        class: null,
+        section: null,
         klase: null,
         subject: null,
         subjects: [],
@@ -293,11 +369,21 @@ export default {
         },
       ],
       show: true,
+      timetableDropdownClass: false,
     }
   },
   apollo: {
-    subjects: {
-      query: SUBJECT_QUERIES,
+    klases: {
+      query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
+
+    sections: {
+      query: SECTION_QUERIES,
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
@@ -317,7 +403,7 @@ export default {
   computed: {
     nowLoading() {
       return (
-        this.$apollo.queries.subjects.loading &&
+        this.$apollo.queries.klases.loading &&
         this.$apollo.queries.teachers.loading
       )
     },
@@ -327,6 +413,41 @@ export default {
   },
 
   methods: {
+    hideMenu() {
+      if (this.registerMenu === true) {
+        this.registerMenu = false
+        this.registrationMenuClass = ''
+      }
+    },
+    timetableDropdown() {
+      this.isBusy = true
+      this.timetableDropdownClass = false
+
+      if (this.form.class === null && this.form.section === null) {
+        return false
+      } else {
+        
+
+        this.$apollo.addSmartQuery('subjects', {
+          query: SUBJECT_QUERIES,
+          variables() {
+            return {
+              workspaceId: parseInt(this.mainWorkspace.id),
+              klase_id: parseInt(this.form.class),
+              section_id: parseInt(this.form.section),
+            }
+          },
+          result({ data, loading }) {
+            if (!loading) {
+              this.subjects = data.subjects
+              this.isBusy = false
+              this.timetableDropdownClass = true
+            }
+          },
+        })
+      }
+    },
+
     // inline editing
     setToEditing(item) {
       this.subjectEditingId = item
@@ -406,6 +527,8 @@ export default {
             variables: {
               subject: this.form.subject,
               workspaceId: parseInt(this.mainWorkspace.id),
+              klase_id: parseInt(this.form.class),
+              section_id: parseInt(this.form.section),
             },
             update: (store, { data: { createSubject } }) => {
               // Read the data from our cache for this query.
@@ -413,12 +536,13 @@ export default {
                 query: SUBJECT_QUERIES,
                 variables: {
                   workspaceId: parseInt(this.mainWorkspace.id),
+                  klase_id: parseInt(this.form.class),
+                  section_id: parseInt(this.form.section),
                 },
               })
               // console.log(this.form.class);
 
               data.subjects.push(createSubject)
-              // console.log(dataCopy)
 
               // Write our data back to the cache.
               // Write back to the cache
@@ -426,6 +550,8 @@ export default {
                 query: SUBJECT_QUERIES,
                 variables: {
                   workspaceId: parseInt(this.mainWorkspace.id),
+                  klase_id: parseInt(this.form.class),
+                  section_id: parseInt(this.form.section),
                 },
                 data,
               })
@@ -568,7 +694,7 @@ export default {
 .libarian__wrapper {
   padding: 2rem;
   font-size: 1.4rem;
-  background-color: var(--color-white);
+  // background-color: var(--color-white);
   border-radius: 0.5rem;
   border: none;
 

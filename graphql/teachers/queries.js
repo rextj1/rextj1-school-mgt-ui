@@ -45,7 +45,7 @@ export const USER_TEACHER_QUERY = gql`
       blood_group {
         name
       }
-      teachers {
+      teacher {
         id
         slug
         first_name

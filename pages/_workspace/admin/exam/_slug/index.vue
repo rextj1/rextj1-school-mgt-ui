@@ -4,6 +4,7 @@
     <div v-else>
       <div class="card">
         <div class="card-header">
+          {{studentMarkResult}}
           <div class="card">
             <vue-html2pdf
               ref="html2Pdf"

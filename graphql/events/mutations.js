@@ -7,14 +7,14 @@ export const CREATE_EVENT_MUTATION = gql`
     $title: String
     $photo: Upload
     $date: String!
-    $workspace: String
+    $workspaceId: Int!
   ) {
     createEvent(
       description: $description
       title: $title
       photo: $photo
       date: $date
-      workspace: $workspace
+      workspaceId: $workspaceId
     ) {
       ...EventFields
     }
@@ -29,7 +29,7 @@ export const UPDATE_EVENT_MUTATION = gql`
     $title: String
     $photo: Upload
     $date: String!
-    $workspace: String
+    $workspaceId: Int!
   ) {
     updateEvent(
       id: $id
@@ -37,7 +37,7 @@ export const UPDATE_EVENT_MUTATION = gql`
       title: $title
       photo: $photo
       date: $date
-      workspace: $workspace
+      workspaceId: $workspaceId
     ) {
       ...EventFields
     }
@@ -46,24 +46,17 @@ export const UPDATE_EVENT_MUTATION = gql`
 `
 
 export const DELETE_EVENT_MUTATION = gql`
-  mutation DeleteEventMutation($workspace: String!, $id: Int!) {
-    deleteEvent(workspace: $workspace, id: $id){
+  mutation DeleteEventMutation($workspaceId: Int!, $id: Int!) {
+    deleteEvent(workspaceId: $workspaceId, id: $id){
       id
     }
   }
 `
 export const PUBLISH_EVENT_MUTATION = gql`
-  mutation PublishEventMutation($workspace: String!, $id: Int!) {
-    publishEvent(workspace: $workspace, id: $id){
+  mutation PublishEventMutation($workspaceId: Int!, $id: Int!) {
+    publishEvent(workspaceId: $workspaceId, id: $id){
       id
       published
     }
   }
 `
-// export const CREATE_ROW_MUTATION = gql`
-//   mutation UpdatexMutation($description: [ObjectT]) {
-//     createRow(description: $description) {
-//       id
-//     }
-//   }
-// `
