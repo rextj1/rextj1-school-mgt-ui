@@ -47,16 +47,21 @@ export const UPDATE_EVENT_MUTATION = gql`
 
 export const DELETE_EVENT_MUTATION = gql`
   mutation DeleteEventMutation($workspaceId: Int!, $id: Int!) {
-    deleteEvent(workspaceId: $workspaceId, id: $id){
+    deleteEvent(workspaceId: $workspaceId, id: $id) {
       id
     }
   }
 `
 export const PUBLISH_EVENT_MUTATION = gql`
   mutation PublishEventMutation($workspaceId: Int!, $id: Int!) {
-    publishEvent(workspaceId: $workspaceId, id: $id){
-      id
-      published
+    publishEvent(workspaceId: $workspaceId, id: $id) {
+      ...EventFields
     }
+  }
+  ${EVENT_FIELDS_FRAGMENT}
+`
+export const BULK_DELETE_EVENT_MUTATION = gql`
+  mutation BulkDeleteEventMutation($workspaceId: Int!, $ids: [String!]) {
+    bulkDeleteEvent(workspaceId: $workspaceId, ids: $ids)
   }
 `

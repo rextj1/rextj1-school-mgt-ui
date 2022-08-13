@@ -1,18 +1,20 @@
 <template>
   <div class="p-4">
     <div class="settings">
+      <template v-if="$apollo.queries.adminWorkspace.loading"><Preload/></template>
+      <template v-else>
       <h3 class="text-center py-4">Admin Settings</h3>
 
-      <section class="p-4">
-        <h3>Media</h3>
+      <b-form
+        v-if="show"
+        method="POST"
+        @submit.prevent="onSubmit"
+        @keydown="form.onKeydown($event)"
+        @reset.prevent="onReset"
+      >
+        <section class="p-4">
+          <h3>Media</h3>
 
-        <b-form
-          v-if="show"
-          method="POST"
-          @submit.prevent="onSubmit"
-          @keydown="form.onKeydown($event)"
-          @reset.prevent="onReset"
-        >
           <div class="d-flex justify-content-around mb-4">
             <div>
               <div class="profile-avatar mb-2">
@@ -71,13 +73,9 @@
                 >
                   Upload logo
                 </b-button>
-
-                {{form.logo}}
-                {{form.stamp}}
               </div>
             </div>
             <div>
-                
               <div class="profile-avatar mb-2">
                 <div v-if="preview_url_stamp == null" class="photo-preview">
                   <img
@@ -94,7 +92,7 @@
                   }"
                 ></div>
 
-               <b-form-group>
+                <b-form-group>
                   <div class="file-upload">
                     <b-button
                       variant="white"
@@ -135,42 +133,59 @@
                   Upload stamp
                 </b-button>
               </div>
-
-            
             </div>
           </div>
-        </b-form>
-      </section>
+        </section>
 
-      <section class="p-4">
-        <h3>Online Payment</h3>
-        <div class="paymnet-method">
-          <div class="paymnet-card">
-            <img
-              src="@/assets/svg/paystack.svg"
-              alt="online-payment"
-              width="200"
-            />
+        <section class="p-4">
+          <h3>Online Payment</h3>
+          <div class="paymnet-method">
+            <div class="paymnet-card">
+              <div v-if="preview_url_logo == null">
+                <img
+                  src="@/assets/svg/paystack.svg"
+                  alt="online-payment"
+                  width="200"
+                />
+              </div>
+              <div v-else>
+                <img
+                  src="@/assets/svg/paystack.svg"
+                  alt="online-payment"
+                  width="200"
+                />
+              </div>
+            </div>
+            <!-- online payment -->
+            <div class="paymnet-input-field">
+              <b-form-input
+                id="paystack_secret_key"
+                v-model="form.paystack_secret_key"
+                type="text"
+                placeholder="Enter your paystack secret key"
+                name="paystack_secret_key"
+                trim
+                size="lg"
+              ></b-form-input>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('paystack_secret_key')"
+              >
+                {{ form.errors.get('paystack_secret_key') }}
+              </b-form-invalid-feedback>
+            </div>
           </div>
-          <div class="paymnet-input-field">
-            <b-form-input
-              id="paystack_secret_key"
-              v-model="form.paystack_secret_key"
-              type="text"
-              placeholder="Enter your paystack secret key"
-              name="paystack_secret_key"
-              trim
-              disabled
-              size="lg"
-            ></b-form-input>
-            <b-form-invalid-feedback
-              :state="!form.errors.has('paystack_secret_key')"
-            >
-              {{ form.errors.get('paystack_secret_key') }}
-            </b-form-invalid-feedback>
-          </div>
-        </div>
-      </section>
+        </section>
+
+        <b-button type="submit" variant="primary" class="mr-4" size="lg">
+          <b-spinner
+            v-if="form.busy"
+            variant="light"
+            class="mr-1 mb-1"
+            small
+          />Submit</b-button
+        >
+      </b-form>
+      </template>
     </div>
   </div>
 </template>
@@ -179,20 +194,44 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
+import { ADMIN_WORKSPACE_QUERIES } from '~/graphql/workspace/queries'
+import { UPDATE_SETTING_ADMIN_MUTATION } from '~/graphql/workspace/mutations'
 export default {
   middleware: 'auth',
   data() {
     return {
       preview_url_logo: null,
       preview_url_stamp: null,
+      logo: null,
+      stamp: null,
       form: new this.$form({
         logo: null,
         stamp: null,
-        paystack_seccet_key: null,
+        paystack_secret_key: null,
       }),
       show: true,
     }
   },
+  apollo: {
+    adminWorkspace: {
+      query: ADMIN_WORKSPACE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+          status: 1,
+        }
+      },
+      result({ data, loading }) {
+        if (!loading) {
+          const adminWorkspace = data.adminWorkspace
+          this.form.paystack_secret_key = adminWorkspace.paystack_secret_key
+          this.logo = adminWorkspace.logo
+          this.stamp = adminWorkspace.stamp
+        }
+      },
+    },
+  },
+
   computed: {
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
@@ -269,6 +308,71 @@ export default {
       }
 
       return true
+    },
+
+    // ------create --------//
+    async onSubmit() {
+      this.form.busy = true
+
+      try {
+        await this.$apollo
+          .mutate({
+            mutation: UPDATE_SETTING_ADMIN_MUTATION,
+            variables: {
+              workspaceId: parseInt(this.mainWorkspace.id),
+              logo: this.form.logo,
+              stamp: this.form.stamp,
+              paystack_secret_key: this.form.paystack_secret_key,
+            },
+            update: (store, { data: { updateAdminSettings } }) => {
+              // Read the data from our cache for this query.
+              const data = store.readQuery({
+                query: ADMIN_WORKSPACE_QUERIES,
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                  status: 1,
+                },
+              })
+              // console.log(this.form.class);
+
+              data.adminWorkspace = updateAdminSettings
+
+              store.writeQuery({
+                query: ADMIN_WORKSPACE_QUERIES,
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                  status: 1,
+                },
+                data,
+              })
+            },
+          })
+          .then(() => {
+            this.form.name = null
+            Swal.fire({
+              timer: 1000,
+              text: 'settings saved successfully',
+              position: 'top-right',
+              color: '#fff',
+              background: '#4bb543',
+              toast: false,
+              showConfirmButton: false,
+              backdrop: false,
+            })
+          })
+
+        this.form.busy = false
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
+        }
+      }
     },
   },
 }

@@ -116,7 +116,7 @@
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamTabulation
           :records="records"
-          :exam-records="examRecords"
+          :marks="marks"
           :first-term="firstTerm"
           :secound-term="secoundTerm"
           :third-term="thirdTerm"
@@ -131,7 +131,6 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import {
-  EXAM_RECORDS_QUERIES,
   EXAM_RECORD_QUERIES,
   FIRST_TERM_QUERIES,
   PUBLISH_RESULT_QUERY,
@@ -139,7 +138,7 @@ import {
   THIRD_TERM_QUERIES,
 } from '~/graphql/examRecord/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import { TERM_QUERIES } from '~/graphql/marks/queries'
+import { MARK_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
@@ -148,7 +147,7 @@ export default {
     return {
       records: [],
       klaseResults: [],
-      examRecords: [],
+      marks: [],
       firstTerm: [],
       secoundTerm: [],
       thirdTerm: [],
@@ -239,27 +238,26 @@ export default {
           },
           result({ loading, data }, key) {
             if (!loading) {
-              console.log(data)
               this.records = data.klaseResults
             }
           },
         })
 
-        this.$apollo.addSmartQuery('examRecords', {
-          query: EXAM_RECORDS_QUERIES,
-          variables() {
-            return {
+         this.$apollo.addSmartQuery('marks', {
+            query: MARK_QUERIES,
+            variables: {
               klase_id: parseInt(this.form.class),
-              session_id: parseInt(this.form.term),
+              session_id: parseInt(this.form.session),
               section_id: parseInt(this.form.section),
+              term_id: parseInt(this.form.term),
               workspaceId: parseInt(this.mainWorkspace.id),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.examRecords = data.examRecords
-            }
-          },
+            },
+            result({ loading, data }, key) {
+              if (!loading) {
+                this.marks = data.marks
+                this.timetableDropdownClass = true
+              }
+            },
         })
 
         this.$apollo.addSmartQuery('firstTerm', {

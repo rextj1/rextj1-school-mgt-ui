@@ -17,19 +17,11 @@
                 @reset.prevent="onReset"
               >
                 <b-row class="p-4">
-                  <b-col md="6" class="p-4">
-                    <b-form-group label="School Notice">
-                      <b-form-textarea
-                        id="textarea"
-                        v-model="form.description"
-                        placeholder="Enter something..."
-                        rows="20"
-                        size="lg"
-                        required
-                      ></b-form-textarea>
-                    </b-form-group>
+                  <b-col md="10" class="p-4">
+                    <client-only>
+                      <VueEditor v-model="form.description" />
+                    </client-only>
                   </b-col>
-                  <b-col md="6" class="p-4"></b-col>
 
                   <b-col md="3" class="p-4">
                     <b-form-group label="Date">
@@ -80,6 +72,11 @@
                 <strong>School Notice</strong>
                 <b-icon scale="0.8" icon="caret-down-fill" />
               </template>
+
+              <b-form-checkbox @change="selectAllNotices"> </b-form-checkbox>
+              <b-button variant="danger" pill @click="handleBulkDeleteNotice"
+                >Delete All</b-button
+              >
               <b-col md="12">
                 <b-table
                   striped
@@ -89,6 +86,16 @@
                   :items="notices"
                   :fields="fields"
                 >
+                  <template #cell(delete)="data">
+                    <b-form-checkbox
+                      v-model="deleteNotices"
+                      :value="data.item.id"
+                    ></b-form-checkbox>
+                  </template>
+                  <template #cell(description)="data">
+                    <span v-html="data.value"></span>
+                  </template>
+
                   <template #cell(date)="date">
                     <b-badge
                       style="font-size: 1.4rem"
@@ -100,7 +107,7 @@
                   <template #cell(actions)="row" class="d-flex">
                     <div class="d-flex">
                       <b-button
-                        v-if="row.item.published == 0"
+                        v-if="row.item.published == false"
                         size="smd"
                         variant="warning"
                         class="mr-3 d-flex"
@@ -119,7 +126,7 @@
                       </b-button>
 
                       <b-button
-                        v-if="row.item.published == 1"
+                        v-if="row.item.published == true"
                         size="smd"
                         variant="primary"
                         class="mr-3 d-flex"
@@ -193,6 +200,38 @@
     </b-modal>
     <!-- end -->
 
+    <!-- bulk delete modal -->
+    <b-modal id="BulkDeleteModal" centered hide-header hide-footer>
+      <div class="p-5 text-center">
+        <Spinner v-if="isDeletingBulk" size="4" />
+        <template v-else>
+          <h5>
+            Are you sure you want to delete
+            <strong>{{ deleteNotices.length }}</strong> Notice(s)?
+          </h5>
+
+          <div>
+            <b-button
+              variant="light"
+              class="px-4 mr-2 border"
+              @click="handleCancelBulkDelete"
+            >
+              Cancel
+            </b-button>
+
+            <b-button
+              variant="danger"
+              class="px-4"
+              @click="bulkDeleteInvokedNotice"
+            >
+              Delete
+            </b-button>
+          </div>
+        </template>
+      </div>
+    </b-modal>
+    <!-- end -->
+
     <!-- edit modal -->
     <AdminEditNoticeModal
       v-model="isEditNoticeModal"
@@ -206,6 +245,7 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import {
+  BULK_DELETE_NOTICE_MUTATION,
   CREATE_NOTICE_MUTATION,
   DELETE_NOTICE_MUTATION,
   PUBLISH_NOTICE_MUTATION,
@@ -216,6 +256,8 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      deleteNotices: [],
+      isDeletingBulk: false,
       isPublished: null,
       notices: [],
       isEditNoticeModal: false,
@@ -231,6 +273,10 @@ export default {
       show: true,
 
       fields: [
+        {
+          key: 'delete',
+          label: 'Delete All',
+        },
         {
           key: 'date',
           label: 'Date',
@@ -284,7 +330,8 @@ export default {
             mutation: CREATE_NOTICE_MUTATION,
             variables: {
               workspaceId: parseInt(this.mainWorkspace.id),
-              ...this.form.data(),
+              description: this.form.description,
+              date: this.form.date,
             },
             update: (store, { data: { createNotice } }) => {
               // Read the data from our cache for this query.
@@ -419,6 +466,106 @@ export default {
           this.isDeleting = false
         })
     },
+
+    // Bulk delete method
+
+    selectAllNotices(event) {
+      if (event === true) {
+        this.deleteNotices = this.notices.map((notice) => notice.id)
+      } else {
+        this.deleteNotices = []
+      }
+    },
+
+    handleCancelBulkDelete() {
+      this.invokedForDelete = null
+      this.$bvModal.hide('BulkDeleteModal')
+    },
+
+    handleBulkDeleteNotice() {
+      if (this.deleteNotices.length > 0) {
+        this.$bvModal.show('BulkDeleteModal')
+      } else {
+        Swal.fire({
+          text: `select notice(s) to delete!`,
+          position: 'top-right',
+          color: '#fff',
+          background: '#d9534f',
+          toast: false,
+          backdrop: false,
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      }
+    },
+
+    bulkDeleteInvokedNotice() {
+      this.isDeletingBulk = true
+ 
+      this.$apollo
+        .mutate({
+          mutation: BULK_DELETE_NOTICE_MUTATION,
+          variables: {
+            workspaceId: parseInt(this.mainWorkspace.id),
+            ids: this.deleteNotices,
+          },
+          update: (store, { data: { bulkDeleteNoice } }) => {
+            try {
+              const data = store.readQuery({
+                query: NOTICE_QUERIES,
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
+              })
+
+              data.notices = data.notices.filter(
+                (notice) => !this.deleteNotices.includes(notice.id)
+              )
+
+              store.writeQuery({
+                query: NOTICE_QUERIES,
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
+                data,
+              })
+            } catch (e) {
+              // Do something with this error
+            }
+          },
+        })
+        .then(() => {
+          Swal.fire({
+            text: `notice(s) deleted successfully!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#5cb85c',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
+          this.deleteLeads = []
+        })
+        .catch(({ graphQLErrors: errors, ...rest }) => {
+          Swal.fire({
+            text: `an error accur while proccessing your request!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#d9534f',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
+        })
+        .finally(() => {
+          this.$bvModal.hide('BulkDeleteModal')
+
+          this.isDeletingBulk = false
+        })
+    },
+
     async handlePublishNotice(noticeId, published) {
       try {
         this.isPublished = noticeId
@@ -426,7 +573,7 @@ export default {
           .mutate({
             mutation: PUBLISH_NOTICE_MUTATION,
             variables: {
-             workspaceId: parseInt(this.mainWorkspace.id),
+              workspaceId: parseInt(this.mainWorkspace.id),
               id: parseInt(noticeId),
             },
             update: (store, { data: { publishNotice } }) => {
@@ -434,13 +581,13 @@ export default {
               const data = store.readQuery({
                 query: NOTICE_QUERIES,
                 variables: {
-                  workspaceId: parseInt(this.mainWorkspace.id)
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
-              var publishedNotice = data.notices.filter((m) => {
-                return m.id === noticeId
-              })
+              var publishedNotice = data.notices.filter(
+                (m) => m.published !== noticeId
+              )
 
               publishedNotice = publishNotice
 
@@ -449,7 +596,7 @@ export default {
               store.writeQuery({
                 query: NOTICE_QUERIES,
                 variables: {
-                  workspaceId: parseInt(this.mainWorkspace.id)
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })

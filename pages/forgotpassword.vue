@@ -5,7 +5,7 @@
         <div class="form-width">
           <b-form
             method="POST"
-            @submit.prevent="onLogin"
+            @submit.prevent="onSubmit"
             @keydown="form.onKeydown($event)"
           >
             <b-form-group label="Email">
@@ -24,46 +24,13 @@
                 {{ form.errors.get('email') }}
               </b-form-invalid-feedback>
             </b-form-group>
-
-            <label>Password</label>
-            <b-input-group label="Password" label-for="password">
-              <input
-                id="password"
-                v-model="form.password"
-                class="form-control shadow"
-                :type="[showPassword == true ? 'text' : 'password']"
-                required
-                name="password"
-                placeholder="Enter password"
-              />
-
-              <b-input-group-append
-                is-text
-                class="icon-pass"
-                @click="showPassword = !showPassword"
-              >
-                <b-icon
-                  :icon="showPassword ? 'eye-slash-fill' : 'eye-fill'"
-                ></b-icon>
-                <b-form-invalid-feedback class="mt-2">
-                  {{ form.errors.get('password') }}
-                </b-form-invalid-feedback>
-              </b-input-group-append>
-            </b-input-group>
-
-            <nuxt-link
-              variant="link"
-              :to="{ name: 'forgotpassword' }"
-              class="bold-color-link"
-            >
-              <p style="color: #0f5f4f">Forgot Password</p>
-            </nuxt-link>
+            <p style="color: #d953df; font-size: 1.2rem">{{ emailAlert }}</p>
 
             <div class="button-container mt-4">
               <b-button
                 type="submit"
                 variant="primary"
-                class="shadow-sm"
+                class="shadow"
                 size="lg"
                 pill
                 :disabled="form.busy"
@@ -74,7 +41,7 @@
                   small
                   class="mr-1 mb-1"
                 />
-                Log in
+                Submit
               </b-button>
             </div>
           </b-form>
@@ -87,6 +54,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+import { OTP_PASSWORD_RESET_MUTATION } from '~/graphql/users/mutations'
 export default {
   layout: 'auth',
 
@@ -97,9 +66,9 @@ export default {
   data() {
     return {
       showPassword: false,
+      emailAlert: '',
       form: new this.$form({
         email: '',
-        password: '',
         busy: false,
       }),
     }
@@ -108,28 +77,53 @@ export default {
     getInputState(input) {
       return this.form.errors.has(input) ? false : null
     },
-    async onLogin() {
-      const credentials = this.form.data()
+    async onSubmit() {
       this.form.busy = true
 
       try {
-        await this.$auth.loginWith('graphql', credentials)
+        await this.$apollo
+          .mutate({
+            mutation: OTP_PASSWORD_RESET_MUTATION,
+            variables: {
+              email: this.form.email,
+            },
+          })
+          .then(({ data }) => {
+            console.log(data)
+            
+            if (data.otpPasswordReset == null) {
+              this.emailAlert = `There's no email associated with this account`
+            } else {
+              Swal.fire({
+                timer: 1000,
+                text: 'settings saved successfully',
+                position: 'top-right',
+                color: '#fff',
+                background: '#4bb543',
+                toast: false,
+                showConfirmButton: false,
+                backdrop: false,
+              })
 
-        // I would normally set this.form.busy = false here
-        // but doing that has this effect where the busy spinner
-        // stops spinning a few seconds before navigating out...
-      } catch ({ graphQLErrors: errors, ...rest }) {
-        this.form.busy = false
-        if (errors && errors.length) {
-          for (let i = 0; i < errors.length; i++) {
-            if (errors[i].message === 'validation') {
-              this.form.errors.set(errors[i].extensions.validation)
-            } else if (errors[i].extensions.code === 'InvalidCredentials') {
-              this.form.errors.set('email', 'Email or password is incorrect.')
+              this.emailAlert = ''
+              this.$router.push({
+                name: 'verify-otp',
+                query: { email: this.form.email },
+              })
             }
-          }
-        } else {
-          // console.log(rest)
+            this.form.email = ''
+          })
+
+        this.form.busy = false
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
         }
       }
     },
@@ -149,24 +143,20 @@ export default {
       font-size: 1.4rem;
       border-radius: 0.5rem;
     }
-    
 
     .cover-box {
-     
       // box-shadow: 0 0 0.2rem 0;
       background-color: #fff;
       width: 50%;
       height: 100vh;
 
       .form-width {
-        
         color: #fff;
         // position: relative;
         // top: 20rem;
         // left: 18rem;
         max-width: 50%;
         margin: 35vh auto;
-        
       }
     }
     .bold-color {
@@ -182,15 +172,15 @@ export default {
     .left-side {
       background: linear-gradient(to right, #5142f5, #047edf 99%);
       animation: fide-slide-down 2s 0.5s ease-out forwards;
-    background-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0),
-        rgba(0, 0, 0, 0.528)
-      ),
-      url('~/assets/images/background.jpg');
-    background-position: center;
-    height: 100vh;
-    background-size: cover;
+      background-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.528)
+        ),
+        url('~/assets/images/background.jpg');
+      background-position: center;
+      height: 100vh;
+      background-size: cover;
       width: 50%;
     }
   }

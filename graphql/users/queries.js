@@ -80,19 +80,6 @@ export const USER_QUERY = gql`
   }
 `
 
-// export const USER_ROLE_QUERY = gql`
-//   query ($id: ID!) {
-//     user(id: $id) {
-//       ...UserFields
-//       roles{
-//         id
-//         name
-//       }
-//     }
-//   }
-//   ${USER_FIELDS_FRAGMENT}
-// `
-
 export const USERS_QUERY = gql`
   query OtpQuery {
     users {
@@ -100,20 +87,7 @@ export const USERS_QUERY = gql`
     }
   }
 `
-// export const COUNTRY_NAME_QUERY = gql`
-//   query CountryQuery {
-//     country {
-//       id
-//       name
-//       state {
-//         id
-//         name
-//       }
-//     }
-//   }
-// `
 
-// roles and permission
 export const ROLEX_QUERIEX = gql`
   query UserRoleQuery($id: ID) {
     user(id: $id) {

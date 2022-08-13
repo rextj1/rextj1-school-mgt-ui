@@ -263,12 +263,21 @@
     </div>
 
     <!-- delete modal -->
-    <b-modal id="DeleteModal" centered hide-header hide-footer>
+    <b-modal id="DeleteModal" size="sm" centered hide-header hide-footer>
       <div class="p-5 text-center">
         <Spinner v-if="isDeleting" size="4" />
         <template v-else>
           <h5>Confirm delete accountant?</h5>
           <p>This action cannot be undone.</p>
+          <b-form-group label="Delete Key">
+            <b-form-input
+              v-model="deleteKey"
+              size="lg"
+              placeholder="Enter delete key..."
+              trim
+              required
+            ></b-form-input>
+          </b-form-group>
 
           <div>
             <b-button
@@ -282,7 +291,8 @@
             <b-button
               variant="danger"
               class="px-4"
-              @click="deleteInvokedAccountant"
+              :disabled="deleteKey != 'school'"
+              @click="deleteInvokedStudent"
             >
               Delete
             </b-button>
@@ -303,6 +313,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      deleteKey: null,
       invokedAccountantForEdit: null,
       isAccountantEditing: false,
       isDeleting: false,
@@ -387,7 +398,7 @@ export default {
       query: ACCOUNTANT_QUERIES,
       variables() {
         return {
-             workspaceId: parseInt(this.mainWorkspace.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -433,14 +444,14 @@ export default {
           mutation: DELETE_ACCOUNTANT_MUTATION,
           variables: {
             id: parseInt(this.invokedForDelete.id),
-              workspaceId: parseInt(this.mainWorkspace.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteAccountant } }) => {
             try {
               const data = store.readQuery({
                 query: ACCOUNTANT_QUERIES,
                 variables: {
-                     workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -456,7 +467,7 @@ export default {
               store.writeQuery({
                 query: ACCOUNTANT_QUERIES,
                 variables: {
-                     workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
               })

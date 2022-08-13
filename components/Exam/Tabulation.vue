@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!-- {{marks}} -->
+    <div v-for="mark in marks" :key="mark.id">{{ mark.exam_total }}</div>
     <div class="card">
       <vue-html2pdf
         ref="html2Pdf"
@@ -19,21 +21,23 @@
           <div class="card">
             <div class="card-body">
               <h2 style="text-align: center; font-weight: bold">
-                <span style="color: green"  v-if="student[1] == 3"
-                >{{ student[1] }}rd Term</span>
-                 <span style="color: green"  v-else-if="student[1] == 2"
-                >{{ student[1] }}nd Term</span>
-                 <span style="color: green" v-else
-                >{{ student[1] }}st Term</span>
+                <span style="color: green" v-if="student[1] == 3"
+                  >{{ student[1] }}rd Term</span
+                >
+                <span style="color: green" v-else-if="student[1] == 2"
+                  >{{ student[1] }}nd Term</span
+                >
+                <span style="color: green" v-else>{{ student[1] }}st Term</span>
                 Tabulation sheet
               </h2>
-              <table class="table table-responsive table-striped">
-                <thead>
+              <b-table :items="marks" :fields="fields"> </b-table>
+              <!-- <table class="table table-responsive table-striped"> -->
+              <!-- <thead>
                   <tr>
                     <th>S/N</th>
-                    <th>Full Name</th>
+                    <th>Full Name</th> -->
 
-                    <th
+              <!-- <th
                       v-if="student[1] == 1 || student[1] == 2"
                       style="color: darkred"
                     >
@@ -55,12 +59,15 @@
 
                     <th v-if="student[1] == 3" style="color: darkgreen">
                       Status
-                    </th>
-                    <th style="color: darkgreen">Published Status</th>
+                    </th> -->
+              <!-- <th style="color: darkgreen">Published Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(record, value) in records" :key="record.id">
+                  <tr>
+                    <td v-for="mark in marks" :key="mark.id">{{ mark.exam_total }}</td>
+                  </tr> -->
+              <!-- <tr v-for="(record, value) in records" :key="record.id">
                     <td>{{ value + 1 }}</td>
                     <td style="">
                       {{ record.student.first_name }}
@@ -99,8 +106,8 @@
                     </td>
                     <td v-else style="color: darkblue; font-weight: bold">
                       Unpublished
-                    </td>
-                    <!-- 
+                    </td> -->
+              <!-- 
                     <td v-for="first in firstTerm" :key="first.id">
                       {{ first.cum_avg }}
                     </td>
@@ -113,10 +120,10 @@
                       {{ third.cum_avg }}
                     </td> -->
 
-                    <!-- <td style="color: darkred">{{ record.total }}</td> -->
-                  </tr>
-                </tbody>
-              </table>
+              <!-- <td style="color: darkred">{{ record.total }}</td> -->
+              <!-- </tr> -->
+              <!-- </tbody>
+              </table> -->
             </div>
             <div class="d-flex justify-content-center mb-4">
               <b-button
@@ -137,12 +144,20 @@
 export default {
   props: {
     records: Array,
-    examRecords: Array,
+    marks: Array,
     firstTerm: Array,
     secoundTerm: Array,
     thirdTerm: Array,
     // publishResult: Object,
     student: Array,
+  },
+
+  data() {
+    return { fields: [
+      {key: 'student.last_name', label: 'Students'},
+       {key: 'subject.subject', label: 'Subjects'},
+        {key: 'exam_total', label: 'Scores'}
+    ]}
   },
 
   methods: {
