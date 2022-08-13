@@ -294,12 +294,22 @@
     </template>
 
     <!-- delete modal -->
-    <b-modal id="DeleteModal" centered hide-header hide-footer>
+    <b-modal id="DeleteModal" size="sm" centered hide-header hide-footer>
       <div class="p-5 text-center">
         <Spinner v-if="isDeleting" size="4" />
         <template v-else>
           <h5>Confirm delete teacher?</h5>
           <p>This action cannot be undone.</p>
+
+          <b-form-group label="Delete Key">
+              <b-form-input
+                v-model="deleteKey"
+                size="lg"
+                placeholder="Enter delete key..."
+                trim
+                required
+              ></b-form-input>
+            </b-form-group>
 
           <div>
             <b-button
@@ -313,7 +323,8 @@
             <b-button
               variant="danger"
               class="px-4"
-              @click="deleteInvokedTeacher"
+              :disabled="deleteKey != 'school'"
+              @click="deleteInvokedStudent"
             >
               Delete
             </b-button>
@@ -334,6 +345,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      deleteKey: null,
       items: [],
       teachers: [],
       invokedTeacherForEdit: null,

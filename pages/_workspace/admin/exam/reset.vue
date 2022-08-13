@@ -32,6 +32,28 @@
               </b-form-group>
             </b-col>
 
+             <b-col md="3">
+              <b-form-group label="section">
+                <b-form-select
+                  id="sections"
+                  v-model="form.sections"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select section--</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+              </b-form-group>
+             </b-col>
+
+
             <b-col md="3">
               <b-form-group label="Previous Session">
                 <b-form-select
@@ -76,7 +98,7 @@
         <ExamResetPromotion
           :resetPromotion="resetPromotion"
           :resetKlase="resetKlase"
-          :student="[form.class, form.session]"
+          :student="[form.class, form.session, form.section]"
         />
       </div>
     </template>
@@ -93,6 +115,7 @@ import {
   RESET_PROMOTE_QUERIES,
 } from '@/graphql/promotions/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -104,6 +127,7 @@ export default {
       form: {
         class: null,
         session: null,
+        section: null,
       },
 
       dynamicClass: '',
@@ -123,6 +147,14 @@ export default {
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
+    sections: {
+      query: SECTION_QUERIES,
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
@@ -150,7 +182,9 @@ export default {
         Swal.fire({
           title: 'Ooop...',
           icon: 'warning',
-          text: 'select all available fields, current class and new class must not be the same or if current session and new session to are the same, you may need to create a new session!',
+          text: `select all available fields, current class and 
+          new class must not be the same or if current session and 
+          new session to are the same, you may need to create a new session!`,
           position: 'center',
           color: '#fff',
           background: '#4bb543',
@@ -159,23 +193,22 @@ export default {
         })
         return false
       } else {
-        
-
         // class
-         this.isBusy = true
-          this.timetableDropdownClass = false
+        this.isBusy = true
+        this.timetableDropdownClass = false
 
         this.$apollo.addSmartQuery('resetKlase', {
           query: RESET_KLASE_QUERIES,
           variables() {
             return {
               id: parseInt(this.form.class),
+              section_id: parseInt(this.form.section),
               workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
             if (!loading) {
-              console.log(data);
+              console.log(data)
               this.resetKlase = data.resetKlase
             }
           },
@@ -183,27 +216,27 @@ export default {
       }
 
       setTimeout(() => {
-          this.isBusy = true
-          this.$apollo.addSmartQuery('resetPromotion', {
-            query: RESET_PROMOTE_QUERIES,
-            variables() {
-              return {
-                from_class: parseInt(this.form.class),
-                status: true,
-                from_session: parseInt(this.form.session),
-                workspaceId: parseInt(this.mainWorkspace.id),
-                from_term: 3,
-              }
-            },
-            result({ loading, data }, key) {
-              if (!loading) {
-                this.resetPromotion = data.resetPromotion
-                this.isBusy = false
-                this.timetableDropdownClass = true
-              }
-            },
-          })
-        }, 100)
+        this.isBusy = true
+        this.$apollo.addSmartQuery('resetPromotion', {
+          query: RESET_PROMOTE_QUERIES,
+          variables() {
+            return {
+              from_class: parseInt(this.form.class),
+              status: true,
+              from_session: parseInt(this.form.session),
+              workspaceId: parseInt(this.mainWorkspace.id),
+              from_term: 3,
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.resetPromotion = data.resetPromotion
+              this.isBusy = false
+              this.timetableDropdownClass = true
+            }
+          },
+        })
+      }, 100)
     },
   },
 }

@@ -304,7 +304,9 @@ export default {
         Swal.fire({
           title: 'Ooop...',
           icon: 'warning',
-          text: 'select all available fields, current class and new class must not be the same or if current session and new session to are the same, you may need to create a new session!',
+          text: `select all available fields, current class and new class must
+           not be the same or if current session and new session to are the same,
+            you may need to create a new session!`,
           position: 'center',
           color: '#fff',
           background: '#d9534f',
@@ -313,11 +315,9 @@ export default {
         })
         return false
       } else {
-        
-
         setTimeout(() => {
           this.isBusy = true
-            this.timetableDropdownClass = false
+          this.timetableDropdownClass = false
           this.$apollo.addSmartQuery('promoteStudents', {
             query: PROMOTESTUDENTS_QUERIES,
             variables() {
@@ -331,7 +331,6 @@ export default {
             },
             result({ loading, data }, key) {
               if (!loading) {
-               
                 this.promoteStudents = data.promoteStudents
                 this.isBusy = false
                 this.timetableDropdownClass = true

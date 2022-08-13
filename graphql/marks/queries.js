@@ -4,7 +4,7 @@ import { MARK_FIELDS_FRAGMENT } from './fragments'
 export const MARK_QUERIES = gql`
   query MarksQuery(
     $klase_id: Int!
-    $subject_id: Int!
+    $subject_id: Int
     $term_id: Int!
     $session_id: Int!
     $section_id: Int!

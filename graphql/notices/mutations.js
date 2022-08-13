@@ -60,10 +60,16 @@ export const PUBLISH_NOTICE_MUTATION = gql`
     }
   }
 `
-export const CREATE_ROW_MUTATION = gql`
-  mutation UpdatexMutation($description: [ObjectT]) {
-    createRow(description: $description) {
-      id
-    }
+// export const CREATE_ROW_MUTATION = gql`
+//   mutation UpdatexMutation($description: [ObjectT]) {
+//     createRow(description: $description) {
+//       id
+//     }
+//   }
+// `
+
+export const BULK_DELETE_NOTICE_MUTATION = gql`
+  mutation BulkDeleteNoticeMutation($workspaceId: Int!, $ids: [String!]) {
+    bulkDeleteNotice(workspaceId: $workspaceId, ids: $ids)
   }
 `

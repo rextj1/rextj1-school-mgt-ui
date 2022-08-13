@@ -9,6 +9,7 @@
               <template #title>
                 <b-icon icon="plus" /><strong>Add Event</strong>
               </template>
+
               <b-form
                 v-if="show"
                 method="POST"
@@ -17,19 +18,11 @@
                 @reset.prevent="onReset"
               >
                 <b-row class="p-4">
-                  <b-col md="6" class="p-4">
-                    <b-form-group label="School Event">
-                      <b-form-textarea
-                        id="textarea"
-                        v-model="form.description"
-                        placeholder="Enter something..."
-                        rows="20"
-                        size="lg"
-                        required
-                      ></b-form-textarea>
-                    </b-form-group>
+                  <b-col md="10" class="p-4">
+                    <client-only>
+                      <VueEditor v-model="form.description" />
+                    </client-only>
                   </b-col>
-                  <b-col md="6" class="p-4"></b-col>
 
                   <b-col md="3" class="p-4">
                     <b-form-group label="Date">
@@ -80,6 +73,11 @@
                 <strong>School Event</strong>
                 <b-icon scale="0.8" icon="caret-down-fill" />
               </template>
+
+              <b-form-checkbox @change="selectAllEvents"> </b-form-checkbox>
+              <b-button variant="danger" pill @click="handleBulkDeleteEvent"
+                >Delete All</b-button
+              >
               <b-col md="12">
                 <b-table
                   striped
@@ -89,6 +87,16 @@
                   :items="events"
                   :fields="fields"
                 >
+                  <template #cell(delete)="data">
+                    <b-form-checkbox
+                      v-model="deleteEvents"
+                      :value="data.item.id"
+                    ></b-form-checkbox>
+                  </template>
+
+                  <template #cell(description)="data">
+                    <span v-html="data.value"></span>
+                  </template>
                   <template #cell(date)="date">
                     <b-badge
                       style="font-size: 1.4rem"
@@ -189,6 +197,38 @@
     </b-modal>
     <!-- end -->
 
+    <!-- bulk delete modal -->
+    <b-modal id="BulkDeleteModal" centered hide-header hide-footer>
+      <div class="p-5 text-center">
+        <Spinner v-if="isDeletingBulk" size="4" />
+        <template v-else>
+          <h5>
+            Are you sure you want to delete
+            <strong>{{ deleteEvents.length }}</strong> Event(s)?
+          </h5>
+
+          <div>
+            <b-button
+              variant="light"
+              class="px-4 mr-2 border"
+              @click="handleCancelBulkDelete"
+            >
+              Cancel
+            </b-button>
+
+            <b-button
+              variant="danger"
+              class="px-4"
+              @click="bulkDeleteInvokedEvent"
+            >
+              Delete
+            </b-button>
+          </div>
+        </template>
+      </div>
+    </b-modal>
+    <!-- end -->
+
     <!-- edit modal -->
     <AdminEditEventModal
       v-if="isEditEventModal"
@@ -202,6 +242,7 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import {
+  BULK_DELETE_EVENT_MUTATION,
   CREATE_EVENT_MUTATION,
   DELETE_EVENT_MUTATION,
   PUBLISH_EVENT_MUTATION,
@@ -210,10 +251,18 @@ import { EVENT_QUERIES } from '~/graphql/events/queries'
 import Swal from 'sweetalert2'
 export default {
   middleware: 'auth',
+  // to remove html tags
+  // filters: {
+  //   strippedContent: function (string) {
+  //     return string.replace(/<\/?[^>]+>/gi, ' ')
+  //   },
+  // },
   data() {
     return {
       isPublished: null,
       events: [],
+      deleteEvents: [],
+      isDeletingBulk: false,
       isEditEventModal: false,
       // isEditEventModal: false,
       invokedForEdit: null,
@@ -227,6 +276,10 @@ export default {
       show: true,
 
       fields: [
+        {
+          key: 'delete',
+          label: 'Delete All',
+        },
         {
           key: 'date',
           label: 'Date',
@@ -280,7 +333,8 @@ export default {
             mutation: CREATE_EVENT_MUTATION,
             variables: {
               workspaceId: parseInt(this.mainWorkspace.id),
-              ...this.form.data(),
+              description: this.form.description,
+              date: this.form.date,
             },
             update: (store, { data: { createEvent } }) => {
               // Read the data from our cache for this query.
@@ -415,6 +469,104 @@ export default {
           this.isDeleting = false
         })
     },
+
+    selectAllEvents(event) {
+      if (event === true) {
+        this.deleteEvents = this.events.map((event) => event.id)
+      } else {
+        this.deleteEvents = []
+      }
+    },
+
+    handleCancelBulkDelete() {
+      this.invokedForDelete = null
+      this.$bvModal.hide('BulkDeleteModal')
+    },
+
+    handleBulkDeleteEvent() {
+      if (this.deleteEvents.length > 0) {
+        this.$bvModal.show('BulkDeleteModal')
+      } else {
+        Swal.fire({
+          text: `select event(s) to delete!`,
+          position: 'top-right',
+          color: '#fff',
+          background: '#d9534f',
+          toast: false,
+          backdrop: false,
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      }
+    },
+
+    bulkDeleteInvokedEvent() {
+      this.isDeletingBulk = true
+
+      this.$apollo
+        .mutate({
+          mutation: BULK_DELETE_EVENT_MUTATION,
+          variables: {
+            workspaceId: parseInt(this.mainWorkspace.id),
+            ids: this.deleteEvents,
+          },
+          update: (store, { data: { bulkDeleteEvent } }) => {
+            try {
+              const data = store.readQuery({
+                query: EVENT_QUERIES,
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
+              })
+
+              data.events = data.events.filter(
+                (event) => !this.deleteEvents.includes(event.id)
+              )
+
+              store.writeQuery({
+                query: EVENT_QUERIES,
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
+                data,
+              })
+            } catch (e) {
+              // Do something with this error
+            }
+          },
+        })
+        .then(() => {
+          Swal.fire({
+            text: `event(s) deleted successfully!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#5cb85c',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
+          this.deleteLeads = []
+        })
+        .catch(({ graphQLErrors: errors, ...rest }) => {
+          Swal.fire({
+            text: `an error accur while proccessing your request!`,
+            position: 'top-right',
+            color: '#fff',
+            background: '#d9534f',
+            toast: false,
+            backdrop: false,
+            timer: 1500,
+            showConfirmButton: false,
+          })
+        })
+        .finally(() => {
+          this.$bvModal.hide('BulkDeleteModal')
+
+          this.isDeletingBulk = false
+        })
+    },
+
     async handlePublishEvent(eventId, published) {
       try {
         this.isPublished = eventId

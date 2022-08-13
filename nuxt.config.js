@@ -68,6 +68,7 @@ export default {
     '@nuxtjs/style-resources',
     '@nuxtjs/apollo',
     'nuxt-paystack',
+    ["vue2-editor/nuxt"]
     // 'vue-sweetalert2/nuxt',
   ],
   hooks: {
@@ -179,9 +180,9 @@ export default {
       default: '~/graphql/apollo/default-client.js',
     },
   },
-  // pwa: {
-  //   manifest: {
-  //     lang: 'en',
-  //   },
-  // },
+  pwa: {
+    manifest: {
+      lang: 'en',
+    },
+  },
 }

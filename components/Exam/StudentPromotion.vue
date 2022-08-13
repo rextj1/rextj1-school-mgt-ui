@@ -140,6 +140,7 @@ export default {
               klase_id: parseInt(this.student[0]),
               klaseTo: parseInt(this.student[1]),
               session_id: parseInt(this.student[2]),
+              section_id: parseInt(this.student[4]),
               sessionTo: parseInt(this.student[3]),
               workspaceId: parseInt(this.mainWorkspace.id),
               from_term: 3,
@@ -149,30 +150,31 @@ export default {
               const data = store.readQuery({
                 query: PROMOTESTUDENTS_QUERIES,
                 variables: {
-                  klase_id: parseInt(klase),
+                  klase_id: parseInt(this.student[0]),
                   status: true,
+                  session_id: parseInt(this.student[2]),
                   section_id: parseInt(this.student[4]),
-                  session_id: parseInt(session),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
-              data.promoteStudents = data.promoteStudents.filter((t) => {
-                  return t.status !== true
-                })
+           
+               data.promoteStudents.filter((t) => {
+                t.status !== true
+              })
               // data.leads.data = data.leads.data.filter(
               //   (lead) => !this.deleteLeads.includes(lead.id)
               // )
-             
-              // data.promoteStudents = createPromoteStudents
+
+              data.promoteStudents = createPromoteStudents
 
               store.writeQuery({
                 query: PROMOTESTUDENTS_QUERIES,
                 variables: {
-                  klase_id: parseInt(klase),
+                  klase_id: parseInt(this.student[0]),
                   status: true,
+                  session_id: parseInt(this.student[2]),
                   section_id: parseInt(this.student[4]),
-                  session_id: parseInt(session),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
 

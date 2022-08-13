@@ -1,0 +1,267 @@
+<template>
+  <div class="font">
+    <div class="form-wrapper">
+      <div class="cover-box">
+        <div class="form-width">
+          <b-form
+            method="POST"
+            @submit.prevent="onSubmit"
+            @keydown="form.onKeydown($event)"
+          >
+            <div class="d-flex">
+              <v-otp-input
+                ref="otpInput"
+                input-classes="otp-input"
+                separator="-"
+                :num-inputs="5"
+                :should-auto-focus="true"
+                :is-input-num="true"
+                @on-change="handleOnChange"
+                @on-complete="handleOnComplete"
+              />
+
+              <!-- <button @click="handleClearInput()">Clear</button> -->
+
+              <b-button
+                type="submit"
+                variant="primary"
+                class="shadow-sm"
+                size="lg"
+                :disabled="timer == 0"
+              >
+                <b-spinner
+                  v-if="form.busy"
+                  variant="light"
+                  small
+                  class="mr-1 mb-1"
+                />
+                Verify
+              </b-button>
+            </div>
+            <div class="timer mt-3">0:{{ timer }}</div>
+            <b-button :disabled="timer > 0" @click="resendOtp">
+              <b-spinner
+                v-if="busy"
+                variant="light"
+                small
+                class="mr-1 mb-1"
+              />Resend Code</b-button
+            >
+          </b-form>
+        </div>
+      </div>
+
+      <div class="left-side"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Swal from 'sweetalert2'
+import {
+  OTP_PASSWORD_RESET_MUTATION,
+  VERIFY_OTP_MUTATION,
+} from '~/graphql/users/mutations'
+export default {
+  layout: 'auth',
+
+  middleware: 'auth',
+
+  auth: 'guest',
+
+  data() {
+    return {
+      busy: null,
+      showPassword: false,
+      onComplete: null,
+      emailAlert: '',
+      timer: 30,
+      form: new this.$form({
+        otp: null,
+        busy: false,
+      }),
+    }
+  },
+  created() {
+    this.setTimer()
+  },
+
+  methods: {
+    handleOnComplete(value) {
+      this.form.otp = value
+      console.log('OTP completed: ', value)
+    },
+    handleOnChange(value) {
+      console.log('OTP changed: ', value)
+    },
+    handleClearInput() {
+      this.$refs.otpInput.clearInput()
+    },
+    setTimer() {
+      setTimeout(() => {
+        if (this.timer > 0) {
+          this.timer--
+        }
+        this.setTimer()
+      }, 1000)
+    },
+    async onSubmit() {
+      this.form.busy = true
+
+      try {
+        await this.$apollo
+          .mutate({
+            mutation: VERIFY_OTP_MUTATION,
+            variables: {
+              otp: parseInt(this.form.otp),
+            },
+          })
+          .then(({ data }) => {
+            if (data.verifyOtp == null) {
+              Swal.fire({
+                timer: 1000,
+                text: 'incorrect Otp code',
+                position: 'top-right',
+                color: '#fff',
+                background: '#d9534f',
+                toast: false,
+                showConfirmButton: false,
+                backdrop: false,
+              })
+            } else {
+              Swal.fire({
+                timer: 1000,
+                text: 'settings saved successfully',
+                position: 'top-right',
+                color: '#fff',
+                background: '#4bb543',
+                toast: false,
+                showConfirmButton: false,
+                backdrop: false,
+              })
+
+              this.$router.push({
+                name: 'updatePassword',
+                query: { email: this.$route.query.email },
+              })
+            }
+          })
+
+        this.form.busy = false
+      } catch ({ graphQLErrors: errors }) {
+        this.form.busy = false
+        if (errors && errors.length > 0) {
+          const validationErrors = errors.filter(
+            (err) => err.extensions.category === 'validation'
+          )
+          validationErrors.forEach((err) => {
+            this.form.errors.set(err.extensions.validation)
+          })
+        }
+      }
+    },
+
+    resendOtp() {
+      this.busy = true
+      this.timer = 30
+      this.$apollo
+        .mutate({
+          mutation: OTP_PASSWORD_RESET_MUTATION,
+          variables: {
+            email: this.$route.query.email,
+          },
+        })
+        .then(() => {
+           Swal.fire({
+                timer: 1000,
+                text: 'otp code sent successfully',
+                position: 'top-right',
+                color: '#fff',
+                background: '#4bb543',
+                toast: false,
+                showConfirmButton: false,
+                backdrop: false,
+              })
+          this.busy = false
+
+        })
+    },
+  },
+}
+</script>
+
+<style lang="scss">
+.font {
+  font-size: 1.6rem;
+  .form-wrapper {
+    display: flex;
+
+    .form-control,
+    .mb-3 {
+      height: 4.5rem;
+      font-size: 1.4rem;
+      border-radius: 0.5rem;
+    }
+
+    .cover-box {
+      // box-shadow: 0 0 0.2rem 0;
+      background-color: #fff;
+      width: 50%;
+      height: 100vh;
+
+      .form-width {
+        // color: #000;
+        max-width: 50%;
+        margin: 35vh auto;
+
+        .otp-input {
+          width: 40px;
+          height: 40px;
+          padding: 5px;
+          margin: 0 10px;
+          font-size: 20px;
+          border-radius: 4px;
+          border: 1px solid rgba(0, 0, 0, 0.3);
+          text-align: center;
+          &.error {
+            border: 1px solid red !important;
+          }
+        }
+        .otp-input::-webkit-inner-spin-button,
+        .otp-input::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        & .timer {
+          color: #000;
+          margin-left: 88%;
+        }
+      }
+    }
+    .bold-color {
+      color: #fff;
+      margin-left: 4rem;
+    }
+    .bold-color-link {
+      color: #fff;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+
+    .left-side {
+      background: linear-gradient(to right, #5142f5, #047edf 99%);
+      animation: fide-slide-down 2s 0.5s ease-out forwards;
+      background-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.528)
+        ),
+        url('~/assets/images/background.jpg');
+      background-position: center;
+      height: 100vh;
+      background-size: cover;
+      width: 50%;
+    }
+  }
+}
+</style>

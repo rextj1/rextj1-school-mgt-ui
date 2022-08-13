@@ -883,23 +883,23 @@
                   />
                   <span class="text" @click="ToggleMenus">Drivers</span>
                 </nuxt-link>
+
+                <div class="d-flex"></div>
+
+                <div class="menu">
+                  <nuxt-link
+                    :to="{
+                      name: 'workspace-admin-settings',
+                      params: { workspace: mainWorkspace.slug },
+                    }"
+                    class="button"
+                  >
+                    <b-icon icon="gear-fill" class="material-icons" />
+                    <span class="text">Settings</span>
+                  </nuxt-link>
+                </div>
               </div>
             </span>
-          </div>
-
-          <div class="flex"></div>
-
-          <div class="menu">
-            <nuxt-link
-              :to="{
-                name: 'workspace-settings',
-                params: { workspace: mainWorkspace.slug },
-              }"
-              class="button"
-            >
-              <b-icon icon="gear-fill" class="material-icons" />
-              <span class="text">Settings</span>
-            </nuxt-link>
           </div>
         </div>
       </div></template
