@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="fonts">
     <b-row no-gutters>
       <b-col md="12">
@@ -28,7 +28,7 @@ import { PAID_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
 export default {
   props: {
     studentPaymentRecords: Object,
-    studentRecord: Array
+    student: Array,
   },
   data() {
     return {
@@ -37,8 +37,9 @@ export default {
       },
     }
   },
+  // pk_test_d5fd91ddaacfe58b24ad1d30afa93df737aff214
   computed: {
-      ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    ...mapState(useWorkspaceStore, ['currentWorkspace']),
     mainWorkspace() {
       return this.currentWorkspace
     },
@@ -46,7 +47,7 @@ export default {
   methods: {
     initializePaystack() {
       this.$paystack({
-        key: 'pk_test_d5fd91ddaacfe58b24ad1d30afa93df737aff214',
+        key: this.mainWorkspace.paystack_secret_key,
         email: 'tojufutughe@gmail.com',
         amount: this.form.amount,
         ref: '' + Math.floor(Math.random() * 1000000000 + 1),
@@ -56,11 +57,11 @@ export default {
             .mutate({
               mutation: CREATE_STUDENT_PAYMENT_MUTATION,
               variables: {
-                student_id: 1,
-                term_id: 2,
-                session_id: 1,
+                student_id: parseInt(student[2]),
+                term_id: parseInt(student[0]),
+                session_id: parseInt(student[1]),
                 amt_paid: parseInt(this.form.amount),
-                 workspaceId: parseInt(this.mainWorkspace.id),
+                workspaceId: parseInt(this.mainWorkspace.id),
               },
               update: (store, { data: { createPaymentRecord } }) => {
                 // Read the data from our cache for this query.
@@ -70,7 +71,7 @@ export default {
                     klase_id: parseInt(this.student[0]),
                     session_id: parseInt(this.student[2]),
                     term_id: parseInt(this.student[1]),
-                     workspaceId: parseInt(this.mainWorkspace.id),
+                    workspaceId: parseInt(this.mainWorkspace.id),
                   },
                 })
 
@@ -81,10 +82,10 @@ export default {
                 store.writeQuery({
                   query: PAYMENT_RECORD_QUERIES,
                   variables: {
-                    klase_id: parseInt(this.student[0]),
-                    session_id: parseInt(this.student[2]),
-                    term_id: parseInt(this.student[1]),
-                     workspaceId: parseInt(this.mainWorkspace.id),
+                    klase_id: parseInt(this.student[3]),
+                    session_id: parseInt(this.student[1]),
+                    term_id: parseInt(this.student[0]),
+                    workspaceId: parseInt(this.mainWorkspace.id),
                   },
                   data,
                 })
@@ -141,5 +142,3 @@ export default {
   }
 }
 </style>
-
-

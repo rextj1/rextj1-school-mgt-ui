@@ -28,11 +28,11 @@ export const DELETE_KLASE_MUTATION = gql`
   mutation DeleteKlaseMutation($id: ID!) {
     deleteKlase(id: $id) {
       id
-      # teachers {
-      #   id
-      #   first_name
-      #   last_name
-      # }
+      teachers {
+        id
+        first_name
+        last_name
+      }
     }
   }
 `

@@ -30,7 +30,7 @@ export const STUDENT_MARK_RESULT_QUERIES = gql`
     $student_id: Int!
     $term_id: Int!
     $session_id: Int!
-    $section_id: Int!
+    $section_id: Int
     $workspaceId: Int
   ) {
     studentMarkResult(

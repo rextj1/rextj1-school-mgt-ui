@@ -10,7 +10,7 @@ export const ACCOUNTANT_QUERIES = gql`
   ${ACCOUNTANT_FIELDS_FRAGMENT}
 `
 export const ACCOUNTANT_QUERY = gql`
-  query accountantQuery($id: Int!, $workspaceId: Int) {
+  query accountantQuery($id: ID!, $workspaceId: Int) {
     accountant(id: $id, workspaceId: $workspaceId) {
       ...AccountantFields
     }

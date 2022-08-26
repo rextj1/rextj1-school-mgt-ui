@@ -1,8 +1,6 @@
 <template>
   <div class="p-4 view-payment">
-    <template v-if="!klases && !terms && !sessions && !user">
-      <div></div
-    ></template>
+    <template v-if="nowloading"><Preload /></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
@@ -54,7 +52,7 @@
 
             <b-col md="2">
               <div v-if="!user.guardian">
-                <b-form-group label="State">
+                <b-form-group label="Select Student">
                   <b-form-select class="mb-3">
                     <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
@@ -77,10 +75,17 @@
 
             <b-button
               type="submit"
-              variant="danger"
+              variant="primary"
               size="lg"
               style="height: 3.85rem; margin-top: 2.85rem"
-              >Submit</b-button
+            >
+              <b-spinner
+                v-if="isBusy"
+                class="mr-1 mb-1"
+                small
+                variant="light"
+              />
+              Submit</b-button
             >
           </b-row>
         </b-form>
@@ -99,17 +104,16 @@
 </template>
 
 <script>
-import {
-  EXAM_RECORD_QUERIES,
-  STUDENT_EXAM_RESULT_QUERIES,
-} from '~/graphql/examRecord/queries'
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
+import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
 import { USER_GUARDIAN_QUERY } from '~/graphql/guardians/queries'
-import { KLASES_QUERIES } from '~/graphql/klases/queries'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import {
-  SESSION_QUERIES,
   STUDENT_MARK_RESULT_QUERIES,
   TERM_QUERIES,
 } from '~/graphql/marks/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -119,6 +123,7 @@ export default {
       studentExamResult: [],
       studentMarkResult: [],
       user: [],
+      isBusy: false,
       timetableDropdownClass: false,
       form: {
         class: null,
@@ -133,15 +138,39 @@ export default {
       registrationMenuClass: '',
     }
   },
+  computed: {
+    nowloading() {
+      return (
+        this.$apollo.queries.user.loading &&
+        this.$apollo.queries.klases.loading &&
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.sessions.loading
+      )
+    },
+
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
   apollo: {
     klases: {
-      query: KLASES_QUERIES,
+      query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     terms: {
       query: TERM_QUERIES,
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     user: {
       query: USER_GUARDIAN_QUERY,
@@ -164,27 +193,9 @@ export default {
       ) {
         return false
       } else {
-        this.timetableDropdownClass = true
-      }
+        this.isBusy = true
+        this.timetableDropdownClass = false
 
-      setTimeout(() => {
-        this.$apollo.addSmartQuery('klaseResults', {
-          query: EXAM_RECORD_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.form.class),
-              term_id: parseInt(this.form.term),
-              session_id: parseInt(this.form.session),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.klaseResults = data.klaseResults
-            }
-          },
-        })
-      }, 100)
-      setTimeout(() => {
         this.$apollo.addSmartQuery('studentExamResult', {
           query: STUDENT_EXAM_RESULT_QUERIES,
           variables() {
@@ -193,16 +204,17 @@ export default {
               student_id: parseInt(this.form.student_id),
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
             if (!loading) {
               this.studentExamResult = data.studentExamResult
+              this.klaseResults = data.studentExamResult
             }
           },
         })
-      }, 100)
-      setTimeout(() => {
+
         this.$apollo.addSmartQuery('studentMarkResult', {
           query: STUDENT_MARK_RESULT_QUERIES,
           variables() {
@@ -211,16 +223,19 @@ export default {
               student_id: parseInt(this.form.student_id),
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
 
           result({ loading, data }, key) {
             if (!loading) {
               this.studentMarkResult = data.studentMarkResult
+              this.isBusy = false
+              this.timetableDropdownClass = true
             }
           },
         })
-      }, 100)
+      }
     },
   },
 }

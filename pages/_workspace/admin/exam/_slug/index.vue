@@ -141,12 +141,19 @@
                               v-html="position(first.position)"
                             ></h4>
                           </div>
+                           <div
+                            class="d-flex align-items-stretch"
+                            style="margin-top: 3rem"
+                          >
+                            <h4>SECTION:</h4>
+                            <h4 style="margin-left: 0.5rem">{{first.section.name}}</h4>
+                          </div>
                           <div
                             class="d-flex align-items-stretch"
                             style="margin-top: 3rem"
                           >
                             <h4>SESSION:</h4>
-                            <h4 style="margin-left: 0.5rem">2020-2023</h4>
+                            <h4 style="margin-left: 0.5rem">{{first.session.name}}</h4>
                           </div>
                           <div
                             class="d-flex align-items-stretch"

@@ -11,14 +11,14 @@ export const TEACHER_DASHBOARD_QUERIES = gql`
   }
 `
 // used by subject
-export const TEACHER_QUERIES = gql`
-  query TeachersQueries {
-    teachers {
-      ...TeacherFields
-    }
-  }
-  ${TEACHER_FIELDS_FRAGMENT}
-`
+// export const TEACHER_QUERIES = gql`
+//   query TeachersQueries {
+//     teachers {
+//       ...TeacherFields
+//     }
+//   }
+//   ${TEACHER_FIELDS_FRAGMENT}
+// `
 
 export const TEACHER_QUERY = gql`
   query TeacherQuery($id: Int!, $workspaceId: Int) {

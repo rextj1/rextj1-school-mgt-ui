@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 view-payment">
-    <div v-if="!terms && !sessions"></div>
+    <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="p-3 mb-4 d-flex">
         <b-form @submit.prevent="markSubmit">
@@ -58,13 +58,15 @@
               style="height: 3.8rem; margin-top: 2.83rem"
               >Submit</b-button
             >
+           
           </b-row>
         </b-form>
       </b-card>
 
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
-        <PaymentStudentFeePayment
-          :marks="marks"
+        <PaymentStudentPaymentRecords
+          :PaidPaymentrecords="PaidPaymentrecords"
+          :DuePaymentrecords="DuePaymentrecords"
           :student="[form.term, form.session]"
         />
       </div>
@@ -73,14 +75,20 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { CREATE_FIELD_MUTATION } from '~/graphql/marks/mutations'
-import { SESSION_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { STUDENT_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
+import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
-      marks: [],
+      PaidPaymentrecords: null,
+      DuePaymentrecords: null,
+      studentPaymentRecords: {},
       timetableDropdownClass: true,
       form: {
         session: null,
@@ -93,14 +101,43 @@ export default {
       registrationMenuClass: '',
     }
   },
+
   apollo: {
     terms: {
       query: TERM_QUERIES,
     },
     sessions: {
       query: SESSION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
+    user: {
+      query: USER_STUDENT_QUERY,
+      variables() {
+        return {
+          id: parseInt(this.$auth.user.id),
+        }
+      },
     },
   },
+  computed: {
+    student() {
+      return this.user.student.id
+    },
+    nowLoading() {
+      return (
+        this.$apollo.queries.terms.loading &&
+        this.$apollo.queries.sessions.loading
+      )
+    },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
+
   methods: {
     dynamicStudentClass(item) {
       this.dynamicClass = item
@@ -111,37 +148,56 @@ export default {
       } else {
         this.timetableDropdownClass = true
       }
-      this.$apollo
-        .mutate({
-          mutation: CREATE_FIELD_MUTATION,
-          variables: {
-            session: parseInt(this.form.session),
-            term: parseInt(this.form.term),
-          },
-        })
-        .then(({ data }) => {})
-        .catch((err) => {
-          err
-        })
+      // this.$apollo
+      //   .mutate({
+      //     mutation: CREATE_FIELD_MUTATION,
+      //     variables: {
+      //       session: parseInt(this.form.session),
+      //       term: parseInt(this.form.term),
+      //     },
+      //   })
+      //   .then(() => {})
+      //   .catch((err) => {
+      //     err
+      //   })
 
-      setTimeout(() => {
-        this.$apollo.addSmartQuery('marks', {
+   
+        this.$apollo.addSmartQuery('studentPaymentRecords', {
           query: STUDENT_PAYMENT_RECORD_QUERIES,
           variables: {
-            klase_id: parseInt(this.form.class),
-            subject_id: parseInt(this.form.subject),
+           
+            student_id: parseInt(this.student),
             session_id: parseInt(this.form.session),
             term_id: parseInt(this.form.term),
             workspaceId: parseInt(this.mainWorkspace.id),
-            status: 'Due'
+            status: 'Due',
           },
           result({ loading, data }, key) {
             if (!loading) {
-              this.marks = data.marks
+              console.log(data, 'due')
+              this.DuePaymentrecords = data.studentPaymentRecords
             }
           },
         })
-      }, 100)
+  
+       this.$apollo.addSmartQuery('studentPaymentRecords', {
+          query: STUDENT_PAYMENT_RECORD_QUERIES,
+          variables: {
+           
+            student_id: parseInt(this.student),
+            session_id: parseInt(this.form.session),
+            term_id: parseInt(this.form.term),
+            workspaceId: parseInt(this.mainWorkspace.id),
+            status: 'Paid',
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              console.log(data, 'paid')
+              this.PaidPaymentrecords = data.studentPaymentRecords
+            }
+          },
+        })
+      
     },
   },
 }

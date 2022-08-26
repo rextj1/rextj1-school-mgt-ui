@@ -46,7 +46,7 @@ export const STUDENT_EXAM_RESULT_QUERIES = gql`
     $student_id: Int!
     $term_id: Int!
     $session_id: Int!
-    $section_id: Int!
+    $section_id: Int
     $workspaceId: Int
   ) {
     studentExamResult(

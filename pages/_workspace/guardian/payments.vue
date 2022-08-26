@@ -3,7 +3,7 @@
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="p-3 mb-4 d-flex">
-        <b-form @submit.prevent="markSubmit">
+        <b-form @submit.prevent="onSubmit">
           <b-row>
             <b-col md="3">
               <b-form-group label="Terms">
@@ -53,7 +53,7 @@
 
             <b-col md="3">
               <div v-if="!user">
-                <b-form-group label="State">
+                <b-form-group label="Select Student">
                   <b-form-select class="mb-3">
                     <b-form-select-option value="null"> </b-form-select-option>
                   </b-form-select>
@@ -76,21 +76,26 @@
 
             <b-button
               type="submit"
-              variant="danger"
+              variant="primary"
               size="lg"
               style="height: 3.8rem; margin-top: 2.83rem"
-              >Submit</b-button
-            >
+              >
+              <b-spinner
+              v-if="isBusy"
+              class="mr-1 mb-1"
+              small
+              variant="light"
+              />
+              Submit</b-button>
           </b-row>
         </b-form>
       </b-card>
 
-      {{ studentPaymentRecords }}
-
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
-        <PaymentStudentFeeOnlineMethod
-          :studentPaymentRecords="studentPaymentRecords"
-          :student="[form.term, form.session, form.student_id, form.class]"
+        <PaymentStudentPaymentRecords
+          :PaidPaymentrecords="PaidPaymentrecords"
+          :DuePaymentrecords="DuePaymentrecords"
+          :student="[form.term, form.session]"
         />
       </div>
     </div>
@@ -100,21 +105,25 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
+import { CREATE_FIELD_MUTATION } from '~/graphql/marks/mutations'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { STUDENT_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { USER_GUARDIAN_QUERY } from '~/graphql/guardians/queries'
+
 export default {
   middleware: 'auth',
   data() {
     return {
+      PaidPaymentrecords: null,
+      DuePaymentrecords: null,
       studentPaymentRecords: {},
       timetableDropdownClass: true,
+      isBusy: false,
       form: {
         session: null,
         term: null,
         student_id: null,
-        class: null,
       },
 
       dynamicClass: '',
@@ -125,14 +134,6 @@ export default {
   },
 
   apollo: {
-    user: {
-      query: USER_GUARDIAN_QUERY,
-      variables() {
-        return {
-          id: parseInt(this.$auth.user.id),
-        }
-      },
-    },
     terms: {
       query: TERM_QUERIES,
     },
@@ -144,25 +145,32 @@ export default {
         }
       },
     },
+    user: {
+      query: USER_GUARDIAN_QUERY,
+      variables() {
+        return {
+          id: parseInt(this.$auth.user.id),
+        }
+      },
+    },
   },
   computed: {
     nowLoading() {
       return (
-        this.$apollo.queries.sessions.loading &&
         this.$apollo.queries.terms.loading &&
-        this.$apollo.queries.user.loading
+        this.$apollo.queries.sessions.loading
       )
     },
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
   },
+
   methods: {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
-    markSubmit() {
-      this.form.class = this.user.guardian.students.map((m) => m.klase.id)
+    onSubmit() {
       if (
         this.form.term === null ||
         this.form.session === null ||
@@ -170,26 +178,45 @@ export default {
       ) {
         return false
       } else {
-        setTimeout(() => {
-          this.$apollo.addSmartQuery('studentPaymentRecords', {
-            query: STUDENT_PAYMENT_RECORD_QUERIES,
-            variables: {
-              klase_id: parseInt(
-                this.user.guardian.students.map((m) => m.klase.id)
-              ),
-              student_id: parseInt(this.form.student_id),
-              session_id: parseInt(this.form.session),
-              term_id: parseInt(this.form.term),
-              workspaceId: parseInt(this.mainWorkspace.id),
-              status: 'Due',
-            },
-            result({ loading, data }, key) {
-              if (!loading) {
-                this.studentPaymentRecords = data.studentPaymentRecords
-              }
-            },
-          })
-        }, 100)
+       
+      
+      this.isBusy = true
+       this.timetableDropdownClass = false
+      this.$apollo.addSmartQuery('studentPaymentRecords', {
+        query: STUDENT_PAYMENT_RECORD_QUERIES,
+        variables: {
+          student_id: parseInt(this.form.student_id),
+          session_id: parseInt(this.form.session),
+          term_id: parseInt(this.form.term),
+          workspaceId: parseInt(this.mainWorkspace.id),
+          status: 'Due',
+        },
+        result({ loading, data }, key) {
+          if (!loading) {
+            console.log(data, 'due')
+            this.DuePaymentrecords = data.studentPaymentRecords
+          }
+        },
+      })
+
+      this.$apollo.addSmartQuery('studentPaymentRecords', {
+        query: STUDENT_PAYMENT_RECORD_QUERIES,
+        variables: {
+          student_id: parseInt(this.form.student_id),
+          session_id: parseInt(this.form.session),
+          term_id: parseInt(this.form.term),
+          workspaceId: parseInt(this.mainWorkspace.id),
+          status: 'Paid',
+        },
+        result({ loading, data }, key) {
+          if (!loading) {
+            console.log(data, 'paid')
+            this.PaidPaymentrecords = data.studentPaymentRecords
+            this.isBusy = false
+             this.timetableDropdownClass = true
+          }
+        },
+      })
       }
     },
   },

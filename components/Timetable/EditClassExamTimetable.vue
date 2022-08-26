@@ -1,70 +1,64 @@
 <template>
   <div class="font">
     <template>
-      <div class="fonts">
-        <template v-if="$apollo.queries.examTimetables.loading"> </template>
-        <template v-else>
-          <div v-if="examTimetables.length == 0">
-            <h3 style="text-align: center; padding: 13rem 0">
-              There are no records to show
-            </h3>
-          </div>
-          <div v-else>
-            <div class="d-flex justify-content-end mb-4">
-              <b-button
-                variant="danger"
-                size="lg"
-                @click.prevent="generateReport"
-                >PDF</b-button
-              >
-            </div>
-
-            <vue-html2pdf
-              ref="html2Pdf"
-              :show-layout="true"
-              :float-layout="false"
-              :enable-download="false"
-              :preview-modal="true"
-              :paginate-elements-by-height="1400"
-              filename="Pdf"
-              :pdf-quality="2"
-              :manual-pagination="false"
-              pdf-format="a4"
-              pdf-orientation="landscape"
-              pdf-content-width=""
+      <div class="wrapper">
+        <div v-if="examTimetables.length == 0">
+          <h3 style="text-align: center; padding: 13rem 0">
+            There are no records to show
+          </h3>
+        </div>
+        <div v-else>
+          <div class="d-flex justify-content-end mb-4">
+            <b-button variant="danger" size="lg" @click.prevent="generateReport"
+              >PDF</b-button
             >
-              <section slot="pdf-content">
-                <b-row no-gutters>
-                  <b-col md="12">
-                    <h3 class="d-flex justify-content-center mb-4">
-                      <!-- <div v-for="klase in examTimetables[0]" :key="klase.id">
+          </div>
+
+          <vue-html2pdf
+            ref="html2Pdf"
+            :show-layout="true"
+            :float-layout="false"
+            :enable-download="false"
+            :preview-modal="true"
+            :paginate-elements-by-height="1400"
+            filename="Pdf"
+            :pdf-quality="2"
+            :manual-pagination="false"
+            pdf-format="a4"
+            pdf-orientation="landscape"
+            pdf-content-width=""
+          >
+            <section slot="pdf-content">
+              <b-row no-gutters>
+                <b-col md="12">
+                  <h3 class="d-flex justify-content-center mb-4">
+                    <!-- <div v-for="klase in examTimetables[0]" :key="klase.id">
                         {{ klase.name }}
                       </div> -->
-                      {{ editCurrentClass[1] }} (Exam Timetable)
-                    </h3>
-                    <div class="card-body">
-                      <div class="card-student p-3">
-                        <b-table
-                          hover
-                          bordered
-                          head-variant="dark"
-                          caption-top
-                          no-border-collapse
-                          fixed
-                          stacked="md"
-                          responsive="true"
-                          :items="examTimetables"
-                          :fields="fields"
-                        >
-                        </b-table>
-                      </div>
+                    {{ editCurrentClass[1] }} (Exam Timetable)
+                  </h3>
+                  <div class="card-body">
+                    <div class="card-student p-3">
+                      <b-table
+                        hover
+                        bordered
+                        head-variant="dark"
+                        caption-top
+                        no-border-collapse
+                        fixed
+                        stacked="md"
+                        responsive="true"
+                        :items="examTimetables"
+                        :fields="fields"
+                      >
+                      </b-table>
                     </div>
-                  </b-col>
-                </b-row>
-              </section>
-            </vue-html2pdf>
-          </div>
-        </template>
+                  </div>
+                </b-col>
+              </b-row>
+            </section>
+          </vue-html2pdf>
+        </div>
       </div>
     </template>
   </div>
@@ -123,7 +117,7 @@ export default {
 </script>
 
 <style lang="scss">
-.fonts {
+.wrapper {
   font-size: 1.4rem !important;
   padding: 2rem;
 

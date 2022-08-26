@@ -1,222 +1,668 @@
 <template>
-  <div>
-    <template>
-      <div class="fixed">
-        <div
-          class="aside"
-          style="font-size: 1.6rem"
-          :class="`${is_expanded ? 'is-expanded' : 'not_expanded'}`"
-        >
-          <div class="logo">
-            <img src="@/assets/svg/ronazon-logo.svg" alt="" />
+  <div class="sidebar-wrapper">
+    <div
+      class="aside"
+      style="font-size: 1.6rem"
+      :class="`${isCollasped == true ? 'is-expanded' : ''}`"
+    >
+      <div class="logo">
+        <img src="@/assets/svg/ronazon-logo.svg" alt="" />
+      </div>
+
+      <div v-for="role in user.roles" :key="role.id">
+        <!-- super user -->
+        <span v-if="role.name == 'super admin'">
+          <h3 class="h3-memu">Schools</h3>
+
+          <div class="menu">
+            <nuxt-link
+              :to="{
+                name: 'workspace-school',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Schools</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-school-create',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Create School</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-school-packages',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Packages</span>
+            </nuxt-link>
           </div>
+        </span>
 
-          <div class="menu-toggle-wrap">
-            <div class="menu-toggle">
-              <b-icon icon="" class="material-icons" />
-            </div>
+        <!-- Accountant -->
+        <span v-if="role.name == 'accountant'">
+          <h3 class="h3-memu">Accountant</h3>
+
+          <div class="menu">
+            <nuxt-link
+              :to="{
+                name: 'workspace-dashboard',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Dashboard</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-accountant-profile',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="person-fill"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Profile</span>
+            </nuxt-link>
+            <nuxt-link v-b-toggle.collapse-1 to="#" class="button">
+              <b-icon
+                icon="person-fill"
+                class="material-icons"
+                @click="
+                  caretDown()
+                  ToggleMenus()
+                "
+              />
+              <span class="text" @click="ToggleMenus()"
+                >Payment
+                <b-icon
+                  style="margin-left: 4rem"
+                  class="caret-down"
+                  scale="0.8"
+                  icon="caret-down"
+              /></span>
+            </nuxt-link>
+
+            <b-collapse
+              id="collapse-1"
+              accordion="my-accordion"
+              role="tabpanel"
+              class="mt-2 dropMenuClose"
+            >
+              <b-card bg-variant="light">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-accountant-createPayment',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <span class="text">Create</span>
+                </nuxt-link>
+
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-accountant-studentPayment',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <span class="text" @click="ToggleMenus">Payment</span>
+                </nuxt-link>
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-accountant-viewPayments',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <span class="text" @click="ToggleMenus">View</span>
+                </nuxt-link>
+              </b-card>
+            </b-collapse>
           </div>
-          <div v-for="role in user.roles" :key="role.id">
-            <!-- super user -->
-            <span v-if="role.name == 'super admin'">
-              <h3 class="h3-memu">Schools</h3>
+        </span>
 
-              <div class="menu">
+        <!-- Liberian -->
+        <span v-if="role.name == 'libarian'">
+          <h3 class="h3-memu">Liberian</h3>
+
+          <div class="menu">
+            <nuxt-link to="/dashboard" class="button">
+              <b-icon icon="columns-gap" class="material-icons" />
+              <span class="text" @click="ToggleMenus">Dashboard</span>
+            </nuxt-link>
+
+            <nuxt-link to="/liberian/profile" class="button">
+              <b-icon
+                icon="person-fill"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Profile</span>
+            </nuxt-link>
+
+            <nuxt-link to="/liberian/books" class="button">
+              <b-icon icon="book" class="material-icons" @click="ToggleMenus" />
+              <span class="text" @click="ToggleMenus">Books</span>
+            </nuxt-link>
+          </div>
+        </span>
+
+        <!-- Teacher -->
+        <span v-if="role.name == 'teacher'">
+          <h3 class="h3-memu">Teacher</h3>
+
+          <div class="menu">
+            <nuxt-link
+              :to="{
+                name: 'workspace-dashboard',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Dashboard</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-teacher-profile',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="person-fill"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Profile</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-teacher-timetable',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="alarm"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Timetable</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-teacher-examTimetable',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="vector-pen"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Exam Timetable</span>
+            </nuxt-link>
+            <nuxt-link
+              :to="{
+                name: 'workspace-teacher-marksheet',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="vector-pen"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Marksheet</span>
+            </nuxt-link>
+          </div>
+        </span>
+
+        <!-- Student -->
+        <span v-if="role.name == 'student'">
+          <h3 class="h3-memu">Student</h3>
+
+          <div class="menu">
+            <nuxt-link
+              :to="{
+                name: 'workspace-dashboard',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Dashboard</span>
+            </nuxt-link>
+            <nuxt-link
+              :to="{
+                name: 'workspace-student-profile',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="person-fill"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Profile</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-student-timetable',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="alarm"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Timetable</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-student-examTimetable',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="alarm"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Exam Timetable</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-student-result',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="file-text"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Result</span>
+            </nuxt-link>
+
+            <!-- collapse -->
+            <nuxt-link
+              v-b-toggle.accordion-4
+              block
+              event=""
+              to="admin"
+              class="button"
+            >
+              <b-icon
+                icon="vector-pen"
+                class="material-icons"
+                @click="ToggleMenus()"
+              />
+              <span class="text" @click="ToggleMenus()"
+                >Payment
+                <b-icon
+                  style="margin-left: 6rem"
+                  scale="0.8"
+                  class="caret-down"
+                  icon="caret-down"
+              /></span>
+            </nuxt-link>
+
+            <b-collapse
+              id="accordion-4"
+              accordion="my-accordion"
+              role="tabpanel"
+              class="mt-2 dropMenuClose"
+            >
+              <b-card bg-variant="light">
                 <nuxt-link
+                  t
                   :to="{
-                    name: 'workspace-school',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Schools</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-school-create',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Create School</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-school-packages',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Packages</span>
-                </nuxt-link>
-              </div>
-            </span>
-
-            <!-- Accountant -->
-            <span v-if="role.name == 'accountant'">
-              <h3 class="h3-memu">Accountant</h3>
-
-              <div class="menu">
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-dashboard',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Dashboard</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-accountant-profile',
+                    name: 'workspace-student-payment',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
                     icon="person-fill"
-                    class="material-icons"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Profile</span>
+                  <span class="text" @click="ToggleMenus">Pay Fee</span>
                 </nuxt-link>
-                <nuxt-link v-b-toggle.collapse-1 to="#" class="button">
-                  <b-icon
-                    icon="person-fill"
-                    class="material-icons"
-                    @click="
-                      caretDown()
-                      ToggleMenus()
-                    "
-                  />
-                  <span class="text" @click="ToggleMenus()"
-                    >Payment
-                    <b-icon
-                      style="margin-left: 4rem"
-                      class="caret-down"
-                      scale="0.8"
-                      icon="caret-down"
-                  /></span>
-                </nuxt-link>
+              </b-card>
+            </b-collapse>
+          </div>
+        </span>
 
-                <b-collapse
-                  id="collapse-1"
-                  accordion="my-accordion"
-                  role="tabpanel"
-                  class="mt-2 dropMenuClose"
-                >
-                  <b-card bg-variant="light">
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-accountant-createPayment',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <span class="text">Create</span>
-                    </nuxt-link>
+        <!-- guardian -->
+        <span v-if="role.name == 'guardian'">
+          <h3 class="h3-memu">Guardian</h3>
 
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-accountant-studentPayment',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <span class="text">Payment</span>
-                    </nuxt-link>
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-accountant-viewPayments',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <span class="text">View</span>
-                    </nuxt-link>
-                  </b-card>
-                </b-collapse>
-              </div>
-            </span>
+          <div class="menu">
+            <nuxt-link
+              :to="{
+                name: 'workspace-dashboard',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Dashboard</span>
+            </nuxt-link>
 
-            <!-- Liberian -->
-            <span v-if="role.name == 'libarian'">
-              <h3 class="h3-memu">Liberian</h3>
+            <nuxt-link
+              :to="{
+                name: 'workspace-guardian-profile',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="person-fill"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Profile</span>
+            </nuxt-link>
 
-              <div class="menu">
-                <nuxt-link to="/dashboard" class="button">
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Dashboard</span>
-                </nuxt-link>
+            <nuxt-link
+              :to="{
+                name: 'workspace-guardian-timetable',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="alarm"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Timetable</span>
+            </nuxt-link>
 
-                <nuxt-link to="/liberian/profile" class="button">
-                  <b-icon
-                    icon="person-fill"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Profile</span>
-                </nuxt-link>
+            <nuxt-link
+              :to="{
+                name: 'workspace-guardian-examTimetable',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="vector-pen"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Exam Timetable</span>
+            </nuxt-link>
 
-                <nuxt-link to="/liberian/books" class="button">
-                  <b-icon
-                    icon="book"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Books</span>
-                </nuxt-link>
-              </div>
-            </span>
+            <nuxt-link
+              :to="{
+                name: 'workspace-guardian-result',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="file-text"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Result</span>
+            </nuxt-link>
 
-            <!-- Teacher -->
-            <span v-if="role.name == 'teacher'">
-              <h3 class="h3-memu">Teacher</h3>
+            <nuxt-link
+              :to="{
+                name: 'workspace-guardian-feePayment',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="file-text"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Fee Payment</span>
+            </nuxt-link>
 
-              <div class="menu">
+            <nuxt-link
+              :to="{
+                name: 'workspace-guardian-payments',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="file-text"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Payments</span>
+            </nuxt-link>
+          </div>
+        </span>
+        <!-- admin -->
+
+        <span v-if="role.name == 'main admin'">
+          <h3 class="h3-memu">Admin</h3>
+
+          <div class="menu">
+            <nuxt-link
+              :to="{
+                name: 'workspace-dashboard',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="columns-gap"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Dashboard</span>
+            </nuxt-link>
+            <nuxt-link to="/admin/roles" class="button">
+              <b-icon
+                icon="person-plus"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">User Roles</span>
+            </nuxt-link>
+
+            <!-- collapse -->
+            <nuxt-link
+              v-b-toggle.accordion-1
+              block
+              event=""
+              to="admin"
+              class="button"
+            >
+              <b-icon
+                icon="vector-pen"
+                class="material-icons"
+                @click="ToggleMenus()"
+              />
+              <span class="text" @click="ToggleMenus()"
+                >Users
+                <b-icon
+                  style="margin-left: 6.6rem"
+                  scale="0.8"
+                  class="caret-down"
+                  icon="caret-down"
+              /></span>
+            </nuxt-link>
+
+            <b-collapse
+              id="accordion-1"
+              accordion="my-accordion"
+              role="tabpanel"
+              class="mt-2 dropMenuClose"
+            >
+              <b-card bg-variant="light">
                 <nuxt-link
                   :to="{
-                    name: 'workspace-dashboard',
+                    name: 'workspace-admin-teacher',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Dashboard</span>
+                  <b-icon
+                    icon="person-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Teacher</span>
                 </nuxt-link>
 
                 <nuxt-link
                   :to="{
-                    name: 'workspace-teacher-profile',
+                    name: 'workspace-admin-student',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
-                    icon="person-fill"
-                    class="material-icons"
+                    icon="people-fill"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Profile</span>
+                  <span class="text" @click="ToggleMenus">Student</span>
+                </nuxt-link>
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-accountant',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="people-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Accountant</span>
                 </nuxt-link>
 
                 <nuxt-link
                   :to="{
-                    name: 'workspace-teacher-timetable',
+                    name: 'workspace-admin-libarian',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="people-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Libarian</span>
+                </nuxt-link>
+              </b-card>
+            </b-collapse>
+
+            <!-- toggle menu -->
+            <nuxt-link
+              v-b-toggle.accordion-2
+              event=""
+              to="admin/school"
+              block
+              class="button"
+            >
+              <b-icon
+                icon="pen"
+                class="material-icons"
+                @click="ToggleMenus()"
+              />
+              <span class="text" @click="ToggleMenus()"
+                >Exam
+                <b-icon
+                  style="margin-left: 6.7rem"
+                  scale="0.8"
+                  class="caret-down"
+                  icon="caret-down"
+              /></span>
+            </nuxt-link>
+
+            <b-collapse
+              id="accordion-2"
+              accordion="my-accordion"
+              role="tabpanel"
+              class="mt-2 dropMenuClose"
+            >
+              <b-card bg-variant="light">
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-exam-timetable',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
                     icon="alarm"
-                    class="material-icons"
+                    scale="0.85"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
                   <span class="text" @click="ToggleMenus">Timetable</span>
@@ -224,706 +670,301 @@
 
                 <nuxt-link
                   :to="{
-                    name: 'workspace-teacher-examTimetable',
+                    name: 'workspace-admin-exam-marksheet',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
-                    icon="vector-pen"
-                    class="material-icons"
+                    icon="file-earmark-ruled"
+                    scale="0.85"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Exam Timetable</span>
+                  <span class="text" @click="ToggleMenus">Marksheet</span>
                 </nuxt-link>
                 <nuxt-link
                   :to="{
-                    name: 'workspace-teacher-marksheet',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="vector-pen"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text">Marksheet</span>
-                </nuxt-link>
-              </div>
-            </span>
-
-            <!-- Student -->
-            <span v-if="role.name == 'student'">
-              <h3 class="h3-memu">Student</h3>
-
-              <div class="menu">
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-dashboard',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Dashboard</span>
-                </nuxt-link>
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-student-profile',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="person-fill"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Profile</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-student-timetable',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="alarm"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Timetable</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-student-examTimetable',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="alarm"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Exam Timetable</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-student-result',
+                    name: 'workspace-admin-exam-result',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
                     icon="file-text"
-                    class="material-icons"
+                    scale="0.85"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Result</span>
-                </nuxt-link>
-
-                <!-- collapse -->
-                <nuxt-link
-                  v-b-toggle.accordion-4
-                  block
-                  event=""
-                  to="admin"
-                  class="button"
-                >
-                  <b-icon
-                    icon="vector-pen"
-                    class="material-icons"
-                    @click="ToggleMenus()"
-                  />
-                  <span class="text" @click="ToggleMenus()"
-                    >Payment
-                    <b-icon
-                      style="margin-left: 6rem"
-                      scale="0.8"
-                      class="caret-down"
-                      icon="caret-down"
-                  /></span>
-                </nuxt-link>
-
-                <b-collapse
-                  id="accordion-4"
-                  accordion="my-accordion"
-                  role="tabpanel"
-                  class="mt-2 dropMenuClose"
-                >
-                  <b-card bg-variant="light">
-                    <nuxt-link
-                      t
-                      :to="{
-                        name: 'workspace-student-payment',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="person-fill"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Pay Fee</span>
-                    </nuxt-link>
-                  </b-card>
-                </b-collapse>
-              </div>
-            </span>
-
-            <!-- guardian -->
-            <span v-if="role.name == 'guardian'">
-              <h3 class="h3-memu">Guardian</h3>
-
-              <div class="menu">
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-dashboard',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Dashboard</span>
+                  <span class="text" @click="ToggleMenus">Results</span>
                 </nuxt-link>
 
                 <nuxt-link
                   :to="{
-                    name: 'workspace-guardian-profile',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="person-fill"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Profile</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-guardian-timetable',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="alarm"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Timetable</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-guardian-examTimetable',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="vector-pen"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Exam Timetable</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-guardian-result',
+                    name: 'workspace-admin-exam-grades',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
                     icon="file-text"
-                    class="material-icons"
+                    scale="0.85"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Result</span>
+                  <span class="text" @click="ToggleMenus">Grades</span>
                 </nuxt-link>
 
                 <nuxt-link
                   :to="{
-                    name: 'workspace-guardian-feePayment',
+                    name: 'workspace-admin-exam-tabulation',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
-                    icon="file-text"
-                    class="material-icons"
+                    icon="newspaper"
+                    scale="0.85"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Fee Payment</span>
+                  <span class="text" @click="ToggleMenus"
+                    >Tabulation Sheet</span
+                  >
                 </nuxt-link>
-              </div>
-            </span>
-            <!-- admin -->
 
-            <span v-if="role.name == 'main admin'">
-              <h3 class="h3-memu">Admin</h3>
-
-              <div class="menu">
                 <nuxt-link
                   :to="{
-                    name: 'workspace-dashboard',
+                    name: 'workspace-admin-exam-promotion',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
-                  <b-icon icon="columns-gap" class="material-icons" />
-                  <span class="text" @click="ToggleMenus">Dashboard</span>
-                </nuxt-link>
-                <nuxt-link to="/admin/roles" class="button">
                   <b-icon
-                    icon="person-plus"
-                    class="material-icons"
+                    icon="arrow-right-circle"
+                    scale="0.85"
+                    class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">User Roles</span>
+                  <span class="text" @click="ToggleMenus">promotion</span>
                 </nuxt-link>
 
-                <!-- collapse -->
                 <nuxt-link
-                  v-b-toggle.accordion-1
-                  block
-                  event=""
-                  to="admin"
+                  :to="{
+                    name: 'workspace-admin-exam-reset',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
                   class="button"
                 >
                   <b-icon
-                    icon="vector-pen"
-                    class="material-icons"
-                    @click="ToggleMenus()"
+                    icon="arrow-left-circle"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus()"
-                    >Users
-                    <b-icon
-                      style="margin-left: 6rem"
-                      scale="0.8"
-                      class="caret-down"
-                      icon="caret-down"
-                  /></span>
+                  <span class="text" @click="ToggleMenus">Reset Promotion</span>
                 </nuxt-link>
-
-                <b-collapse
-                  id="accordion-1"
-                  accordion="my-accordion"
-                  role="tabpanel"
-                  class="mt-2 dropMenuClose"
-                >
-                  <b-card bg-variant="light">
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-teacher',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="person-fill"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Teacher</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-student',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="people-fill"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Student</span>
-                    </nuxt-link>
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-accountant',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="people-fill"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Accountant</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-libarian',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="people-fill"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Libarian</span>
-                    </nuxt-link>
-                  </b-card>
-                </b-collapse>
-
-                <!-- toggle menu -->
-                <nuxt-link
-                  v-b-toggle.accordion-2
-                  event=""
-                  to="admin/school"
-                  block
-                  class="button"
-                >
-                  <b-icon
-                    icon="pen"
-                    class="material-icons"
-                    @click="ToggleMenus()"
-                  />
-                  <span class="text" @click="ToggleMenus()"
-                    >Exam
-                    <b-icon
-                      style="margin-left: 6rem"
-                      scale="0.8"
-                      class="caret-down"
-                      icon="caret-down"
-                  /></span>
-                </nuxt-link>
-
-                <b-collapse
-                  id="accordion-2"
-                  accordion="my-accordion"
-                  role="tabpanel"
-                  class="mt-2 dropMenuClose"
-                >
-                  <b-card bg-variant="light">
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-exam-timetable',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="alarm"
-                        scale="0.85"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text">Timetable</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-exam-marksheet',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="file-earmark-ruled"
-                        scale="0.85"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text">Marksheet</span>
-                    </nuxt-link>
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-exam-result',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="file-text"
-                        scale="0.85"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text">Results</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-exam-grades',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="file-text"
-                        scale="0.85"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text">Grades</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-exam-tabulation',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="newspaper"
-                        scale="0.85"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text">Tabulation Sheet</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-exam-promotion',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="arrow-right-circle"
-                        scale="0.85"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text">promotion</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-exam-reset',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="arrow-left-circle"
-                        scale="0.85"
-                        class="material-icon"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text">Reset Promotion</span>
-                    </nuxt-link>
-                    <!-- <nuxt-link to="/admin/exam/publish" class="button">
+                <!-- <nuxt-link to="/admin/exam/publish" class="button">
                   <span class="text">publish Result</span>
                 </nuxt-link> -->
-                  </b-card>
-                </b-collapse>
-                <!-- end -->
+              </b-card>
+            </b-collapse>
+            <!-- end -->
 
-                <!-- collapse -->
-                <nuxt-link
-                  v-b-toggle.accordion-3
-                  block
-                  event=""
-                  to="admin/school"
-                  class="button"
-                >
-                  <b-icon
-                    icon="vector-pen"
-                    class="material-icons"
-                    @click="ToggleMenus()"
-                  />
-                  <span class="text" @click="ToggleMenus()"
-                    >School
-                    <b-icon
-                      style="margin-left: 6rem"
-                      scale="0.8"
-                      class="caret-down"
-                      icon="caret-down"
-                  /></span>
-                </nuxt-link>
+            <!-- collapse -->
+            <nuxt-link
+              v-b-toggle.accordion-3
+              block
+              event=""
+              to="admin/school"
+              class="button"
+            >
+              <b-icon
+                icon="vector-pen"
+                class="material-icons"
+                @click="ToggleMenus()"
+              />
+              <span class="text" @click="ToggleMenus()"
+                >Activities
+                <b-icon
+                  style="margin-left: 4.5rem"
+                  scale="0.8"
+                  class="caret-down"
+                  icon="caret-down"
+              /></span>
+            </nuxt-link>
 
-                <b-collapse
-                  id="accordion-3"
-                  accordion="my-accordion"
-                  role="tabpanel"
-                  class="mt-2 dropMenuClose"
-                >
-                  <b-card bg-variant="light">
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-timetable',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="alarm"
-                        class="material-icons"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Timetable</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-session',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="layers"
-                        class="material-icons"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Sessions</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-section',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="layers"
-                        class="material-icons"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Section</span>
-                    </nuxt-link>
-
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-classes',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="layers"
-                        class="material-icons"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Classes</span>
-                    </nuxt-link>
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-subjects',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                      class="button"
-                    >
-                      <b-icon
-                        icon="text-indent-left"
-                        class="material-icons"
-                        @click="ToggleMenus"
-                      />
-                      <span class="text" @click="ToggleMenus">Subjects</span>
-                    </nuxt-link>
-                  </b-card>
-                </b-collapse>
-
-                <nuxt-link
-                  class="button"
-                  :to="{
-                    name: 'workspace-admin-event',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                >
-                  <b-icon
-                    icon="calendar2-date"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Event</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  class="button"
-                  :to="{
-                    name: 'workspace-admin-notice',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                >
-                  <b-icon
-                    icon="calendar2-date"
-                    class="material-icons"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Notices</span>
-                </nuxt-link>
-
+            <b-collapse
+              id="accordion-3"
+              accordion="my-accordion"
+              role="tabpanel"
+              class="mt-2 dropMenuClose"
+            >
+              <b-card bg-variant="light">
                 <nuxt-link
                   :to="{
-                    name: 'workspace-admin-driver',
+                    name: 'workspace-admin-timetable',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
                   <b-icon
-                    icon="truck"
+                    icon="alarm"
                     class="material-icons"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Drivers</span>
+                  <span class="text" @click="ToggleMenus">Timetable</span>
                 </nuxt-link>
 
-                <div class="d-flex"></div>
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-session',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="layers"
+                    class="material-icons"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Sessions</span>
+                </nuxt-link>
 
-                <div class="menu">
-                  <nuxt-link
-                    :to="{
-                      name: 'workspace-admin-settings',
-                      params: { workspace: mainWorkspace.slug },
-                    }"
-                    class="button"
-                  >
-                    <b-icon icon="gear-fill" class="material-icons" />
-                    <span class="text">Settings</span>
-                  </nuxt-link>
-                </div>
-              </div>
-            </span>
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-section',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="layers"
+                    class="material-icons"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Section</span>
+                </nuxt-link>
+
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-classes',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="layers"
+                    class="material-icons"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Classes</span>
+                </nuxt-link>
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-subjects',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="text-indent-left"
+                    class="material-icons"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Subjects</span>
+                </nuxt-link>
+              </b-card>
+            </b-collapse>
+
+            <nuxt-link
+              class="button"
+              :to="{
+                name: 'workspace-admin-event',
+                params: { workspace: mainWorkspace.slug },
+              }"
+            >
+              <b-icon
+                icon="calendar2-date"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Event</span>
+            </nuxt-link>
+
+            <nuxt-link
+              class="button"
+              :to="{
+                name: 'workspace-admin-notice',
+                params: { workspace: mainWorkspace.slug },
+              }"
+            >
+              <b-icon
+                icon="calendar2-date"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Notices</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-admin-driver',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="truck"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Drivers</span>
+            </nuxt-link>
+
+            <div class="d-flex"></div>
+
+            <div class="menu">
+              <nuxt-link
+                :to="{
+                  name: 'workspace-admin-settings',
+                  params: { workspace: mainWorkspace.slug },
+                }"
+                class="button"
+              >
+                <b-icon
+                  icon="gear-fill"
+                  class="material-icons"
+                  @click="ToggleMenus"
+                />
+                <span class="text" @click="ToggleMenus">Settings</span>
+              </nuxt-link>
+            </div>
           </div>
-        </div>
-      </div></template
-    >
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'pinia'
+import { mapState, mapActions } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
+import { useToggleMenu } from '@/stores/toggle'
 import { ROLEX_QUERIEX } from '~/graphql/users/queries'
 export default {
   // mounted() {
-  //   this.is_expanded = localStorage.getItem('is_expanded') === 'true'
+  //   this.isCollasped = localStorage.getItem('is_expanded') === 'true'
   // },
   data() {
     return {
-      is_expanded: 'is_expanded',
       rotate: '',
       user: [],
     }
   },
   computed: {
     ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    ...mapState(useToggleMenu, ['isCollasped']),
     mainWorkspace() {
       return this.currentWorkspace
     },
@@ -937,12 +978,9 @@ export default {
     },
   },
   methods: {
-    // ToggleMenu() {
-    //   this.is_expanded = !this.is_expanded
-    //   // localStorage.setItem('is_expanded', this.is_expanded)
-    // },
+    ...mapActions(useToggleMenu, ['toggleIcon']),
     ToggleMenus() {
-      this.is_expanded = 'is_expanded'
+      this.toggleIcon(true)
     },
     // caretDown() {
     //   if (this.rotate === '') {
@@ -956,22 +994,28 @@ export default {
 </script>
 
 <style lang="scss">
-.fixed {
-  position: fixed;
-  overflow-y: auto;
-  width: 20.5rem;
+.sidebar-wrapper {
   top: 0;
   background-color: #fff;
   z-index: 3;
 
   .aside {
-    // position: sticky !important;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     background-color: var(--color-white);
+
+     @include media-breakpoint-up(md) {
+      padding: 1rem
+    }
+
+    @include media-breakpoint-down(md) {
+      width: 0;
+    }
+
     width: calc(2rem + 32px);
     height: 100vh;
-    padding: 1rem;
     transition: 0.3s ease-out;
 
     .logo {
@@ -982,28 +1026,28 @@ export default {
       }
     }
 
-    // .....toggle------ //
     .menu-toggle-wrap {
       display: flex;
       justify-content: flex-end;
       margin-bottom: 1rem;
       position: relative;
       top: 0;
-      transition: 0.3s ease-out;
+      transition: 0.2s ease-in-out;
       cursor: pointer;
 
       .menu-toggle {
-        transition: 0.3s ease-out;
-        .material-icons,
-        .material-icon {
-          font-size: 3rem;
+        transition: 0.2s ease-in-out;
+
+        
+        .material-icons {
+          font-size: 2rem;
+          color: var(--primary);
           transition: 0.2s ease-out;
         }
 
         &:hover {
-          .material-icons,
-          .material-icon {
-            color: rgba(0, 0, 0, 0.473);
+          .material-icons {
+            color: var(--primary);
             transform: translateX(0.5rem);
           }
         }
@@ -1011,7 +1055,7 @@ export default {
     }
 
     .dropMenuClose {
-      display: block;
+      // display: block;
 
       .button {
         &.nuxt-link-exact-active {
@@ -1084,7 +1128,8 @@ export default {
     }
 
     &.is-expanded {
-      width: 100%;
+      width: 20.5rem;
+      padding: 1rem;
 
       .menu-toggle-wrap {
         top: -3rem;
@@ -1121,6 +1166,10 @@ export default {
           .material-icon {
             margin-right: 0;
           }
+          // .text {
+          //     display: flex;
+          //     flex-wrap: wrap;
+          //   }
 
           &:hover {
             background-color: var(--color-primary);
@@ -1145,12 +1194,23 @@ export default {
           }
         }
       }
+
+      @include media-breakpoint-down(md) {
+      overflow: hidden;
     }
 
-    @media (max-width: 1024px) {
-      position: absolute;
-      z-index: 99;
     }
+
+    @include media-breakpoint-down(md) {
+      top: 6.5rem;
+      position: absolute;
+      z-index: 999;
+    }
+
+    // @media (max-width: 1024px) {
+    //   position: absolute;
+    //   z-index: 99;
+    // }
   }
 }
 </style>

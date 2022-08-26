@@ -1,96 +1,86 @@
 <template>
-  <div>
-    <template>
-      <div class="top">
-        <nav class="" @click="hideTopNav">
-          <ul class="d-flex align-items-center">
-            <li>
-              <span class="mainNotification">
-                <b-icon
-                  class="h1 bell"
-                  scale="1.1"
-                  variant="light"
-                  icon="bell-fill"
-                />
+  <div class="top">
+    <nav class="" @click="hideTopNav">
+      <b-icon class="h1 toggle-menu" variant="light" icon="border-width"  @click="toggleThisMenu"/>
+      <ul class="d-flex align-items-center">
+        <li>
+          <span class="mainNotification">
+            <b-icon
+              class="h1 bell"
+              scale="1.1"
+              variant="light"
+              icon="bell-fill"
+            />
 
-                <div v-if="user.notifications.length === 0"></div>
+            <div v-if="user.notifications.length === 0"></div>
 
-                <div v-else class="userNotification" @click="notificationModal">
-                  {{ user.notifications.length }}
-                </div>
-              </span>
-            </li>
-            <li>
-              <span
-                v-if="$auth.loggedIn"
-                class="profile-image"
-                @click="profileImage"
-              >
-                <div class="nav-image">
-                  <img src="@/assets/images/background.jpg" alt="" />
-                  <h5>
-                    {{ $auth.user.first_name
-                    }}<b-icon
-                      icon="caret-down-fill"
-                      style="color: #fff"
-                    ></b-icon>
-                  </h5>
-                </div>
-                <transition class="leave-cancelled">
-                  <div
-                    v-show="profileBody"
-                    class="profile"
-                    :class="topNavClass"
-                  >
-                    <div class="align-content">
-                      <img src="@/assets/images/background.jpg" alt="" />
-                      <p>{{ $auth.user.first_name }}</p>
-                      <p>{{ $auth.user.email }}</p>
-                    </div>
-
-                    <ul>
-                      <li>
-                        <nuxt-link
-                          :to="{
-                            name: 'workspace-admin-profile',
-                            params: { workspace: mainWorkspace.slug },
-                          }"
-                        >
-                          <span class="nav-profile"
-                            ><b-icon icon="person" /></span
-                          >Profile
-                        </nuxt-link>
-                      </li>
-                      <li @click="logout">
-                        <span class="nav-profile"><b-icon icon="power" /></span
-                        >Logout
-                      </li>
-                    </ul>
-                  </div>
-                </transition>
-              </span>
-            </li>
-          </ul>
-          <b-modal
-            :id="notice"
-            class="modal"
-            :hide-backdrop="true"
-            title="Edit Accountant Data"
-            scrollable
-            size="md"
-            :hide-footer="true"
+            <div v-else class="userNotification" @click="notificationModal">
+              {{ user.notifications.length }}
+            </div>
+          </span>
+        </li>
+        <li>
+          <span
+            v-if="$auth.loggedIn"
+            class="profile-image"
+            @click="profileImage"
           >
-            <Notification :notify-now="[$auth.user.id, notice]" />
-          </b-modal>
-        </nav>
-      </div>
-    </template>
+            <div class="nav-image">
+              <img src="@/assets/images/background.jpg" alt="" />
+              <h5>
+                {{ $auth.user.first_name
+                }}<b-icon icon="caret-down-fill" style="color: #fff"></b-icon>
+              </h5>
+            </div>
+            <transition class="leave-cancelled">
+              <div v-show="profileBody" class="profile" :class="topNavClass">
+                <div class="align-content">
+                  <img src="@/assets/images/background.jpg" alt="" />
+                  <p>{{ $auth.user.first_name }}</p>
+                  <p>{{ $auth.user.email }}</p>
+                </div>
+
+                <ul>
+                  <li>
+                    <nuxt-link
+                      :to="{
+                        name: 'workspace-admin-profile',
+                        params: { workspace: mainWorkspace.slug },
+                      }"
+                    >
+                      <span class="nav-profile"><b-icon icon="person" /></span
+                      >Profile
+                    </nuxt-link>
+                  </li>
+                  <li @click="logout">
+                    <span class="nav-profile"><b-icon icon="power" /></span
+                    >Logout
+                  </li>
+                </ul>
+              </div>
+            </transition>
+          </span>
+        </li>
+      </ul>
+      <b-modal
+        :id="notice"
+        class="modal"
+        :hide-backdrop="true"
+        title="Edit Accountant Data"
+        scrollable
+        size="md"
+        :hide-footer="true"
+      >
+        <Notification :notify-now="[$auth.user.id, notice]" />
+      </b-modal>
+    </nav>
   </div>
 </template>
 
 <script>
-import { mapState } from 'pinia'
+import { mapState, mapActions } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
+import { useToggleMenu } from '@/stores/toggle'
 import { USER_NOTIFICATION_QUERIES } from '~/graphql/notifications/queries'
 export default {
   data() {
@@ -121,6 +111,10 @@ export default {
   },
 
   methods: {
+    ...mapActions(useToggleMenu, ['toggleMenu']),
+    toggleThisMenu(){
+      this.toggleMenu()
+    },
     profileImage(e) {
       if (this.topNavClass === '') {
         this.profileBody = true
@@ -148,22 +142,32 @@ export default {
 
 <style lang="scss" scoped>
 .top {
+  // position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+  position: sticky;
+  z-index: 6;
+  background: linear-gradient(to right, #5142f5, #047edf 99%);
+  height: 6.8rem;
   nav {
-    position: fixed;
-    width: 100% !important;
     font-size: 1.6rem;
     display: flex;
-    background: linear-gradient(to right, #5142f5, #047edf 99%);
-    height: 6.8rem;
-    justify-content: flex-end;
+    max-height: 100%;
+    justify-content: space-between;
     flex: 1;
-    z-index: 2;
-    top: 0;
+    z-index: 5;
+
+    .toggle-menu {
+      margin-left: 1rem;
+      margin-top: 2rem;
+       cursor: pointer;
+    }
 
     .bell {
       margin-top: 1.4rem;
       margin-right: 2rem;
-
       cursor: pointer;
     }
 

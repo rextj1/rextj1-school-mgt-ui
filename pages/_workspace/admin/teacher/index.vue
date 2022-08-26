@@ -252,7 +252,7 @@
                       variant="info"
                       size="md"
                       class="px-3"
-                      @click="handleteacherEditModal(data.item)"
+                      @click="handleteacherEditModal(data.item.id)"
                     >
                       Edit
                     </b-button>
@@ -280,12 +280,20 @@
                 </b-table>
 
                 <!-- Info modal -->
+                <b-modal
+                  :id="infoModal"
+                  class="modal"
+                  :hide-backdrop="false"
+                  scrollable
+                  title="Edit Teacher Data"
+                  size="lg"
+                  :hide-footer="true"
+                >
 
                 <AdminEditTeacherModal
-                  v-if="invokedTeacherForEdit"
-                  v-model="isTeacherEditing"
-                  :teacher="invokedTeacherForEdit"
+                  :teacherInfo="[teacherId, infoModal]"
                 />
+                </b-modal>
               </b-container>
             </div>
           </div>
@@ -306,7 +314,8 @@
                 v-model="deleteKey"
                 size="lg"
                 placeholder="Enter delete key..."
-                trim
+                type="password"
+                name="password"
                 required
               ></b-form-input>
             </b-form-group>
@@ -324,7 +333,7 @@
               variant="danger"
               class="px-4"
               :disabled="deleteKey != 'school'"
-              @click="deleteInvokedStudent"
+              @click="deleteInvokedTeacher"
             >
               Delete
             </b-button>
@@ -348,11 +357,10 @@ export default {
       deleteKey: null,
       items: [],
       teachers: [],
-      invokedTeacherForEdit: null,
-      isTeacherEditing: false,
+      teacherId: null,
+     
       isDeleting: false,
       invokedForDelete: null,
-
       fields: [
         {
           key: 'index',
@@ -455,9 +463,9 @@ export default {
   },
 
   methods: {
-    handleteacherEditModal(teacher) {
-      this.invokedTeacherForEdit = teacher
-      this.isTeacherEditing = true
+    handleteacherEditModal(item) {
+      this.teacherId= item
+      this.$root.$emit('bv::show::modal', this.infoModal)
     },
     resetInfoModal() {
       this.infoModal.title = ''
