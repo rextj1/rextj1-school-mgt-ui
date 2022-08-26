@@ -1,16 +1,8 @@
 <template>
   <div class="student">
-    <b-modal
-      :value="value"
-      :visible="value"
-      :hide-backdrop="false"
-      scrollable
-      title="Edit Teacher Data"
-      size="lg"
-      :hide-footer="true"
-      @change="$emit('input', $event)"
-    >
-      <div class="p-4 student__wrapper">
+    <div v-if="nowLoading"><Preload/></div>
+
+      <div class="p-4 student__wrapper" v-else>
         <b-form
           v-if="show"
           method="POST"
@@ -369,7 +361,7 @@
           </b-row>
         </b-form>
       </div>
-    </b-modal>
+   
   </div>
 </template>
 
@@ -384,45 +376,24 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { UPDATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
-import { TEACHERS_QUERIES } from '~/graphql/teachers/queries'
+import { TEACHER_QUERY } from '~/graphql/teachers/queries'
 
 export default {
   middleware: 'auth',
   props: {
-    value: {
-      type: Boolean,
-      default: true,
-    },
-    teacher: {
-      type: Object,
+    teacherInfo: {
+      type: Array,
       required: true,
     },
   },
 
   created() {
-    this.form.teacherTable.first_name = this.teacher.first_name
-    this.form.teacherTable.last_name = this.teacher.last_name
-    this.form.teacherTable.middle_name = this.teacher.middle_name
-    this.form.teacherTable.birthday = this.teacher.birthday
-    this.form.teacherTable.qualification = this.teacher.qualification
-    this.form.image = this.teacher.photo
-    this.form.teacherTable.phone = this.teacher.phone
-    this.form.teacherTable.gender = this.teacher.gender
-
-    this.form.id = parseInt(this.teacher.id)
-    this.form.userTable.country = this.teacher.user.country.id
-    this.form.userTable.state = this.teacher.user.state.id
-    this.form.userTable.city = this.teacher.user.city.id
-    this.form.userTable.religion = this.teacher.user.religion
-    this.form.userTable.bloodGroup = this.teacher.user.blood_group.id
-    this.form.userTable.email = this.teacher.user.email
-
-    this.form.userTable.lga = this.teacher.user.lga
+   
   },
   data() {
     return {
       k: null,
-      teachers: [],
+      teacher: {},
       form: new this.$form({
         image: null,
         userTable: {
@@ -453,11 +424,7 @@ export default {
       show: true,
     }
   },
-  watch: {
-    teacher(value) {
-      this.setTeacher(value)
-    },
-  },
+
   apollo: {
     countries: {
       query: COUNTRY_QUERIES,
@@ -477,11 +444,35 @@ export default {
         return { id: parseInt(this.form.userTable.state) }
       },
     },
-    teachers: {
-      query: TEACHERS_QUERIES,
+  
+     teacher: {
+       query: TEACHER_QUERY,
       variables() {
         return {
-          slug: this.mainWorkspace.slug,
+          id: parseInt(this.teacherInfo[0]),
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+      result({ data, loading }) {
+        if (!loading) {
+          this.form.teacherTable.first_name = data.teacher.first_name
+          this.form.teacherTable.last_name = data.teacher.last_name
+          this.form.teacherTable.middle_name = data.teacher.middle_name
+          this.form.teacherTable.birthday = data.teacher.birthday
+          this.form.teacherTable.qualification = data.teacher.qualification
+          this.form.photo = data.teacher.photo
+          this.form.teacherTable.phone = data.teacher.phone
+          this.form.teacherTable.gender = data.teacher.gender
+
+          this.form.id = parseInt(data.teacher.id)
+          this.form.userTable.country = data.teacher.user.country.id
+          this.form.userTable.state = data.teacher.user.state.id
+          this.form.userTable.city = data.teacher.user.city.id
+          this.form.userTable.religion = data.teacher.user.religion
+          this.form.userTable.bloodGroup = data.teacher.user.blood_group.id
+          this.form.userTable.email = data.teacher.user.email
+
+          this.form.userTable.lga = data.teacher.user.lga
         }
       },
     },
@@ -490,29 +481,19 @@ export default {
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.teacher.loading
+      )
+    },
   },
 
   methods: {
-    setTeacher(teacher) {
-      this.form.teacherTable.first_name = teacher.first_name
-      this.form.teacherTable.last_name = teacher.last_name
-      this.form.teacherTable.middle_name = teacher.middle_name
-      this.form.teacherTable.birthday = teacher.birthday
-      this.form.teacherTable.qualification = teacher.qualification
-      this.form.image = teacher.photo
-      this.form.teacherTable.phone = teacher.phone
-      this.form.teacherTable.gender = teacher.gender
-
-      this.form.id = parseInt(teacher.id)
-      this.form.userTable.country = teacher.user.country.id
-      this.form.userTable.state = teacher.user.state.id
-      this.form.userTable.city = teacher.user.city.id
-      this.form.userTable.religion = teacher.user.religion
-      this.form.userTable.bloodGroup = teacher.user.blood_group.id
-      this.form.userTable.email = teacher.user.email
-
-      this.form.userTable.lga = teacher.user.lga
-    },
+    // setTeacher(teacher) {
+      
+    // },
     selectImage() {
       this.$refs.Avatar.click()
     },
@@ -573,7 +554,7 @@ export default {
           .mutate({
             mutation: UPDATE_TEACHER_MUTATION,
             variables: {
-              id: parseInt(this.form.id),
+              id: parseInt(this.teacherInfo[0]),
               userTable: this.form.userTable,
               teacherTable: this.form.teacherTable,
               workspaceId: parseInt(this.mainWorkspace.id),
@@ -581,22 +562,23 @@ export default {
             update: (store, { data: { updateTeacher } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
-                query: TEACHERS_QUERIES,
+                query: TEACHER_QUERY,
                 variables: {
+                   id: parseInt(this.teacherInfo[0]),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
-              let teacherData = data.teachers.filter(
-                (t) => t.id == this.form.id
-              )
+          
+            
 
-              teacherData = updateTeacher
+              data.teacherData = updateTeacher
 
               // Mutate cache result
 
               store.writeQuery({
-                query: TEACHERS_QUERIES,
+                query: TEACHER_QUERY,
                 variables: {
+                  id: parseInt(this.teacherInfo[0]),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
 
@@ -617,7 +599,7 @@ export default {
               showConfirmButton: false,
             })
 
-            this.$emit('input', false)
+           this.$bvModal.hide(this.teacherInfo[1])
           })
       } catch ({ graphQLErrors: errors }) {
         this.form.busy = false

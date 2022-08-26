@@ -1,376 +1,366 @@
 <template>
   <div class="student">
-    <b-modal
-      :value="value"
-      :visible="value"
-      :hide-backdrop="false"
-      scrollable
-      title="Edit Accountant Data"
-      size="lg"
-      :hide-footer="true"
-      @change="$emit('input', $event)"
-    >
-      <div class="p-4 student__wrapper">
-        <b-form
-          v-if="show"
-          method="POST"
-          @submit.prevent="onSubmit"
-          @keydown="form.onKeydown($event)"
-          @reset.prevent="onReset"
-        >
-          <div class="d-flex flex-column align-items-center mb-4">
-            <div class="profile-avatar mb-2">
-              <div v-if="preview_url == null" class="photo-preview">
-                <img
-                  :src="`http://sms.test/storage/accountant/${form.photo}`"
-                  alt=""
-                  width="100"
-                  style="border-radius: 50%"
+    <div v-if="nowLoading"><Preload /></div>
+    <div class="p-4 student__wrapper" v-else>
+      <b-form
+        v-if="show"
+        method="POST"
+        @submit.prevent="onSubmit"
+        @keydown="form.onKeydown($event)"
+        @reset.prevent="onReset"
+      >
+        <div class="d-flex flex-column align-items-center mb-4">
+          <div class="profile-avatar mb-2">
+            <div v-if="preview_url == null" class="photo-preview">
+              <img
+                :src="`http://sms.test/storage/accountant/${form.photo}`"
+                alt=""
+                width="100"
+                style="border-radius: 50%"
+              />
+            </div>
+            <div
+              v-else
+              class="photo-preview"
+              :style="{
+                backgroundImage: `url(${preview_url})`,
+              }"
+            ></div>
+
+            <b-form-group>
+              <div class="file-upload">
+                <b-button
+                  variant="white"
+                  class="shadow-sm"
+                  size="sm"
+                  pill
+                  @click="selectImage"
+                >
+                  <b-icon icon="camera-fill" />
+                </b-button>
+                <input
+                  id="avatar"
+                  ref="Avatar"
+                  type="file"
+                  accept="image"
+                  class="file-upload__input"
+                  hidden
+                  @change="handleFileUpload()"
                 />
               </div>
-              <div
-                v-else
-                class="photo-preview"
-                :style="{
-                  backgroundImage: `url(${preview_url})`,
-                }"
-              ></div>
 
-              <b-form-group>
-                <div class="file-upload">
-                  <b-button
-                    variant="white"
-                    class="shadow-sm"
-                    size="sm"
-                    pill
-                    @click="selectImage"
-                  >
-                    <b-icon icon="camera-fill" />
-                  </b-button>
-                  <input
-                    id="avatar"
-                    ref="Avatar"
-                    type="file"
-                    accept="image"
-                    class="file-upload__input"
-                    hidden
-                    @change="handleFileUpload()"
-                  />
-                </div>
-
-                <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
+              <!-- <b-form-invalid-feedback :state="!form.errors.has('photo')">
                   {{ form.errors.get('photo') }}
                 </b-form-invalid-feedback> -->
-              </b-form-group>
-            </div>
-
-            <div class="text-center">
-              <p class="small mb-2">
-                Recommended size: Less than 2MB (150 x 150)
-              </p>
-              <b-button
-                variant="outline-primary"
-                size="md"
-                class="px-3"
-                pill
-                @click="selectImage"
-              >
-                Upload photo
-              </b-button>
-            </div>
+            </b-form-group>
           </div>
 
-          <!--  -->
-          <b-row class="p-4" style="font-size: 1.6rem">
-            <b-col md="4" class="p-4">
-              <b-form-group label="First Name">
-                <b-form-input
-                  id="firstName"
-                  v-model="form.teacherTable.first_name"
-                  debounce="500"
-                  name="first_name"
-                  size="lg"
-                  placeholder="Enter First name"
-                  trim
-                ></b-form-input>
-                <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.first_name')"
-                >
-                  {{ form.errors.get('teacherTable.first_name') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="4" class="p-4">
-              <b-form-group id="last_name" label="Last Name">
-                <b-form-input
-                  id="first_name"
-                  v-model="form.teacherTable.last_name"
-                  type="text"
-                  placeholder="Enter last name"
-                  name="last_name"
-                  trim
-                ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('last_name')">
-                  {{ form.errors.get('last_name') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="middle Name (optional)">
-                <b-form-input
-                  id="input-1"
-                  v-model="form.teacherTable.middle_name"
-                  type="text"
-                  placeholder="Enter middle name"
-                  name="last_name"
-                  trim
-                ></b-form-input>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Email:">
-                <b-form-input
-                  id="input-1"
-                  v-model="form.userTable.email"
-                  type="email"
-                  placeholder="Enter email"
-                  name="email"
-                  trim
-                ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('email')">
-                  {{ form.errors.get('email') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="Phone no:">
-                <b-form-input
-                  id="qualification"
-                  v-model="form.teacherTable.phone"
-                  type="number"
-                  placeholder="Enter phone no."
-                  name="phone"
-                  trim
-                ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('phone')">
-                  {{ form.errors.get('phone') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group label="Qualification">
-                <b-form-input
-                  id="qualification"
-                  v-model="form.teacherTable.qualification"
-                  type="text"
-                  placeholder="Enter qualification"
-                  name="qualification"
-                ></b-form-input>
-                <b-form-invalid-feedback
-                  :state="!form.errors.has('qualification')"
-                >
-                  {{ form.errors.get('qualification') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group label="Religion">
-                <b-form-input
-                  id="religion"
-                  v-model="form.userTable.religion"
-                  type="text"
-                  placeholder="Enter religion"
-                  name="religion"
-                  trim
-                ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('religion')">
-                  {{ form.errors.get('religion') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group label="Gender">
-                <b-form-select
-                  v-model="form.teacherTable.gender"
-                  :options="genders"
-                  class="mb-3"
-                  size="lg"
-                  required
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- Please select gender --</b-form-select-option
-                    >
-                  </template>
-
-                  <!-- These options will appear after the ones from 'options' prop -->
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group label="Date of birth">
-                <b-form-datepicker
-                  id="datepicker-buttons"
-                  v-model="form.teacherTable.birthday"
-                  today-button
-                  reset-button
-                  close-button
-                  locale="en"
-                  size="lg"
-                  name="birthday"
-                ></b-form-datepicker>
-                <b-form-invalid-feedback :state="!form.errors.has('birthday')">
-                  {{ form.errors.get('birthday') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group label="Blood Group">
-                <b-form-select
-                  id="bloodGroups"
-                  v-model="form.userTable.bloodGroup"
-                  value-field="id"
-                  text-field="name"
-                  :options="bloodGroups"
-                  class="mb-3"
-                  size="lg"
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- Please select blood Group--</b-form-select-option
-                    >
-                  </template>
-
-                  <!-- These options will appear after the ones from 'options' prop -->
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group label="Country">
-                <b-form-select
-                  id="country"
-                  v-model="form.userTable.country"
-                  value-field="id"
-                  text-field="name"
-                  :options="countries"
-                  class="mb-3"
-                  size="lg"
-                  required
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- Please select country --</b-form-select-option
-                    >
-                  </template>
-
-                  <!-- These options will appear after the ones from 'options' prop -->
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <div v-if="!country">
-                <b-form-group label="State">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div v-else>
-                <b-form-group label="State">
-                  <b-form-select v-model="form.userTable.state" class="mb-3">
-                    <b-form-select-option
-                      v-for="k in country.state"
-                      :key="k.id"
-                      :value="k.id"
-                      >{{ k.name }}</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <div v-if="!state">
-                <b-form-group label="City">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div v-else>
-                <b-form-group label="City">
-                  <b-form-select v-model="form.userTable.city" class="mb-3">
-                    <b-form-select-option
-                      v-for="k in state.cities"
-                      :key="k.id"
-                      :value="k.id"
-                      >{{ k.name }}</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
-            </b-col>
-
-            <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="L.G.A">
-                <b-form-input
-                  id="lga"
-                  v-model="form.userTable.lga"
-                  type="text"
-                  placeholder="Enter L.G.A"
-                  name="lga"
-                ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('lga')">
-                  {{ form.errors.get('lga') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
-              ><b-button
-                type="submit"
-                pill
-                variant="primary"
-                class="mr-4"
-                size="lg"
-              >
-                <b-spinner
-                  v-if="form.busy"
-                  variant="light"
-                  small
-                  class="mr-1 mb-1"
-                />Register</b-button
-              >
-              <b-button
-                pill
-                class="ml-4"
-                style="font-size: 1.4rem"
-                size="lg"
-                type="reset"
-                variant="danger"
-                >Reset</b-button
-              ></b-col
+          <div class="text-center">
+            <p class="small mb-2">
+              Recommended size: Less than 2MB (150 x 150)
+            </p>
+            <b-button
+              variant="outline-primary"
+              size="md"
+              class="px-3"
+              pill
+              @click="selectImage"
             >
-          </b-row>
-        </b-form>
-      </div>
-    </b-modal>
+              Upload photo
+            </b-button>
+          </div>
+        </div>
+
+        <!--  -->
+        <b-row class="p-4" style="font-size: 1.6rem">
+          <b-col md="4" class="p-4">
+            <b-form-group label="First Name">
+              <b-form-input
+                id="firstName"
+                v-model="form.teacherTable.first_name"
+                debounce="500"
+                name="first_name"
+                size="lg"
+                placeholder="Enter First name"
+                trim
+              ></b-form-input>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('teacherTable.first_name')"
+              >
+                {{ form.errors.get('teacherTable.first_name') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="4" class="p-4">
+            <b-form-group id="last_name" label="Last Name">
+              <b-form-input
+                id="first_name"
+                v-model="form.teacherTable.last_name"
+                type="text"
+                placeholder="Enter last name"
+                name="last_name"
+                trim
+              ></b-form-input>
+              <b-form-invalid-feedback :state="!form.errors.has('last_name')">
+                {{ form.errors.get('last_name') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="4" class="p-4">
+            <b-form-group id="input-group-1" label="middle Name (optional)">
+              <b-form-input
+                id="input-1"
+                v-model="form.teacherTable.middle_name"
+                type="text"
+                placeholder="Enter middle name"
+                name="last_name"
+                trim
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group id="input-group-1" label="Email:">
+              <b-form-input
+                id="input-1"
+                v-model="form.userTable.email"
+                type="email"
+                placeholder="Enter email"
+                name="email"
+                trim
+              ></b-form-input>
+              <b-form-invalid-feedback :state="!form.errors.has('email')">
+                {{ form.errors.get('email') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group id="input-group-1" label="Phone no:">
+              <b-form-input
+                id="qualification"
+                v-model="form.teacherTable.phone"
+                type="number"
+                placeholder="Enter phone no."
+                name="phone"
+                trim
+              ></b-form-input>
+              <b-form-invalid-feedback :state="!form.errors.has('phone')">
+                {{ form.errors.get('phone') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Qualification">
+              <b-form-input
+                id="qualification"
+                v-model="form.teacherTable.qualification"
+                type="text"
+                placeholder="Enter qualification"
+                name="qualification"
+              ></b-form-input>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('qualification')"
+              >
+                {{ form.errors.get('qualification') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Religion">
+              <b-form-input
+                id="religion"
+                v-model="form.userTable.religion"
+                type="text"
+                placeholder="Enter religion"
+                name="religion"
+                trim
+              ></b-form-input>
+              <b-form-invalid-feedback :state="!form.errors.has('religion')">
+                {{ form.errors.get('religion') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Gender">
+              <b-form-select
+                v-model="form.teacherTable.gender"
+                :options="genders"
+                class="mb-3"
+                size="lg"
+                required
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Please select gender --</b-form-select-option
+                  >
+                </template>
+
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Date of birth">
+              <b-form-datepicker
+                id="datepicker-buttons"
+                v-model="form.teacherTable.birthday"
+                today-button
+                reset-button
+                close-button
+                locale="en"
+                size="lg"
+                name="birthday"
+              ></b-form-datepicker>
+              <b-form-invalid-feedback :state="!form.errors.has('birthday')">
+                {{ form.errors.get('birthday') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Blood Group">
+              <b-form-select
+                id="bloodGroups"
+                v-model="form.userTable.bloodGroup"
+                value-field="id"
+                text-field="name"
+                :options="bloodGroups"
+                class="mb-3"
+                size="lg"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Please select blood Group--</b-form-select-option
+                  >
+                </template>
+
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group label="Country">
+              <b-form-select
+                id="country"
+                v-model="form.userTable.country"
+                value-field="id"
+                text-field="name"
+                :options="countries"
+                class="mb-3"
+                size="lg"
+                required
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Please select country --</b-form-select-option
+                  >
+                </template>
+
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <div v-if="!country">
+              <b-form-group label="State">
+                <b-form-select class="mb-3">
+                  <b-form-select-option value="null"> </b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+            </div>
+
+            <div v-else>
+              <b-form-group label="State">
+                <b-form-select v-model="form.userTable.state" class="mb-3">
+                  <b-form-select-option
+                    v-for="k in country.state"
+                    :key="k.id"
+                    :value="k.id"
+                    >{{ k.name }}</b-form-select-option
+                  >
+                </b-form-select>
+              </b-form-group>
+            </div>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <div v-if="!state">
+              <b-form-group label="City">
+                <b-form-select class="mb-3">
+                  <b-form-select-option value="null"> </b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+            </div>
+
+            <div v-else>
+              <b-form-group label="City">
+                <b-form-select v-model="form.userTable.city" class="mb-3">
+                  <b-form-select-option
+                    v-for="k in state.cities"
+                    :key="k.id"
+                    :value="k.id"
+                    >{{ k.name }}</b-form-select-option
+                  >
+                </b-form-select>
+              </b-form-group>
+            </div>
+          </b-col>
+
+          <b-col md="3" class="p-4">
+            <b-form-group id="input-group-1" label="L.G.A">
+              <b-form-input
+                id="lga"
+                v-model="form.userTable.lga"
+                type="text"
+                placeholder="Enter L.G.A"
+                name="lga"
+              ></b-form-input>
+              <b-form-invalid-feedback :state="!form.errors.has('lga')">
+                {{ form.errors.get('lga') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
+            ><b-button
+              type="submit"
+              pill
+              variant="primary"
+              class="mr-4"
+              size="lg"
+            >
+              <b-spinner
+                v-if="form.busy"
+                variant="light"
+                small
+                class="mr-1 mb-1"
+              />Register</b-button
+            >
+            <b-button
+              pill
+              class="ml-4"
+              style="font-size: 1.4rem"
+              size="lg"
+              type="reset"
+              variant="danger"
+              >Reset</b-button
+            ></b-col
+          >
+        </b-row>
+      </b-form>
+    </div>
   </div>
 </template>
 
@@ -385,44 +375,21 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { UPDATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
-import { ACCOUNTANT_QUERIES } from '~/graphql/accountants/queries'
+import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 
 export default {
   middleware: 'auth',
   props: {
-    value: {
-      type: Boolean,
-      default: true,
-    },
-    accountant: {
-      type: Object,
+    accountantInfo: {
+      type: Array,
       required: true,
     },
   },
-  created() {
-    this.form.teacherTable.first_name = this.accountant.first_name
-    this.form.teacherTable.last_name = this.accountant.last_name
-    this.form.teacherTable.middle_name = this.accountant.middle_name
-    this.form.teacherTable.birthday = this.accountant.birthday
-    this.form.teacherTable.qualification = this.accountant.qualification
-    this.form.image = this.accountant.photo
-    this.form.teacherTable.phone = this.accountant.phone
-    this.form.teacherTable.gender = this.accountant.gender
 
-    this.form.id = parseInt(this.accountant.id)
-    this.form.userTable.country = this.accountant.user.country.id
-    this.form.userTable.state = this.accountant.user.state.id
-    this.form.userTable.city = this.accountant.user.city.id
-    this.form.userTable.religion = this.accountant.user.religion
-    this.form.userTable.bloodGroup = this.accountant.user.blood_group.id
-    this.form.userTable.email = this.accountant.user.email
-
-    this.form.userTable.lga = this.accountant.user.lga
-  },
   data() {
     return {
       k: null,
-      teachers: [],
+      accountant: {},
       form: new this.$form({
         image: null,
         userTable: {
@@ -453,15 +420,18 @@ export default {
       show: true,
     }
   },
-  watch: {
-    accountant(value) {
-      this.setAccountant(value)
-    },
-  },
+
   computed: {
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.accountant.loading
+      )
+    },
   },
 
   apollo: {
@@ -483,37 +453,39 @@ export default {
         return { id: parseInt(this.form.userTable.state) }
       },
     },
-    accountants: {
-      query: ACCOUNTANT_QUERIES,
+    accountant: {
+      query: ACCOUNTANT_QUERY,
       variables() {
         return {
+          id: parseInt(this.accountantInfo[0]),
           workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+      result({ data, loading }) {
+        if (!loading) {
+          this.form.teacherTable.first_name = data.accountant.first_name
+          this.form.teacherTable.last_name = data.accountant.last_name
+          this.form.teacherTable.middle_name = data.accountant.middle_name
+          this.form.teacherTable.birthday = data.accountant.birthday
+          this.form.teacherTable.qualification = data.accountant.qualification
+          this.form.photo = data.accountant.photo
+          this.form.teacherTable.phone = data.accountant.phone
+          this.form.teacherTable.gender = data.accountant.gender
+
+          this.form.id = parseInt(data.accountant.id)
+          this.form.userTable.country = data.accountant.user.country.id
+          this.form.userTable.state = data.accountant.user.state.id
+          this.form.userTable.city = data.accountant.user.city.id
+          this.form.userTable.religion = data.accountant.user.religion
+          this.form.userTable.email = data.accountant.user.email
+          this.form.userTable.bloodGroup = data.accountant.user.blood_group.id
+
+          this.form.userTable.lga = data.accountant.user.lga
         }
       },
     },
   },
   methods: {
-    setAccountant(accountant) {
-      this.form.teacherTable.first_name = accountant.first_name
-      this.form.teacherTable.last_name = accountant.last_name
-      this.form.teacherTable.middle_name = accountant.middle_name
-      this.form.teacherTable.birthday = accountant.birthday
-      this.form.teacherTable.qualification = accountant.qualification
-      this.form.image = accountant.photo
-      this.form.teacherTable.phone = accountant.phone
-      this.form.teacherTable.gender = accountant.gender
-
-      this.form.id = parseInt(accountant.id)
-      this.form.userTable.country = accountant.user.country.id
-      this.form.userTable.state = accountant.user.state.id
-      this.form.userTable.city = accountant.user.city.id
-      this.form.userTable.religion = accountant.user.religion
-      this.form.userTable.bloodGroup = accountant.user.blood_group.id
-      this.form.userTable.email = accountant.user.email
-
-      this.form.userTable.lga = accountant.user.lga
-    },
-
     selectImage() {
       this.$refs.Avatar.click()
     },
@@ -574,7 +546,7 @@ export default {
           .mutate({
             mutation: UPDATE_ACCOUNTANT_MUTATION,
             variables: {
-              id: parseInt(this.form.id),
+              id: parseInt(this.accountantInfo[0]),
               userTable: this.form.userTable,
               teacherTable: this.form.teacherTable,
               workspaceId: parseInt(this.mainWorkspace.id),
@@ -582,20 +554,23 @@ export default {
             update: (store, { data: { updateAccountant } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
-                query: ACCOUNTANT_QUERIES,
-                variables: { workspaceId: parseInt(this.mainWorkspace.id) },
+                query: ACCOUNTANT_QUERY,
+                variables: {
+                  id: parseInt(this.accountantInfo[0]),
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
               })
+  
+              data.accountant = updateAccountant
 
-              let accountantData = data.accountants.filter(
-                (t) => t.id == this.form.id
-              )
-              accountantData = updateAccountant
-
-              // Mutate cache result
+              // // Mutate cache result
 
               store.writeQuery({
-                query: ACCOUNTANT_QUERIES,
-                variables: {    workspaceId: parseInt(this.mainWorkspace.id) },
+                query: ACCOUNTANT_QUERY,
+                variables: {
+                  id: parseInt(this.accountantInfo[0]),
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                },
 
                 data,
               })
@@ -613,7 +588,7 @@ export default {
               showConfirmButton: false,
             })
             this.form.busy = false
-            this.$emit('input', false)
+            this.$bvModal.hide(this.accountantInfo[1])
           })
 
         this.form.busy = false

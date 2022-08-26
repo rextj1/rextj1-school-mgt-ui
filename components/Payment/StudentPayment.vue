@@ -228,6 +228,7 @@
                             size="md"
                             class="px-3"
                             type="submit"
+                             disabled
                             @click="getModal(data.item.id)"
                           >
                             Reset
@@ -355,7 +356,7 @@
                   </div>
 
                   <!-- modal -->
-                  <b-modal
+                  <!-- <b-modal
                     :id="infoModal"
                     class="modal"
                     :hide-backdrop="false"
@@ -394,7 +395,7 @@
                         </div>
                       </div>
                     </template>
-                  </b-modal>
+                  </b-modal> -->
                   <!-- end modal -->
                 </div>
               </b-col>

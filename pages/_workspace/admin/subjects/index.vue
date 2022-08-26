@@ -150,14 +150,36 @@
                         <b-icon icon="pencil" class="mr-1"> </b-icon>
                         Edit
                       </b-button>
-                      <b-button
-                        variant="danger"
-                        size="sm"
-                        class="px-3"
-                        @click="deleteSubject(data.item.id)"
-                      >
-                        Revoke teacher
-                      </b-button>
+
+                      
+                        <b-button
+                        v-if="data.item.id == loadingId"
+                          variant="danger"
+                          size="sm"
+                          class="px-3"
+                          @click="deleteSubject(data.item.id)"
+                        >
+                          <b-spinner
+                            class="mb-1 mr-1"
+                            small
+                            variant="light"
+                            v-if="loading"
+                          />
+                          Revoke teacher
+                        </b-button>
+                     
+
+
+                        <b-button v-else
+                          variant="danger"
+                          size="sm"
+                          class="px-3"
+                          @click="deleteSubject(data.item.id)"
+                        >
+                    
+                          Revoke teacher
+                        </b-button>
+
                     </template>
                   </b-table>
                 </div>
@@ -327,7 +349,7 @@ import {
   DELETE_SUBJECT_MUTATION,
   ASSIGN_SUBJECT_TO_TEACHER_MUTATION,
 } from '@/graphql/subjects/mutations'
-import { TEACHER_QUERIES } from '~/graphql/teachers/queries'
+import { TEACHERS_QUERIES, TEACHER_QUERIES } from '~/graphql/teachers/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
@@ -335,6 +357,8 @@ export default {
   data() {
     return {
       isBusy: false,
+      loading: false,
+      loadingId: null,
       id: 0,
       subjects: [],
       teachers: [],
@@ -392,7 +416,7 @@ export default {
     },
 
     teachers: {
-      query: TEACHER_QUERIES,
+      query: TEACHERS_QUERIES,
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
@@ -426,8 +450,6 @@ export default {
       if (this.form.class === null && this.form.section === null) {
         return false
       } else {
-        
-
         this.$apollo.addSmartQuery('subjects', {
           query: SUBJECT_QUERIES,
           variables() {
@@ -587,7 +609,9 @@ export default {
 
     // ------delete ----------/
     deleteSubject(item) {
+      this.loading = true
       const deleteId = item
+      this.loadingId = deleteId
       this.$apollo
         .mutate({
           mutation: DELETE_SUBJECT_MUTATION,
@@ -602,19 +626,18 @@ export default {
               },
             })
 
-            const index = data.subjects.findIndex((m) => m.id == deleteId)
-            if (index !== -1) {
-              // Mutate cache result
-              data.subjects.splice(index, 1)
+            data.subjects.filter((m) => m.id !== deleteId)
+            data.subjects = deleteSubject
 
-              store.readQuery({
-                query: SUBJECT_QUERIES,
-                variables: {
-                  workspaceId: parseInt(this.mainWorkspace.id),
-                },
-                data,
-              })
-            }
+            // const index = data.subjects.findIndex((m) => m.id == deleteId)
+
+            store.readQuery({
+              query: SUBJECT_QUERIES,
+              variables: {
+                workspaceId: parseInt(this.mainWorkspace.id),
+              },
+              data,
+            })
           },
         })
         .then(() => {
@@ -627,6 +650,7 @@ export default {
             toast: false,
             backdrop: false,
           })
+          this.loading = false
         })
         .catch((e) => {
           console.log(e)

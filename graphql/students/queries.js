@@ -30,3 +30,46 @@ export const STUDENT_QUERY = gql`
   }
   ${STUDENT_FIELDS_FRAGMENT}
 `
+export const USER_STUDENT_QUERY = gql`
+  query userStudent($id: ID!) {
+    user(id: $id) {
+      id
+      blood_group {
+        name
+      }
+      student {
+        id
+        slug
+        first_name
+        last_name
+        middle_name
+        phone
+        gender
+        photo
+        adm_no
+        code
+        status
+        klase {
+          id
+          name
+        }
+        address
+        admitted_year
+        guardian_name
+        guardian_no
+        guardian_email
+        guardian_address
+        term {
+          id
+          name
+        }
+        cum_avg
+        session {
+          id
+          name
+        }
+        birthday
+      }
+    }
+  }
+`

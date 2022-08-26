@@ -1,81 +1,113 @@
 <template>
-  <div class="p-4 view-payment">
-    <template>
-      <div class="fonts">
-        <template v-if="!klases"> <div></div></template>
-        <template v-else>
-          <div class="libarian__wrapper">
-            <b-card no-body @click="hideMenu">
-              <b-tabs card style="font-size: 1.4rem">
-                <b-tab lazy @click="registrationMenu">
-                  <template #title>
-                    <strong>View Timetable</strong>
-                    <b-icon scale="0.8" icon="caret-down-fill" />
-                  </template>
+  <div class="p-4">
+    <template v-if="nowloading"><Preload /></template>
+    <template v-else>
+      <div class="exam-wrapper p-2 mb-4">
+        <b-row no-gutters>
+          <b-col md="6" class="p-4">
+            <b-form-group label="Current Class:">
+              <b-form-select
+                id="klase"
+                v-model="studentClass"
+                value-field="id"
+                text-field="name"
+                :options="klases"
+                class="mb-3"
+                size="lg"
+                required
+                @change="timetableDropdown"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- select class --</b-form-select-option
+                  >
+                </template>
 
-                  <div class="menu" style="background-color: #fff">
-                    <ul
-                      v-show="registerMenu"
-                      class="shadow"
-                      :class="registrationMenuClass"
-                    >
-                      <span v-for="klase in klases" :key="klase.id">
-                        <li
-                          @click.prevent="
-                            dynamicStudentClass(klase.id, klase.name)
-                            activeTab = 'TimetableEditClassTimetable'
-                          "
-                        >
-                          <span class="d-flex">{{ klase.name }}</span>
-                        </li>
-                      </span>
-                    </ul>
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </div>
+
+      <div v-show="timetableDropdownClass">
+        <div v-if="timetables.length > 0" class="exam-wrapper p-2">
+          <vue-html2pdf
+            ref="html2Pdf"
+            :show-layout="true"
+            :float-layout="false"
+            :enable-download="false"
+            :preview-modal="true"
+            :paginate-elements-by-height="1400"
+            filename="Pdf"
+            :pdf-quality="2"
+            :manual-pagination="false"
+            pdf-format="a4"
+            pdf-orientation="landscape"
+            pdf-content-width=""
+          >
+            <section slot="pdf-content">
+              <b-row no-gutters>
+                <b-col md="12">
+                  <h3 class="d-flex justify-content-center mb-4">
+                    Class timetable
+                  </h3>
+                  <div class="card-body">
+                    <div class="card-student p-3">
+                      <b-table
+                        hover
+                        bordered
+                        head-variant="dark"
+                        caption-top
+                        no-border-collapse
+                        fixed
+                        stacked="md"
+                        responsive="true"
+                        :items="timetables"
+                        :fields="fields"
+                      >
+                      </b-table>
+                    </div>
                   </div>
+                </b-col>
+              </b-row>
+            </section>
+          </vue-html2pdf>
 
-                  <component
-                    :is="activeTab"
-                    :edit-current-class="[dynamicClass, klaseName]"
-                  />
-                </b-tab>
-              </b-tabs>
-            </b-card>
+          <div class="d-flex justify-content-center mb-4">
+            <b-button variant="danger" size="lg" @click.prevent="generateReport"
+              >download</b-button
+            >
           </div>
-        </template>
+        </div>
+        <div v-else-if="timetables.length == 0" class="exam-wrapper p-2">
+          <h2 style="text-align: center">No record found</h2>
+        </div>
       </div>
     </template>
   </div>
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
+import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TIMETABLE_QUERIES } from '~/graphql/timetables/queries'
-
-import {
-  CREATE_TIMETABLE_MUTATION,
-  DELETE_TIMETABLE_MUTATION,
-} from '~/graphql/timetables/mutations'
 export default {
   middleware: 'auth',
   data() {
     return {
-      timetables: [],
-      infoModal: 'modelInfo',
-      slug: '',
+      timetables: {},
+      timetableDropdownClass: false,
+      studentClass: null,
 
-      id: 0,
+      klaseId: '',
       klaseName: '',
-      show: true,
-      form: new this.$form({
-        class: null,
-        time: null,
-        monday: null,
-        tuesday: null,
-        wednesday: null,
-        thursday: null,
-        friday: null,
-        busy: false,
-      }),
+      items: [],
       fields: [
+        { key: 'date', label: 'Date' },
         { key: 'time', label: 'Time' },
         { key: 'monday', label: 'Monday' },
 
@@ -86,220 +118,80 @@ export default {
         { key: 'thursday', label: 'Thursday' },
 
         { key: 'friday', label: 'Friday' },
-        { key: 'Action', label: 'Action' },
       ],
-      dynamicClass: '',
-
-      activeTab: '',
-      registerMenu: false,
-      registrationMenuClass: '',
     }
   },
   apollo: {
+    user: {
+      query: USER_STUDENT_QUERY,
+      variables() {
+        return {
+          id: parseInt(this.$auth.user.id),
+        }
+      },
+    },
     klases: {
       query: KLASE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
+
+  computed: {
+    nowloading() {
+      return this.$apollo.queries.user.loading
+    },
+
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
+
   methods: {
-    // modal
-    timetableEdit(item) {
-      this.$bvModal.show(this.infoModal)
-      this.slug = item
+    generateReport() {
+      this.$refs.html2Pdf.generatePdf()
     },
-    // end modal
-    dynamicStudentClass(item, itemName) {
-      this.dynamicClass = item
-      this.klaseName = itemName
-    },
-    registrationMenu(e) {
-      if (this.registrationMenuClass === '') {
-        this.registerMenu = true
-        this.registrationMenuClass = 'off'
-        e.stopPropagation()
-      } else {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
-      }
-    },
-    hideMenu() {
-      if (this.registerMenu === true) {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
-      }
-    },
+
     timetableDropdown() {
+      this.timetableDropdownClass = true
       this.$apollo.addSmartQuery('timetables', {
         query: TIMETABLE_QUERIES,
         variables() {
           return {
-            klase_id: parseInt(this.form.class),
+            klase_id: parseInt(this.studentClass),
+            workspaceId: parseInt(this.mainWorkspace.id),
           }
         },
-        result({ data, loading }) {
+
+        result({ loading, data }, key) {
           if (!loading) {
             this.timetables = data.timetables
           }
         },
       })
     },
-
-    // -------- create mutation -------------- //
-    onSubmit() {
-      if (
-        this.form.time === null &&
-        this.form.monday === null &&
-        this.form.tuesday === null &&
-        this.form.wednesday === null &&
-        this.form.thursday === null &&
-        this.form.friday === null
-      ) {
-      } else {
-        const klaseId = this.form.class
-        this.form.busy = true
-        this.$apollo
-          .mutate({
-            mutation: CREATE_TIMETABLE_MUTATION,
-            variables: {
-              time: this.form.time,
-              monday: this.form.monday,
-              tuesday: this.form.tuesday,
-              wednesday: this.form.wednesday,
-              thursday: this.form.thursday,
-              friday: this.form.friday,
-              klase_id: parseInt(this.form.class),
-            },
-            update: (store, { data: { createTimetable } }) => {
-              // Read the data from our cache for this query.
-              const data = store.readQuery({
-                query: TIMETABLE_QUERIES,
-                variables: { klase_id: parseInt(klaseId) },
-              })
-              // console.log(this.form.class);
-
-              data.timetables.push(createTimetable)
-              // console.log(dataCopy)
-
-              // Write our data back to the cache.
-              // Write back to the cache
-              store.writeQuery({
-                query: TIMETABLE_QUERIES,
-                variables: {
-                  klase_id: parseInt(klaseId),
-                },
-                data,
-              })
-            },
-          })
-          .then(({ data }) => {
-            this.form.busy = false
-
-            this.form.time = ''
-            this.form.monday = ''
-            this.form.tuesday = ''
-            this.form.wednesday = ''
-            this.form.thursday = ''
-            this.form.friday = ''
-
-            this.$router.push('/admin/timetable')
-          })
-          .catch((err) => {
-            // this.klase_id =
-          })
-      }
-    },
-    // -------- end mutation -------------- //
-
-    // -------- delete mutation -------------- //
-    deleteItem(item) {
-      const klaseId = this.form.class
-      const deleteId = item
-      this.form.busy = true
-      this.$apollo
-        .mutate({
-          mutation: DELETE_TIMETABLE_MUTATION,
-          variables: {
-            id: parseInt(item),
-          },
-          update: (store, { data: { deleteTimetable } }) => {
-            const data = store.readQuery({
-              query: TIMETABLE_QUERIES,
-              variables: { klase_id: parseInt(klaseId) },
-            })
-
-            const index = data.timetables.findIndex((m) => m.id == deleteId)
-            if (index !== -1) {
-              // Mutate cache result
-              data.timetables.splice(index, 1)
-
-              store.readQuery({
-                query: TIMETABLE_QUERIES,
-                variables: {
-                  klase_id: parseInt(klaseId),
-                },
-                data,
-              })
-            }
-          },
-        })
-        .then(({ data }) => {
-          this.form.busy = false
-          // this.$router.push('/admin/teacher')
-        })
-        .catch((err) => {
-          // this.klase_id =
-        })
-    },
-    // -------- end mutation -------------- //
   },
 }
 </script>
 
 <style lang="scss">
-.view-payment {
-  font-size: 1.6rem;
+.exam-wrapper {
+  font-size: 1.4rem !important;
+  background-color: #fff;
 
-  .custom-select:focus {
-    box-shadow: none;
+  .add-student {
+    font-size: 1.6rem;
+    box-shadow: 0 5px 5px 0 #1f64b367;
   }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -9.5rem;
-        left: 15.5rem;
-        background-color: #fff;
-      }
-
-      li {
-        background-color: #fff;
-        padding: 1.3rem 5.5rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
+  .card-body {
+    padding: 0;
+    .card-student {
+      border: none;
+      border-radius: 0.5rem;
+      height: auto;
     }
   }
 }

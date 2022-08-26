@@ -248,7 +248,7 @@ import {
   DELETE_KLASE_MUTATION,
   UPDATE_KLASE_MUTATION,
 } from '@/graphql/klases/mutations'
-import { TEACHER_QUERIES } from '~/graphql/teachers/queries'
+import { TEACHERS_QUERIES } from '~/graphql/teachers/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -299,7 +299,7 @@ export default {
       },
     },
     teachers: {
-      query: TEACHER_QUERIES,
+      query: TEACHERS_QUERIES,
       variables(){
         return{
           workspaceId: parseInt(this.mainWorkspace.id),

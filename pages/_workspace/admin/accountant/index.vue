@@ -223,7 +223,7 @@
                       variant="info"
                       size="md"
                       class="px-3"
-                      @click="handleEditModal(data.item)"
+                      @click="handleEditModal(data.item.id)"
                     >
                       Edit
                     </b-button>
@@ -250,11 +250,21 @@
                   </template>
                 </b-table>
 
+                  <b-modal
+                  :id="infoModal"
+                  class="modal"
+                  :hide-backdrop="false"
+                  scrollable
+                  title="Edit Teacher Data"
+                  size="lg"
+                  :hide-footer="true"
+                >
+
                 <AdminEditAccountantModal
-                  v-if="invokedAccountantForEdit"
-                  v-model="isAccountantEditing"
-                  :accountant="invokedAccountantForEdit"
+                 
+                  :accountantInfo="[accountantId, infoModal]"
                 />
+                  </b-modal>
               </b-container>
             </div>
           </div>
@@ -274,6 +284,7 @@
               v-model="deleteKey"
               size="lg"
               placeholder="Enter delete key..."
+              type="password"
               trim
               required
             ></b-form-input>
@@ -292,7 +303,7 @@
               variant="danger"
               class="px-4"
               :disabled="deleteKey != 'school'"
-              @click="deleteInvokedStudent"
+              @click="deleteInvokedAccountant"
             >
               Delete
             </b-button>
@@ -314,8 +325,7 @@ export default {
   data() {
     return {
       deleteKey: null,
-      invokedAccountantForEdit: null,
-      isAccountantEditing: false,
+      accountantId: null,
       isDeleting: false,
       invokedForDelete: null,
       items: [],
@@ -422,9 +432,9 @@ export default {
   },
 
   methods: {
-    handleEditModal(accountant) {
-      this.invokedAccountantForEdit = accountant
-      this.isAccountantEditing = true
+    handleEditModal(item) {
+      this.accountantId= item
+      this.$root.$emit('bv::show::modal', this.infoModal)
     },
     resetInfoModal() {
       this.infoModal.title = ''

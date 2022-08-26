@@ -82,8 +82,8 @@ export const RESET_PROMOTE_QUERIES = gql`
 `
 
 export const RESET_KLASE_QUERIES = gql`
-  query resetKlaseQuery($id: ID!, $workspaceId: Int, $section_id: Int!) {
-    resetKlase(id: $id, workspaceId: $workspaceId, section_id: $section_id) {
+  query resetKlaseQuery($id: ID!, $workspaceId: Int) {
+    resetKlase(id: $id, workspaceId: $workspaceId) {
       id
       name
     }

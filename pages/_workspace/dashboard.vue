@@ -1,7 +1,5 @@
 <template>
-  <div class="home main">
-    <!-- <template v-if="nowLoading"><Preload/></template> -->
-    <template>
+  <div class="home wrapper p-4">
       <b-row no-gutters>
         <b-col md="4" class="p-3">
           <div class="card card1 shadow p-3">
@@ -15,14 +13,14 @@
 
               <div class="xxx">
                 <h3>{{ studentsDashboard.length }}</h3>
-                <h2>Total Students</h2>
+                <h2 class="mr-1">Students</h2>
               </div>
             </div>
           </div>
         </b-col>
 
         <b-col md="4" class="p-3">
-          <div class="card card2 shadow">
+          <div class="card card2 shadow p-3">
             <div class="card-body">
               <img
                 src="@/assets/svg/people-svgrepo.svg"
@@ -32,7 +30,7 @@
               />
               <div class="xxx">
                 <h3>{{ teachersDashboard.length }}</h3>
-                <h2>Total Teachers</h2>
+                <h2>Teachers</h2>
               </div>
             </div>
           </div>
@@ -49,37 +47,37 @@
               />
               <div class="xxx">
                 <h3>{{ guardiansDashboard.length }}</h3>
-                <h2>Total Parents</h2>
+                <h2>Parents</h2>
               </div>
             </div>
           </div>
         </b-col>
       </b-row>
       <b-row no-gutters>
-        <b-col md="6" class="p-3">
-          <div class="cardA card1 shadow p-3">
-            <div class="card-body">
+        <b-col md="6" class="p-3 pie-chart">
+          
+            <div class="card-body cardA">
               <apexchart
-                width="410"
+                width="380"
                 type="pie"
                 :options="options"
                 :series="admin"
               ></apexchart>
             </div>
-          </div>
+         
         </b-col>
 
-        <b-col md="6" class="p-3">
-          <div class="cardA card1 shadow p-3">
-            <div class="card-body">
+        <b-col md="6" class="p-3 donut-chart">
+         
+            <div class="card-body cardA">
               <apexchart
-                width="410"
+                width="380"
                 type="donut"
                 :options="options"
                 :series="admin"
               ></apexchart>
             </div>
-          </div>
+          
         </b-col>
       </b-row>
 
@@ -106,7 +104,7 @@
             </div>
           </div> </b-col
       ></b-row>
-    </template>
+   
   </div>
 </template>
 
@@ -185,12 +183,22 @@ export default {
 .home {
   // margin-top: 5rem;
   font-size: 1.6rem;
-  &.main {
+  &.wrapper {
     flex: 1 1 0;
-    padding: 2rem;
 
     @media (max-width: 768px) {
       padding-left: 2rem;
+    }
+    .pie-chart{
+      @include media-breakpoint-down(md){
+       
+      }
+    }
+
+    .donut-chart{
+      @include media-breakpoint-down(sm){
+        display: none
+      }
     }
   }
 
@@ -220,7 +228,6 @@ export default {
       .xxx {
         display: flex;
         flex-direction: column;
-        align-items: center;
       }
     }
 
@@ -265,9 +272,10 @@ export default {
     border: none;
     margin-bottom: 4rem;
     border-radius: 0.5rem;
-    height: 30rem;
+    height: 26rem;
     background-color: #fff;
   }
+
   .cardB {
     border: none;
     margin-bottom: 2rem;

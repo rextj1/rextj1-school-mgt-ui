@@ -79,6 +79,31 @@
                         <b-icon icon="pencil" class="mr-1"> </b-icon>
                         Edit
                       </b-button>
+
+                      <b-button
+                        v-if="data.item.id == loadingId"
+                        variant="danger"
+                        size="sm"
+                        class="px-3"
+                      >
+                        <b-spinner
+                          class="mr-1 mb-1"
+                          small
+                          variant="light"
+                          v-if="loading"
+                        />
+                        Revoke teacher
+                      </b-button>
+
+                      <b-button
+                        v-else
+                        variant="danger"
+                        size="sm"
+                        class="px-3"
+                        @click="deleteClass(data.item.id)"
+                      >
+                        Revoke teacher
+                      </b-button>
                     </template>
                   </b-table>
                 </div>
@@ -221,6 +246,7 @@
                       >
                         <b-spinner
                           v-if="busy"
+                          small
                           variant="light"
                           class="mr-1 mb-1"
                         />Submit</b-button
@@ -248,12 +274,14 @@ import {
   DELETE_KLASE_MUTATION,
   UPDATE_KLASE_MUTATION,
 } from '@/graphql/klases/mutations'
-import { TEACHER_QUERIES } from '~/graphql/teachers/queries'
+import { TEACHERS_QUERIES, TEACHER_QUERIES } from '~/graphql/teachers/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
       id: 0,
+      loadingId: null,
+      loading: false,
       klaseEditingId: '',
       klase: {},
       klases: [],
@@ -299,12 +327,12 @@ export default {
       },
     },
     teachers: {
-      query: TEACHER_QUERIES,
-      variables(){
-        return{
+      query: TEACHERS_QUERIES,
+      variables() {
+        return {
           workspaceId: parseInt(this.mainWorkspace.id),
         }
-      }
+      },
     },
   },
   computed: {
@@ -352,7 +380,7 @@ export default {
           variables: {
             id: parseInt(this.id),
             name: this.form.names,
-           workspaceId: parseInt(this.mainWorkspace.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
         })
         .then(() => {
@@ -467,10 +495,12 @@ export default {
               // Read the data from our cache for this query.
               const data = store.readQuery({
                 query: KLASE_QUERIES,
+                workspaceId: parseInt(this.mainWorkspace.id),
               })
-              data.klases.push(assignKlaseToTeacher)
+              data.klases = assignKlaseToTeacher
               store.writeQuery({
                 query: KLASE_QUERIES,
+                workspaceId: parseInt(this.mainWorkspace.id),
                 data,
               })
             },
@@ -504,6 +534,56 @@ export default {
           })
         }
       }
+    },
+    // ------delete ----------/
+    deleteClass(item) {
+      this.loading = true
+      const deleteId = item
+      this.loadingId = deleteId
+      this.$apollo
+        .mutate({
+          mutation: DELETE_KLASE_MUTATION,
+          variables: {
+            id: parseInt(deleteId),
+          },
+          update: (store, { data: { deleteKlase } }) => {
+            const data = store.readQuery({
+              query: KLASE_QUERIES,
+              variables: {
+                workspaceId: parseInt(this.mainWorkspace.id),
+              },
+            })
+
+            data.klases.filter((m) => m.id === deleteId)
+            data.klases = deleteKlase
+
+            // const index = data.subjects.findIndex((m) => m.id == deleteId)
+
+            store.readQuery({
+              query: KLASE_QUERIES,
+              variables: {
+                workspaceId: parseInt(this.mainWorkspace.id),
+              },
+              data,
+            })
+          },
+        })
+        .then(() => {
+          Swal.fire({
+            timer: 1000,
+            text: 'teacher revoked successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            backdrop: false,
+          })
+          this.loading = false
+        })
+        .catch((e) => {
+          console.log(e)
+          // this.klase_id =
+        })
     },
   },
 }

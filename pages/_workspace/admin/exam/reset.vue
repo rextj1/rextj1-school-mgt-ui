@@ -32,7 +32,7 @@
               </b-form-group>
             </b-col>
 
-             <b-col md="3">
+            <b-col md="3">
               <b-form-group label="section">
                 <b-form-select
                   id="sections"
@@ -51,8 +51,7 @@
                   </template>
                 </b-form-select>
               </b-form-group>
-             </b-col>
-
+            </b-col>
 
             <b-col md="3">
               <b-form-group label="Previous Session">
@@ -194,6 +193,7 @@ export default {
         return false
       } else {
         // class
+        console.log(this.form.section);
         this.isBusy = true
         this.timetableDropdownClass = false
 
@@ -202,7 +202,6 @@ export default {
           variables() {
             return {
               id: parseInt(this.form.class),
-              section_id: parseInt(this.form.section),
               workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
@@ -215,28 +214,26 @@ export default {
         })
       }
 
-      setTimeout(() => {
-        this.isBusy = true
-        this.$apollo.addSmartQuery('resetPromotion', {
-          query: RESET_PROMOTE_QUERIES,
-          variables() {
-            return {
-              from_class: parseInt(this.form.class),
-              status: true,
-              from_session: parseInt(this.form.session),
-              workspaceId: parseInt(this.mainWorkspace.id),
-              from_term: 3,
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.resetPromotion = data.resetPromotion
-              this.isBusy = false
-              this.timetableDropdownClass = true
-            }
-          },
-        })
-      }, 100)
+      this.isBusy = true
+      this.$apollo.addSmartQuery('resetPromotion', {
+        query: RESET_PROMOTE_QUERIES,
+        variables() {
+          return {
+            from_class: parseInt(this.form.class),
+            status: true,
+            from_session: parseInt(this.form.session),
+            workspaceId: parseInt(this.mainWorkspace.id),
+            from_term: 3,
+          }
+        },
+        result({ loading, data }, key) {
+          if (!loading) {
+            this.resetPromotion = data.resetPromotion
+            this.isBusy = false
+            this.timetableDropdownClass = true
+          }
+        },
+      })
     },
   },
 }

@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <div v-if="$fetchState.pending"><Preload /></div>
-    <div v-else-if="$fetchState.error">Error Message</div>
-    <div v-else>
+  <div class="default-layout">
+    <template v-if="$fetchState.pending"><Preload /></template>
+    <template v-else-if="$fetchState.error">Error Message</template>
+    <template v-else>
       <SideBar />
-      <div class="ty"><TopNav /></div>
-      <div style="margin-left: 20rem"><Nuxt /></div>
-    </div>
+      <main class="main">
+        <TopNav />
+        <Nuxt />
+      </main>
+    </template>
   </div>
 </template>
 
@@ -116,7 +118,15 @@ export default {
 </script>
 
 <style lang="scss">
-.ty {
-  margin-top: 6rem;
+.default-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden; 
+  }
 }
 </style>

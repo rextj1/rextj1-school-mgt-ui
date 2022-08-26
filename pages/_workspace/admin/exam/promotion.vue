@@ -285,9 +285,7 @@ export default {
             showConfirmButton: false,
           })
         })
-        .catch((e) => {
-          console.log(e)
-        })
+        .catch(() => {})
     },
     markSubmit() {
       if (
@@ -315,29 +313,27 @@ export default {
         })
         return false
       } else {
-        setTimeout(() => {
-          this.isBusy = true
-          this.timetableDropdownClass = false
-          this.$apollo.addSmartQuery('promoteStudents', {
-            query: PROMOTESTUDENTS_QUERIES,
-            variables() {
-              return {
-                klase_id: parseInt(this.form.class),
-                status: true,
-                session_id: parseInt(this.form.session),
-                section_id: parseInt(this.form.section),
-                workspaceId: parseInt(this.mainWorkspace.id),
-              }
-            },
-            result({ loading, data }, key) {
-              if (!loading) {
-                this.promoteStudents = data.promoteStudents
-                this.isBusy = false
-                this.timetableDropdownClass = true
-              }
-            },
-          })
-        }, 100)
+        this.isBusy = true
+        this.timetableDropdownClass = false
+        this.$apollo.addSmartQuery('promoteStudents', {
+          query: PROMOTESTUDENTS_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              status: true,
+              session_id: parseInt(this.form.session),
+              section_id: parseInt(this.form.section),
+              workspaceId: parseInt(this.mainWorkspace.id),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.promoteStudents = data.promoteStudents
+              this.isBusy = false
+              this.timetableDropdownClass = true
+            }
+          },
+        })
       }
     },
   },

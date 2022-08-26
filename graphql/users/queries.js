@@ -141,49 +141,49 @@ export const ROLES_AND_PERMISSION_QUERIES = gql`
   }
 `
 // student
-export const USER_STUDENT_QUERY = gql`
-  query userStudent($id: ID!) {
-    user(id: $id) {
-      id
-      blood_group {
-        name
-      }
-      students {
-        id
-        slug
-        first_name
-        last_name
-        middle_name
-        phone
-        gender
-        photo
-        adm_no
-        code
-        status
-        klase {
-          id
-          name
-        }
-        address
-        admitted_year
-        guardian_name
-        guardian_no
-        guardian_email
-        guardian_address
-        term {
-          id
-          name
-        }
-        cum_avg
-        session {
-          id
-          name
-        }
-        birthday
-      }
-    }
-  }
-`
+// export const USER_STUDENT_QUERY = gql`
+//   query userStudent($id: ID!) {
+//     user(id: $id) {
+//       id
+//       blood_group {
+//         name
+//       }
+//       students {
+//         id
+//         slug
+//         first_name
+//         last_name
+//         middle_name
+//         phone
+//         gender
+//         photo
+//         adm_no
+//         code
+//         status
+//         klase {
+//           id
+//           name
+//         }
+//         address
+//         admitted_year
+//         guardian_name
+//         guardian_no
+//         guardian_email
+//         guardian_address
+//         term {
+//           id
+//           name
+//         }
+//         cum_avg
+//         session {
+//           id
+//           name
+//         }
+//         birthday
+//       }
+//     }
+//   }
+// `
 
 export const USER_ACCOUNTANT_QUERY = gql`
   query userAccountant($id: ID!) {

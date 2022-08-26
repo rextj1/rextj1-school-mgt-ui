@@ -2,37 +2,14 @@
   <div class="profile">
     <template v-if="$apollo.queries.user.loading"><Preload /></template>
     <template v-else>
-      <div v-for="student in user.students" :key="student.id">
-        {{ student }}
+     
+        {{ user }}
         <b-jumbotron header="" class="teacher shadow">
           <h1 class="d-flex align-items-center">
             Current Fee Status: <b-badge variant="success">Paid</b-badge>
           </h1>
-          <b-button
-            :to="{
-              name: 'student-timetables',
-              params: { timetables: parseInt(student.klase.id) },
-            }"
-            variant="primary"
-            size="md"
-            class="px-3"
-          >
-            <b-icon icon="eye" class="mr-1"></b-icon>
-            {{ student.klase.name }} Timetable
-          </b-button>
-
-          <b-button
-            :to="{
-              name: 'student-exam',
-              params: { exam: parseInt(student.klase.id) },
-            }"
-            variant="primary"
-            size="md"
-            class="px-3"
-          >
-            <b-icon icon="eye" class="mr-1"></b-icon>
-            {{ student.klase.name }} Exam Timetable
-          </b-button>
+         
+         
           <div class="d-flex justify-content-center mb-4">
             <div v-if="student.photo == 'null'">
               <b-img
@@ -84,14 +61,19 @@
             </b-col>
           </b-row>
         </b-jumbotron>
-      </div>
+     
     </template>
   </div>
 </template>
 
 <script>
-import { USER_STUDENT_QUERY } from '~/graphql/users/queries'
+import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 export default {
+  computed: {
+    student(){
+      return this.user.student
+    }
+  },
   apollo: {
     user: {
       query: USER_STUDENT_QUERY,
