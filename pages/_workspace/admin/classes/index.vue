@@ -4,7 +4,7 @@
       <Preload />
     </div>
     <div v-else>
-      <div class="libarian__wrapper">
+      <div>
         <b-card no-body>
           <b-tabs card style="font-size: 1.4rem">
             <b-tab active>
@@ -114,25 +114,24 @@
               <div class="margin-down">
                 <!-- description -->
                 <b-form
-                  v-if="show"
                   method="POST"
                   @submit.prevent="onSubmitCreate"
                   @keydown="form.onKeydown($event)"
-                  @reset.prevent="onReset"
                 >
                   <!-- description -->
-                  <b-row no-gutters>
+
+                  <b-row no-gutters class="px-4 mb-5">
                     <b-col md="2">
                       <label
                         for="input-small"
                         class="label-padding"
-                        style="font-size: 2rem"
+                        style="font-size: 1.6rem"
                         >Name:</label
                       >
                     </b-col>
 
-                    <b-col md="8">
-                      <div class="d-flex">
+                    <b-col md="3">
+                      <b-form-group>
                         <b-form-input
                           id="name"
                           v-model="form.name"
@@ -141,23 +140,30 @@
                           trim
                           type="text"
                           required
-                          size="lg"
-                        ></b-form-input>
+                          size="smd"
+                        >
+                        </b-form-input>
+                        <b-form-invalid-feedback
+                          :state="!form.errors.has('name')"
+                        >
+                          {{ form.errors.get('name') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
 
-                        <b-button
-                          type="submit"
-                          variant="primary"
-                          class="mr-4"
-                          size="lg"
-                        >
-                          <b-spinner
-                            v-if="form.busy"
-                            variant="light"
-                            class="mr-1 mb-1"
-                            small
-                          />Add Class</b-button
-                        >
-                      </div>
+                      <b-button
+                        type="submit"
+                        variant="primary"
+                        class="mr-4"
+                        size="lg"
+                        :disabled="form.busy"
+                      >
+                        <b-spinner
+                          v-if="form.busy"
+                          variant="light"
+                          class="mr-1 mb-1"
+                          small
+                        />Add Class</b-button
+                      >
                     </b-col>
                   </b-row>
                 </b-form>
@@ -170,15 +176,11 @@
                 <strong>Assign Teacher To Class</strong>
               </template>
 
-              <hr />
-
-              <div class="margin-down">
+              <div class="margin-down p-4">
                 <b-form
-                  v-if="show"
                   method="POST"
                   @submit.prevent="onSubmitAssign"
                   @keydown="form.onKeydown($event)"
-                  @reset.prevent="onReset"
                 >
                   <b-row class="mb-4">
                     <b-col md="2">
@@ -187,7 +189,7 @@
                       >
                     </b-col>
 
-                    <b-col md="8">
+                    <b-col md="4">
                       <b-form-group label="">
                         <b-form-select
                           id="klases"
@@ -196,7 +198,7 @@
                           text-field="name"
                           :options="klases"
                           class="mb-3"
-                          size="lg"
+                          size="smd"
                           required
                         >
                           <template #first>
@@ -216,7 +218,7 @@
                       >
                     </b-col>
 
-                    <b-col md="8">
+                    <b-col md="4">
                       <b-form-group label="">
                         <b-form-select
                           v-model="teacherx"
@@ -227,7 +229,7 @@
                           required
                           style="height: 15rem"
                           class="mb-3"
-                          size="lg"
+                          size="smd"
                         >
                         </b-form-select>
                       </b-form-group>
@@ -274,7 +276,7 @@ import {
   DELETE_KLASE_MUTATION,
   UPDATE_KLASE_MUTATION,
 } from '@/graphql/klases/mutations'
-import { TEACHERS_QUERIES, TEACHER_QUERIES } from '~/graphql/teachers/queries'
+import { TEACHERS_QUERIES } from '~/graphql/teachers/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -314,7 +316,6 @@ export default {
           sortable: false,
         },
       ],
-      show: true,
     }
   },
   apollo: {
@@ -430,11 +431,9 @@ export default {
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
-              // console.log(this.form.class);
+
               data.klases.push(createKlase)
-              // console.log(dataCopy)
-              // Write our data back to the cache.
-              // Write back to the cache
+
               store.writeQuery({
                 query: KLASE_QUERIES,
                 variables: {
@@ -580,51 +579,10 @@ export default {
           })
           this.loading = false
         })
-        .catch((e) => {
-          console.log(e)
+        .catch(() => {
           // this.klase_id =
         })
     },
   },
 }
 </script>
-
-<style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.4rem;
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
-  .margin-down {
-    margin-top: 3rem;
-    .label-padding {
-      padding-right: 15rem;
-      margin-bottom: 5rem;
-    }
-    .custom-select:focus,
-    .form-control.focus,
-    .form-control:focus {
-      box-shadow: none;
-    }
-    .custom-select,
-    .form-control,
-    .mb-3 {
-      height: 4.5rem;
-      font-size: 1.4rem;
-      color: #000;
-      width: 40.6%;
-    }
-  }
-  .table-down {
-    padding: 4rem;
-    .table {
-      margin-bottom: 4rem;
-    }
-  }
-  .custom-select-lg .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-}
-</style>
-Footer

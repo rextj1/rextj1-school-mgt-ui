@@ -4,7 +4,11 @@
     <div v-else>
       <div class="card">
         <div class="card-header">
-          {{studentMarkResult}}
+          <b-button variant="primary" @click="handleEditCommits()"
+            >Edit Comments</b-button
+          >
+
+          <!-- {{ studentExamResult }} -->
           <div class="card">
             <vue-html2pdf
               ref="html2Pdf"
@@ -21,166 +25,375 @@
               pdf-content-width=""
             >
               <section slot="pdf-content">
-                <div class="p-4 text-center">
+                <div class="p-4">
                   <div
                     class="student__wrapper"
                     style="
-                      border: 2px solid #000;
+                      border: 2px solid #111;
                       font-weight: bold;
-                      width: 75%;
+                      width: 90%;
                       margin: auto;
                     "
                   >
                     <div
+                      v-for="first in studentExamResult"
+                      :key="first.id"
                       style="
+                        margin-top: 1rem;
+                        padding: 0.5rem;
+
+                        overflow-x: auto;
                         font-weight: bold;
-                        border: 4px solid #f0ad4e;
-                        width: 98%;
-                        margin: auto;
-                        margin-top: 0.5rem;
                       "
                     >
                       <div
-                        v-for="first in studentExamResult"
-                        :key="first.id"
-                        style="
-                          margin-top: 1rem;
-                          padding: 1rem;
-
-                          overflow-x: auto;
-                          font-weight: bold;
+                        class=" mt-4
+                          d-flex
+                          justify-content-between
+                          align-items-center
                         "
+                        style=""
                       >
-                        <div
-                          class="
-                            d-flex
-                            justify-content-between
-                            align-items-center
-                          "
-                          style=""
-                        >
-                          <!-- :src="`${$config.APIRoot}/student/storage/${first.student.photo}`" -->
-                          <div class="school-logo" style="">
-                            <img
-                              src="@/assets/svg/ronazon-logo.svg"
-                              alt="logo"
-                              width="100"
-                            />
-                          </div>
-                          <div class="d-flex flex-column align-items-center">
-                            <h2><em>Ronazon Academy International</em></h2>
-                            <h4>Result sheet {{ first.klase.name }}</h4>
-                          </div>
-                          <div class="student-picture">
-                            <img
-                              src="@/assets/images/teacher.jpeg"
-                              alt="student-photo"
-                              width="60"
-                            />
-                          </div>
+                        <!-- :src="`${$config.APIRoot}/student/storage/${first.student.photo}`" -->
+                        <div class="school-logo" style="">
+                          <img
+                            src="@/assets/svg/ronazon-logo.svg"
+                            alt="logo"
+                            width="100"
+                          />
                         </div>
-                        <!-- end header -->
-                        <div class="d-flex justify-content-between">
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>NAME OF STUDENT:</h4>
-                            <h4 style="margin-left: 0.5rem">
-                              {{ first.student.first_name }}
-                              {{ first.student.last_name }}
-                              {{ first.student.middle_name }}
-                            </h4>
-                          </div>
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>ADM No:</h4>
-                            <h4 style="margin-left: 0.5rem">
-                              {{ first.student.adm_no }}
-                            </h4>
-                          </div>
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>Class:</h4>
-                            <h4 style="margin-left: 0.5rem">
-                              {{ first.klase.name }}
-                            </h4>
-                          </div>
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>Term:</h4>
-
-                            <h4 style="margin-left: 0.5rem" v-if="term == 1">
-                              First Term
-                            </h4>
-                            <h4
-                              style="margin-left: 0.5rem"
-                              v-else-if="term == 2"
-                            >
-                              Secound Term
-                            </h4>
-                            <h4 style="margin-left: 0.5rem" v-else>
-                              Third Term
-                            </h4>
-                          </div>
+                        <div class="d-flex flex-column align-items-center">
+                          <h1 style="font-weight: bold; color: #1c0988">
+                            <em>Ronazon Academy International</em>
+                          </h1>
+                          <h3 style="font-weight: bold; color: #1c0988">
+                            Result sheet {{ first.klase.name }}
+                          </h3>
                         </div>
-                        <div class="d-flex justify-content-between">
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>POSITION:</h4>
-                            <h4
-                              style="margin-left: 0.5rem"
-                              v-html="position(first.position)"
-                            ></h4>
-                          </div>
-                           <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>SECTION:</h4>
-                            <h4 style="margin-left: 0.5rem">{{first.section.name}}</h4>
-                          </div>
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>SESSION:</h4>
-                            <h4 style="margin-left: 0.5rem">{{first.session.name}}</h4>
-                          </div>
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>Age:</h4>
-
-                            <h5
-                              style="margin-top: 0.3rem; margin-left: 0.5rem"
-                              v-html="getAge(first.student.birthday)"
-                            ></h5>
-                          </div>
-                          <div
-                            class="d-flex align-items-stretch"
-                            style="margin-top: 3rem"
-                          >
-                            <h4>NUMBERS IN CLASS:</h4>
-
-                            <h4 style="margin-left: 0.5rem">
-                              {{ numStudents }}
-                            </h4>
-                          </div>
+                        <div class="student-picture">
+                          <img
+                            src="@/assets/images/teacher.jpeg"
+                            alt="student-photo"
+                            width="60"
+                          />
                         </div>
                       </div>
-                    </div>
 
-                    <!-- table -->
+                      <!-- end header -->
+                      <!-- section 1 -->
+
+                      <div class="mt-4">
+                        <table
+                          border="2"
+                          style="
+                            border: 2px solid #292b2c;
+                            width: 100%;
+                            margin: 0;
+                            text-transform: uppercase;
+                          "
+                        >
+                          <tr style="color: #1c0988">
+                            <th style="padding: 0.5rem" colspan="2">
+                              <span class="d-flex">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  NAME OF STUDENT:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.student.first_name }}
+                                  {{ first.student.last_name }}
+                                  {{ first.student.middle_name }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" colspan="1">
+                              <span class="d-flex">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  SEX:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.student.gender }}
+                                </h4>
+                              </span>
+                            </th>
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  ADMISSION NO:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.student.adm_no }}
+                                </h4>
+                              </span>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  AGE:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                  v-html="getAge(first.student.birthday)"
+                                ></h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  NUMBER IN CLASS:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ numStudents }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" colspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  POSITION:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                  v-html="position(first.position)"
+                                ></h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  RESULT STATUS:
+                                </h4>
+                                <h4
+                                  v-if="first.avg >= setPromotion.name"
+                                  class="mt-2 ml-2"
+                                  style="color: green; font-weight: bold"
+                                >
+                                  PASS
+                                </h4>
+                                <h4
+                                  v-else
+                                  class="mt-2 ml-2"
+                                  style="color: #d9534f; font-weight: bold"
+                                >
+                                  FAIL
+                                </h4>
+                              </span>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th
+                              v-if="term == 3"
+                              style="padding: 0.5rem"
+                              rowspan="2"
+                            >
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  PROMOTED TO:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.promoted_to }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  ATTENDANCE:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.num_present }} /
+                                  {{ first.num_total }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  Next Term Begins:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.term_start }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  Next Term Ends:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.term_end }}
+                                </h4>
+                              </span>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th
+                              style="padding: 0.5rem"
+                              colspan="1"
+                              v-if="term == 1"
+                            >
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  TERM:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.term.name }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th
+                              style="padding: 0.5rem"
+                              colspan="1"
+                              v-if="term == 2"
+                            >
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  TERM:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.term.name }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th
+                              style="padding: 0.5rem"
+                              colspan="1"
+                              v-if="term == 3"
+                            >
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  TERM:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #1f1f9f; font-weight: bold"
+                                >
+                                  {{ first.term.name }}
+                                </h4>
+                              </span>
+                            </th>
+
+                            <th style="padding: 0.5rem" colspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  SECTION:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #1f1f9f; font-weight: bold"
+                                >
+                                  {{ first.section.name }}
+                                </h4>
+                              </span>
+                            </th>
+                            <th style="padding: 0.5rem" rowspan="1">
+                              <span class="d-flex align-items-stretch">
+                                <h4
+                                  class="mt-2"
+                                  style="color: #1c09f5; font-weight: bold"
+                                >
+                                  SESSION:
+                                </h4>
+                                <h4
+                                  class="mt-2 ml-2"
+                                  style="color: #111; font-weight: bold"
+                                >
+                                  {{ first.session.name }}
+                                </h4>
+                              </span>
+                            </th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
 
                     <div
                       style="
@@ -296,49 +509,93 @@
                         </table>
                       </div>
 
+                      <!-- comments -->
+
                       <div
-                        style="margin-top: 2rem; font-weight: bold"
-                        class="d-flex"
+                        class="d-flex justify-content-between"
+                        style="margin-top: 4rem; font-weight: bold"
                       >
-                        <div>
-                          <table
-                            border="2"
-                            style="width: 30rem; border: 2px solid #d9534f"
+                        <div
+                          class="mt-4"
+                          style="width: 30rem; border: 2px solid #292b2c"
+                        >
+                          <div class="mr-2" style="width: 30rem">
+                            <div
+                              class="text-center p-1"
+                              style="
+                                margin: 0;
+                                background-color: #007bff;
+                                color: #fff;
+                              "
+                            >
+                              A GRADE KEY
+                            </div>
+                          </div>
+
+                          <span
+                            class="p-1 mt-2 d-flex justify-content-between"
+                            style="color: #1c0988"
+                            v-for="grade in grades"
+                            :key="grade.id"
                           >
-                            <tr>
-                              <td
-                                style="width: 30rem; border: 2px solid #d9534f"
-                              >
-                                Principal Remarks
-                              </td>
-                              <td
-                                style="width: 30rem; border: 2px solid #d9534f"
-                              >
-                                Albert
-                              </td>
-                            </tr>
-                          </table>
+                            <span>{{ grade.name }} - {{ grade.remark }}</span>
+                            <span class="ml-auto m-r-2" style="color: #1c0988"
+                              >{{ grade.mark_from }} -
+                              {{ grade.mark_to }} %</span
+                            >
+                          </span>
                         </div>
 
                         <!-- comments -->
-                        <div class="ml-auto">
-                          <table
-                            border="2"
-                            style="width: 30rem; border: 2px solid #d9534f"
+
+                        <div class="mt-4 ml-3">
+                          <div
+                            class="p-1"
+                            style="width: 59rem; border: 2px solid #111"
                           >
-                            <tr>
-                              <td
-                                style="width: 30rem; border: 2px solid #d9534f"
-                              >
-                                Principal Remarks
-                              </td>
-                              <td
-                                style="width: 30rem; border: 2px solid #d9534f"
-                              >
-                                Albert
-                              </td>
-                            </tr>
-                          </table>
+                            <div
+                              class="text-center p-1"
+                              style="
+                                margin: 0;
+                                background-color: #007bff;
+                                color: #fff;
+                              "
+                            >
+                              Teacher's Remark
+                            </div>
+                            <div v-if="!studentExamResult"></div>
+                            <h4 v-else class="p-2 mt-2" style="color: #1c0988">
+                              {{ studentExamResult[0].p_comment }}
+                            </h4>
+                          </div>
+
+                          <div
+                            class="p-1"
+                            style="
+                              width: 59rem;
+                              border: 2px solid #111;
+                              margin-top: 0.2px;
+                            "
+                          >
+                            <div
+                              class="text-center p-1"
+                              style="
+                                margin: 0;
+                                background-color: #007bff;
+                                color: #fff;
+                              "
+                            >
+                              Head Teacher's Remark
+                            </div>
+                            <div v-if="!studentExamResult"></div>
+                            <h4
+                              v-else
+                              class="p-2 mt-2"
+                              style="color: #1c0988; font-style: italic"
+                            >
+                              {{ studentExamResult[0].t_comment }}
+                            </h4>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -357,6 +614,16 @@
           </div>
         </div>
       </div>
+
+      <!-- edit modal -->
+
+      <ExamResultCommitsModal
+        v-if="examRecords"
+        v-model="isResultComments"
+        :studentExamResult="examRecords"
+        :student="[klaseId, studentId, term, sessionId, sectionId]"
+      />
+      <!-- end modal -->
     </div>
   </div>
 </template>
@@ -366,8 +633,16 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
 import { STUDENT_MARK_RESULT_QUERIES } from '~/graphql/marks/queries'
+import { GRADE_QUERIES } from '~/graphql/grades/queries'
+import { SET_PROMOTION_QUERIES } from '~/graphql/promotions/queries'
+
 export default {
   middleware: 'auth',
+  data: () => ({
+    isResultComments: false,
+    examRecords: null,
+    setPromotion: {}
+  }),
 
   computed: {
     nowLoading() {
@@ -397,6 +672,9 @@ export default {
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
+    teacherRemarks() {
+      return this.teacherRemark()
+    },
   },
 
   apollo: {
@@ -427,6 +705,22 @@ export default {
         }
       },
     },
+    grades: {
+      query: GRADE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
+    setPromotion: {
+      query: SET_PROMOTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
   },
 
   methods: {
@@ -446,6 +740,10 @@ export default {
         return i + '<sup>th</sup>'
       }
     },
+    teacherRemark() {
+      const a = this.studentExamResult[0].t_comment
+      a.substring(0, 50)
+    },
     getAge(item) {
       const dob = new Date(item)
       const month_diff = Date.now() - dob.getTime()
@@ -456,6 +754,10 @@ export default {
     },
     generateReport() {
       this.$refs.html2Pdf.generatePdf()
+    },
+    handleEditCommits() {
+      this.examRecords = this.studentExamResult
+      this.isResultComments = true
     },
   },
 }

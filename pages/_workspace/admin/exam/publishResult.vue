@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
@@ -113,8 +113,9 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="libarian__wrapper">
-        <ExamTabulation
+      <div v-show="timetableDropdownClass">
+        <ExamPublishResult
+          v-if="records"
           :records="records"
           :marks="marks"
           :first-term="firstTerm"
@@ -145,12 +146,13 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      records: [],
+      records: null,
       klaseResults: [],
       marks: [],
       firstTerm: [],
       secoundTerm: [],
       thirdTerm: [],
+      publishResult: null,
       timetableDropdownClass: false,
       form: {
         class: null,
@@ -243,21 +245,21 @@ export default {
           },
         })
 
-         this.$apollo.addSmartQuery('marks', {
-            query: MARK_QUERIES,
-            variables: {
-              klase_id: parseInt(this.form.class),
-              session_id: parseInt(this.form.session),
-              section_id: parseInt(this.form.section),
-              term_id: parseInt(this.form.term),
-              workspaceId: parseInt(this.mainWorkspace.id),
-            },
-            result({ loading, data }, key) {
-              if (!loading) {
-                this.marks = data.marks
-                this.timetableDropdownClass = true
-              }
-            },
+        this.$apollo.addSmartQuery('marks', {
+          query: MARK_QUERIES,
+          variables: {
+            klase_id: parseInt(this.form.class),
+            session_id: parseInt(this.form.session),
+            section_id: parseInt(this.form.section),
+            term_id: parseInt(this.form.term),
+            workspaceId: parseInt(this.mainWorkspace.id),
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.marks = data.marks
+              this.timetableDropdownClass = true
+            }
+          },
         })
 
         this.$apollo.addSmartQuery('firstTerm', {
@@ -323,54 +325,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.view-payment {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -3.5rem;
-        left: 14.2rem;
-        background-color: #fff;
-      }
-
-      li:not(:last-child) {
-        background-color: #fff;
-        padding: 1rem 4.8rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
-  }
-}
-</style>

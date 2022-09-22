@@ -1,63 +1,59 @@
 <template>
   <div class="card">
-    <div class="card-header"></div>
-    <div class="card">
-      <div class="card-body">
-        <div class="p-3 roles-table">
-          <div v-if="promoteStudents[0] == null"></div>
-          <div v-else>
-            <h2
-              class="p-4 d-flex justify-content-center"
-              style="font-weight: bold"
-            >
-              ({{ promoteStudents[0].klase.name }}) Student Result Section
-            </h2>
-            <b-table :items="promoteStudents" :fields="fields">
-              <template #cell(#)="data">
-                {{ data.index + 1 }}
-              </template>
-
-              <template #cell(first_name)="data">
-                {{ data.item.first_name }} {{ data.item.last_name }}
-              </template>
-
-              <template #cell(session)="data">
-                {{ data.item.session.name }}
-              </template>
-
-              <template #cell(klase)="data">
-                {{ data.item.klase.name }}
-              </template>
-
-              <!-- <template #cell(actions)="data">
-                  <b-button
-                    variant="danger"
-                    size="md"
-                    class="px-3"
-                    @click="resultModal(data.item.student.id)"
-                  >
-                    <b-icon icon="eye" class="mr-1"></b-icon>
-                    View Result
-                  </b-button>
-                </template> -->
-            </b-table>
-          </div>
-        </div>
-        <div
-          class="d-flex justify-content-center"
-          @click="createPromoteStudents"
-        >
-          <b-button :disabled="busy" variant="success" size="lg">
-            <b-spinner
-              v-if="busy"
-              variant="light"
-              small
-              class="mr-1 mb-1"
-            />Promote Students</b-button
+    <template v-if="promoteStudents.length == 0"
+      ><h3 class="text-center p-4">No record found</h3></template
+    >
+    <template v-else>
+      <div class="p-3 roles-table">
+        <div>
+          <h2
+            class="p-4 d-flex justify-content-center"
+            style="font-weight: bold"
           >
+            ({{ promoteStudents[0].klase.name }}) Student Result Section
+          </h2>
+          <b-table :items="promoteStudents" :responsive="true" :fields="fields">
+            <template #cell(#)="data">
+              {{ data.index + 1 }}
+            </template>
+
+            <template #cell(first_name)="data">
+              {{ data.item.first_name }} {{ data.item.last_name }}
+            </template>
+
+            <template #cell(session)="data">
+              {{ data.item.session.name }}
+            </template>
+
+            <template #cell(klase)="data">
+              {{ data.item.klase.name }}
+            </template>
+
+            <template #cell(actions)="data">
+              <b-button
+                variant="warning"
+                size="md"
+                class="px-3"
+                @click="resultModal(data.item.student.id)"
+              >
+                <b-icon icon="eye" class="mr-1"></b-icon>
+                promote student
+              </b-button>
+            </template>
+          </b-table>
         </div>
       </div>
-    </div>
+      <div class="d-flex justify-content-center" @click="createPromoteStudents">
+        <b-button :disabled="busy" variant="success" size="lg">
+          <b-spinner
+            v-if="busy"
+            variant="light"
+            small
+            class="mr-1 mb-1"
+          />Promote Students</b-button
+        >
+      </div>
+    </template>
   </div>
 </template>
 
@@ -71,6 +67,7 @@ import { UPDATE_PUBLISH_RESULT_MUTATION } from '~/graphql/examRecord/mutations'
 export default {
   props: {
     promoteStudents: Array,
+    examRecords: null,
     student: Array,
     setPromotion: Object,
   },
@@ -129,6 +126,22 @@ export default {
 
   methods: {
     createPromoteStudents() {
+      if (this.examRecords[0].term_start == null) {
+        Swal.fire({
+          text: 'You are being redirected to the Resumption page to create school resumption date',
+          position: 'center',
+          color: '#fff',
+          background: '#d9534f',
+          toast: false,
+          backdrop: false,
+        })
+        this.$router.push({
+          name: 'workspace-admin-exam-resumption',
+          params: { workspace: this.mainWorkspace.slug },
+        })
+        return
+      }
+
       if (this.promoteStudents.length !== 0) {
         const klase = parseInt(this.student[0])
         const session = parseInt(this.student[2])
@@ -140,7 +153,6 @@ export default {
               klase_id: parseInt(this.student[0]),
               klaseTo: parseInt(this.student[1]),
               session_id: parseInt(this.student[2]),
-              section_id: parseInt(this.student[4]),
               sessionTo: parseInt(this.student[3]),
               workspaceId: parseInt(this.mainWorkspace.id),
               from_term: 3,
@@ -153,13 +165,11 @@ export default {
                   klase_id: parseInt(this.student[0]),
                   status: true,
                   session_id: parseInt(this.student[2]),
-                  section_id: parseInt(this.student[4]),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
-           
-               data.promoteStudents.filter((t) => {
+              data.promoteStudents.filter((t) => {
                 t.status !== true
               })
               // data.leads.data = data.leads.data.filter(
@@ -174,7 +184,6 @@ export default {
                   klase_id: parseInt(this.student[0]),
                   status: true,
                   session_id: parseInt(this.student[2]),
-                  section_id: parseInt(this.student[4]),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
 
@@ -197,9 +206,7 @@ export default {
               showConfirmButton: false,
             })
           })
-          .catch((e) => {
-            console.log(e)
-          }),
+          .catch(() => {}),
           this.$apollo
             .mutate({
               mutation: UPDATE_PUBLISH_RESULT_MUTATION,
@@ -207,13 +214,12 @@ export default {
                 klase_id: parseInt(this.student[0]),
                 term_id: 3,
                 session_id: parseInt(this.student[2]),
-                section_id: parseInt(this.student[3]),
                 workspaceId: parseInt(this.mainWorkspace.id),
                 status: 'published',
               },
             })
             .then(() => {})
-            .catch((e) => console.log(e))
+            .catch((e) => {})
       } else {
         Swal.fire({
           title: 'Ooops...',

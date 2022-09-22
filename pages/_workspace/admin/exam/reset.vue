@@ -33,27 +33,6 @@
             </b-col>
 
             <b-col md="3">
-              <b-form-group label="section">
-                <b-form-select
-                  id="sections"
-                  v-model="form.sections"
-                  value-field="id"
-                  text-field="name"
-                  :options="sections"
-                  class="mb-3"
-                  size="lg"
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- select section--</b-form-select-option
-                    >
-                  </template>
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3">
               <b-form-group label="Previous Session">
                 <b-form-select
                   id="sessions"
@@ -79,7 +58,7 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
+              size="md"
               style="height: 3.85rem; margin-top: 2.85rem"
               :disabled="isBusy"
               ><b-spinner
@@ -97,7 +76,7 @@
         <ExamResetPromotion
           :resetPromotion="resetPromotion"
           :resetKlase="resetKlase"
-          :student="[form.class, form.session, form.section]"
+          :student="[form.class, form.session]"
         />
       </div>
     </template>
@@ -114,7 +93,6 @@ import {
   RESET_PROMOTE_QUERIES,
 } from '@/graphql/promotions/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
-import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -126,7 +104,6 @@ export default {
       form: {
         class: null,
         session: null,
-        section: null,
       },
 
       dynamicClass: '',
@@ -146,14 +123,6 @@ export default {
     },
     sessions: {
       query: SESSION_QUERIES,
-      variables() {
-        return {
-          workspaceId: parseInt(this.mainWorkspace.id),
-        }
-      },
-    },
-    sections: {
-      query: SECTION_QUERIES,
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
@@ -193,7 +162,6 @@ export default {
         return false
       } else {
         // class
-        console.log(this.form.section);
         this.isBusy = true
         this.timetableDropdownClass = false
 
@@ -207,7 +175,6 @@ export default {
           },
           result({ loading, data }, key) {
             if (!loading) {
-              console.log(data)
               this.resetKlase = data.resetKlase
             }
           },

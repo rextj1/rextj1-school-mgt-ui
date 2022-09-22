@@ -33,6 +33,7 @@ export const USER_GUARDIAN_QUERY = gql`
       guardian {
         id
         slug
+        email
         students {
           ...SingleStudentField
         }

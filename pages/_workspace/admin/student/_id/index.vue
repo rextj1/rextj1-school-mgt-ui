@@ -47,10 +47,10 @@
           <b-col md="6" class="first-details p-4">
             <p>
               {{ student.last_name }} {{ student.first_name }}
-              {{ student.middle_name }}
+              {{ student.middle_name | '' }}
             </p>
             <p>{{ student.phone }}</p>
-            <!-- <p>{{ student.qualification }}</p> -->
+        
             <p>{{ student.code }}</p>
             <p>{{ student.guardian_name }}</p>
             <p>{{ student.guardian_no }}</p>
@@ -64,14 +64,18 @@
               {{ student.user.religion }}
             </p>
             <p>
-              {{ student.user.blood_group.name }}
+              {{
+                student.user.blood_group != null
+                  ? student.user.blood_group.name
+                  : ''
+              }}
             </p>
-            <!-- <p>
+            <p>
               {{ student.user.country.name }}
             </p>
             <p>
               {{ student.user.state.name }}
-            </p> -->
+            </p>
             <p>
               {{ student.user.lga }}
             </p>

@@ -129,6 +129,10 @@ export default {
   .form-wrapper {
     display: flex;
 
+    @include media-breakpoint-down(md) {
+      display: block;
+    }
+
     .form-control,
     .mb-3 {
       height: 4.5rem;
@@ -142,13 +146,22 @@ export default {
       width: 50%;
       height: 100vh;
 
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+
       .form-width {
         color: #fff;
-        // position: relative;
-        // top: 20rem;
-        // left: 18rem;
         max-width: 50%;
         margin: 35vh auto;
+
+        @include media-breakpoint-down(md) {
+          position: absolute;
+           margin:0;
+          left: 25%;
+          top: 25%;
+          translate: translate(-50%, -50%);
+        }
       }
     }
     .bold-color {
@@ -174,6 +187,10 @@ export default {
       height: 100vh;
       background-size: cover;
       width: 50%;
+
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
     }
   }
 }

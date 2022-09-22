@@ -1,8 +1,16 @@
 import gql from 'graphql-tag'
 
 export const CHANGE_USER_PASSWORD_MUTATION = gql`
-  mutation ChangeUserPasswordMutation($id: Int!, $confirmPassword: String!) {
-    updateUserPassword(id: $id, confirmPassword: $confirmPassword)
+  mutation ChangeUserPasswordMutation(
+    $id: Int!
+    $oldPassword: String!
+    $password: String!
+  ) {
+    updateUserPassword(
+      id: $id
+      oldPassword: $oldPassword
+      password: $password
+    )
   }
 `
 export const OTP_PASSWORD_RESET_MUTATION = gql`

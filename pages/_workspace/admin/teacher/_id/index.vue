@@ -54,7 +54,7 @@
 
             <p>{{ teacher.gender }}</p>
             <p>
-              {{ teacher.user.blood_group.name }}
+              {{ teacher.user.blood_group != null ? teacher.user.blood_group.name : '' }}
             </p>
             <p>
               {{ teacher.user.country.name }}

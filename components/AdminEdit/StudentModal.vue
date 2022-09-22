@@ -1,6 +1,6 @@
 <template>
   <div class="student">
-    <template v-if="nowLoading"></template>
+    <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <div class="p-4 student__wrapper">
         <b-form
@@ -84,6 +84,7 @@
                   size="lg"
                   placeholder="Enter First name"
                   trim
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.first_name')"
@@ -102,6 +103,7 @@
                   size="lg"
                   placeholder="Enter Last name"
                   trim
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.last_name')"
@@ -125,7 +127,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Email">
                 <b-form-input
                   id="email"
@@ -136,6 +138,7 @@
                   type="email"
                   placeholder="Enter email"
                   trim
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('studentUser.email')"
@@ -144,16 +147,19 @@
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Phone No.">
                 <b-form-input
                   id="phone"
                   v-model="form.student.phone"
                   name="phone"
                   placeholder="Enter phone no."
+                  min="1234567899"
+                  max="12345678919"
                   trim
                   type="number"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.phone')"
@@ -163,7 +169,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Guardian Name">
                 <b-form-input
                   id="guardian_name"
@@ -173,6 +179,7 @@
                   trim
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.guardian_name')"
@@ -182,7 +189,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Guardian Email">
                 <b-form-input
                   id="guardian_email"
@@ -192,6 +199,7 @@
                   trim
                   type="email"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.guardian_email')"
@@ -210,6 +218,7 @@
                   name="address"
                   size="lg"
                   placeholder="Enter address"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.address')"
@@ -219,16 +228,19 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Guardian no.">
                 <b-form-input
                   id="guardian_no"
                   v-model="form.student.guardian_no"
                   name="guardian_no"
                   placeholder="Enter guardian number"
+                  min="1234567899"
+                  max="12345678919"
                   trim
                   type="number"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.guardian_no')"
@@ -248,6 +260,7 @@
                   trim
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.adm_no')"
@@ -267,6 +280,7 @@
                   trim
                   type="number"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.admitted_year')"
@@ -286,6 +300,7 @@
                   trim
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('studentUser.religion')"
@@ -316,7 +331,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
@@ -336,7 +351,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Current Class">
                 <b-form-select
                   id="klases"
@@ -360,7 +375,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Current Term">
                 <b-form-select
                   v-model="form.student.term"
@@ -383,7 +398,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Section">
                 <b-form-select
                   v-model="form.student.section"
@@ -406,7 +421,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Session">
                 <b-form-select
                   v-model="form.student.session"
@@ -429,7 +444,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
@@ -452,7 +467,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
@@ -476,7 +491,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
@@ -487,7 +502,11 @@
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.userStudent.state" class="mb-3">
+                  <b-form-select
+                    v-model="form.userStudent.state"
+                    class="mb-3"
+                    required
+                  >
                     <b-form-select-option
                       v-for="k in country.state"
                       :key="k.id"
@@ -499,7 +518,7 @@
               </div>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <div v-if="!state">
                 <b-form-group label="City">
                   <b-form-select class="mb-3">
@@ -510,7 +529,11 @@
 
               <div v-else>
                 <b-form-group label="City">
-                  <b-form-select v-model="form.userStudent.city" class="mb-3">
+                  <b-form-select
+                    v-model="form.userStudent.city"
+                    class="mb-3"
+                    required
+                  >
                     <b-form-select-option
                       v-for="k in state.cities"
                       :key="k.id"
@@ -522,7 +545,7 @@
               </div>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="L.G.A">
                 <b-form-input
                   id="lga"
@@ -531,6 +554,7 @@
                   placeholder="Enter lga"
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('userStudent.lga')"
@@ -540,7 +564,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="5" class="p-4">
+            <b-col md="8" class="p-4">
               <b-form-group label="Guardian Address">
                 <b-form-textarea
                   id="guardian_address"
@@ -548,6 +572,7 @@
                   rows="10"
                   max-rows="8"
                   size="lg"
+                  required
                 ></b-form-textarea>
 
                 <b-form-invalid-feedback
@@ -563,6 +588,7 @@
                 type="submit"
                 pill
                 variant="primary"
+                :disabled="form.busy"
                 class="mr-4"
                 size="lg"
               >
@@ -755,7 +781,10 @@ export default {
           this.form.userStudent.state = data.student.user.state.id
           this.form.userStudent.city = data.student.user.city.id
           this.form.userStudent.religion = data.student.user.religion
-          this.form.userStudent.bloodGroup = data.student.user.blood_group.id
+          this.form.userStudent.bloodGroup =
+            data.student.user.blood_group != null
+              ? data.student.user.blood_group.id
+              : ''
           this.form.userStudent.email = data.student.user.email
 
           this.form.userStudent.lga = data.student.user.lga

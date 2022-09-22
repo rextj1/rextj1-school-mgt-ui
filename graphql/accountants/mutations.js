@@ -21,7 +21,7 @@ export const UPDATE_ACCOUNTANT_MUTATION = gql`
   mutation UpdateAccountantMutation(
     $id: ID!
     $workspaceId: Int
-    $userTable: UsersInput
+    $userTable: EditUsersInput
     $teacherTable: WorkersInput
   ) {
     updateAccountant(

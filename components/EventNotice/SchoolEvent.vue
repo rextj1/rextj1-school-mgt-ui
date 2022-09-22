@@ -1,8 +1,6 @@
 <template>
   <div class="liberian">
     <div class="p-4 liberian__wrapper">
-      <h1 class="d-flex justify-content-center mb-4">Notice Board</h1>
-
       <b-row no-gutters>
         <b-col md="12">
           <b-table striped responsive :items="events" :fields="fields">
@@ -12,12 +10,12 @@
                   <b-badge
                     style="font-size: 1.4rem"
                     class="d-inline-block"
-                    variant="danger"
+                    variant="warning"
                     >{{ row.item.date }}</b-badge
                   >
                 </div>
 
-                <div>{{ row.item.description }}</div>
+                 <span v-html="row.item.description"></span>
               </div>
             </template>
           </b-table>
@@ -28,6 +26,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { EVENT_QUERIES } from '@/graphql/events/queries'
 export default {
   data() {
@@ -35,7 +35,7 @@ export default {
       fields: [
         {
           key: 'date',
-          label: 'Date',
+          label: 'School Event',
         },
       ],
       form: {
@@ -44,9 +44,19 @@ export default {
       },
     }
   },
+   computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
   apollo: {
-    events: {
+    notices: {
       query: EVENT_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
 }

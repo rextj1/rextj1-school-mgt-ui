@@ -32,6 +32,7 @@ export const PAYMENT_RECORD_FIELDS_FRAGMENT = gql`
     status
     receipt
     title
+    created_at
     student {
       id
       first_name

@@ -17,14 +17,12 @@
       >
         <div class="bg-white rounded p-4 edit-lead-modal">
           <b-form-group label="School Notice">
-            <b-form-textarea
-              id="textarea"
-              v-model="form.description"
-              placeholder="Enter something..."
-              rows="3"
-              size="lg"
-              required
-            ></b-form-textarea>
+            <client-only>
+              <VueEditor v-model="form.description"/>
+            </client-only>
+            <b-form-invalid-feedback :state="!form.errors.has('description')">
+              {{ form.errors.get('description') }}
+            </b-form-invalid-feedback>
           </b-form-group>
 
           <b-form-group label="Date">
@@ -36,8 +34,10 @@
               close-button
               locale="en"
               size="lg"
-              required
             ></b-form-datepicker>
+             <b-form-invalid-feedback :state="!form.errors.has('date')">
+              {{ form.errors.get('date') }}
+            </b-form-invalid-feedback>
           </b-form-group>
 
           <div class="mt-4 text-right">
@@ -79,7 +79,7 @@ export default {
     return {
       form: new this.$form({
         id: null,
-        description: '',
+        description: null,
         date: null,
       }),
     }
@@ -110,7 +110,7 @@ export default {
         .mutate({
           mutation: UPDATE_NOTICE_MUTATION,
           variables: {
-           workspaceId: parseInt(this.mainWorkspace.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
             ...this.form,
           },
         })

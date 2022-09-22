@@ -61,15 +61,13 @@ export const PAID_PAYMENT_RECORD_QUERIES = gql`
 export const STUDENT_PAYMENT_RECORD_QUERIES = gql`
   query StudentPaymentRecordQueries(
     $student_id: Int
-    $session_id: Int!
-    $term_id: Int!
+    $session_id: Int
+    $term_id: Int
     $status: String!
-   
     $workspaceId: Int
   ) {
     studentPaymentRecords(
       student_id: $student_id
-  
       session_id: $session_id
       term_id: $term_id
       status: $status

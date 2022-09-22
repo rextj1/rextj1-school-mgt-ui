@@ -37,6 +37,19 @@ export const USER_STUDENT_QUERY = gql`
       blood_group {
         name
       }
+      country {
+        id
+        name
+      }
+      state {
+        id
+        name
+      }
+      city {
+        id
+        name
+      }
+      lga
       student {
         id
         slug

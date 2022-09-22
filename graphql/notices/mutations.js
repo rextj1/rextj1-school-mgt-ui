@@ -3,10 +3,10 @@ import { NOTICE_FIELDS_FRAGMENT } from './fragments'
 
 export const CREATE_NOTICE_MUTATION = gql`
   mutation CreateMutation(
-    $description: String!
+    $description: String
     $title: String
     $photo: Upload
-    $date: String!
+    $date: String
     $workspaceId: Int!
   ) {
     createNotice(
@@ -25,10 +25,10 @@ export const CREATE_NOTICE_MUTATION = gql`
 export const UPDATE_NOTICE_MUTATION = gql`
   mutation UpdateMutation(
     $id: ID!
-    $description: String!
+    $description: String
     $title: String
     $photo: Upload
-    $date: String!
+    $date: String
     $workspaceId: Int!
   ) {
     updateNotice(

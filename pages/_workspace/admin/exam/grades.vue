@@ -236,9 +236,8 @@ export default {
   },
 
   methods: {
-    handleEditGrade(grade){
-      this.invokeGradeForEdit = grade,
-      this.showGradeModal = true
+    handleEditGrade(grade) {
+      ;(this.invokeGradeForEdit = grade), (this.showGradeModal = true)
     },
     async onSubmit() {
       this.form.busy = true
@@ -262,10 +261,10 @@ export default {
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
-              // console.log(this.form.class);
+             
 
               data.grades.push(createGrade)
-              // console.log(dataCopy)
+             
 
               // Write our data back to the cache.
               // Write back to the cache
@@ -335,6 +334,11 @@ export default {
     .label-padding {
       padding-right: 15rem;
       margin-bottom: 5rem;
+
+      @include media-breakpoint-down(sm) {
+        padding-right: 0;
+        margin-bottom: 0;
+      }
     }
 
     .custom-select:focus,
@@ -350,6 +354,11 @@ export default {
       font-size: 1.4rem;
       color: #000;
       width: 40.6%;
+
+      @include media-breakpoint-down(sm) {
+        width: 100%;
+        margin-bottom: 2rem;
+      }
     }
   }
   .table-down {

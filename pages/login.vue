@@ -14,7 +14,7 @@
                 type="email"
                 placeholder="Enter email"
                 required
-                class="shadow"
+                class=""
                 :state="getInputState('email')"
               ></b-form-input>
               <b-form-invalid-feedback
@@ -30,7 +30,7 @@
               <input
                 id="password"
                 v-model="form.password"
-                class="form-control shadow"
+                class="form-control"
                 :type="[showPassword == true ? 'text' : 'password']"
                 required
                 name="password"
@@ -63,7 +63,7 @@
               <b-button
                 type="submit"
                 variant="primary"
-                class="shadow-sm"
+                class=""
                 size="lg"
                 pill
                 :disabled="form.busy"
@@ -143,30 +143,39 @@ export default {
   .form-wrapper {
     display: flex;
 
+    @include media-breakpoint-down(md) {
+      display: block;
+    }
+
     .form-control,
     .mb-3 {
       height: 4.5rem;
       font-size: 1.4rem;
       border-radius: 0.5rem;
     }
-    
 
     .cover-box {
-     
       // box-shadow: 0 0 0.2rem 0;
       background-color: #fff;
       width: 50%;
       height: 100vh;
+      
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
 
       .form-width {
-        
         color: #fff;
-        // position: relative;
-        // top: 20rem;
-        // left: 18rem;
         max-width: 50%;
         margin: 35vh auto;
-        
+
+        @include media-breakpoint-down(md) {
+          position: absolute;
+           margin:0;
+          left: 25%;
+          top: 25%;
+          translate: translate(-50%, -50%);
+        }
       }
     }
     .bold-color {
@@ -182,16 +191,20 @@ export default {
     .left-side {
       background: linear-gradient(to right, #5142f5, #047edf 99%);
       animation: fide-slide-down 2s 0.5s ease-out forwards;
-    background-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0),
-        rgba(0, 0, 0, 0.528)
-      ),
-      url('~/assets/images/background.jpg');
-    background-position: center;
-    height: 100vh;
-    background-size: cover;
+      background-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.528)
+        ),
+        url('~/assets/images/background.jpg');
+      background-position: center;
+      height: 100vh;
+      background-size: cover;
       width: 50%;
+
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
     }
   }
 }

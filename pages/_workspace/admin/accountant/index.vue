@@ -1,5 +1,5 @@
 <template>
-  <div class="fonts">
+  <div class="accountant">
     <div v-if="$apollo.queries.accountants.loading">
       <Preload />
     </div>
@@ -171,7 +171,6 @@
                   :sort-by.sync="sortBy"
                   :sort-desc.sync="sortDesc"
                   :sort-direction="sortDirection"
-                  stacked="md"
                   show-empty
                   small
                   striped
@@ -203,40 +202,42 @@
 
                   <!-- view modal -->
                   <template #cell(actions)="data">
-                    <b-button
-                      :to="{
-                        name: 'workspace-admin-accountant-id',
-                        params: {
-                          workspace: mainWorkspace.slug,
-                          id: data.item.id,
-                        },
-                      }"
-                      variant="primary"
-                      size="md"
-                      class="px-3"
-                    >
-                      <b-icon icon="eye" class="mr-1"></b-icon>
-                      View
-                    </b-button>
+                    <div class="d-flex">
+                      <b-button
+                        :to="{
+                          name: 'workspace-admin-accountant-id',
+                          params: {
+                            workspace: mainWorkspace.slug,
+                            id: data.item.id,
+                          },
+                        }"
+                        variant="primary"
+                        size="md"
+                        class="px-3"
+                      >
+                        <b-icon icon="eye" class="mr-1"></b-icon>
+                        View
+                      </b-button>
 
-                    <b-button
-                      variant="info"
-                      size="md"
-                      class="px-3"
-                      @click="handleEditModal(data.item.id)"
-                    >
-                      Edit
-                    </b-button>
+                      <b-button
+                        variant="info"
+                        size="md"
+                        class="px-3"
+                        @click="handleEditModal(data.item.id)"
+                      >
+                        Edit
+                      </b-button>
 
-                    <b-button
-                      variant="danger"
-                      size="md"
-                      class="px-3"
-                      @click="handleDeleteModal(data.item)"
-                    >
-                      <b-icon icon="trash" class="mr-1" />
-                      Delete
-                    </b-button>
+                      <b-button
+                        variant="danger"
+                        size="sm"
+                        class="px-3"
+                        @click="handleDeleteModal(data.item)"
+                      >
+                        <b-icon icon="trash" class="mr-1" />
+                        Delete
+                      </b-button>
+                    </div>
                   </template>
 
                   <template #row-details="row">
@@ -250,7 +251,7 @@
                   </template>
                 </b-table>
 
-                  <b-modal
+                <b-modal
                   :id="infoModal"
                   class="modal"
                   :hide-backdrop="false"
@@ -259,12 +260,10 @@
                   size="lg"
                   :hide-footer="true"
                 >
-
-                <AdminEditAccountantModal
-                 
-                  :accountantInfo="[accountantId, infoModal]"
-                />
-                  </b-modal>
+                  <AdminEditAccountantModal
+                    :accountantInfo="[accountantId, infoModal]"
+                  />
+                </b-modal>
               </b-container>
             </div>
           </div>
@@ -433,7 +432,7 @@ export default {
 
   methods: {
     handleEditModal(item) {
-      this.accountantId= item
+      this.accountantId = item
       this.$root.$emit('bv::show::modal', this.infoModal)
     },
     resetInfoModal() {
@@ -523,7 +522,7 @@ export default {
 </script>
 
 <style lang="scss">
-.fonts {
+.accountant {
   font-size: 1.4rem !important;
   padding: 2rem;
 

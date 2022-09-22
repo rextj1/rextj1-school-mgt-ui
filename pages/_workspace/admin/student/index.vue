@@ -1,5 +1,5 @@
 <template>
-  <div class="fonts">
+  <div class="student">
     <template v-if="$apollo.queries.students.loading"><Preload /></template>
     <template v-else>
       <b-button
@@ -170,7 +170,6 @@
                   :sort-by.sync="sortBy"
                   :sort-desc.sync="sortDesc"
                   :sort-direction="sortDirection"
-                  stacked="md"
                   show-empty
                   small
                   striped
@@ -217,38 +216,40 @@
 
                   <!-- view modal -->
                   <template #cell(actions)="data">
-                    <b-button
-                      variant="primary"
-                      :to="{
-                        name: 'workspace-admin-student-id',
-                        params: {
-                          workspace: mainWorkspace.slug,
-                          id: data.item.id,
-                        },
-                      }"
-                    >
-                      <b-icon icon="eye" class="mr-1"></b-icon>
-                      View
-                    </b-button>
+                    <div class="d-flex">
+                      <b-button
+                        variant="primary"
+                        :to="{
+                          name: 'workspace-admin-student-id',
+                          params: {
+                            workspace: mainWorkspace.slug,
+                            id: data.item.id,
+                          },
+                        }"
+                      >
+                        <b-icon icon="eye" class="mr-1"></b-icon>
+                        View
+                      </b-button>
 
-                    <b-button
-                      variant="info"
-                      size="md"
-                      class="px-3"
-                      @click="info(data.item.id)"
-                    >
-                      Edit
-                    </b-button>
+                      <b-button
+                        variant="info"
+                        size="md"
+                        class="px-3"
+                        @click="info(data.item.id)"
+                      >
+                        Edit
+                      </b-button>
 
-                    <b-button
-                      variant="danger"
-                      size="md"
-                      class="px-3"
-                      @click="handleDeleteModal(data.item)"
-                    >
-                      <b-icon icon="trash" class="mr-1" />
-                      Delete
-                    </b-button>
+                      <b-button
+                        variant="danger"
+                        size="md"
+                        class="px-3"
+                        @click="handleDeleteModal(data.item)"
+                      >
+                        <b-icon icon="trash" class="mr-1" />
+                        Delete
+                      </b-button>
+                    </div>
                   </template>
 
                   <template #row-details="row">
@@ -289,15 +290,15 @@
           <h5>Confirm delete student?</h5>
           <p>This action cannot be undone.</p>
 
-           <b-form-group label="Delete Key">
-              <b-form-input
-                v-model="deleteKey"
-                size="lg"
-                placeholder="Enter delete key..."
-                trim
-                required
-              ></b-form-input>
-            </b-form-group>
+          <b-form-group label="Delete Key">
+            <b-form-input
+              v-model="deleteKey"
+              size="lg"
+              placeholder="Enter delete key..."
+              trim
+              required
+            ></b-form-input>
+          </b-form-group>
 
           <div>
             <b-button
@@ -439,7 +440,7 @@ export default {
       query: STUDENT_QUERIES,
       variables() {
         return {
-           workspaceId: parseInt(this.mainWorkspace.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -492,7 +493,7 @@ export default {
               const data = store.readQuery({
                 query: STUDENT_QUERIES,
                 variables: {
-                   workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -508,7 +509,7 @@ export default {
               store.writeQuery({
                 query: STUDENT_QUERIES,
                 variables: {
-                   workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
 
                 data,
@@ -519,7 +520,7 @@ export default {
           },
         })
         .then(() => {
-           Swal.fire({
+          Swal.fire({
             timer: 1000,
             text: 'student added successfully',
             position: 'top-right',
@@ -527,7 +528,7 @@ export default {
             background: '#4bb543',
             toast: false,
             backdrop: false,
-            showConfirmButton: false
+            showConfirmButton: false,
           })
         })
         .catch(({ graphQLErrors: errors, ...rest }) => {
@@ -558,7 +559,7 @@ export default {
 .modal {
   background-color: rgba(0, 0, 0, 0.295) !important;
 }
-.fonts {
+.student {
   font-size: 1.4rem !important;
   padding: 2rem;
 

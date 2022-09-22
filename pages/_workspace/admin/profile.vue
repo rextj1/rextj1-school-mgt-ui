@@ -46,6 +46,16 @@
             <!-- description -->
             <b-row no-gutters>
               <b-col md="3">
+                <b-form-group label="Old Password">
+                  <b-form-input
+                    v-model="form.oldPassword"
+                    placeholder="Old password"
+                    type="password"
+                    required
+                    size="lg"
+                  ></b-form-input>
+                </b-form-group>
+
                 <b-form-group label="Password">
                   <b-form-input
                     v-model="password"
@@ -61,7 +71,7 @@
 
                 <b-form-group label="Confirm Password">
                   <b-form-input
-                    v-model="form.confirmPassword"
+                    v-model="confirmPassword"
                     placeholder="Comfirm password"
                     type="password"
                     required
@@ -102,9 +112,10 @@ export default {
 
   data() {
     return {
-      password: '',
+      confirmPassword: '',
       form: new this.$form({
-        confirmPassword: '',
+        oldPassword: '',
+        password: '',
         busy: false,
       }),
     }
@@ -128,16 +139,16 @@ export default {
   },
   methods: {
     onSubmit() {
-     
-     this.form.busy = true
+      this.form.busy = true
       if (this.password == this.form.confirmPassword) {
-         alert('uuu')
+        alert('uuu')
         this.$apollo
           .mutate({
             mutation: CHANGE_USER_PASSWORD_MUTATION,
             variables: {
               id: parseInt(this.user.id),
-              confirmPassword: this.form.confirmPassword,
+              oldPassword: this.form.oldPassword,
+              password: this.form.password,
             },
           })
           .then(() => {
@@ -167,7 +178,7 @@ export default {
               showConfirmButton: false,
             })
           })
-      }else{
+      } else {
         return
       }
     },

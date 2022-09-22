@@ -1,9 +1,9 @@
 <template>
-  <div class="student-payment p-4">
+  <div class="p-4">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="p-3 mb-4 d-flex">
-        <b-form @submit.prevent="markSubmit">
+        <b-form @submit.prevent="onSubmit">
           <b-row>
             <b-col md="2">
               <b-form-group label="Classes">
@@ -52,6 +52,29 @@
             </b-col>
 
             <b-col md="2">
+              <b-form-group label="Sections">
+                <b-form-select
+                  id="sections"
+                  v-model="form.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Section term--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="2">
               <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
@@ -85,20 +108,26 @@
                 small
                 variant="light"
                 v-if="isBusy"
-              />
-              Submit</b-button
+              />Submit</b-button
             >
           </b-row>
         </b-form>
       </b-card>
 
-      <b-card v-show="paymentDropdownClass" class="p-4">
-        <PaymentStudentPayment
-          :paymentRecords="paymentRecords"
-          :paidPaymentRecords="paidPaymentRecords"
-          :student="[form.class, form.term, form.session]"
-        />
-      </b-card>
+      <div v-show="timetableDropdownClass" class="p-4" style="background-color: #fff">
+        <div v-if="klases.length == 0">
+          <h3 style="text-align: center; padding: 13rem 0">
+            There are no records to show
+          </h3>
+        </div>
+        <div v-else>
+          <ExamClassAttendance
+            v-if="classAttendances"
+            :classAttendances="classAttendances"
+            :student="[form.class, form.term, form.session, form.section]"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -108,24 +137,31 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
-import {
-  PAID_PAYMENT_RECORD_QUERIES,
-  PAYMENT_RECORD_QUERIES,
-} from '~/graphql/payments/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import { SUBJECT_QUERIES } from '~/graphql/subjects/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
+      classAttendances: null,
+      klaseResults: [],
+      klases: [],
       isBusy: false,
-      paymentRecords: [],
-      paidPaymentRecords: [],
-      paymentDropdownClass: false,
+      timetableDropdownClass: false,
       form: {
         class: null,
-        term: null,
+        subject: null,
         session: null,
+        section: null,
+        term: null,
       },
+
+      dynamicClass: '',
+      activeTab: '',
+      registerMenu: false,
+      registrationMenuClass: '',
     }
   },
   apollo: {
@@ -137,8 +173,26 @@ export default {
         }
       },
     },
+    subjects: {
+      query: SUBJECT_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+          klase_id: parseInt(this.form.class),
+          section_id: parseInt(this.form.section),
+        }
+      },
+    },
     terms: {
       query: TERM_QUERIES,
+    },
+    sections: {
+      query: SECTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
     sessions: {
       query: SESSION_QUERIES,
@@ -154,78 +208,51 @@ export default {
       return (
         this.$apollo.queries.klases.loading &&
         this.$apollo.queries.terms.loading &&
-        this.$apollo.queries.sessions.loading
+        this.$apollo.queries.sessions.loading &&
+        this.$apollo.queries.sections.loading &&
+        this.$apollo.queries.subjects.loading
       )
     },
-    ...mapState(useWorkspaceStore, ['currentWorkspace']),
-    mainWorkspace() {
-      return this.currentWorkspace
-    },
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   methods: {
-    markSubmit() {
+    dynamicStudentClass(item) {
+      this.dynamicClass = item
+    },
+    onSubmit() {
+      this.timetableDropdownClass = false
+
       if (
         this.form.class === null ||
         this.form.term === null ||
-        this.form.session === null
+        this.form.session === null ||
+        this.form.section === null
       ) {
         return false
       } else {
         this.isBusy = true
-        this.paymentDropdownClass = false
-        this.$apollo.addSmartQuery('paymentRecords', {
-          query: PAYMENT_RECORD_QUERIES,
+
+        this.$apollo.addSmartQuery('klaseResults', {
+          query: EXAM_RECORD_QUERIES,
           variables: {
             klase_id: parseInt(this.form.class),
             session_id: parseInt(this.form.session),
+            section_id: parseInt(this.form.section),
             term_id: parseInt(this.form.term),
             workspaceId: parseInt(this.mainWorkspace.id),
           },
           result({ loading, data }, key) {
             if (!loading) {
-              this.paymentRecords = data.paymentRecords
+              this.classAttendances = data.klaseResults
+              this.isBusy = false
+              this.timetableDropdownClass = true
             }
           },
         })
-
-        setTimeout(() => {
-          this.$apollo.addSmartQuery('paidPaymentRecords', {
-            query: PAID_PAYMENT_RECORD_QUERIES,
-            variables: {
-              klase_id: parseInt(this.form.class),
-              session_id: parseInt(this.form.session),
-              term_id: parseInt(this.form.term),
-              workspaceId: parseInt(this.mainWorkspace.id),
-            },
-            result({ loading, data }, key) {
-              if (!loading) {
-                this.paidPaymentRecords = data.paidPaymentRecords
-                this.isBusy = false
-                this.paymentDropdownClass = true
-              }
-            },
-          })
-        }, 100)
       }
     },
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.student-payment {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-}
-</style>

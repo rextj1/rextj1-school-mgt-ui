@@ -95,6 +95,7 @@
                   size="lg"
                   placeholder="Enter First name"
                   trim
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.first_name')"
@@ -113,6 +114,7 @@
                   size="lg"
                   placeholder="Enter Last name"
                   trim
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.last_name')"
@@ -147,14 +149,16 @@
                   type="email"
                   placeholder="Enter email"
                   trim
+                  required
                 ></b-form-input>
-                <b-form-invalid-feedback
+                  <b-form-invalid-feedback
                   :state="!form.errors.has('studentUser.email')"
                 >
                   {{ form.errors.get('studentUser.email') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
+
             <b-col md="3" class="p-4">
               <b-form-group label="Phone No.">
                 <b-form-input
@@ -162,9 +166,12 @@
                   v-model="form.student.phone"
                   name="phone"
                   placeholder="Enter phone no."
+                  min="1234567899"
+                  max="12345678919"
                   trim
                   type="number"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.phone')"
@@ -184,6 +191,7 @@
                   trim
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.guardian_name')"
@@ -203,6 +211,7 @@
                   trim
                   type="email"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.guardian_email')"
@@ -221,6 +230,7 @@
                   name="address"
                   size="lg"
                   placeholder="Enter address"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.address')"
@@ -237,9 +247,12 @@
                   v-model="form.student.guardian_no"
                   name="guardian_no"
                   placeholder="Enter guardian number"
+                  min="1234567899"
+                  max="12345678919"
                   trim
                   type="number"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.guardian_no')"
@@ -259,6 +272,7 @@
                   trim
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.adm_no')"
@@ -278,6 +292,7 @@
                   trim
                   type="number"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.admitted_year')"
@@ -297,6 +312,7 @@
                   trim
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
                   :state="!form.errors.has('studentUser.religion')"
@@ -340,9 +356,9 @@
                   name="birthday"
                 ></b-form-datepicker>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('studentUser.birthday')"
+                  :state="!form.errors.has('student.birthday')"
                 >
-                  {{ form.errors.get('studentUser.birthday') }}
+                  {{ form.errors.get('student.birthday') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -500,7 +516,11 @@
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.userStudent.state" class="mb-3">
+                  <b-form-select
+                    v-model="form.userStudent.state"
+                    class="mb-3"
+                    required
+                  >
                     <b-form-select-option
                       v-for="k in country.state"
                       :key="k.id"
@@ -523,7 +543,11 @@
 
               <div v-else>
                 <b-form-group label="City">
-                  <b-form-select v-model="form.userStudent.city" class="mb-3">
+                  <b-form-select
+                    v-model="form.userStudent.city"
+                    class="mb-3"
+                    required
+                  >
                     <b-form-select-option
                       v-for="k in state.cities"
                       :key="k.id"
@@ -544,11 +568,12 @@
                   placeholder="Enter lga"
                   type="text"
                   size="lg"
+                  required
                 ></b-form-input>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('userStudent.lga')"
+                  :state="!form.errors.has('studentUser.lga')"
                 >
-                  {{ form.errors.get('userStudent.lga') }}
+                  {{ form.errors.get('studentUser.lga') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -561,12 +586,13 @@
                   rows="10"
                   max-rows="8"
                   size="lg"
+                  required
                 ></b-form-textarea>
 
                 <b-form-invalid-feedback
                   :state="!form.errors.has('student.guardian_address')"
                 >
-                  {{ form.errors.get('studentguardian_address') }}
+                  {{ form.errors.get('student.guardian_address') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -577,6 +603,7 @@
                 pill
                 variant="primary"
                 class="mr-4"
+                :disabled="form.busy"
                 size="lg"
               >
                 <b-spinner

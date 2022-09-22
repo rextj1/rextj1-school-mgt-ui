@@ -1,5 +1,5 @@
 <template>
-  <div class="student">
+  <div>
     <b-modal
       :value="value"
       :visible="value"
@@ -243,32 +243,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
-
-  .margin-down {
-    .label-padding {
-      padding-right: 15rem;
-      margin-bottom: 5rem;
-    }
-
-    .custom-select:focus,
-    .form-control.focus,
-    .form-control:focus {
-      box-shadow: none;
-    }
-
-    .custom-select,
-    .form-control,
-    .mb-3 {
-      height: 4rem;
-      font-size: 1.4rem;
-      color: #000;
-      width: 40.6%;
-    }
-  }
-}
-</style>

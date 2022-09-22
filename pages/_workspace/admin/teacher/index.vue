@@ -1,5 +1,5 @@
 <template>
-  <div class="fonts">
+  <div class="teacher">
     <template v-if="$apollo.queries.teachers.loading"><Preload /></template>
     <template v-else>
       <b-button
@@ -169,7 +169,6 @@
                   :sort-by.sync="sortBy"
                   :sort-desc.sync="sortDesc"
                   :sort-direction="sortDirection"
-                  stacked="md"
                   show-empty
                   small
                   striped
@@ -232,40 +231,42 @@
 
                   <!-- view modal -->
                   <template #cell(actions)="data">
-                    <b-button
-                      :to="{
-                        name: 'workspace-admin-teacher-id',
-                        params: {
-                          workspace: mainWorkspace.name,
-                          id: data.item.id,
-                        },
-                      }"
-                      variant="primary"
-                      size="md"
-                      class="px-3"
-                    >
-                      <b-icon icon="eye" class="mr-1"></b-icon>
-                      View
-                    </b-button>
+                    <div class="d-flex">
+                      <b-button
+                        :to="{
+                          name: 'workspace-admin-teacher-id',
+                          params: {
+                            workspace: mainWorkspace.name,
+                            id: data.item.id,
+                          },
+                        }"
+                        variant="primary"
+                        size="md"
+                        class="px-3"
+                      >
+                        <b-icon icon="eye" class="mr-1"></b-icon>
+                        View
+                      </b-button>
 
-                    <b-button
-                      variant="info"
-                      size="md"
-                      class="px-3"
-                      @click="handleteacherEditModal(data.item.id)"
-                    >
-                      Edit
-                    </b-button>
+                      <b-button
+                        variant="info"
+                        size="md"
+                        class="px-3"
+                        @click="handleteacherEditModal(data.item.id)"
+                      >
+                        Edit
+                      </b-button>
 
-                    <b-button
-                      variant="danger"
-                      size="md"
-                      class="px-3"
-                      @click="handleDeleteModal(data.item)"
-                    >
-                      <b-icon icon="trash" class="mr-1" />
-                      Delete
-                    </b-button>
+                      <b-button
+                        variant="danger"
+                        size="md"
+                        class="px-3"
+                        @click="handleDeleteModal(data.item)"
+                      >
+                        <b-icon icon="trash" class="mr-1" />
+                        Delete
+                      </b-button>
+                    </div>
                   </template>
 
                   <template #row-details="row">
@@ -289,10 +290,9 @@
                   size="lg"
                   :hide-footer="true"
                 >
-
-                <AdminEditTeacherModal
-                  :teacherInfo="[teacherId, infoModal]"
-                />
+                  <AdminEditTeacherModal
+                    :teacherInfo="[teacherId, infoModal]"
+                  />
                 </b-modal>
               </b-container>
             </div>
@@ -310,15 +310,15 @@
           <p>This action cannot be undone.</p>
 
           <b-form-group label="Delete Key">
-              <b-form-input
-                v-model="deleteKey"
-                size="lg"
-                placeholder="Enter delete key..."
-                type="password"
-                name="password"
-                required
-              ></b-form-input>
-            </b-form-group>
+            <b-form-input
+              v-model="deleteKey"
+              size="lg"
+              placeholder="Enter delete key..."
+              type="password"
+              name="password"
+              required
+            ></b-form-input>
+          </b-form-group>
 
           <div>
             <b-button
@@ -358,7 +358,7 @@ export default {
       items: [],
       teachers: [],
       teacherId: null,
-     
+
       isDeleting: false,
       invokedForDelete: null,
       fields: [
@@ -439,7 +439,7 @@ export default {
       query: TEACHERS_QUERIES,
       variables() {
         return {
-           workspaceId: parseInt(this.mainWorkspace.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },
@@ -464,7 +464,7 @@ export default {
 
   methods: {
     handleteacherEditModal(item) {
-      this.teacherId= item
+      this.teacherId = item
       this.$root.$emit('bv::show::modal', this.infoModal)
     },
     resetInfoModal() {
@@ -485,14 +485,14 @@ export default {
           mutation: DELETE_TEACHER_MUTATION,
           variables: {
             id: parseInt(this.invokedForDelete.id),
-             workspaceId: parseInt(this.mainWorkspace.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteTeacher } }) => {
             try {
               const data = store.readQuery({
                 query: TEACHERS_QUERIES,
                 variables: {
-                   workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
 
@@ -508,7 +508,7 @@ export default {
               store.writeQuery({
                 query: TEACHERS_QUERIES,
                 variables: {
-                   workspaceId: parseInt(this.mainWorkspace.id),
+                  workspaceId: parseInt(this.mainWorkspace.id),
                 },
 
                 data,
@@ -555,7 +555,7 @@ export default {
 </script>
 
 <style lang="scss">
-.fonts {
+.teacher {
   font-size: 1.4rem !important;
   padding: 2rem;
 

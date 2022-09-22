@@ -1,7 +1,11 @@
 import gql from 'graphql-tag'
 import { KLASE_FIELDS_FRAGMENT } from '../klases/fragments'
 
-import { TEACHER_FIELDS_FRAGMENT, TEACHERS_FIELDS_FRAGMENT } from './fragments'
+import {
+  TEACHER_FIELDS_FRAGMENT,
+  TEACHERS_FIELDS_FRAGMENT,
+  ASSIGN_TEACHER_FRAGMENT,
+} from './fragments'
 // dashboard
 export const TEACHER_DASHBOARD_QUERIES = gql`
   query TeachersDashboardQueries($workspaceId: Int) {
@@ -45,6 +49,19 @@ export const USER_TEACHER_QUERY = gql`
       blood_group {
         name
       }
+      country {
+        id
+        name
+      }
+      state {
+        id
+        name  
+      }
+      city {
+        id
+        name
+      }
+      lga
       teacher {
         id
         slug

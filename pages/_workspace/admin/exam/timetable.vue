@@ -2,9 +2,9 @@
   <div class="p-4 view-payment">
     <template v-if="$apollo.queries.klases.loading"><Preload /></template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-4 d-flex">
         <b-row no-gutters>
-          <b-col md="6" class="p-4">
+          <b-col md="6" class="p-2">
             <b-form-group label="Current Class:">
               <b-form-select
                 id="klase"
@@ -46,48 +46,45 @@
 
               <b-row no-gutters>
                 <b-col md="12">
-                  <h3 class="d-flex justify-content-center mb-4">
+                  <h3 class="text-center mb-4">
                     <!-- <div v-for="time in timetable[0]" :key="time.id">
                     {{ time['name'] }}
                   </div> -->
                     Exam Timetable
                   </h3>
 
-                  <div class="card-body">
-                    <div class="card-student p-3">
-                      <b-table
-                        hover
-                        bordered
-                        head-variant="dark"
-                        caption-top
-                        no-border-collapse
-                        fixed
-                        stacked="md"
-                        responsive="true"
-                        :items="examTimetables"
-                        :fields="fields"
-                      >
-                        <template #cell(Action)="data">
-                          <div class="d-flex justify-content-center">
-                            <b-button
-                              variant="primary"
-                              size="lg"
-                              @click="timetableEdit(data.item.id)"
-                              >Edit</b-button
-                            >
+                  <b-card>
+                    <b-table
+                      hover
+                      bordered
+                      head-variant="dark"
+                      caption-top
+                      no-border-collapse
+                      :responsive="true"
+                      :items="examTimetables"
+                      :fields="fields"
+                    >
+                      <template #cell(Action)="data">
+                        <div class="d-flex">
+                          <b-button
+                            variant="primary"
+                            size="smd"
+                            @click="timetableEdit(data.item.id)"
+                            >Edit</b-button
+                          >
 
-                            <b-button
-                              variant="danger"
-                              size="lg"
-                              class="ml-2"
-                              @click="deleteItem(data.item.id)"
-                              >Delete</b-button
-                            >
-                          </div>
-                        </template>
-                      </b-table>
-                    </div>
-                  </div>
+                          <b-button
+                            variant="danger"
+                            size="smd"
+                            class="ml-2"
+                            @click="deleteItem(data.item.id)"
+                            >Delete</b-button
+                          >
+                        </div>
+                      </template>
+                    </b-table>
+                  </b-card>
+
                   <!-- Info modal -->
                   <b-modal
                     :id="infoModal"
@@ -113,7 +110,7 @@
                   @submit.prevent="onSubmit"
                   @keydown="form.onKeydown($event)"
                 >
-                  <table class="table table-bordered">
+                  <table class="w-100 table table-bordered table-responsive">
                     <thead>
                       <tr>
                         <th scope="col">Date</th>
@@ -387,10 +384,8 @@ export default {
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
-              // console.log(this.form.class);
 
               data.examTimetables.push(createExamTimetable)
-              // console.log(dataCopy)
 
               // Write our data back to the cache.
               // Write back to the cache
@@ -416,10 +411,7 @@ export default {
 
             // this.$router.push('/admin/exam/timetable')
           })
-          .catch((e) => {
-            console.log(e)
-            // this.klase_id =
-          })
+          .catch(() => {})
       }
     },
     // -------- end mutation -------------- //
@@ -465,10 +457,7 @@ export default {
           this.form.busy = false
           // this.$router.push('/admin/teacher')
         })
-        .catch((e) => {
-          console.log(e)
-          // this.klase_id =
-        })
+        .catch(() => {})
     },
     // -------- end mutation -------------- //
   },
