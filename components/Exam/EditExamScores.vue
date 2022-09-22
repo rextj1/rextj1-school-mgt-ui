@@ -1,83 +1,87 @@
 <template>
-  <div class="timetable">
-    <div v-if="marks[0] == null"></div>
+  <div class="exam-scores">
+    <template v-if="marks.length == 0"
+      ><h3 class="text-center p4">No record found</h3></template
+    >
 
-    <h2 v-else class="d-flex justify-content-center p-4">
-      <span style="color: green; font-weight: bold"
-        >({{ marks[0].klase.name }}) Scoresheet</span
-      >
-    </h2>
-    <div class="exam-timetable table-responsive">
-      <b-form
-        method="POST"
-        @submit.prevent="onLogin"
-        @keydown="form.onKeydown($event)"
-      >
-        <table class="table table-striped table-sm align-table">
-          <thead class="">
-            <tr>
-              <th scope="col">S/N</th>
-              <th scope="col">Name</th>
-              <th scope="col">Subject</th>
-              <th scope="col">ADM No.</th>
-              <th scope="col">1ST (CA) 20%</th>
-              <th scope="col">2ND (CA) 20%</th>
-              <th scope="col">Exam 60%</th>
-            </tr>
-          </thead>
+    <template v-else>
+      <h2 class="d-flex justify-content-center p-4">
+        <span style="color: green; font-weight: bold"
+          >({{ marks[0].klase.name }}) Scoresheet</span
+        >
+      </h2>
+      <div class="exam-timetable table-responsive">
+        <b-form
+          method="POST"
+          @submit.prevent="onLogin"
+          @keydown="form.onKeydown($event)"
+        >
+          <table class="table table-striped table-sm align-table">
+            <thead class="">
+              <tr>
+                <th scope="col">S/N</th>
+                <th scope="col">Name</th>
+                <th scope="col">Subject</th>
+                <th scope="col">ADM No.</th>
+                <th scope="col">1ST (CA) 20%</th>
+                <th scope="col">2ND (CA) 20%</th>
+                <th scope="col">Exam 60%</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            <tr v-for="(mark, value) in marks" :key="mark.id">
-              <td>{{ value + 1 }}</td>
+            <tbody>
+              <tr v-for="(mark, value) in marks" :key="mark.id">
+                <td>{{ value + 1 }}</td>
 
-              <td>
-                {{ mark.student.first_name }} {{ mark.student.last_name }}
-              </td>
-              <td>{{ mark.subject.subject }}</td>
+                <td>
+                  {{ mark.student.first_name }} {{ mark.student.last_name }}
+                </td>
+                <td>{{ mark.subject.subject }}</td>
 
-              <td>{{ mark.student.adm_no }}</td>
-              <td scope="row">
-                <input
-                  v-model="mark.ca1"
-                  type="number"
-                  min="0"
-                  max="20"
-                  @input="sendScores(mark, $event.target.value, 'ca1')"
-                />
-              </td>
-              <td scope="row">
-                <input
-                  v-model="mark.ca2"
-                  type="number"
-                  min="0"
-                  max="20"
-                  @input="sendScores(mark, $event.target.value, 'ca2')"
-                />
-              </td>
-              <td scope="row">
-                <input
-                  v-model="mark.exam"
-                  type="number"
-                  min="0"
-                  max="60"
-                  @input="sendScores(mark, $event.target.value, 'exam')"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="d-flex justify-content-center mt-4">
-          <b-button size="lg" type="submit" variant="danger"
-            ><b-spinner
-              v-if="busy"
-              variant="light"
-              small
-              class="mr-1 mb-1"
-            />Add Scores</b-button
-          >
-        </div>
-      </b-form>
-    </div>
+                <td>{{ mark.student.adm_no }}</td>
+                <td scope="row">
+                  <input
+                    v-model="mark.ca1"
+                    type="number"
+                    min="0"
+                    max="20"
+                    @input="sendScores(mark, $event.target.value, 'ca1')"
+                  />
+                </td>
+                <td scope="row">
+                  <input
+                    v-model="mark.ca2"
+                    type="number"
+                    min="0"
+                    max="20"
+                    @input="sendScores(mark, $event.target.value, 'ca2')"
+                  />
+                </td>
+                <td scope="row">
+                  <input
+                    v-model="mark.exam"
+                    type="number"
+                    min="0"
+                    max="60"
+                    @input="sendScores(mark, $event.target.value, 'exam')"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="d-flex justify-content-center mt-4">
+            <b-button size="lg" type="submit" variant="danger" :disabled="busy"
+              ><b-spinner
+                v-if="busy"
+                variant="light"
+                small
+                class="mr-1 mb-1"
+              />Add Scores</b-button
+            >
+          </div>
+        </b-form>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -88,7 +92,7 @@ import Swal from 'sweetalert2'
 import { CREATE_ROW_MUTATION } from '~/graphql/marks/mutations'
 export default {
   props: {
-    marks: Array,
+    marks: null,
     student: Array,
   },
   data() {
@@ -163,7 +167,7 @@ export default {
 </script>
 
 <style lang="scss">
-.exam-timetable {
+.exam-scores {
   font-size: 1.6rem;
   background-color: var(--color-white);
 

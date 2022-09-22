@@ -1,7 +1,12 @@
 <template>
   <div class="top">
     <nav class="" @click="hideTopNav">
-      <b-icon class="h1 toggle-menu" variant="light" icon="border-width"  @click="toggleThisMenu"/>
+      <b-icon
+        class="h1 toggle-menu"
+        variant="light"
+        icon="border-width"
+        @click="toggleThisMenu"
+      />
       <ul class="d-flex align-items-center">
         <li>
           <span class="mainNotification">
@@ -62,11 +67,13 @@
           </span>
         </li>
       </ul>
+
+      <!-- notification -->
       <b-modal
         :id="notice"
         class="modal"
-        :hide-backdrop="true"
-        title="Edit Accountant Data"
+        body-bg-variant="light"
+        :hide-backdrop="false"
         scrollable
         size="md"
         :hide-footer="true"
@@ -112,7 +119,7 @@ export default {
 
   methods: {
     ...mapActions(useToggleMenu, ['toggleMenu']),
-    toggleThisMenu(){
+    toggleThisMenu() {
       this.toggleMenu()
     },
     profileImage(e) {
@@ -162,7 +169,7 @@ export default {
     .toggle-menu {
       margin-left: 1rem;
       margin-top: 2rem;
-       cursor: pointer;
+      cursor: pointer;
     }
 
     .bell {

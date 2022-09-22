@@ -245,7 +245,6 @@ import { KLASE_QUERIES, KLASE_QUERY } from '~/graphql/klases/queries'
 import {
   ASSIGN_KLASE_TO_TEACHER_MUTATION,
   CREATE_KLASE_MUTATION,
-  DELETE_KLASE_MUTATION,
   UPDATE_KLASE_MUTATION,
 } from '@/graphql/klases/mutations'
 import { TEACHERS_QUERIES } from '~/graphql/teachers/queries'

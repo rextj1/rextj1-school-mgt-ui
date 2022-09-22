@@ -17,7 +17,7 @@
             @submit.prevent="onSubmit"
             @keydown="form.onKeydown($event)"
           >
-            <table class="table table-bordered">
+            <table class="table table-sm table-bordered">
               <thead>
                 <tr style="font-size: 1.4rem">
                   <th scope="col">Time</th>
@@ -32,47 +32,53 @@
               <tbody>
                 <tr style="font-size: 1.4rem">
                   <th scope="row">
-                    <b-input
+                    <input
+                      class="form-control form-control-sm"
                       v-model="form.time"
-                      style="width: 11rem; font-size: 1.4rem"
                       type="text"
-                    ></b-input>
+                      style="font-size: 1.4rem"
+                    />
                   </th>
 
                   <th scope="row">
-                    <b-form-input
+                    <input
+                      class="form-control form-control-sm"
                       v-model="form.monday"
                       type="text"
-                      style="width: 11rem; font-size: 1.4rem"
-                    ></b-form-input>
+                      style="font-size: 1.4rem"
+                    />
                   </th>
                   <th scope="row">
-                    <b-form-input
+                    <input
+                      class="form-control form-control-sm"
                       v-model="form.tuesday"
                       type="text"
-                      style="width: 11rem; font-size: 1.4rem"
-                    ></b-form-input>
+                      style="font-size: 1.4rem"
+                    />
                   </th>
                   <th scope="row">
-                    <b-form-input
+                    <input
+                      class="form-control form-control-sm"
                       v-model="form.wednesday"
                       type="text"
-                      style="width: 11rem; font-size: 1.4rem"
-                    ></b-form-input>
+                      style="font-size: 1.4rem"
+                    />
                   </th>
                   <th scope="row">
-                    <b-form-input
+                    <input
+                      class="form-control form-control-sm"
                       v-model="form.thursday"
                       type="text"
-                      style="width: 11rem; font-size: 1.4rem"
-                    ></b-form-input>
+                      style="font-size: 1.4rem"
+                    />
                   </th>
                   <th scope="row">
-                    <b-form-input
+                    <input
+                      class="form-control form-control-sm"
                       v-model="form.friday"
                       type="text"
-                      style="width: 11rem; font-size: 1.4rem"
-                    ></b-form-input>
+                      style="font-size: 1.4rem"
+                    />
                   </th>
                 </tr>
               </tbody>
@@ -183,7 +189,7 @@ export default {
             thursday: this.form.thursday,
             friday: this.form.friday,
             klase_id: parseInt(this.klaseId),
-             workspaceId: parseInt(this.mainWorkspace.id),
+            workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { updateTimetable } }) => {
             // Read the data from our cache for this query.
@@ -202,7 +208,7 @@ export default {
               query: TIMETABLE_QUERY,
               variables: {
                 id: parseInt(updateId),
-                 workspaceId: parseInt(this.mainWorkspace.id),
+                workspaceId: parseInt(this.mainWorkspace.id),
               },
               data,
             })

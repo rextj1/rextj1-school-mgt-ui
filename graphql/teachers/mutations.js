@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { TEACHERS_FIELDS_FRAGMENT } from './fragments'
+import { ASSIGN_TEACHER_FRAGMENT, TEACHERS_FIELDS_FRAGMENT } from './fragments'
 
 export const CREATE_TEACHER_MUTATION = gql`
   mutation CreateTeacherMutation(
@@ -21,7 +21,7 @@ export const UPDATE_TEACHER_MUTATION = gql`
   mutation UpdateTeacherMutation(
     $id: ID!
     $workspaceId: Int
-    $userTable: UsersInput
+    $userTable: EditUsersInput
     $teacherTable: WorkersInput
   ) {
     updateTeacher(

@@ -1,8 +1,7 @@
 <template>
   <div class="liberian">
     <div class="p-4 liberian__wrapper">
-      <h1 class="d-flex justify-content-center mb-4">Notice Board</h1>
-
+     
       <b-row no-gutters>
         <b-col md="12">
           <b-table striped responsive :items="notices" :fields="fields">
@@ -17,7 +16,7 @@
                   >
                 </div>
 
-                <div>{{ row.item.description }}</div>
+                 <span v-html="row.item.description"></span>
               </div>
             </template>
           </b-table>
@@ -28,6 +27,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { NOTICE_QUERIES } from '@/graphql/notices/queries'
 export default {
   data() {
@@ -35,7 +36,7 @@ export default {
       fields: [
         {
           key: 'date',
-          label: 'Date',
+          label: 'School Notice',
         },
       ],
       form: {
@@ -44,9 +45,19 @@ export default {
       },
     }
   },
+   computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
+  },
   apollo: {
     notices: {
       query: NOTICE_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
     },
   },
 }

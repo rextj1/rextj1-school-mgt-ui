@@ -1,10 +1,10 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4">
     <template v-if="nowLoading">
       <Preload />
     </template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="p-2 mb-4 d-flex">
         <!-- setPromotion -->
 
         <h3>Set promotion mark</h3>
@@ -41,29 +41,6 @@
                   <template #first>
                     <b-form-select-option :value="null" disabled
                       >-- select class--</b-form-select-option
-                    >
-                  </template>
-
-                  <!-- These options will appear after the ones from 'options' prop -->
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="2">
-              <b-form-group label="Section">
-                <b-form-select
-                  id="sections"
-                  v-model="form.section"
-                  value-field="id"
-                  text-field="name"
-                  :options="sections"
-                  class="mb-3"
-                  size="lg"
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- select section--</b-form-select-option
                     >
                   </template>
 
@@ -160,14 +137,10 @@
 
       <div v-show="timetableDropdownClass" class="libarian__wrapper">
         <ExamStudentPromotion
+          v-if="examRecords"
           :promote-students="promoteStudents"
-          :student="[
-            form.class,
-            form.classTo,
-            form.session,
-            form.sessionTo,
-            form.section,
-          ]"
+          :examRecords="examRecords"
+          :student="[form.class, form.classTo, form.session, form.sessionTo]"
           :set-promotion="setPromotion"
         />
       </div>
@@ -180,14 +153,13 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import { TERM_QUERIES } from '~/graphql/marks/queries'
 import {
   PROMOTESTUDENTS_QUERIES,
   SET_PROMOTION_QUERIES,
 } from '@/graphql/promotions/queries'
 import { CREATE_SET_PROMOTION_MUTATION } from '@/graphql/promotions/mutations'
-import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -195,13 +167,14 @@ export default {
       isBusy: false,
       promoteStudents: [],
       setPromotion: {},
+      examRecords: null,
+      klaseResults: [],
       timetableDropdownClass: false,
       form: {
         class: null,
         session: null,
         classTo: null,
         sessionTo: null,
-        section: null,
       },
 
       dynamicClass: '',
@@ -219,14 +192,7 @@ export default {
         }
       },
     },
-    sections: {
-      query: SECTION_QUERIES,
-      variables() {
-        return {
-          workspaceId: parseInt(this.mainWorkspace.id),
-        }
-      },
-    },
+
     sessions: {
       query: SESSION_QUERIES,
       variables() {
@@ -250,7 +216,6 @@ export default {
         this.$apollo.queries.klases.loading &&
         this.$apollo.queries.setPromotion.loading &&
         this.$apollo.queries.sessions.loading &&
-        this.$apollo.queries.sections.loading &&
         this.$apollo.queries.setPromotion.loading
       )
     },
@@ -292,7 +257,6 @@ export default {
         this.form.class === null ||
         this.form.classTo === null ||
         this.form.session === null ||
-        this.form.section === null ||
         this.form.sessionTo === null ||
         this.form.class === this.form.classTo ||
         this.form.class > this.form.classTo ||
@@ -314,6 +278,24 @@ export default {
         return false
       } else {
         this.isBusy = true
+
+        this.$apollo.addSmartQuery('klaseResults', {
+          query: EXAM_RECORD_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: 3,
+              session_id: parseInt(this.form.session),
+              workspaceId: parseInt(this.mainWorkspace.id),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.examRecords = data.klaseResults
+            }
+          },
+        })
+
         this.timetableDropdownClass = false
         this.$apollo.addSmartQuery('promoteStudents', {
           query: PROMOTESTUDENTS_QUERIES,
@@ -322,7 +304,6 @@ export default {
               klase_id: parseInt(this.form.class),
               status: true,
               session_id: parseInt(this.form.session),
-              section_id: parseInt(this.form.section),
               workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
@@ -339,60 +320,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.view-payment {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-
-  .custom-select {
-    option {
-      font-size: 1.5rem !important;
-    }
-  }
-
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -3.5rem;
-        left: 14.2rem;
-        background-color: #fff;
-      }
-
-      li:not(:last-child) {
-        background-color: #fff;
-        padding: 1rem 4.8rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
-  }
-}
-</style>

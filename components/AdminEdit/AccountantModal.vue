@@ -83,6 +83,7 @@
                 size="lg"
                 placeholder="Enter First name"
                 trim
+                required
               ></b-form-input>
               <b-form-invalid-feedback
                 :state="!form.errors.has('teacherTable.first_name')"
@@ -101,9 +102,10 @@
                 placeholder="Enter last name"
                 name="last_name"
                 trim
+                required
               ></b-form-input>
-              <b-form-invalid-feedback :state="!form.errors.has('last_name')">
-                {{ form.errors.get('last_name') }}
+              <b-form-invalid-feedback :state="!form.errors.has('teacherTable.last_name')">
+                {{ form.errors.get('teacherTable.last_name') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -124,15 +126,16 @@
           <b-col md="3" class="p-4">
             <b-form-group id="input-group-1" label="Email:">
               <b-form-input
-                id="input-1"
+                id="email"
                 v-model="form.userTable.email"
                 type="email"
                 placeholder="Enter email"
                 name="email"
                 trim
+                required
               ></b-form-input>
-              <b-form-invalid-feedback :state="!form.errors.has('email')">
-                {{ form.errors.get('email') }}
+              <b-form-invalid-feedback :state="!form.errors.has('userTable.email')">
+                {{ form.errors.get('userTable.email') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -140,9 +143,11 @@
           <b-col md="3" class="p-4">
             <b-form-group id="input-group-1" label="Phone no:">
               <b-form-input
-                id="qualification"
+                id="phone"
                 v-model="form.teacherTable.phone"
                 type="number"
+                min="1234567899"
+                max="12345678919"
                 placeholder="Enter phone no."
                 name="phone"
                 trim
@@ -161,11 +166,12 @@
                 type="text"
                 placeholder="Enter qualification"
                 name="qualification"
+                required
               ></b-form-input>
               <b-form-invalid-feedback
-                :state="!form.errors.has('qualification')"
+                :state="!form.errors.has('teacherTable.qualification')"
               >
-                {{ form.errors.get('qualification') }}
+                {{ form.errors.get('teacherTable.qualification') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -179,6 +185,7 @@
                 placeholder="Enter religion"
                 name="religion"
                 trim
+                required
               ></b-form-input>
               <b-form-invalid-feedback :state="!form.errors.has('religion')">
                 {{ form.errors.get('religion') }}
@@ -186,7 +193,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group label="Gender">
               <b-form-select
                 v-model="form.teacherTable.gender"
@@ -207,7 +214,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group label="Date of birth">
               <b-form-datepicker
                 id="datepicker-buttons"
@@ -216,16 +223,16 @@
                 reset-button
                 close-button
                 locale="en"
-                size="lg"
+                size="md"
                 name="birthday"
               ></b-form-datepicker>
-              <b-form-invalid-feedback :state="!form.errors.has('birthday')">
-                {{ form.errors.get('birthday') }}
+              <b-form-invalid-feedback :state="!form.errors.has('teacherTable.birthday')">
+                {{ form.errors.get('teacherTable.birthday') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group label="Blood Group">
               <b-form-select
                 id="bloodGroups"
@@ -283,7 +290,7 @@
 
             <div v-else>
               <b-form-group label="State">
-                <b-form-select v-model="form.userTable.state" class="mb-3">
+                <b-form-select v-model="form.userTable.state" class="mb-3" required>
                   <b-form-select-option
                     v-for="k in country.state"
                     :key="k.id"
@@ -306,7 +313,7 @@
 
             <div v-else>
               <b-form-group label="City">
-                <b-form-select v-model="form.userTable.city" class="mb-3">
+                <b-form-select v-model="form.userTable.city" class="mb-3" required>
                   <b-form-select-option
                     v-for="k in state.cities"
                     :key="k.id"
@@ -326,9 +333,10 @@
                 type="text"
                 placeholder="Enter L.G.A"
                 name="lga"
+                required
               ></b-form-input>
-              <b-form-invalid-feedback :state="!form.errors.has('lga')">
-                {{ form.errors.get('lga') }}
+              <b-form-invalid-feedback :state="!form.errors.has('userTable.lga')">
+                {{ form.errors.get('userTable.lga') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -560,7 +568,7 @@ export default {
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
-  
+
               data.accountant = updateAccountant
 
               // // Mutate cache result

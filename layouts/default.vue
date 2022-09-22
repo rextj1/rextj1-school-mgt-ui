@@ -68,11 +68,11 @@ export default {
 
     if (
       this.$auth.user.email === 'tojurex@yahoo.com' &&
-      userWorkspace.workspace.name === 'defaultWorkspace'
+      userWorkspace.workspace.slug === 'defaultWorkspace'
     ) {
       return redirect({
         name: 'workspace-school',
-        params: { workspace: userWorkspace.workspace.name },
+        params: { workspace: userWorkspace.workspace.slug },
       })
     } else {
       return redirect({

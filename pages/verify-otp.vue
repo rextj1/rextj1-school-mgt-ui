@@ -1,8 +1,8 @@
 <template>
-  <div class="font">
-    <div class="form-wrapper">
-      <div class="cover-box">
-        <div class="form-width">
+  <div class="verify-otp">
+    <div class="form-wrapper-otp">
+      <div class="cover-box-otp">
+        <div class="form-width-otp">
           <b-form
             method="POST"
             @submit.prevent="onSubmit"
@@ -172,18 +172,17 @@ export default {
           },
         })
         .then(() => {
-           Swal.fire({
-                timer: 1000,
-                text: 'otp code sent successfully',
-                position: 'top-right',
-                color: '#fff',
-                background: '#4bb543',
-                toast: false,
-                showConfirmButton: false,
-                backdrop: false,
-              })
+          Swal.fire({
+            timer: 1000,
+            text: 'otp code sent successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#4bb543',
+            toast: false,
+            showConfirmButton: false,
+            backdrop: false,
+          })
           this.busy = false
-
         })
     },
   },
@@ -191,10 +190,14 @@ export default {
 </script>
 
 <style lang="scss">
-.font {
+.verify-otp {
   font-size: 1.6rem;
-  .form-wrapper {
+  .form-wrapper-otp {
     display: flex;
+
+    @include media-breakpoint-down(md) {
+      display: block;
+    }
 
     .form-control,
     .mb-3 {
@@ -203,13 +206,17 @@ export default {
       border-radius: 0.5rem;
     }
 
-    .cover-box {
+    .cover-box-otp {
       // box-shadow: 0 0 0.2rem 0;
       background-color: #fff;
       width: 50%;
       height: 100vh;
 
-      .form-width {
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+
+      .form-width-otp {
         // color: #000;
         max-width: 50%;
         margin: 35vh auto;
@@ -223,6 +230,15 @@ export default {
           border-radius: 4px;
           border: 1px solid rgba(0, 0, 0, 0.3);
           text-align: center;
+
+          @include media-breakpoint-down(md) {
+            text-align: left;
+            width: 40px;
+            height: 40px;
+            padding: 5px;
+            margin: 0 8px;
+            font-size: 16px;
+          }
           &.error {
             border: 1px solid red !important;
           }
@@ -235,6 +251,14 @@ export default {
         & .timer {
           color: #000;
           margin-left: 88%;
+        }
+
+        @include media-breakpoint-down(md) {
+          position: absolute;
+          margin: 0;
+          left: 12%;
+          top: 40%;
+          translate: translate(-50%, -50%);
         }
       }
     }
@@ -261,6 +285,10 @@ export default {
       height: 100vh;
       background-size: cover;
       width: 50%;
+
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
     }
   }
 }

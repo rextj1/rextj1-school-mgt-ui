@@ -70,7 +70,11 @@
 
             <p>{{ accountant.gender }}</p>
             <p>
-              {{ accountant.user.blood_group.name }}
+              {{
+                accountant.user.blood_group != null
+                  ? accountant.user.blood_group.name
+                  : ''
+              }}
             </p>
             <p>
               {{ accountant.user.country.name }}
@@ -84,27 +88,6 @@
             <p>
               {{ accountant.user.lga }}
             </p>
-            <!-- <h3 v-for="klase in accountant.klases" :key="klase">
-              <p>
-                <b-badge
-                  style="line-height: 1.6"
-                  variant="warning"
-                  class="px-2"
-                  :id="klase.id"
-                  >{{ klase.name }}</b-badge
-                >
-              </p>
-              <b-popover :target="klase.id" triggers="hover click">
-                <b-nav vertical>
-                  <b-nav-item
-                    v-for="subject in klase.subjects"
-                    :key="subject.id"
-                  >
-                    <div style="font-size: 1.4rem">{{ subject.subject }}</div>
-                  </b-nav-item>
-                </b-nav>
-              </b-popover>
-            </h3> -->
           </b-col>
         </b-row>
       </b-jumbotron>

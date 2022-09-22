@@ -1,46 +1,42 @@
 <template>
-  <div class="p-4 view-payment">
-    <template>
-      <div class="fonts">
-        <template v-if="$apollo.queries.klases.loading"><Preload /></template>
-        <template v-else>
-          <div class="libarian__wrapper">
-            <b-card no-body @click="hideMenu">
-              <b-tabs card style="font-size: 1.4rem">
-                <b-tab lazy @click="registrationMenu">
-                  <template #title>
-                    <strong>View Timetable</strong>
-                    <b-icon scale="0.8" icon="caret-down-fill" />
-                  </template>
+  <div class="p-4 teacher-timetable">
+    <template v-if="$apollo.queries.klases.loading"><Preload /></template>
+    <template v-else>
+      <div class="exam-wrapper">
+        <b-card no-body @click="hideMenu">
+          <b-tabs card style="font-size: 1.4rem">
+            <b-tab lazy @click="registrationMenu">
+              <template #title>
+                <strong>View Timetable</strong>
+                <b-icon scale="0.8" icon="caret-down-fill" />
+              </template>
 
-                  <div class="menu" style="background-color: #fff">
-                    <ul
-                      v-show="registerMenu"
-                      class="shadow"
-                      :class="registrationMenuClass"
+              <div class="menu">
+                <ul
+                  v-show="registerMenu"
+                  class="shadow"
+                  :class="registrationMenuClass"
+                >
+                  <span v-for="klase in klases" :key="klase.id">
+                    <li
+                      @click.prevent="
+                        dynamicStudentClass(klase.id, klase.name)
+                        activeTab = 'TimetableEditClassTimetable'
+                      "
                     >
-                      <span v-for="klase in klases" :key="klase.id">
-                        <li
-                          @click.prevent="
-                            dynamicStudentClass(klase.id, klase.name)
-                            activeTab = 'TimetableEditClassTimetable'
-                          "
-                        >
-                          <span class="d-flex">{{ klase.name }}</span>
-                        </li>
-                      </span>
-                    </ul>
-                  </div>
+                      <span class="d-flex">{{ klase.name }}</span>
+                    </li>
+                  </span>
+                </ul>
+              </div>
 
-                  <component
-                    :is="activeTab"
-                    :edit-current-class="[dynamicClass, klaseName]"
-                  />
-                </b-tab>
-              </b-tabs>
-            </b-card>
-          </div>
-        </template>
+              <component
+                :is="activeTab"
+                :edit-current-class="[dynamicClass, klaseName]"
+              />
+            </b-tab>
+          </b-tabs>
+        </b-card>
       </div>
     </template>
   </div>
@@ -268,7 +264,7 @@ export default {
 </script>
 
 <style lang="scss">
-.view-payment {
+.teacher-timetable {
   font-size: 1.6rem;
 
   .custom-select:focus {
@@ -282,8 +278,7 @@ export default {
     font-size: 1.4rem;
     color: #000;
   }
-  .libarian__wrapper {
-    padding: 2rem;
+  .exam-wrapper {
     font-size: 1.4rem;
     background-color: var(--color-white);
     border-radius: 0.5rem;
@@ -298,8 +293,8 @@ export default {
         z-index: 999;
         position: absolute;
         border: none;
-        top: -2.5rem;
-        // left: -0.1rem;
+         top: -1.2rem;
+        left: 0.3rem !important;
         background-color: #fff;
       }
 

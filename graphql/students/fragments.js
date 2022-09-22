@@ -91,6 +91,7 @@ export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
     gender
     photo
     adm_no
+    gender
     code
     cum_avg
     status

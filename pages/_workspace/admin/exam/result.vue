@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
@@ -115,7 +115,8 @@
 
       <div class="card" v-show="timetableDropdownClass">
         <div class="card-body">
-          <div class="p-3 roles-table">
+          <h3 v-if="klaseResults.length == 0" class="text-center">No record found</h3>
+          <div class="p-3 roles-table" v-else>
             <h2
               class="p-4 d-flex justify-content-center"
               style="font-weight: bold"
@@ -336,54 +337,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.view-payment {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -3.5rem;
-        left: 14.2rem;
-        background-color: #fff;
-      }
-
-      li:not(:last-child) {
-        background-color: #fff;
-        padding: 1rem 4.8rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
-  }
-}
-</style>

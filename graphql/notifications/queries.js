@@ -11,6 +11,7 @@ export const USER_NOTIFICATION_QUERIES = gql`
           data
         }
         read_at
+        created_at
       }
       unreadNotifications {
         type

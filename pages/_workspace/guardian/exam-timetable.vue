@@ -2,34 +2,34 @@
   <div class="p-4">
     <template v-if="nowloading"><Preload /></template>
     <template v-else>
-      <div  class="exam-wrapper p-2 mb-4">
-         <b-row no-gutters>
-        <b-col md="6" class="p-4">
-          <b-form-group label="Current Class:">
-            <b-form-select
-              id="klase"
-              v-model="studentClass"
-              value-field="id"
-              text-field="name"
-              :options="klases"
-              class="mb-3"
-              size="lg"
-              required
-              @change="timetableDropdown"
-            >
-              <!-- This slot appears above the options from 'options' prop -->
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- select class --</b-form-select-option
-                >
-              </template>
+      <b-card class="mb-4">
+        <b-row no-gutters>
+          <b-col md="4">
+            <b-form-group label="Current Class:">
+              <b-form-select
+                id="klase"
+                v-model="studentClass"
+                value-field="id"
+                text-field="name"
+                :options="klases"
+                class="mb-3"
+                size="lg"
+                required
+                @change="timetableDropdown"
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- select class --</b-form-select-option
+                  >
+                </template>
 
-              <!-- These options will appear after the ones from 'options' prop -->
-            </b-form-select>
-          </b-form-group>
-        </b-col>
-      </b-row></div>
-     
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-card>
 
       <div v-show="timetableDropdownClass">
         <div v-if="examTimetables.length > 0" class="exam-wrapper p-2">
@@ -48,30 +48,21 @@
             pdf-content-width=""
           >
             <section slot="pdf-content">
-              <b-row no-gutters>
-                <b-col md="12">
-                  <h3 class="d-flex justify-content-center mb-4">
-                    Class timetable
-                  </h3>
-                  <div class="card-body">
-                    <div class="card-student p-3">
-                      <b-table
-                        hover
-                        bordered
-                        head-variant="dark"
-                        caption-top
-                        no-border-collapse
-                        fixed
-                        stacked="md"
-                        responsive="true"
-                        :items="examTimetables"
-                        :fields="fields"
-                      >
-                      </b-table>
-                    </div>
-                  </div>
-                </b-col>
-              </b-row>
+              <h3 class="text-center mb-4">Class timetable</h3>
+              <b-card>
+                <b-table
+                  hover
+                  bordered
+                  head-variant="dark"
+                  caption-top
+                  no-border-collapse
+                  fixed
+                  responsive="true"
+                  :items="examTimetables"
+                  :fields="fields"
+                >
+                </b-table>
+              </b-card>
             </section>
           </vue-html2pdf>
 
@@ -81,8 +72,8 @@
             >
           </div>
         </div>
-        <div v-else-if="examTimetables.length == 0" class="exam-wrapper p-2">
-          <h2 style="text-align: center">No record found</h2>
+        <div v-else-if="examTimetables.length == 0" class="exam-wrapper p-4">
+          <h2 class="text-center p-4">No record found</h2>
         </div>
       </div>
     </template>
@@ -180,19 +171,8 @@ export default {
 <style lang="scss">
 .exam-wrapper {
   font-size: 1.4rem !important;
+  padding: 4rem;
   background-color: #fff;
 
-  .add-student {
-    font-size: 1.6rem;
-    box-shadow: 0 5px 5px 0 #1f64b367;
-  }
-  .card-body {
-    padding: 0;
-    .card-student {
-      border: none;
-      border-radius: 0.5rem;
-      height: auto;
-    }
-  }
 }
 </style>

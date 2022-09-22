@@ -1,190 +1,244 @@
 <template>
   <div class="p-4">
     <div class="settings">
-      <template v-if="$apollo.queries.adminWorkspace.loading"><Preload/></template>
+      <template v-if="$apollo.queries.adminWorkspace.loading"
+        ><Preload
+      /></template>
       <template v-else>
-      <h3 class="text-center py-4">Admin Settings</h3>
+        <div class="p-4">
+          <h3 class="ml-4 mt-5">Admin Settings</h3>
 
-      <b-form
-        v-if="show"
-        method="POST"
-        @submit.prevent="onSubmit"
-        @keydown="form.onKeydown($event)"
-        @reset.prevent="onReset"
-      >
-        <section class="p-4">
-          <h3>Media</h3>
+          <b-form
+            v-if="show"
+            method="POST"
+            @submit.prevent="onSubmit"
+            @keydown="form.onKeydown($event)"
+            @reset.prevent="onReset"
+          >
+            <section class="p-4">
+              <h3 class="text-center mt-2">Setup Media</h3>
+              <hr />
 
-          <div class="d-flex justify-content-around mb-4">
-            <div>
-              <div class="profile-avatar mb-2">
-                <div v-if="preview_url_logo == null" class="photo-preview">
-                  <img
-                    src="@/assets/svg/graduate-student.svg"
-                    alt=""
-                    style="border-radius: 50%"
-                  />
-                </div>
-                <div
-                  v-else
-                  class="photo-preview"
-                  :style="{
-                    backgroundImage: `url(${preview_url_logo})`,
-                  }"
-                ></div>
+              <div class="d-flex justify-content-around mb-4">
+                <div>
+                  <div class="profile-avatar mb-2">
+                    <div v-if="preview_url_logo == null" class="photo-preview">
+                      <img
+                        src="@/assets/svg/graduate-student.svg"
+                        alt=""
+                        style="border-radius: 50%"
+                      />
+                    </div>
+                    <div
+                      v-else
+                      class="photo-preview"
+                      :style="{
+                        backgroundImage: `url(${preview_url_logo})`,
+                      }"
+                    ></div>
 
-                <b-form-group>
-                  <div class="file-upload">
+                    <b-form-group>
+                      <div class="file-upload">
+                        <b-button
+                          variant="white"
+                          class="shadow-sm"
+                          size="sm"
+                          pill
+                          @click="selectImage"
+                        >
+                          <b-icon icon="camera-fill" />
+                        </b-button>
+                        <input
+                          id="avatar"
+                          ref="Avatar"
+                          type="file"
+                          accept="image"
+                          class="file-upload__input"
+                          hidden
+                          @change="handleFileUpload()"
+                        />
+                      </div>
+                      <b-form-invalid-feedback
+                        :state="!form.errors.has('logo')"
+                      >
+                        {{ form.errors.get('logo') }}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </div>
+
+                  <div class="text-center">
+                    <p class="small mb-2">
+                      Recommended size: Less than 2MB (150 x 150)
+                    </p>
                     <b-button
-                      variant="white"
-                      class="shadow-sm"
-                      size="sm"
+                      variant="outline-primary"
+                      size="md"
+                      class="px-3"
                       pill
                       @click="selectImage"
                     >
-                      <b-icon icon="camera-fill" />
+                      Upload logo
                     </b-button>
-                    <input
-                      id="avatar"
-                      ref="Avatar"
-                      type="file"
-                      accept="image"
-                      class="file-upload__input"
-                      hidden
-                      @change="handleFileUpload()"
-                    />
                   </div>
-                  <b-form-invalid-feedback :state="!form.errors.has('logo')">
-                    {{ form.errors.get('logo') }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-              </div>
-
-              <div class="text-center">
-                <p class="small mb-2">
-                  Recommended size: Less than 2MB (150 x 150)
-                </p>
-                <b-button
-                  variant="outline-primary"
-                  size="md"
-                  class="px-3"
-                  pill
-                  @click="selectImage"
-                >
-                  Upload logo
-                </b-button>
-              </div>
-            </div>
-            <div>
-              <div class="profile-avatar mb-2">
-                <div v-if="preview_url_stamp == null" class="photo-preview">
-                  <img
-                    src="@/assets/svg/graduate-student.svg"
-                    alt=""
-                    style="border-radius: 50%"
-                  />
                 </div>
-                <div
-                  v-else
-                  class="photo-preview"
-                  :style="{
-                    backgroundImage: `url(${preview_url_stamp})`,
-                  }"
-                ></div>
+                <div>
+                  <div class="profile-avatar mb-2">
+                    <div v-if="preview_url_stamp == null" class="photo-preview">
+                      <img
+                        src="@/assets/svg/graduate-student.svg"
+                        alt=""
+                        style="border-radius: 50%"
+                      />
+                    </div>
+                    <div
+                      v-else
+                      class="photo-preview"
+                      :style="{
+                        backgroundImage: `url(${preview_url_stamp})`,
+                      }"
+                    ></div>
 
-                <b-form-group>
-                  <div class="file-upload">
+                    <b-form-group>
+                      <div class="file-upload">
+                        <b-button
+                          variant="white"
+                          class="shadow-sm"
+                          size="sm"
+                          pill
+                          @click="selectStamp"
+                        >
+                          <b-icon icon="camera-fill" />
+                        </b-button>
+                        <input
+                          id="Stamp"
+                          ref="Stamp"
+                          type="file"
+                          accept="image"
+                          class="file-upload__input"
+                          hidden
+                          @change="handleStampUpload()"
+                        />
+                      </div>
+                      <b-form-invalid-feedback
+                        :state="!form.errors.has('stam')"
+                      >
+                        {{ form.errors.get('stamp') }}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </div>
+
+                  <div class="text-center">
+                    <p class="small mb-2">
+                      Recommended size: Less than 2MB (150 x 150)
+                    </p>
                     <b-button
-                      variant="white"
-                      class="shadow-sm"
-                      size="sm"
+                      variant="outline-primary"
+                      size="md"
+                      class="px-3"
                       pill
                       @click="selectStamp"
                     >
-                      <b-icon icon="camera-fill" />
+                      Upload stamp
                     </b-button>
-                    <input
-                      id="Stamp"
-                      ref="Stamp"
-                      type="file"
-                      accept="image"
-                      class="file-upload__input"
-                      hidden
-                      @change="handleStampUpload()"
-                    />
                   </div>
-                  <b-form-invalid-feedback :state="!form.errors.has('stam')">
-                    {{ form.errors.get('stamp') }}
+                </div>
+              </div>
+            </section>
+
+            <section class="p-4">
+              <h3 class="text-center mt-4">Setup Online Payment</h3>
+              <hr />
+              <div class="paymnet-method">
+                <!-- online payment -->
+                <div class="paymnet-input-field">
+                  <b-form-group label="Enter secret key">
+                    <b-form-input
+                      id="paystack_secret_key"
+                      v-model="form.paystack_secret_key"
+                      type="text"
+                      placeholder="Enter your paystack secret key"
+                      name="paystack_secret_key"
+                      trim
+                      size="lg"
+                    ></b-form-input>
+                  </b-form-group>
+                  <b-form-invalid-feedback
+                    :state="!form.errors.has('paystack_secret_key')"
+                  >
+                    {{ form.errors.get('paystack_secret_key') }}
                   </b-form-invalid-feedback>
-                </b-form-group>
+                </div>
               </div>
+            </section>
 
-              <div class="text-center">
-                <p class="small mb-2">
-                  Recommended size: Less than 2MB (150 x 150)
-                </p>
-                <b-button
-                  variant="outline-primary"
-                  size="md"
-                  class="px-3"
-                  pill
-                  @click="selectStamp"
-                >
-                  Upload stamp
-                </b-button>
-              </div>
-            </div>
-          </div>
-        </section>
+            <section>
+              <h2 class="d-flex justify-content-center mt-2 p-3" style="">
+                TEST CARD PAYMENT
+              </h2>
 
-        <section class="p-4">
-          <h3>Online Payment</h3>
-          <div class="paymnet-method">
-            <div class="paymnet-card">
-              <div v-if="preview_url_logo == null">
-                <img
-                  src="@/assets/svg/paystack.svg"
-                  alt="online-payment"
-                  width="200"
-                />
-              </div>
-              <div v-else>
-                <img
-                  src="@/assets/svg/paystack.svg"
-                  alt="online-payment"
-                  width="200"
-                />
-              </div>
-            </div>
-            <!-- online payment -->
-            <div class="paymnet-input-field">
-              <b-form-input
-                id="paystack_secret_key"
-                v-model="form.paystack_secret_key"
-                type="text"
-                placeholder="Enter your paystack secret key"
-                name="paystack_secret_key"
-                trim
-                size="lg"
-              ></b-form-input>
-              <b-form-invalid-feedback
-                :state="!form.errors.has('paystack_secret_key')"
-              >
-                {{ form.errors.get('paystack_secret_key') }}
-              </b-form-invalid-feedback>
-            </div>
-          </div>
-        </section>
+              <b-row>
+                <b-col md="6">
+                  <b-img src="@/assets/svg/paystack.svg" width="250"></b-img
+                ></b-col>
+                <b-col md="6" style="margin-top: 3.5rem">
+                  <b-form
+                    method="POST"
+                    @submit.prevent="initializePaystack()"
+                    @keydown="form.onKeydown($event)"
+                    @reset.prevent="onReset"
+                  >
+                    <b-row>
+                      <b-col md="6">
+                        <b-form-group label="Enter Amount">
+                          <b-form-input
+                            id="amount"
+                            v-model="amount"
+                            value-field="id"
+                            type="number"
+                            placeholder="Enter amount..."
+                            style="height: 4rem; font-size: 1.8rem"
+                            class="mb-3"
+                            size="lg"
+                            required
+                          >
+                          </b-form-input>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                    <b-button
+                      type="submit"
+                      variant="primary"
+                      size="lg"
+                      style="
+                        height: 3.8rem;
+                        font-size: 1.8rem;
+                        margin-top: 2.83rem;
+                        width: 100%;
+                        font-weight: bold;
+                      "
+                      >Test Now</b-button
+                    >
+                  </b-form>
+                </b-col>
+              </b-row>
+            </section>
 
-        <b-button type="submit" variant="primary" class="mr-4" size="lg">
-          <b-spinner
-            v-if="form.busy"
-            variant="light"
-            class="mr-1 mb-1"
-            small
-          />Submit</b-button
-        >
-      </b-form>
+            <b-button
+              type="submit"
+              variant="warning"
+              class="mr-4"
+              size="lg"
+              style="width: 100%; height: 3.8rem; font-size: 1.8rem"
+            >
+              <b-spinner
+                v-if="form.busy"
+                variant="light"
+                class="mr-1 mb-1"
+                small
+              />Submit Sttings Information</b-button
+            >
+          </b-form>
+        </div>
       </template>
     </div>
   </div>
@@ -204,6 +258,7 @@ export default {
       preview_url_stamp: null,
       logo: null,
       stamp: null,
+      amount: null,
       form: new this.$form({
         logo: null,
         stamp: null,
@@ -373,6 +428,24 @@ export default {
           })
         }
       }
+    },
+
+    // test payyment
+    initializePaystack() {
+      this.$paystack({
+        key:
+          this.form.paystack_secret_key === null
+            ? this.mainWorkspace.paystack_secret_key
+            : this.form.paystack_secret_key,
+        // email: this.guardianEmail,
+        amount: this.form.amount * 100,
+        ref: '' + Math.floor(Math.random() * 1000000000 + 1),
+        currency: 'NGN',
+        callback: () => {},
+        onClose: () => {
+          this.$router.push('')
+        },
+      })
     },
   },
 }

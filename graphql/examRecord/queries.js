@@ -6,7 +6,7 @@ export const EXAM_RECORD_QUERIES = gql`
     $klase_id: Int!
     $term_id: Int!
     $session_id: Int!
-    $section_id: Int!
+    $section_id: Int
     $workspaceId: Int
   ) {
     klaseResults(
@@ -61,29 +61,6 @@ export const STUDENT_EXAM_RESULT_QUERIES = gql`
     }
   }
   ${EXAM_RECORD_FIELDS_FRAGMENT}
-`
-
-export const PUBLISH_RESULT_QUERY = gql`
-  query PublishResultQuery(
-    $klase_id: Int!
-    $term_id: Int!
-    $session_id: Int!
-    $section_id: Int!
-    $status: String!
-    $workspaceId: Int
-  ) {
-    publishResult(
-      klase_id: $klase_id
-      term_id: $term_id
-      session_id: $session_id
-      section_id: $section_id
-      status: $status
-      workspaceId: $workspaceId
-    ) {
-      id
-      status
-    }
-  }
 `
 
 // student Result Query

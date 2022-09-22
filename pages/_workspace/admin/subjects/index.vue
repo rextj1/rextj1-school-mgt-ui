@@ -5,7 +5,7 @@
       <b-card class="mb-4 d-flex">
         <b-form @submit.prevent="timetableDropdown">
           <b-row no-gutters>
-            <b-col md="4">
+            <b-col md="3">
               <b-form-group label="Current Class:">
                 <b-form-select
                   id="klase"
@@ -28,7 +28,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4">
+            <b-col md="3" class="ml-2">
               <b-form-group label="Current Section:">
                 <b-form-select
                   id="klase"
@@ -71,7 +71,8 @@
       <!--  -->
       <div
         v-show="timetableDropdownClass"
-        class="libarian__wrapper"
+        class="p-4"
+        style="background-color:#fff"
         @click="hideMenu"
       >
         <b-card no-body @click="hideMenu">
@@ -151,35 +152,31 @@
                         Edit
                       </b-button>
 
-                      
-                        <b-button
+                      <b-button
                         v-if="data.item.id == loadingId"
-                          variant="danger"
-                          size="sm"
-                          class="px-3"
-                          @click="deleteSubject(data.item.id)"
-                        >
-                          <b-spinner
-                            class="mb-1 mr-1"
-                            small
-                            variant="light"
-                            v-if="loading"
-                          />
-                          Revoke teacher
-                        </b-button>
-                     
+                        variant="danger"
+                        size="sm"
+                        class="px-3"
+                        @click="deleteSubject(data.item.id)"
+                      >
+                        <b-spinner
+                          class="mb-1 mr-1"
+                          small
+                          variant="light"
+                          v-if="loading"
+                        />
+                        Revoke teacher
+                      </b-button>
 
-
-                        <b-button v-else
-                          variant="danger"
-                          size="sm"
-                          class="px-3"
-                          @click="deleteSubject(data.item.id)"
-                        >
-                    
-                          Revoke teacher
-                        </b-button>
-
+                      <b-button
+                        v-else
+                        variant="danger"
+                        size="sm"
+                        class="px-3"
+                        @click="deleteSubject(data.item.id)"
+                      >
+                        Revoke teacher
+                      </b-button>
                     </template>
                   </b-table>
                 </div>
@@ -189,7 +186,6 @@
               <div class="margin-down">
                 <!-- description -->
                 <b-form
-                  v-if="show"
                   method="POST"
                   @submit.prevent="onSubmitCreate"
                   @keydown="form.onKeydown($event)"
@@ -206,30 +202,36 @@
                       >
                     </b-col>
 
-                    <b-col md="8">
-                      <div class="d-flex">
+                    <b-col md="4">
+                      <b-form-group>
                         <b-form-input
                           v-model="form.subject"
-                          placeholder="Enter class"
+                          placeholder="Enter subject"
                           type="text"
                           required
                           size="lg"
                         ></b-form-input>
+                        <b-form-invalid-feedback
+                          :state="!form.errors.has('subject')"
+                        >
+                          {{ form.errors.get('subject') }}
+                        </b-form-invalid-feedback>
+                      </b-form-group>
 
-                        <b-button
-                          type="submit"
-                          variant="primary"
-                          class="mr-4"
-                          size="lg"
-                        >
-                          <b-spinner
-                            v-if="form.busy"
-                            variant="light"
-                            class="mr-1 mb-1"
-                            small
-                          />Add Subject</b-button
-                        >
-                      </div>
+                      <b-button
+                        type="submit"
+                        variant="primary"
+                        class="mr-4"
+                        size="lg"
+                        :disabled="form.busy"
+                      >
+                        <b-spinner
+                          v-if="form.busy"
+                          variant="light"
+                          class="mr-1 mb-1"
+                          small
+                        />Add Subject</b-button
+                      >
                     </b-col>
                   </b-row>
                 </b-form>
@@ -240,14 +242,13 @@
               <template #title>
                 <strong>Assign Teachers</strong>
               </template>
-              <h2 class="p-4">Assign Subjects to Teacher</h2>
-              <hr />
+              <h3 class="p-4">Assign Subjects to Teacher</h3>
+            
 
               <div class="margin-down">
                 <!-- description -->
 
                 <b-form
-                  v-if="show"
                   method="POST"
                   @submit.prevent="assignSubjectToTeacher"
                   @keydown="form.onKeydown($event)"
@@ -260,7 +261,7 @@
                       >
                     </b-col>
 
-                    <b-col md="8">
+                    <b-col md="4">
                       <b-form-group>
                         <b-form-select
                           id="subjects"
@@ -285,7 +286,7 @@
                         >Assign Teacher:</label
                       >
                     </b-col>
-                    <b-col md="8">
+                    <b-col md="4">
                       <b-form-group label="">
                         <b-form-select
                           id="teachers"
@@ -713,52 +714,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.4rem;
-  // background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
-
-  option {
-    padding: 0.3rem;
-  }
-
-  .margin-down {
-    margin-top: 5rem;
-
-    .label-padding {
-      padding-right: 15rem;
-      margin-bottom: 5rem;
-    }
-
-    .custom-select:focus,
-    .form-control.focus,
-    .form-control:focus {
-      box-shadow: none;
-    }
-
-    .custom-select,
-    .form-control,
-    .mb-3 {
-      height: 4rem;
-      font-size: 1.4rem;
-      color: #000;
-      width: 40.6%;
-    }
-  }
-  .table-down {
-    padding: 4rem;
-
-    .table {
-      margin-bottom: 4rem;
-    }
-  }
-
-  .custom-select-lg .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-}
-</style>

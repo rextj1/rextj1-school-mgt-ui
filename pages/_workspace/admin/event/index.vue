@@ -2,7 +2,7 @@
   <div class="p-4">
     <template v-if="$apollo.queries.events.loading"><Preload /></template>
     <template v-else>
-      <div class="libarian__wrapper">
+      <div>
         <b-card no-body>
           <b-tabs card style="font-size: 1.4rem">
             <b-tab active>
@@ -11,7 +11,6 @@
               </template>
 
               <b-form
-                v-if="show"
                 method="POST"
                 @submit.prevent="onSubmit"
                 @keydown="form.onKeydown($event)"
@@ -22,6 +21,11 @@
                     <client-only>
                       <VueEditor v-model="form.description" />
                     </client-only>
+                    <b-form-invalid-feedback
+                      :state="!form.errors.has('description')"
+                    >
+                      {{ form.errors.get('description') }}
+                    </b-form-invalid-feedback>
                   </b-col>
 
                   <b-col md="3" class="p-4">
@@ -34,8 +38,12 @@
                         close-button
                         locale="en"
                         size="lg"
-                        required
                       ></b-form-datepicker>
+                      <b-form-invalid-feedback
+                        :state="!form.errors.has('date')"
+                      >
+                        {{ form.errors.get('date') }}
+                      </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
 
@@ -71,13 +79,22 @@
             <b-tab lazy>
               <template #title>
                 <strong>School Event</strong>
-                <b-icon scale="0.8" icon="caret-down-fill" />
               </template>
 
-              <b-form-checkbox @change="selectAllEvents"> </b-form-checkbox>
-              <b-button variant="danger" pill @click="handleBulkDeleteEvent"
-                >Delete All</b-button
-              >
+              <div class="d-flex justify-content-between">
+                <b-form-checkbox
+                  style="margin-left: 2.2rem"
+                  @change="selectAllEvents"
+                >
+                </b-form-checkbox>
+                <b-button
+                  class="mr-4 mb-2"
+                  variant="danger"
+                  pill
+                  @click="handleBulkDeleteEvent"
+                  >Delete All</b-button
+                >
+              </div>
               <b-col md="12">
                 <b-table
                   striped
@@ -273,7 +290,6 @@ export default {
         date: null,
         busy: false,
       }),
-      show: true,
 
       fields: [
         {
@@ -288,19 +304,6 @@ export default {
           key: 'description',
           label: 'Description',
         },
-        // {
-        //   key: 'title',
-        //   label: 'Title',
-        // },
-        // {
-        //   key: 'pubished',
-        //   label: 'Published',
-        // },
-        // {
-        //   key: 'photo',
-        //   label: 'Photo',
-        // },
-
         { key: 'actions', label: 'Actions' },
       ],
       invokedForDelete: null,
@@ -650,38 +653,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.6rem;
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
-
-  .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-
-  .menu {
-    ul {
-      position: absolute;
-      border: none;
-      top: -8.5rem;
-      left: 14.3rem;
-      background-color: #fff;
-    }
-
-    li:not(:last-child) {
-      background-color: #fff;
-      padding: 1.2rem 5.8rem;
-      border-bottom: 1px solid gray;
-      cursor: pointer;
-
-      &:hover {
-        background-color: var(--color-input);
-      }
-    }
-  }
-}
-</style>

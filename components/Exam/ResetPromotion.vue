@@ -4,75 +4,77 @@
       <div class="card">
         <div class="card-body">
           <div class="p-3 roles-table">
-            <h2
-              class="p-4 d-flex justify-content-center"
-              style="font-weight: bold"
-            >
-              Reset Student Promotion
-            </h2>
+            <h2 class="p-4 text-center">Reset Student Promotion</h2>
 
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Full Name</th>
-                  <th scope="col">Photo</th>
-                  <th scope="col">Previous Class</th>
-                  <th scope="col">current Class</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(reset, index) in resetPromotion" :key="reset.id">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>
-                    {{ reset.student.first_name }} {{ reset.student.last_name }}
-                  </td>
-
-                  <td>
-                    <b-img
-                      :src="`${$config.APIRoot}/storage/student/${reset.student.photo}`"
-                      alt="photo"
-                      width="30"
-                    />
-                  </td>
-
-                  <td>
-                    {{ resetKlase.name }}
-                  </td>
-
-                  <td>
-                    {{ reset.student.klase.name }}
-                  </td>
-
-                  <td style="color: green">
-                    {{ reset.status == true ? 'Promoted' : '' }}
-                  </td>
-                  <td>
-                    <div
-                      class="d-flex justify-content-center"
-                      @click="createPromoteStudents"
+            <div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Full Name</th>
+                      <th scope="col">Photo</th>
+                      <th scope="col">Previous Class</th>
+                      <th scope="col">current Class</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(reset, index) in resetPromotion"
+                      :key="reset.id"
                     >
-                      <b-button variant="danger" size="lg">
-                        <b-spinner
-                          v-if="resetSpinner"
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td>
+                        {{ reset.student.first_name }}
+                        {{ reset.student.last_name }}
+                      </td>
+
+                      <td>
+                        <b-img
+                          :src="`${$config.APIRoot}/storage/student/${reset.student.photo}`"
+                          alt="photo"
+                          width="30"
+                        />
+                      </td>
+
+                      <td>
+                        {{ resetKlase.name }}
+                      </td>
+
+                      <td>
+                        {{ reset.student.klase.name }}
+                      </td>
+
+                      <td style="color: green">
+                        {{ reset.status == true ? 'Promoted' : '' }}
+                      </td>
+                      <td>
+                        <b-button
                           variant="danger"
-                          small
-                          class="mr-1 mb-1"
-                        />Reset</b-button
-                      >
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                          size="lg"
+                          @click="createPromoteStudents"
+                        >
+                          <b-spinner
+                            v-if="resetSpinner"
+                            variant="danger"
+                            small
+                            class="mr-1 mb-1"
+                          />Reset</b-button
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
           <div
             class="d-flex justify-content-center"
             @click="createPromoteStudents"
           >
-            <b-button variant="success" :disabled="busy" size="lg">
+            <b-button class="mb-4" variant="success" :disabled="busy" size="lg">
               <b-spinner
                 v-if="busy"
                 variant="light"
@@ -106,7 +108,7 @@ export default {
       resetSpinner: false,
     }
   },
-   computed: {
+  computed: {
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
@@ -125,8 +127,8 @@ export default {
               from_class: parseInt(this.student[0]),
               status: true,
               from_session: parseInt(this.student[1]),
-               workspaceId: parseInt(this.mainWorkspace.id),
-               from_term: 3,
+              workspaceId: parseInt(this.mainWorkspace.id),
+              from_term: 3,
             },
             update: (store, { data: { createResetPromote } }) => {
               // Read the data from our cache for this query.
@@ -136,8 +138,8 @@ export default {
                   from_class: parseInt(klase),
                   status: true,
                   from_session: parseInt(session),
-                   workspaceId: parseInt(this.mainWorkspace.id),
-                   from_term: 3,
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                  from_term: 3,
                 },
               })
 
@@ -152,8 +154,8 @@ export default {
                   from_class: parseInt(klase),
                   status: true,
                   from_session: parseInt(session),
-                   workspaceId: parseInt(this.mainWorkspace.id),
-                  from_term: 3
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                  from_term: 3,
                 },
 
                 data,
@@ -174,20 +176,21 @@ export default {
               timer: 1500,
               showConfirmButton: false,
             })
-          }).catch((e)=>{console.log(e)})
-            this.$apollo
+          })
+          .catch(() => {})
+        this.$apollo
           .mutate({
             mutation: UPDATE_PUBLISH_RESULT_MUTATION,
             variables: {
               klase_id: parseInt(this.student[0]),
               term_id: 3,
               session_id: parseInt(this.student[1]),
-              section_id: parseInt(this.student[2]),
-               workspaceId: parseInt(this.mainWorkspace.id),
+              workspaceId: parseInt(this.mainWorkspace.id),
               status: 'unpublished',
             },
           })
-          .then(() => {}).catch((e)=>{console.log(e)})
+          .then(() => {})
+          .catch(() => {})
       } else {
         Swal.fire({
           title: 'Ooops...',

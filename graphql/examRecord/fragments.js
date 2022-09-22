@@ -11,6 +11,12 @@ export const EXAM_RECORD_FIELDS_FRAGMENT = gql`
     p_comment
     t_comment
     ps
+    num_present
+    num_absent
+    num_total
+    term_start
+    term_end
+    promoted_to
     term {
       id
       name
@@ -28,7 +34,9 @@ export const EXAM_RECORD_FIELDS_FRAGMENT = gql`
       id
       first_name
       last_name
+      middle_name
       adm_no
+      gender
       photo
       birthday
     }

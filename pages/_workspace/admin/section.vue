@@ -2,7 +2,7 @@
   <div class="p-4">
     <template v-if="$apollo.queries.sections.loading"><Preload /></template>
     <template v-else>
-      <div class="libarian__wrapper">
+      <div>
         <b-card no-body>
           <div class="p-4">
             <div class="p-3">
@@ -59,31 +59,39 @@
               @reset.prevent="onReset"
             >
               <!-- description -->
-              <b-row no-gutters>
+              <b-row no-gutters class="px-4 mb-5">
                 <b-col md="2">
                   <label
                     for="input-small"
                     class="label-padding ml-4"
-                    style="font-size: 2rem"
+                    style="font-size: 1.6rem"
                     >Name:</label
                   >
                 </b-col>
 
-                <b-col md="8">
-                  <div class="d-flex">
-                    <b-form-input
-                      v-model="form.name"
-                      placeholder="Enter class"
-                      type="text"
-                      required
-                      size="lg"
-                    ></b-form-input>
+                <b-col md="4">
+                  
+                    <b-form-group>
+                      <b-form-input
+                        v-model="form.name"
+                        placeholder="Enter section"
+                        type="text"
+                        required
+                        size="lg"
+                      ></b-form-input>
+                      <b-form-invalid-feedback
+                        :state="!form.errors.has('name')"
+                      >
+                        {{ form.errors.get('name') }}
+                      </b-form-invalid-feedback>
+                    </b-form-group>
 
                     <b-button
                       type="submit"
                       variant="primary"
                       class="mr-4"
                       size="lg"
+                      :disabled="form.busy"
                     >
                       <b-spinner
                         v-if="form.busy"
@@ -92,7 +100,7 @@
                         small
                       />Add Section</b-button
                     >
-                  </div>
+              
                 </b-col>
               </b-row>
             </b-form>
@@ -291,52 +299,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.4rem;
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
-
-  option {
-    padding: 0.3rem;
-  }
-
-  .margin-down {
-    margin-top: 5rem;
-
-    .label-padding {
-      padding-right: 15rem;
-      margin-bottom: 5rem;
-    }
-
-    .custom-select:focus,
-    .form-control.focus,
-    .form-control:focus {
-      box-shadow: none;
-    }
-
-    .custom-select,
-    .form-control,
-    .mb-3 {
-      height: 4rem;
-      font-size: 1.4rem;
-      color: #000;
-      width: 40.6%;
-    }
-  }
-  .table-down {
-    padding: 4rem;
-
-    .table {
-      margin-bottom: 4rem;
-    }
-  }
-
-  .custom-select-lg .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-}
-</style>

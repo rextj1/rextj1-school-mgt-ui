@@ -31,9 +31,7 @@
                       head-variant="dark"
                       caption-top
                       no-border-collapse
-                      fixed
-                      stacked="md"
-                      responsive="true"
+                      :responsive="true"
                       :items="examTimetables"
                       :fields="fields"
                     >

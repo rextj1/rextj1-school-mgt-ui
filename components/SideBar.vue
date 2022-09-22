@@ -124,7 +124,7 @@
               <b-card bg-variant="light">
                 <nuxt-link
                   :to="{
-                    name: 'workspace-accountant-createPayment',
+                    name: 'workspace-accountant-create-payment',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
@@ -134,7 +134,7 @@
 
                 <nuxt-link
                   :to="{
-                    name: 'workspace-accountant-studentPayment',
+                    name: 'workspace-accountant-fee-payment',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
@@ -152,32 +152,6 @@
                 </nuxt-link>
               </b-card>
             </b-collapse>
-          </div>
-        </span>
-
-        <!-- Liberian -->
-        <span v-if="role.name == 'libarian'">
-          <h3 class="h3-memu">Liberian</h3>
-
-          <div class="menu">
-            <nuxt-link to="/dashboard" class="button">
-              <b-icon icon="columns-gap" class="material-icons" />
-              <span class="text" @click="ToggleMenus">Dashboard</span>
-            </nuxt-link>
-
-            <nuxt-link to="/liberian/profile" class="button">
-              <b-icon
-                icon="person-fill"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
-              <span class="text" @click="ToggleMenus">Profile</span>
-            </nuxt-link>
-
-            <nuxt-link to="/liberian/books" class="button">
-              <b-icon icon="book" class="material-icons" @click="ToggleMenus" />
-              <span class="text" @click="ToggleMenus">Books</span>
-            </nuxt-link>
           </div>
         </span>
 
@@ -233,7 +207,7 @@
 
             <nuxt-link
               :to="{
-                name: 'workspace-teacher-examTimetable',
+                name: 'workspace-teacher-exam-timetable',
                 params: { workspace: mainWorkspace.slug },
               }"
               class="button"
@@ -357,7 +331,7 @@
               <span class="text" @click="ToggleMenus()"
                 >Payment
                 <b-icon
-                  style="margin-left: 6rem"
+                  style="margin-left: 4.5rem"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -384,7 +358,23 @@
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Pay Fee</span>
+                  <span class="text" @click="ToggleMenus">Fee Payment</span>
+                </nuxt-link>
+
+                <nuxt-link
+                  t
+                  :to="{
+                    name: 'workspace-student-receipt',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="person-fill"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Print Receipt</span>
                 </nuxt-link>
               </b-card>
             </b-collapse>
@@ -443,7 +433,7 @@
 
             <nuxt-link
               :to="{
-                name: 'workspace-guardian-examTimetable',
+                name: 'workspace-guardian-exam-timetable',
                 params: { workspace: mainWorkspace.slug },
               }"
               class="button"
@@ -473,21 +463,6 @@
 
             <nuxt-link
               :to="{
-                name: 'workspace-guardian-feePayment',
-                params: { workspace: mainWorkspace.slug },
-              }"
-              class="button"
-            >
-              <b-icon
-                icon="file-text"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
-              <span class="text" @click="ToggleMenus">Fee Payment</span>
-            </nuxt-link>
-
-            <nuxt-link
-              :to="{
                 name: 'workspace-guardian-payments',
                 params: { workspace: mainWorkspace.slug },
               }"
@@ -499,6 +474,21 @@
                 @click="ToggleMenus"
               />
               <span class="text" @click="ToggleMenus">Payments</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-guardian-receipt',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+            >
+              <b-icon
+                icon="file-text"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Print Receipt</span>
             </nuxt-link>
           </div>
         </span>
@@ -521,14 +511,6 @@
                 @click="ToggleMenus"
               />
               <span class="text" @click="ToggleMenus">Dashboard</span>
-            </nuxt-link>
-            <nuxt-link to="/admin/roles" class="button">
-              <b-icon
-                icon="person-plus"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
-              <span class="text" @click="ToggleMenus">User Roles</span>
             </nuxt-link>
 
             <!-- collapse -->
@@ -604,21 +586,6 @@
                   />
                   <span class="text" @click="ToggleMenus">Accountant</span>
                 </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-admin-libarian',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="people-fill"
-                    class="material-icon"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Libarian</span>
-                </nuxt-link>
               </b-card>
             </b-collapse>
 
@@ -670,6 +637,22 @@
 
                 <nuxt-link
                   :to="{
+                    name: 'workspace-admin-exam-grades',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="file-text"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Grades</span>
+                </nuxt-link>
+
+                <nuxt-link
+                  :to="{
                     name: 'workspace-admin-exam-marksheet',
                     params: { workspace: mainWorkspace.slug },
                   }"
@@ -683,6 +666,55 @@
                   />
                   <span class="text" @click="ToggleMenus">Marksheet</span>
                 </nuxt-link>
+
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-exam-attendance',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="file-text"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Attendance</span>
+                </nuxt-link>
+
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-exam-resumption',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="newspaper"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Resumption</span>
+                </nuxt-link>
+
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-admin-exam-publishResult',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <b-icon
+                    icon="newspaper"
+                    scale="0.85"
+                    class="material-icon"
+                    @click="ToggleMenus"
+                  />
+                  <span class="text" @click="ToggleMenus">Publish Result</span>
+                </nuxt-link>
+
                 <nuxt-link
                   :to="{
                     name: 'workspace-admin-exam-result',
@@ -701,40 +733,6 @@
 
                 <nuxt-link
                   :to="{
-                    name: 'workspace-admin-exam-grades',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="file-text"
-                    scale="0.85"
-                    class="material-icon"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus">Grades</span>
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
-                    name: 'workspace-admin-exam-tabulation',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <b-icon
-                    icon="newspaper"
-                    scale="0.85"
-                    class="material-icon"
-                    @click="ToggleMenus"
-                  />
-                  <span class="text" @click="ToggleMenus"
-                    >Tabulation Sheet</span
-                  >
-                </nuxt-link>
-
-                <nuxt-link
-                  :to="{
                     name: 'workspace-admin-exam-promotion',
                     params: { workspace: mainWorkspace.slug },
                   }"
@@ -746,7 +744,7 @@
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">promotion</span>
+                  <span class="text" @click="ToggleMenus">Promotion</span>
                 </nuxt-link>
 
                 <nuxt-link
@@ -764,9 +762,6 @@
                   />
                   <span class="text" @click="ToggleMenus">Reset Promotion</span>
                 </nuxt-link>
-                <!-- <nuxt-link to="/admin/exam/publish" class="button">
-                  <span class="text">publish Result</span>
-                </nuxt-link> -->
               </b-card>
             </b-collapse>
             <!-- end -->
@@ -785,9 +780,9 @@
                 @click="ToggleMenus()"
               />
               <span class="text" @click="ToggleMenus()"
-                >Activities
+                >Setup
                 <b-icon
-                  style="margin-left: 4.5rem"
+                  style="margin-left: 6.5rem"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -907,21 +902,6 @@
               <span class="text" @click="ToggleMenus">Notices</span>
             </nuxt-link>
 
-            <nuxt-link
-              :to="{
-                name: 'workspace-admin-driver',
-                params: { workspace: mainWorkspace.slug },
-              }"
-              class="button"
-            >
-              <b-icon
-                icon="truck"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
-              <span class="text" @click="ToggleMenus">Drivers</span>
-            </nuxt-link>
-
             <div class="d-flex"></div>
 
             <div class="menu">
@@ -1006,8 +986,8 @@ export default {
     flex-direction: column;
     background-color: var(--color-white);
 
-     @include media-breakpoint-up(md) {
-      padding: 1rem
+    @include media-breakpoint-up(md) {
+      padding: 1rem;
     }
 
     @include media-breakpoint-down(md) {
@@ -1038,7 +1018,6 @@ export default {
       .menu-toggle {
         transition: 0.2s ease-in-out;
 
-        
         .material-icons {
           font-size: 2rem;
           color: var(--primary);
@@ -1196,9 +1175,8 @@ export default {
       }
 
       @include media-breakpoint-down(md) {
-      overflow: hidden;
-    }
-
+        overflow: hidden;
+      }
     }
 
     @include media-breakpoint-down(md) {

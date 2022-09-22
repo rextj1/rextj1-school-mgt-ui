@@ -3,10 +3,10 @@ import { EVENT_FIELDS_FRAGMENT } from './fragments'
 
 export const CREATE_EVENT_MUTATION = gql`
   mutation CreateMutation(
-    $description: String!
+    $description: String
     $title: String
     $photo: Upload
-    $date: String!
+    $date: String
     $workspaceId: Int!
   ) {
     createEvent(
@@ -25,10 +25,10 @@ export const CREATE_EVENT_MUTATION = gql`
 export const UPDATE_EVENT_MUTATION = gql`
   mutation UpdateMutation(
     $id: ID!
-    $description: String!
+    $description: String
     $title: String
     $photo: Upload
-    $date: String!
+    $date: String
     $workspaceId: Int!
   ) {
     updateEvent(

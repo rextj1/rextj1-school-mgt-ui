@@ -207,12 +207,13 @@
                                     font-size: 1.55rem;
                                   "
                                   @keydown.enter="
-                                    payFee(data.item.id, $event.target.value)
+                                    payFee(data.item, $event.target.value)
                                   "
                                   :ref="`t-${data.item.id}`"
                                   type="number"
                                   placeholder="Pay now"
-                                  min="0"
+                                  min="1"
+                                  :max="`${data.item.balance}`"
                                   required
                                   size="lg"
                                 />
@@ -912,7 +913,23 @@ export default {
         })
     },
 
-    payFee(id, value) {
+    payFee(item, value) {
+      if(value > item.balance){
+        Swal.fire({
+          title: 'Ooops...',
+          icon: 'warning',
+          text: `Amount entered can't be greater than the balance`,
+          position: 'center',
+          color: '#fff',
+          background: '#cc3300',
+          toast: false,
+          backdrop: false,
+          timer: 2000,
+          showConfirmButton: false,
+        })
+        return
+      }
+
       if (value == null || value == 0) {
         Swal.fire({
           title: 'Ooops...',
@@ -927,7 +944,7 @@ export default {
           showConfirmButton: false,
         })
       } else {
-        const payId = id
+        const payId = item.id
         const payValue = value
         this.$refs[`t-${payId}`].value = null
 
@@ -967,16 +984,16 @@ export default {
               })
             },
           })
-          .then(({ data }) => {
+          .then(() => {
             Swal.fire({
-              title: 'Done...',
-              icon: 'success',
+              text: 'Fee payed successfully',
               timer: 1000,
-              position: 'center',
+              position: 'top-right',
               color: '#fff',
               background: '#4bb543',
               toast: false,
               backdrop: false,
+               showConfirmButton: false,
             })
           })
       }

@@ -19,7 +19,6 @@ export const CREATE_PROMOTION_MUTATION = gql`
     $session_id: Int!
     $sessionTo: Int!
     $from_term: Int!
-    $section_id: Int!
     $workspaceId: Int
   ) {
     createPromoteStudents(
@@ -27,7 +26,6 @@ export const CREATE_PROMOTION_MUTATION = gql`
       klaseTo: $klaseTo
       session_id: $session_id
       sessionTo: $sessionTo
-      section_id: $section_id
       from_term: $from_term
       workspaceId: $workspaceId
     ) {

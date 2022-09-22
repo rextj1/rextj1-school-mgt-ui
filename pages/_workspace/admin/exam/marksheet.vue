@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="p-3 mb-4 d-flex">
@@ -136,14 +136,10 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="libarian__wrapper">
-        <div v-if="klases.length == 0">
-          <h3 style="text-align: center; padding: 13rem 0">
-            There are no records to show
-          </h3>
-        </div>
-        <div v-else>
+      <div v-show="timetableDropdownClass" class="p-4" style="background-color: #fff">
+        <div>
           <ExamEditExamScores
+            v-if="marks"
             :marks="marks"
             :student="[
               form.class,
@@ -168,11 +164,12 @@ import { MARK_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SUBJECT_QUERIES } from '~/graphql/subjects/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import Swal from 'sweetalert2'
 export default {
   middleware: 'auth',
   data() {
     return {
-      marks: [],
+      marks: null,
       klases: [],
       isBusy: false,
       timetableDropdownClass: false,
@@ -255,8 +252,19 @@ export default {
         this.form.term === null ||
         this.form.session === null ||
         this.form.subject === null ||
-        this.form.section === null
+        this.form.section === null ||
+        this.form.subject == null
       ) {
+        Swal.fire({
+          title: 'Ooop...',
+          icon: 'warning',
+          text: `select all available fields`,
+          position: 'center',
+          color: '#fff',
+          background: '#d9534f',
+          toast: false,
+          backdrop: false,
+        })
         return false
       } else {
         this.isBusy = true
@@ -275,8 +283,8 @@ export default {
           .then(() => {
             this.isBusy = false
           })
-          .catch((e) => {
-            console.log(e)
+          .catch(() => {
+            
           })
 
         setTimeout(() => {
@@ -303,59 +311,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.view-payment {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-  .custom-select {
-    option {
-      font-size: 1.5rem !important;
-    }
-  }
-
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -3.5rem;
-        left: 14.2rem;
-        background-color: #fff;
-      }
-
-      li:not(:last-child) {
-        background-color: #fff;
-        padding: 1rem 4.8rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
-  }
-}
-</style>

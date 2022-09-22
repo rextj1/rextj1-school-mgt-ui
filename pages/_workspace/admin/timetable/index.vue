@@ -1,10 +1,10 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4 admin-timetable-wrapper">
     <template v-if="$apollo.queries.klases.loading"><Preload /></template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="px-3 mb-4 d-flex">
         <b-row no-gutters>
-          <b-col md="6" class="p-4">
+          <b-col md="6">
             <b-form-group label="Current Class:">
               <b-form-select
                 id="klase"
@@ -13,7 +13,7 @@
                 text-field="name"
                 :options="klases"
                 class="mb-3"
-                size="lg"
+                size="smd"
                 required
                 @change="timetableDropdown"
               >
@@ -61,9 +61,7 @@
                         head-variant="dark"
                         caption-top
                         no-border-collapse
-                        fixed
-                        stacked="md"
-                        responsive="true"
+                        :responsive="true"
                         :items="timetables"
                         :fields="fields"
                       >
@@ -107,14 +105,15 @@
                 </b-col>
               </b-row>
 
-              <div class="exam-timetble">
+
+              <div class="exam-timetble mt-4">
                 <b-form
                   v-show="show"
                   method="POST"
                   @submit.prevent="onSubmit"
                   @keydown="form.onKeydown($event)"
                 >
-                  <table class="table table-bordered">
+                  <table class="table table-sm table-bordered">
                     <thead>
                       <tr>
                         <th scope="col">Time</th>
@@ -129,42 +128,33 @@
                     <tbody>
                       <tr>
                         <th scope="row">
-                          <b-input
+                          <input
+                          class="form-control form-control-sm"
                             v-model="form.time"
-                            style="width: 11rem"
+                           
                             type="text"
-                          ></b-input>
+                          />
                         </th>
 
                         <th scope="row">
-                          <b-form-input
-                            v-model="form.monday"
-                            type="text"
-                          ></b-form-input>
+                          <input
+                          class="form-control form-control-sm" v-model="form.monday" type="text" />
                         </th>
                         <th scope="row">
-                          <b-form-input
-                            v-model="form.tuesday"
-                            type="text"
-                          ></b-form-input>
+                          <input
+                          class="form-control form-control-sm" v-model="form.tuesday" type="text" />
                         </th>
                         <th scope="row">
-                          <b-form-input
-                            v-model="form.wednesday"
-                            type="text"
-                          ></b-form-input>
+                          <input
+                          class="form-control form-control-sm" v-model="form.wednesday" type="text" />
                         </th>
                         <th scope="row">
-                          <b-form-input
-                            v-model="form.thursday"
-                            type="text"
-                          ></b-form-input>
+                          <input
+                          class="form-control form-control-sm" v-model="form.thursday" type="text" />
                         </th>
                         <th scope="row">
-                          <b-form-input
-                            v-model="form.friday"
-                            type="text"
-                          ></b-form-input>
+                          <input
+                          class="form-control form-control-sm" v-model="form.friday" type="text" />
                         </th>
                       </tr>
                     </tbody>
@@ -509,7 +499,7 @@ export default {
 </script>
 
 <style lang="scss">
-.view-payment {
+.admin-timetable-wrapper {
   font-size: 1.6rem;
 
   .custom-select:focus {
@@ -551,7 +541,8 @@ export default {
         cursor: pointer;
 
         &:hover {
-          background-color: var(--color-input);
+          background-color: var(-input
+          class="form-control form-control-sm");
         }
       }
     }
