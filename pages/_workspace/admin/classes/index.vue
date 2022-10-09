@@ -244,6 +244,7 @@
                         type="submit"
                         variant="primary"
                         class="mr-4"
+                        :disabled="busy"
                         size="lg"
                       >
                         <b-spinner

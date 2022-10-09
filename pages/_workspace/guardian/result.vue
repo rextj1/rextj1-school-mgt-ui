@@ -1,12 +1,12 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4 guardian-student-result">
     <template v-if="nowloading"><Preload /></template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
-        <b-form @submit.prevent="markSubmit">
+        <b-form @submit.prevent="studentResultQuery">
           <b-row>
             <b-col md="2">
-              <b-form-group label="Select Class">
+              <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
                   v-model="form.class"
@@ -16,12 +16,20 @@
                   class="mb-3"
                   size="lg"
                 >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select class--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
                 </b-form-select>
               </b-form-group>
             </b-col>
 
             <b-col md="2">
-              <b-form-group label="Select Term">
+              <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
                   v-model="form.term"
@@ -31,12 +39,20 @@
                   class="mb-3"
                   size="lg"
                 >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select term--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
                 </b-form-select>
               </b-form-group>
             </b-col>
 
-            <b-col md="2">
-              <b-form-group label="Select Session">
+             <b-col md="2">
+              <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
                   v-model="form.session"
@@ -46,6 +62,14 @@
                   class="mb-3"
                   size="lg"
                 >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select session--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
                 </b-form-select>
               </b-form-group>
             </b-col>
@@ -66,7 +90,7 @@
                       v-for="student in user.guardian.students"
                       :key="student.id"
                       :value="student.id"
-                      >{{ student.first_name }}
+                      >{{ student.last_name }} {{ student.first_name }}
                     </b-form-select-option>
                   </b-form-select>
                 </b-form-group>
@@ -78,12 +102,12 @@
               variant="primary"
               size="lg"
               style="height: 3.85rem; margin-top: 2.85rem"
-            >
-              <b-spinner
+              :disabled="isBusy"
+              ><b-spinner
                 v-if="isBusy"
+                variant="light"
                 class="mr-1 mb-1"
                 small
-                variant="light"
               />
               Submit</b-button
             >
@@ -91,9 +115,9 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="libarian__wrapper">
+      <div v-show="timetableDropdownClass">
         <ExamSingleStudentResult
-          :klase-results="klaseResults"
+          v-if="studentExamResult"
           :student-exam-result="studentExamResult"
           :student-mark-result="studentMarkResult"
           :student="[form.class, form.term, form.session, form.student_id]"
@@ -119,8 +143,7 @@ export default {
   data() {
     return {
       k: null,
-      klaseResults: [],
-      studentExamResult: [],
+      studentExamResult: null,
       studentMarkResult: [],
       user: [],
       isBusy: false,
@@ -128,6 +151,7 @@ export default {
       form: {
         class: null,
         session: null,
+        section: null,
         term: null,
         student_id: null,
       },
@@ -185,13 +209,13 @@ export default {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
-    markSubmit() {
+    studentResultQuery() {
       if (
         this.form.class === null ||
         this.form.term === null ||
         this.form.session === null
       ) {
-        return false
+        return 
       } else {
         this.isBusy = true
         this.timetableDropdownClass = false
@@ -204,6 +228,7 @@ export default {
               student_id: parseInt(this.form.student_id),
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
+              status: 'published',
               workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
@@ -223,6 +248,7 @@ export default {
               student_id: parseInt(this.form.student_id),
               term_id: parseInt(this.form.term),
               session_id: parseInt(this.form.session),
+              status: 'published',
               workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
@@ -242,7 +268,7 @@ export default {
 </script>
 
 <style lang="scss">
-.view-payment {
+.guardian-student-result {
   font-size: 1.6rem;
 
   .custom-select:focus {
@@ -255,40 +281,6 @@ export default {
     height: 4rem;
     font-size: 1.4rem;
     color: #000;
-  }
-
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -3.5rem;
-        left: 14.2rem;
-        background-color: #fff;
-      }
-
-      li:not(:last-child) {
-        background-color: #fff;
-        padding: 1rem 4.8rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
   }
 }
 </style>

@@ -5,9 +5,7 @@ export const NOTICE_FIELDS_FRAGMENT = gql`
     id
     slug
     description
-    title
-    photo
-    published
+    status
     date
   }
 `

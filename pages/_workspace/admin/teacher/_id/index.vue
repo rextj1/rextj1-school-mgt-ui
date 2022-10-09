@@ -3,7 +3,7 @@
     <template v-if="$apollo.queries.teacher.loading"><Preload /></template>
     <template v-else>
       <b-button
-      :to="{
+        :to="{
           name: 'workspace-admin-teacher',
           params: { workspace: mainWorkspace.slug },
         }"
@@ -13,28 +13,41 @@
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="teacher shadow">
-        <h1>About {{ teacher.last_name }}</h1>
-        <div class="d-flex justify-content-center mb-4">
+
+      <b-card class="user shadow">
+        <div v-if="teacher.user.photo == null" class="text-center mb-4 mt-4">
           <b-img
-            src="~/assets/images/teacher.jpeg"
+             src="@/assets/svg/user-avatar.svg"
+            thumbnail
+            fluid
+            alt="School image"
+            width="150"
+          ></b-img>
+        </div>
+
+        <div v-else class="text-center mb-4 mt-4">
+          <b-img
+            :src="`${$config.APIRoot}/storage/user/${teacher.user.photo}`"
             thumbnail
             fluid
             alt="Responsive image"
-            width="230"
+            width="150"
           ></b-img>
         </div>
-        <b-row no-gutters class="sm-query">
-          <b-col md="6" class="first-detail p-4">
+
+        <div class="d-flex justify-content-between p-5">
+          <div>
             <p>Full Name</p>
-            <p>Phone no:</p>
             <p>Qualifications</p>
             <p>Code</p>
+            <p>Date of employment</p>
+            <p>Email</p>
+            <p>Phone no:</p>
             <p>Gender</p>
             <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
-            <p>city</p>
+            <p>City</p>
             <p>L.G.A</p>
 
             <p>
@@ -42,19 +55,25 @@
                 >Subjects Assigned</b-badge
               >
             </p>
-          </b-col>
-          <b-col md="6" class="first-details p-4">
+          </div>
+          <div style="font-weight: bold">
             <p>
               {{ teacher.last_name }} {{ teacher.first_name }}
               {{ teacher.middle_name }}
             </p>
-            <p>{{ teacher.phone }}</p>
             <p>{{ teacher.qualification }}</p>
             <p>{{ teacher.code }}</p>
+            <p>{{ teacher.employment }}</p>
+            <p>{{ teacher.user.email }}</p>
+            <p>{{ teacher.phone }}</p>
 
             <p>{{ teacher.gender }}</p>
             <p>
-              {{ teacher.user.blood_group != null ? teacher.user.blood_group.name : '' }}
+              {{
+                teacher.user.blood_group != null
+                  ? teacher.user.blood_group.name
+                  : ''
+              }}
             </p>
             <p>
               {{ teacher.user.country.name }}
@@ -63,7 +82,7 @@
               {{ teacher.user.state.name }}
             </p>
             <p>
-              {{ teacher.user.city.name }}
+              {{ teacher.user.city }}
             </p>
             <p>
               {{ teacher.user.lga }}
@@ -90,10 +109,10 @@
                 </b-nav>
               </b-popover>
             </h3>
-          </b-col>
-        </b-row>
-      </b-jumbotron></template
-    >
+          </div>
+        </div>
+      </b-card>
+    </template>
   </div>
 </template>
 
@@ -108,7 +127,7 @@ export default {
       variables() {
         return {
           id: parseInt(this.$route.params.id),
-           workspaceId: parseInt(this.mainWorkspace.id),
+          workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
     },

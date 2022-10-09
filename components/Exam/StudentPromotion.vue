@@ -1,59 +1,46 @@
 <template>
-  <div class="card">
-    <template v-if="promoteStudents.length == 0"
-      ><h3 class="text-center p-4">No record found</h3></template
-    >
-    <template v-else>
-      <div class="p-3 roles-table">
-        <div>
-          <h2
-            class="p-4 d-flex justify-content-center"
-            style="font-weight: bold"
+  <div>
+    <b-card class="p-4">
+      <template v-if="promoteStudents.length == 0"
+        ><h3 class="text-center p-4">No record found</h3></template
+      >
+      <template v-else>
+        <h2 class="p-4 text-center" style="font-weight: bold">
+          <span style="color: green"
+            >({{ promoteStudents[0].klase.name }})</span
           >
-            ({{ promoteStudents[0].klase.name }}) Student Result Section
-          </h2>
-          <b-table :items="promoteStudents" :responsive="true" :fields="fields">
-            <template #cell(#)="data">
-              {{ data.index + 1 }}
-            </template>
+          Student Result Section
+        </h2>
+        <b-table :items="promoteStudents" :responsive="true" :fields="fields">
+          <template #cell(#)="data">
+            {{ data.index + 1 }}
+          </template>
 
-            <template #cell(first_name)="data">
-              {{ data.item.first_name }} {{ data.item.last_name }}
-            </template>
+          <template #cell(first_name)="data">
+            {{ data.item.first_name }} {{ data.item.last_name }}
+          </template>
 
-            <template #cell(session)="data">
-              {{ data.item.session.name }}
-            </template>
+          <template #cell(session)="data">
+            {{ data.item.session.name }}
+          </template>
 
-            <template #cell(klase)="data">
-              {{ data.item.klase.name }}
-            </template>
+          <template #cell(klase)="data">
+            {{ data.item.klase.name }}
+          </template>
+        </b-table>
 
-            <template #cell(actions)="data">
-              <b-button
-                variant="warning"
-                size="md"
-                class="px-3"
-                @click="resultModal(data.item.student.id)"
-              >
-                <b-icon icon="eye" class="mr-1"></b-icon>
-                promote student
-              </b-button>
-            </template>
-          </b-table>
+        <div class="text-center mb-4" @click="createPromoteStudents">
+          <b-button :disabled="busy" variant="success" size="lg">
+            <b-spinner
+              v-if="busy"
+              variant="light"
+              small
+              class="mr-1 mb-1"
+            />Promote Students</b-button
+          >
         </div>
-      </div>
-      <div class="d-flex justify-content-center" @click="createPromoteStudents">
-        <b-button :disabled="busy" variant="success" size="lg">
-          <b-spinner
-            v-if="busy"
-            variant="light"
-            small
-            class="mr-1 mb-1"
-          />Promote Students</b-button
-        >
-      </div>
-    </template>
+      </template>
+    </b-card>
   </div>
 </template>
 
@@ -67,7 +54,7 @@ import { UPDATE_PUBLISH_RESULT_MUTATION } from '~/graphql/examRecord/mutations'
 export default {
   props: {
     promoteStudents: Array,
-    examRecords: null,
+    examRecords: Array,
     student: Array,
     setPromotion: Object,
   },
@@ -105,11 +92,6 @@ export default {
 
         {
           key: '',
-          sortable: false,
-        },
-        {
-          key: 'actions',
-          label: 'Actions',
           sortable: false,
         },
       ],
@@ -172,9 +154,7 @@ export default {
               data.promoteStudents.filter((t) => {
                 t.status !== true
               })
-              // data.leads.data = data.leads.data.filter(
-              //   (lead) => !this.deleteLeads.includes(lead.id)
-              // )
+              
 
               data.promoteStudents = createPromoteStudents
 
@@ -238,9 +218,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.card {
-  font-size: 1.5rem;
-}
-</style>

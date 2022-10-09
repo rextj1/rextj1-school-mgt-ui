@@ -1,10 +1,10 @@
 <template>
   <div class="student">
-    <div v-if="nowLoading"><Preload /></div>
-    <div v-else>
+    <template v-if="nowLoading"><Preload /></template>
+    <template v-else>
       <b-button
         :to="{
-          name: 'workspace-admin-accountant',
+          name: 'workspace-admin-teacher',
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
@@ -15,7 +15,7 @@
       </b-button>
       <div class="p-4 student__wrapper">
         <h2 class="d-flex justify-content-center mb-4 mt-4">
-          Register Accountant
+          Register Teacher
         </h2>
         <hr />
         <b-form
@@ -63,7 +63,9 @@
                     @change="handleFileUpload()"
                   />
                 </div>
-                <b-form-invalid-feedback :state="!form.errors.has('teacherTable.photo')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('teacherTable.photo')"
+                >
                   {{ form.errors.get('teacherTable.photo') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -119,14 +121,16 @@
                   trim
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('teacherTable.last_name')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('teacherTable.last_name')"
+                >
                   {{ form.errors.get('teacherTable.last_name') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="middle Name (optional)">
+              <b-form-group id="input-group-1" label="Middle Name (optional)">
                 <b-form-input
                   id="input-1"
                   v-model="form.teacherTable.middle_name"
@@ -149,7 +153,9 @@
                   trim
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userTable.email')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userTable.email')"
+                >
                   {{ form.errors.get('userTable.email') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -162,13 +168,15 @@
                   v-model="form.teacherTable.phone"
                   type="number"
                   placeholder="Enter phone no."
+                  name="phone"
                   min="1234567899"
                   max="12345678919"
-                  name="phone"
                   trim
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('teacherTable.phone')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('teacherTable.phone')"
+                >
                   {{ form.errors.get('teacherTable.phone') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -182,6 +190,7 @@
                   type="text"
                   placeholder="Enter qualification"
                   name="qualification"
+                  trim
                   required
                 ></b-form-input>
                 <b-form-invalid-feedback
@@ -203,7 +212,9 @@
                   trim
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userTable.religion')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userTable.religion')"
+                >
                   {{ form.errors.get('userTable.religion') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -231,7 +242,7 @@
             </b-col>
 
             <b-col md="3" class="p-4">
-              <b-form-group label="Date of birth">
+              <b-form-group label="Date of Birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
                   v-model="form.teacherTable.birthday"
@@ -241,8 +252,11 @@
                   locale="en"
                   size="lg"
                   name="birthday"
+                  required
                 ></b-form-datepicker>
-                <b-form-invalid-feedback :state="!form.errors.has('teacherTable.birthday')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('teacherTable.birthday')"
+                >
                   {{ form.errors.get('teacherTable.birthday') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -268,6 +282,28 @@
 
                   <!-- These options will appear after the ones from 'options' prop -->
                 </b-form-select>
+              </b-form-group>
+            </b-col>
+
+
+            <b-col md="3" class="p-4">
+              <b-form-group label="Date of Employment">
+                <b-form-datepicker
+                  id="datepicker-employment"
+                  v-model="form.teacherTable.employment"
+                  today-button
+                  reset-button
+                  close-button
+                  locale="en"
+                  size="lg"
+                  name="employment"
+                  required
+                ></b-form-datepicker>
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('teacherTable.employment')"
+                >
+                  {{ form.errors.get('teacherTable.employment') }}
+                </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
@@ -318,28 +354,25 @@
               </div>
             </b-col>
 
-            <b-col md="3" class="p-4">
-              <div v-if="!state">
-                <b-form-group label="City">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div v-else>
-                <b-form-group label="City">
-                  <b-form-select v-model="form.userTable.city" class="mb-3" required>
-                    <b-form-select-option
-                      v-for="k in state.cities"
-                      :key="k.id"
-                      :value="k.id"
-                      >{{ k.name }}</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
+             <b-col md="3" class="p-4">
+              <b-form-group id="input-group-1" label="City">
+                <b-form-input
+                  id="city"
+                  v-model="form.userTable.city"
+                  type="text"
+                  placeholder="Enter city"
+                  name="city"
+                  required
+                ></b-form-input>
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userTable.city')"
+                >
+                  {{ form.errors.get('userTable.city') }}
+                </b-form-invalid-feedback>
+              </b-form-group>
             </b-col>
+
+         
 
             <b-col md="3" class="p-4">
               <b-form-group id="input-group-1" label="L.G.A">
@@ -351,7 +384,9 @@
                   name="lga"
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userTable.lga')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userTable.lga')"
+                >
                   {{ form.errors.get('userTable.lga') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -385,7 +420,7 @@
           </b-row>
         </b-form>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -399,7 +434,7 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
-import { CREATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
+import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
 
 export default {
   middleware: 'auth',
@@ -424,6 +459,7 @@ export default {
           middle_name: null,
           gender: null,
           birthday: null,
+          employment: null,
           phone: null,
           photo: null,
           qualification: null,
@@ -458,15 +494,17 @@ export default {
     },
   },
   computed: {
-    nowLoading() {
-      return (
-        this.$apollo.queries.countries.loading &&
-        this.$apollo.queries.bloodGroups.loading
-      )
-    },
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
+    nowLoading() {
+      return (
+        this.$apollo.queries.countries.loading &&
+        this.$apollo.queries.bloodGroups.loading &&
+        this.$apollo.queries.state.loading &&
+        this.$apollo.queries.country.loading
+      )
+    },
   },
 
   methods: {
@@ -528,7 +566,7 @@ export default {
         await this.$apollo
           .mutate(
             {
-              mutation: CREATE_ACCOUNTANT_MUTATION,
+              mutation: CREATE_TEACHER_MUTATION,
               variables: {
                 workspaceId: parseInt(this.mainWorkspace.id),
                 userTable: this.form.userTable,
@@ -544,7 +582,7 @@ export default {
           .then(() => {
             Swal.fire({
               timer: 1500,
-              text: 'accountant added successfully',
+              text: 'teacher added successfully',
               position: 'top-right',
               color: '#fff',
               background: '#4bb543',
@@ -554,7 +592,7 @@ export default {
             })
             this.form.busy = false
             this.$router.push({
-              name: 'workspace-admin-accountant',
+              name: 'workspace-admin-teacher',
               params: { workspaceId: parseInt(this.mainWorkspace.id) },
             })
           })
@@ -596,6 +634,7 @@ export default {
     height: 4rem;
     font-size: 1.4rem;
   }
+
   .profile-avatar {
     position: relative;
     text-align: center;

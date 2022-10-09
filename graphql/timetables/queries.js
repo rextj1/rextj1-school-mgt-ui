@@ -15,8 +15,12 @@ import { SINGLE_TIMETABLE_FIELDS_FRAGMENT } from './fragments'
 //   ${SINGLE_TIMETABLE_FIELDS_FRAGMENT}
 // `
 export const TIMETABLE_QUERIES = gql`
-  query TimetablesQuery($klase_id: Int!, $workspaceId: Int) {
-    timetables(klase_id: $klase_id, workspaceId: $workspaceId) {
+  query TimetablesQuery($klase_id: Int!, $section_id: Int!, $workspaceId: Int) {
+    timetables(
+      klase_id: $klase_id
+      section_id: $section_id
+      workspaceId: $workspaceId
+    ) {
       ...SingleTimetableFields
       # klase {
       #   id

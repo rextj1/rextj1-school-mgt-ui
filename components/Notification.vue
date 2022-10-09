@@ -1,28 +1,32 @@
 <template>
   <div>
-    <b-button variant="warning" size="sm" @click="close">Mark As Read</b-button>
+    <div class="d-flex justify-content-between">
+      <h3>Notifications</h3>
+      <b-button class="mb-2" variant="dark" pill size="sm" @click="close"
+        >Mark As Read</b-button
+      >
+    </div>
     <div v-for="data in user.notifications" :key="data.id" class="">
       <!-- {{ data.data.data }} -->
       <!-- notice -->
       <div v-if="data.type == 'App\\Notifications\\SchoolNotice'">
         <b-card>
-          <span v-html="data.data.data" @click="navigateTo">
-            
-            There is a new Notice, click here to view
+          <b-badge variant="danger">{{ data.created_at | formatDate }}</b-badge>
+          <span v-html="data.data.description" @click="navigateTo">
+            There is a new Event, click here to view
           </span>
-          {{ data.created_at | formatDate }}
         </b-card>
       </div>
       <!-- event -->
+
       <div v-if="data.type == 'App\\Notifications\\SchoolEvent'">
         <b-card>
-          <span class="mt-2">There is a new Event, click here to view </span>
-
-          <b-button
-            variant="link"
-            v-html="data.data.data"
-            @click="navigateTo"
-          ></b-button>
+          <b-badge variant="primary">{{
+            data.created_at | formatDate
+          }}</b-badge>
+          <span v-html="data.data.description" @click="navigateTo">
+            There is a new Event, click here to view
+          </span>
         </b-card>
       </div>
     </div>
@@ -43,7 +47,10 @@ export default {
     },
   },
   props: {
-    notifyNow: Array,
+    notifyNow: {
+      type: Array,
+      required: false,
+    },
   },
   data: () => ({
     user: [],
@@ -84,7 +91,7 @@ export default {
 </script>
 
 <style scoped>
-span{
+span {
   cursor: pointer;
 }
 </style>

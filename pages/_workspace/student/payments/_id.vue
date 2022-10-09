@@ -1,6 +1,6 @@
 <template>
   <div class="payment-fonts">
-    <template v-if="$apollo.queries.studentPaymentRecords.loading"
+    <template v-if="$apollo.queries.studentPaymentRecord.loading"
       ><Preload
     /></template>
     <template v-else>
@@ -9,7 +9,7 @@
           <div class="card-body">
             <div class="card-student" style="background-color: #fff">
               <div style="padding: 5rem; margin: auto; min-height: 100vh">
-                <!-- {{ studentPaymentRecords }} -->
+                <!-- {{ studentPaymentRecord }} -->
 
                 <div class="mt-4">
                   <div class="text-center mb-4">
@@ -34,8 +34,8 @@
                       margin-bottom: 5rem;
                     "
                   >
-                    {{ studentPaymentRecords.term.name }} Payment Receipt ({{
-                      studentPaymentRecords.session.name
+                    {{ studentPaymentRecord.term.name }} Payment Receipt ({{
+                      studentPaymentRecord.session.name
                     }}
                     Session)
                   </h4>
@@ -66,15 +66,15 @@
 
                   <div style="text-transform: uppercase">
                     <h4>
-                      {{ studentPaymentRecords.student.first_name }}
-                      {{ studentPaymentRecords.student.last_name }}
-                      {{ studentPaymentRecords.student.middle_name }}
+                      {{ studentPaymentRecord.student.first_name }}
+                      {{ studentPaymentRecord.student.last_name }}
+                      {{ studentPaymentRecord.student.middle_name }}
                     </h4>
                     <h4>
-                      {{ studentPaymentRecords.student.adm_no }}
+                      {{ studentPaymentRecord.student.adm_no }}
                     </h4>
-                    <h4>{{ studentPaymentRecords.student.last_name }}</h4>
-                    <h4>{{ studentPaymentRecords.klase.name }}</h4>
+                    <h4>{{ studentPaymentRecord.student.last_name }}</h4>
+                    <h4>{{ studentPaymentRecord.klase.name }}</h4>
                   </div>
                 </div>
 
@@ -99,22 +99,20 @@
                   </div>
 
                   <div style="margin-left: 3rem">
-                    <h4>{{ studentPaymentRecords.title }}</h4>
-                    <h4>{{ studentPaymentRecords.ref_no }}</h4>
+                    <h4>{{ studentPaymentRecord.title }}</h4>
+                    <h4>{{ studentPaymentRecord.ref_no }}</h4>
                     <h4>
-                      <span>&#x20A6;</span>{{ studentPaymentRecords.amount }}
+                      <span>&#x20A6;</span>{{ studentPaymentRecord.amount }}
                     </h4>
                     <h4>
-                      <span>&#x20A6;</span>{{ studentPaymentRecords.amt_paid }}
+                      <span>&#x20A6;</span>{{ studentPaymentRecord.amt_paid }}
                     </h4>
                     <h4>
-                      <span>&#x20A6;</span>{{ studentPaymentRecords.balance }}
+                      <span>&#x20A6;</span>{{ studentPaymentRecord.balance }}
                     </h4>
-                    <h4>{{ studentPaymentRecords.created_at | formatDate }}</h4>
+                    <h4>{{ studentPaymentRecord.created_at | formatDate }}</h4>
                   </div>
                 </div>
-           
-
               </div>
             </div>
           </div>
@@ -128,12 +126,10 @@
 import moment from 'moment'
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
-import {
-  STUDENT_PAYMENT_RECORD_QUERIES,
-} from '~/graphql/payments/queries'
+import { STUDENT_PAYMENT_RECORD_QUERY } from '~/graphql/payments/queries'
 export default {
   middleware: 'auth',
-    filters: {
+  filters: {
     formatDate(value) {
       const date = moment.utc(value).local()
       return date.format('D MMM YYYY')
@@ -156,9 +152,6 @@ export default {
       return this.$route.query.student_id
     },
 
-    klaseId() {
-      return this.$route.query.klase_id
-    },
     sessionId() {
       return this.$route.query.session_id
     },
@@ -167,8 +160,8 @@ export default {
     },
   },
   apollo: {
-    studentPaymentRecords: {
-      query: STUDENT_PAYMENT_RECORD_QUERIES,
+    studentPaymentRecord: {
+      query: STUDENT_PAYMENT_RECORD_QUERY,
       variables() {
         return {
           student_id: parseInt(this.studentId),
@@ -179,8 +172,6 @@ export default {
         }
       },
     },
-  }
+  },
 }
 </script>
-
-

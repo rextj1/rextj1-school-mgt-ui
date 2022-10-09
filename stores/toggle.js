@@ -9,8 +9,8 @@ export const useToggleMenu = defineStore('toggle', {
     toggleMenu() {
       this.$state.isCollasped = !this.$state.isCollasped
     },
-    toggleIcon() {
-      this.$state.isCollasped = true
+    toggleIcon(item) {
+      this.$state.isCollasped = item
     },
   },
  

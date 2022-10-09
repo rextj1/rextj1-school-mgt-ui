@@ -61,15 +61,11 @@ export const PAID_PAYMENT_RECORD_QUERIES = gql`
 export const STUDENT_PAYMENT_RECORD_QUERIES = gql`
   query StudentPaymentRecordQueries(
     $student_id: Int
-    $session_id: Int
-    $term_id: Int
     $status: String!
     $workspaceId: Int
   ) {
     studentPaymentRecords(
       student_id: $student_id
-      session_id: $session_id
-      term_id: $term_id
       status: $status
       workspaceId: $workspaceId
     ) {
@@ -79,28 +75,28 @@ export const STUDENT_PAYMENT_RECORD_QUERIES = gql`
   ${PAYMENT_RECORD_FIELDS_FRAGMENT}
 `
 
-// export const STUDENT_PAYMENT_RECORD_QUERIES = gql`
-//   query StudentPaymentRecordQueries(
-//     $student_id: Int!
-//     $session_id: Int!
-//     $term_id: Int!
-//     $status: String!
-//     $workspaceId: Int
-//     $klase_id: Int
-//   ) {
-//     studentPaymentRecords(
-//       klase_id: $klase_id
-//       session_id: $session_id
-//       term_id: $term_id
-//       status: $status
-//       klase_id: $klase_id
-//       workspaceId: $workspaceId
-//     ) {
-//       ...PaymentRecordFields
-//     }
-//   }
-//   ${PAYMENT_RECORD_FIELDS_FRAGMENT}
-// `
+export const STUDENT_PAYMENT_RECORD_QUERY = gql`
+  query StudentPaymentRecordQuery(
+    $student_id: Int
+    $session_id: Int
+    $term_id: Int
+    $status: String!
+    $workspaceId: Int
+    $klase_id: Int
+  ) {
+    studentPaymentRecord(
+      student_id: $student_id
+      session_id: $session_id
+      term_id: $term_id
+      status: $status
+      klase_id: $klase_id
+      workspaceId: $workspaceId
+    ) {
+      ...PaymentRecordFields
+    }
+  }
+  ${PAYMENT_RECORD_FIELDS_FRAGMENT}
+`
 export const ALL_DUE_PAYMENT_QUERY = gql`
   query AllDuePaymentRecordsQuery(
     $workspaceId: Int

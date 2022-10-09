@@ -114,7 +114,11 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="p-4" style="background-color: #fff">
+      <div
+        v-show="timetableDropdownClass"
+        class="p-4"
+        style="background-color: #fff"
+      >
         <div v-if="klases.length == 0">
           <h3 style="text-align: center; padding: 13rem 0">
             There are no records to show
@@ -190,6 +194,7 @@ export default {
       query: SECTION_QUERIES,
       variables() {
         return {
+          klase_id: parseInt(this.form.class),
           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4 fee-receipt-wrapper">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="px-3 mb-4">
@@ -16,7 +16,7 @@
 
               <div v-else>
                 <b-form-group label="Select Student">
-                  <b-form-select v-model="form.student_id" class="mb-3 option-width">
+                  <b-form-select v-model="form.student_id" class="mb-3">
                     <b-form-select-option
                       v-for="student in user.guardian.students"
                       :key="student.id"
@@ -47,8 +47,8 @@
       </b-card>
 
       <div v-show="timetableDropdownClass">
-        <PaymentPaymentReceipt
-          v-if="DuePaymentrecords || PaidPaymentrecords"
+        <PaymentStudentPaymentReceipt
+          v-if="PaidPaymentrecords"
           :PaidPaymentrecords="PaidPaymentrecords"
           :DuePaymentrecords="DuePaymentrecords"
           
@@ -72,8 +72,8 @@ export default {
     return {
       PaidPaymentrecords: null,
       DuePaymentrecords: null,
-      studentPaymentRecords: {},
-      timetableDropdownClass: true,
+      studentPaymentRecords: [],
+      timetableDropdownClass: false,
       isBusy: false,
       form: {
         student_id: null,
@@ -169,16 +169,8 @@ export default {
 </script>
 
 <style lang="scss">
-.view-payment {
+.fee-receipt-wrapper {
   font-size: 1.6rem;
-
-  .option-width {
-    width: 35rem;
-
-    @include media-breakpoint-down(sm) {
-      width: 25rem;
-    }
-  }
 
   .custom-select:focus {
     box-shadow: none;
@@ -187,8 +179,13 @@ export default {
   .form-control,
   .mb-3 {
     height: 4rem;
+     width: 35rem;
+
     font-size: 1.4rem;
     color: #000;
+     @include media-breakpoint-down(sm) {
+      width: 25rem;
+    }
   }
 
 }

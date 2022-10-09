@@ -15,6 +15,10 @@ export const EXAM_TIMETABLE_FIELDS_FRAGMENT = gql`
       slug
       name
     }
+    section{
+      id
+      name
+    }
   }
 `
 

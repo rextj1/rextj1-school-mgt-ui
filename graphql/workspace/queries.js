@@ -9,6 +9,7 @@ export const ADMIN_WORKSPACE_QUERIES = gql`
       stamp
       email
       status
+      gender
       paystack_secret_key
     }
   }
@@ -21,8 +22,13 @@ export const SCHOOL_QUERIES = gql`
       slug
       email
       status
+      gender
+      user {
+        ...UxerFields
+      }
     }
   }
+  ${UXER_FIELDS_FRAGMENT}
 `
 export const SCHOOL_QUERY = gql`
   query SchoolQuery($id: ID!) {
@@ -32,6 +38,7 @@ export const SCHOOL_QUERY = gql`
       slug
       email
       status
+      gender
       user {
         ...UxerFields
       }

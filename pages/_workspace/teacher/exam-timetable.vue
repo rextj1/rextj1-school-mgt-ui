@@ -1,42 +1,99 @@
 <template>
-  <div class="p-4 teacher-examTimetable">
-    <template v-if="$apollo.queries.klases.loading"> <Preload /></template>
+  <div class="p-4">
+    <template v-if="nowloading"><Preload /></template>
     <template v-else>
-      <div class="exam-wrapper">
-        <b-card no-body @click="hideMenu">
-          <b-tabs card style="font-size: 1.4rem">
-            <b-tab lazy @click="registrationMenu">
-              <template #title>
-                <strong>Exam Timetable</strong>
-                <b-icon scale="0.8" icon="caret-down-fill" />
-              </template>
+      <b-card class="mb-4">
+        <b-row no-gutters>
+          <b-col md="3">
+            <b-form-group label="Current Class:">
+              <b-form-select
+                id="klase"
+                v-model="studentClass"
+                value-field="id"
+                text-field="name"
+                :options="klases"
+                class="mb-3"
+                size="lg"
+                required
+              >
+                <!-- This slot appears above the options from 'options' prop -->
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- select class --</b-form-select-option
+                  >
+                </template>
 
-              <div class="menu">
-                <ul
-                  v-show="registerMenu"
-                  class="shadow"
-                  :class="registrationMenuClass"
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="ml-2">
+            <b-form-group label="Sections">
+              <b-form-select
+                id="sections"
+                v-model="section"
+                value-field="id"
+                text-field="name"
+                :options="sections"
+                class="mb-3"
+                size="lg"
+                required
+                @change="timetableDropdown"
+              >
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-card>
+
+      <div v-show="timetableDropdownClass">
+        <div v-if="examTimetables.length > 0" class="exam-wrapper p-2">
+          <vue-html2pdf
+            ref="html2Pdf"
+            :show-layout="true"
+            :float-layout="false"
+            :enable-download="false"
+            :preview-modal="true"
+            :paginate-elements-by-height="1400"
+            filename="Pdf"
+            :pdf-quality="2"
+            :manual-pagination="false"
+            pdf-format="a4"
+            pdf-orientation="landscape"
+            pdf-content-width=""
+          >
+            <section slot="pdf-content">
+              <h3 class="text-center mb-4">
+                <span style="color: green">({{ sections[0].klase.name }})</span>
+                Exam timetable
+              </h3>
+              <b-card>
+                <b-table
+                  hover
+                  bordered
+                  head-variant="dark"
+                  caption-top
+                  no-border-collapse
+                  fixed
+                  responsive="true"
+                  :items="examTimetables"
+                  :fields="fields"
                 >
-                  <span v-for="klase in klases" :key="klase.id">
-                    <li
-                      @click.prevent="
-                        dynamicStudentClass(klase.id, klase.name)
-                        activeTab = 'TimetableEditClassExamTimetable'
-                      "
-                    >
-                      <span class="d-flex">{{ klase.name }}</span>
-                    </li>
-                  </span>
-                </ul>
-              </div>
+                </b-table>
+              </b-card>
+            </section>
+          </vue-html2pdf>
 
-              <component
-                :is="activeTab"
-                :edit-current-class="[dynamicClass, klaseName]"
-              />
-            </b-tab>
-          </b-tabs>
-        </b-card>
+          <div class="d-flex justify-content-center mb-4">
+            <b-button variant="danger" size="lg" @click.prevent="generateReport"
+              >download</b-button
+            >
+          </div>
+        </div>
+        <div v-else-if="examTimetables.length == 0" class="exam-wrapper p-4">
+          <h2 class="text-center p-4">No record found</h2>
+        </div>
       </div>
     </template>
   </div>
@@ -45,29 +102,19 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
+import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
+import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
-     
-      infoModal: 'modelInfo',
-      slug: '',
-
-      id: 0,
-      klaseName: '',
-      show: true,
-      form: new this.$form({
-        class: null,
-        date: null,
-        time: null,
-        monday: null,
-        tuesday: null,
-        wednesday: null,
-        thursday: null,
-        friday: null,
-        busy: false,
-      }),
+      examTimetables: {},
+      timetableDropdownClass: false,
+      studentClass: null,
+      section: null,
+      items: [],
       fields: [
         { key: 'date', label: 'Date' },
         { key: 'time', label: 'Time' },
@@ -80,16 +127,18 @@ export default {
         { key: 'thursday', label: 'Thursday' },
 
         { key: 'friday', label: 'Friday' },
-        { key: 'Action', label: 'Action' },
       ],
-      dynamicClass: '',
-
-      activeTab: '',
-      registerMenu: false,
-      registrationMenuClass: '',
     }
   },
   apollo: {
+    user: {
+      query: USER_STUDENT_QUERY,
+      variables() {
+        return {
+          id: parseInt(this.$auth.user.id),
+        }
+      },
+    },
     klases: {
       query: KLASE_QUERIES,
       variables() {
@@ -98,90 +147,61 @@ export default {
         }
       },
     },
+    sections: {
+      query: SECTION_QUERIES,
+      variables() {
+        return {
+          klase_id: parseInt(this.studentClass),
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
   },
+
   computed: {
+    nowloading() {
+      return (
+        this.$apollo.queries.user.loading && this.$apollo.queries.klases.loading
+      )
+    },
+
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
   },
+
   methods: {
-    // modal
-    timetableEdit(item) {
-      this.$bvModal.show(this.infoModal)
-      this.slug = item
-    },
-    // end modal
-    dynamicStudentClass(item, itemName) {
-      this.dynamicClass = item
-      this.klaseName = itemName
-    },
-    registrationMenu(e) {
-      if (this.registrationMenuClass === '') {
-        this.registerMenu = true
-        this.registrationMenuClass = 'off'
-        e.stopPropagation()
-      } else {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
-      }
-    },
-    hideMenu() {
-      if (this.registerMenu === true) {
-        this.registerMenu = false
-        this.registrationMenuClass = ''
-      }
+    generateReport() {
+      this.$refs.html2Pdf.generatePdf()
     },
 
+    timetableDropdown() {
+      this.timetableDropdownClass = true
+      this.$apollo.addSmartQuery('examTimetables', {
+        query: EXAM_TIMETABLE_QUERIES,
+        variables() {
+          return {
+            klase_id: parseInt(this.studentClass),
+            section_id: parseInt(this.section),
+            workspaceId: parseInt(this.mainWorkspace.id),
+          }
+        },
+
+        result({ loading, data }, key) {
+          if (!loading) {
+            this.examTimetables = data.examTimetables
+          }
+        },
+      })
+    },
   },
 }
 </script>
 
 <style lang="scss">
-.teacher-examTimetable {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-  .exam-wrapper {
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -1.2rem;
-        left: 0.3rem !important;
-        background-color: #fff;
-      }
-
-      li {
-        background-color: #fff;
-        padding: 1.3rem 5.6rem !important;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
-  }
+.exam-wrapper {
+  font-size: 1.4rem !important;
+  padding: 4rem;
+  background-color: #fff;
 }
 </style>

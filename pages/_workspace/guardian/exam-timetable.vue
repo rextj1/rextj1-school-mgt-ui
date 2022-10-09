@@ -4,7 +4,7 @@
     <template v-else>
       <b-card class="mb-4">
         <b-row no-gutters>
-          <b-col md="4">
+          <b-col md="3">
             <b-form-group label="Current Class:">
               <b-form-select
                 id="klase"
@@ -15,7 +15,6 @@
                 class="mb-3"
                 size="lg"
                 required
-                @change="timetableDropdown"
               >
                 <!-- This slot appears above the options from 'options' prop -->
                 <template #first>
@@ -25,6 +24,23 @@
                 </template>
 
                 <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="ml-2">
+            <b-form-group label="Sections">
+              <b-form-select
+                id="sections"
+                v-model="section"
+                value-field="id"
+                text-field="name"
+                :options="sections"
+                class="mb-3"
+                size="lg"
+                required
+                @change="timetableDropdown"
+              >
               </b-form-select>
             </b-form-group>
           </b-col>
@@ -48,7 +64,10 @@
             pdf-content-width=""
           >
             <section slot="pdf-content">
-              <h3 class="text-center mb-4">Class timetable</h3>
+              <h3 class="text-center mb-4">
+                <span style="color: green">({{ sections[0].klase.name }})</span>
+                Exam timetable
+              </h3>
               <b-card>
                 <b-table
                   hover
@@ -86,6 +105,7 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -93,7 +113,7 @@ export default {
       examTimetables: {},
       timetableDropdownClass: false,
       studentClass: null,
-
+      section: null,
       klaseId: '',
       klaseName: '',
       items: [],
@@ -129,11 +149,22 @@ export default {
         }
       },
     },
+    sections: {
+      query: SECTION_QUERIES,
+      variables() {
+        return {
+          klase_id: parseInt(this.studentClass),
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
   },
 
   computed: {
     nowloading() {
-      return this.$apollo.queries.user.loading
+      return (
+        this.$apollo.queries.user.loading && this.$apollo.queries.klases.loading
+      )
     },
 
     ...mapState(useWorkspaceStore, {
@@ -153,6 +184,7 @@ export default {
         variables() {
           return {
             klase_id: parseInt(this.studentClass),
+            section_id: parseInt(this.section),
             workspaceId: parseInt(this.mainWorkspace.id),
           }
         },
@@ -173,6 +205,5 @@ export default {
   font-size: 1.4rem !important;
   padding: 4rem;
   background-color: #fff;
-
 }
 </style>

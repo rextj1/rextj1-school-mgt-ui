@@ -57,10 +57,7 @@ export const USER_TEACHER_QUERY = gql`
         id
         name  
       }
-      city {
-        id
-        name
-      }
+      city
       lga
       teacher {
         id
@@ -74,6 +71,7 @@ export const USER_TEACHER_QUERY = gql`
         photo
         birthday
         qualification
+        year_of_hire
         subjects {
           id
           subject

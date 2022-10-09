@@ -115,7 +115,7 @@
           </b-col>
 
           <b-col md="4" class="p-4">
-            <b-form-group id="input-group-1" label="middle Name (optional)">
+            <b-form-group id="input-group-1" label="Middle Name (optional)">
               <b-form-input
                 id="input-1"
                 v-model="form.teacherTable.middle_name"
@@ -127,7 +127,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group id="input-group-1" label="Email:">
               <b-form-input
                 id="input-1"
@@ -146,7 +146,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group id="input-group-1" label="Phone no:">
               <b-form-input
                 id="phone"
@@ -167,7 +167,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group label="Qualification">
               <b-form-input
                 id="qualification"
@@ -185,7 +185,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group label="Religion">
               <b-form-input
                 id="religion"
@@ -204,7 +204,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="3" class="p-4">
             <b-form-group label="Gender">
               <b-form-select
                 v-model="form.teacherTable.gender"
@@ -225,8 +225,8 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
-            <b-form-group label="Date of birth">
+          <b-col md="5" class="p-4">
+            <b-form-group label="Date of Birth">
               <b-form-datepicker
                 id="datepicker-buttons"
                 v-model="form.teacherTable.birthday"
@@ -245,7 +245,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="3" class="p-4">
             <b-form-group label="Blood Group">
               <b-form-select
                 id="bloodGroups"
@@ -268,7 +268,28 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="5" class="p-4">
+            <b-form-group label="Date of Employment">
+              <b-form-datepicker
+                id="datepicker-employment"
+                v-model="form.teacherTable.employment"
+                today-button
+                reset-button
+                close-button
+                locale="en"
+                size="lg"
+                name="employment"
+                required
+              ></b-form-datepicker>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('teacherTable.employment')"
+              >
+                {{ form.errors.get('teacherTable.employment') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="4" class="p-4">
             <b-form-group label="Country">
               <b-form-select
                 id="country"
@@ -292,7 +313,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <div v-if="!country">
               <b-form-group label="State">
                 <b-form-select class="mb-3">
@@ -319,34 +340,25 @@
             </div>
           </b-col>
 
-          <b-col md="3" class="p-4">
-            <div v-if="!state">
-              <b-form-group label="City">
-                <b-form-select class="mb-3">
-                  <b-form-select-option value="null"> </b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-            </div>
-
-            <div v-else>
-              <b-form-group label="City">
-                <b-form-select
-                  v-model="form.userTable.city"
-                  class="mb-3"
-                  required
-                >
-                  <b-form-select-option
-                    v-for="k in state.cities"
-                    :key="k.id"
-                    :value="k.id"
-                    >{{ k.name }}</b-form-select-option
-                  >
-                </b-form-select>
-              </b-form-group>
-            </div>
+          <b-col md="4" class="p-4">
+            <b-form-group id="input-group-1" label="City">
+              <b-form-input
+                id="city"
+                v-model="form.userTable.city"
+                type="text"
+                placeholder="Enter city"
+                name="city"
+                required
+              ></b-form-input>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('userTable.city')"
+              >
+                {{ form.errors.get('userTable.city') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group id="input-group-1" label="L.G.A">
               <b-form-input
                 id="lga"
@@ -438,7 +450,7 @@ export default {
           last_name: '',
           middle_name: null,
           gender: null,
-
+          employment: null,
           photo: null,
           birthday: null,
           phone: null,
@@ -491,16 +503,16 @@ export default {
           this.form.photo = data.teacher.photo
           this.form.teacherTable.phone = data.teacher.phone
           this.form.teacherTable.gender = data.teacher.gender
-
+          this.form.teacherTable.employment = data.teacher.employment
           this.form.id = parseInt(data.teacher.id)
           this.form.userTable.country = data.teacher.user.country.id
           this.form.userTable.state = data.teacher.user.state.id
-          this.form.userTable.city = data.teacher.user.city.id
           this.form.userTable.religion = data.teacher.user.religion
           this.form.userTable.bloodGroup = data.teacher.user.blood_group.id
           this.form.userTable.email = data.teacher.user.email
 
           this.form.userTable.lga = data.teacher.user.lga
+          this.form.userTable.city = data.teacher.user.city
         }
       },
     },
@@ -597,7 +609,7 @@ export default {
                 },
               })
 
-              data.teacherData = updateTeacher
+              data.teacher = updateTeacher
 
               // Mutate cache result
 

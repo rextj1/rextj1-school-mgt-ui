@@ -151,7 +151,7 @@
                   trim
                   required
                 ></b-form-input>
-                  <b-form-invalid-feedback
+                <b-form-invalid-feedback
                   :state="!form.errors.has('studentUser.email')"
                 >
                   {{ form.errors.get('studentUser.email') }}
@@ -221,7 +221,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="6" class="p-4">
               <b-form-group label="Address">
                 <b-form-input
                   id="address"
@@ -343,8 +343,31 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
-              <b-form-group label="Date of birth">
+               <b-col md="3" class="p-4">
+              <b-form-group label="Blood Group">
+                <b-form-select
+                  id="bloodGroups"
+                  v-model="form.userStudent.bloodGroup"
+                  value-field="id"
+                  text-field="name"
+                  :options="bloodGroups"
+                  class="mb-3"
+                  size="lg"
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select blood Group--</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="5" class="p-4">
+              <b-form-group label="Date of Birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
                   v-model="form.student.birthday"
@@ -363,7 +386,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Current Class">
                 <b-form-select
                   id="klases"
@@ -458,30 +481,9 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
-              <b-form-group label="Blood Group">
-                <b-form-select
-                  id="bloodGroups"
-                  v-model="form.userStudent.bloodGroup"
-                  value-field="id"
-                  text-field="name"
-                  :options="bloodGroups"
-                  class="mb-3"
-                  size="lg"
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- Please select blood Group--</b-form-select-option
-                    >
-                  </template>
+         
 
-                  <!-- These options will appear after the ones from 'options' prop -->
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="3" class="p-4">
+            <b-col md="3">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
@@ -505,7 +507,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3">
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
@@ -532,31 +534,20 @@
               </div>
             </b-col>
 
-            <b-col md="3" class="p-4">
-              <div v-if="!state">
-                <b-form-group label="City">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div v-else>
-                <b-form-group label="City">
-                  <b-form-select
-                    v-model="form.userStudent.city"
-                    class="mb-3"
-                    required
-                  >
-                    <b-form-select-option
-                      v-for="k in state.cities"
-                      :key="k.id"
-                      :value="k.id"
-                      >{{ k.name }}</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
+              <b-col md="4" class="p-4">
+              <b-form-group id="input-group-1" label="City">
+                <b-form-input
+                  id="city"
+                  v-model="form.userStudent.city"
+                  type="text"
+                  placeholder="Enter city"
+                  name="city"
+                  required
+                ></b-form-input>
+                <b-form-invalid-feedback :state="!form.errors.has('userStudent.city')">
+                  {{ form.errors.get('userStudent.city') }}
+                </b-form-invalid-feedback>
+              </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
@@ -732,6 +723,7 @@ export default {
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
+          klase_id: parseInt(this.form.student.klase),
         }
       },
     },

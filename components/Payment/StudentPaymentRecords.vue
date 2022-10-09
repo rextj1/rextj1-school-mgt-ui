@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-card no-body>
+      
       <b-tabs card style="font-size: 1.4rem">
         <b-tab active>
           <template #title>
@@ -28,37 +29,37 @@
               </b-thead>
 
               <tbody>
-                <b-tr>
+                <b-tr v-for="DuePaymentrecord in DuePaymentrecords" :key="DuePaymentrecord.id">
                   <b-td>
-                    {{ DuePaymentrecords.student.first_name }}
-                    {{ DuePaymentrecords.student.last_name }}
+                    {{ DuePaymentrecord.student.first_name }}
+                    {{ DuePaymentrecord.student.last_name }}
                   </b-td>
                   <b-td>
-                    {{ DuePaymentrecords.ref_no }}
+                    {{ DuePaymentrecord.ref_no }}
                   </b-td>
                   <b-td>
-                    {{ DuePaymentrecords.klase.name }}
+                    {{ DuePaymentrecord.klase.name }}
                   </b-td>
                   <b-td>
-                    {{ DuePaymentrecords.term.name }}
+                    {{ DuePaymentrecord.term.name }}
                   </b-td>
                   <b-td>
-                    {{ DuePaymentrecords.session.name }}
+                    {{ DuePaymentrecord.session.name }}
                   </b-td>
                   <b-td style="color: red">
-                    {{ DuePaymentrecords.amount }}
+                    {{ DuePaymentrecord.amount }}
                   </b-td>
                   <b-td style="color: green">
-                    {{ DuePaymentrecords.amt_paid }}
+                    {{ DuePaymentrecord.amt_paid }}
                   </b-td>
                   <b-td style="color: red">
-                    {{ DuePaymentrecords.balance }}
+                    {{ DuePaymentrecord.balance }}
                   </b-td>
                   <b-td style="color: red">
-                    {{ DuePaymentrecords.status }}
+                    {{ DuePaymentrecord.status }}
                   </b-td>
                   <b-td>
-                    {{ DuePaymentrecords.receipt }}
+                    {{ DuePaymentrecord.receipt }}
                   </b-td>
                   <b-td>
                     <b-button
@@ -67,12 +68,12 @@
                         name: 'workspace-student-payments-id',
                         params: {
                           workspace: mainWorkspace.slug,
-                          id: DuePaymentrecords.id,
+                          id: DuePaymentrecord.id,
                         },
                         query: {
-                          student_id: DuePaymentrecords.student.id,
-                          term_id: DuePaymentrecords.term.id,
-                          session_id: DuePaymentrecords.session.id,
+                          student_id: DuePaymentrecord.student.id,
+                          term_id: DuePaymentrecord.term.id,
+                          session_id: DuePaymentrecord.session.id,
                         },
                       }"
                       >Pay Now</b-button
@@ -88,7 +89,7 @@
           <template #title>
             <strong>Paid Payment</strong>
           </template>
-          <h3 v-if="PaidPaymentrecords == null" class="text-center mt-4">
+          <h3 v-if="PaidPaymentrecords.length == 0" class="text-center mt-4">
             No record found
           </h3>
           <div class="table-down" v-else>
@@ -110,37 +111,37 @@
               </b-thead>
 
               <tbody>
-                <b-tr>
+                <b-tr v-for="PaidPaymentrecord in PaidPaymentrecords" :key="PaidPaymentrecord.id">
                   <b-td>
-                    {{ PaidPaymentrecords.student.first_name }}
-                    {{ PaidPaymentrecords.student.last_name }}
+                    {{ PaidPaymentrecord.student.first_name }}
+                    {{ PaidPaymentrecord.student.last_name }}
                   </b-td>
                   <b-td>
-                    {{ PaidPaymentrecords.ref_no }}
+                    {{ PaidPaymentrecord.ref_no }}
                   </b-td>
                   <b-td>
-                    {{ PaidPaymentrecords.klase.name }}
+                    {{ PaidPaymentrecord.klase.name }}
                   </b-td>
                   <b-td>
-                    {{ PaidPaymentrecords.term.name }}
+                    {{ PaidPaymentrecord.term.name }}
                   </b-td>
                   <b-td>
-                    {{ PaidPaymentrecords.session.name }}
+                    {{ PaidPaymentrecord.session.name }}
                   </b-td>
                   <b-td style="color: red">
-                    {{ PaidPaymentrecords.amount }}
+                    {{ PaidPaymentrecord.amount }}
                   </b-td>
                   <b-td style="color: green">
-                    {{ PaidPaymentrecords.amt_paid }}
+                    {{ PaidPaymentrecord.amt_paid }}
                   </b-td>
                   <b-td style="color: red">
-                    {{ PaidPaymentrecords.balance }}
+                    {{ PaidPaymentrecord.balance }}
                   </b-td>
                   <b-td style="color: red">
-                    {{ PaidPaymentrecords.status }}
+                    {{ PaidPaymentrecord.status }}
                   </b-td>
                   <b-td>
-                    {{ PaidPaymentrecords.receipt }}
+                    {{ PaidPaymentrecord.receipt }}
                   </b-td>
                 </b-tr>
               </tbody>
@@ -158,12 +159,12 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 export default {
   props: {
     PaidPaymentrecords: {
-      type: null,
-      default: null,
+      type: Array,
+      required: false,
     },
     DuePaymentrecords: {
-      type: null,
-      default: null,
+      type: [],
+      required: false,
     },
     email: {
       type: String,

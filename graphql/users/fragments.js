@@ -5,13 +5,14 @@ export const UXER_FIELDS_FRAGMENT = gql`
     id
     first_name
     last_name
-    # middle_name
+    middle_name
     user_type
     phone
     gender
     religion
     photo
     email
+    city
     lga
     password
     created_at
@@ -31,15 +32,15 @@ export const UXER_FIELDS_FRAGMENT = gql`
     state {
       id
       name
-      cities {
-        id
-        name
-      }
+      # cities {
+      #   id
+      #   name
+      # }
     }
-    city {
-      id
-      name
-    }
+    # city {
+    #   id
+    #   name
+    # }
   }
 `
 
@@ -79,10 +80,9 @@ export const USERS_FIELDS_FRAGMENT = gql`
     gender
     religion
     photo
-    password
     email
+    city
     lga
-    password
     created_at
     updated_at
     blood_group {
@@ -92,28 +92,24 @@ export const USERS_FIELDS_FRAGMENT = gql`
     country {
       id
       name
-      state {
-        id
-        name
-      }
+      
     }
     state {
       id
       name
-      cities {
-        id
-        name
-      }
+
     }
-    city {
-      id
-      name
-    }
+    # city {
+    #   id
+    #   name
+    # }
     workspace {
       id
       name
       slug
       logo
+      status
+      paystack_secret_key
     }
   }
 `

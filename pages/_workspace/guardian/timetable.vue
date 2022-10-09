@@ -4,7 +4,7 @@
     <template v-else>
       <b-card class="mb-4">
         <b-row no-gutters>
-          <b-col md="4">
+          <b-col md="3">
             <b-form-group label="Current Class:">
               <b-form-select
                 id="klase"
@@ -15,7 +15,6 @@
                 class="mb-3"
                 size="lg"
                 required
-                @change="timetableDropdown"
               >
                 <!-- This slot appears above the options from 'options' prop -->
                 <template #first>
@@ -24,6 +23,24 @@
                   >
                 </template>
 
+                <!-- These options will appear after the ones from 'options' prop -->
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="3" class="ml-2">
+            <b-form-group label="Sections">
+              <b-form-select
+                id="sections"
+                v-model="section"
+                value-field="id"
+                text-field="name"
+                :options="sections"
+                class="mb-3"
+                size="lg"
+                required
+                @change="timetableDropdown"
+              >
                 <!-- These options will appear after the ones from 'options' prop -->
               </b-form-select>
             </b-form-group>
@@ -48,7 +65,10 @@
             pdf-content-width=""
           >
             <section slot="pdf-content">
-              <h3 class="text-center mt-4 mb-2">Class Timetable</h3>
+              <h3 class="text-center mt-4 mb-2">
+                <span style="color: green">({{ sections[0].klase.name }})</span>
+                Class Timetable
+              </h3>
 
               <b-card>
                 <b-table
@@ -73,9 +93,9 @@
             >
           </div>
         </div>
-        <div v-else-if="timetables.length == 0" class="exam-wrapper p-4">
+        <b-card v-else-if="timetables.length == 0" class="exam-wrapper p-4">
           <h3 class="text-center p-4">No record found</h3>
-        </div>
+        </b-card>
       </div>
     </template>
   </div>
@@ -87,6 +107,7 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TIMETABLE_QUERIES } from '~/graphql/timetables/queries'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -94,12 +115,11 @@ export default {
       timetables: {},
       timetableDropdownClass: false,
       studentClass: null,
-
+      section: null,
       klaseId: '',
       klaseName: '',
       items: [],
       fields: [
-        { key: 'date', label: 'Date' },
         { key: 'time', label: 'Time' },
         { key: 'monday', label: 'Monday' },
 
@@ -130,11 +150,22 @@ export default {
         }
       },
     },
+    sections: {
+      query: SECTION_QUERIES,
+      variables() {
+        return {
+          klase_id: parseInt(this.studentClass),
+          workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
   },
 
   computed: {
     nowloading() {
-      return this.$apollo.queries.user.loading
+      return (
+        this.$apollo.queries.user.loading && this.$apollo.queries.klases.loading
+      )
     },
 
     ...mapState(useWorkspaceStore, {
@@ -154,6 +185,7 @@ export default {
         variables() {
           return {
             klase_id: parseInt(this.studentClass),
+            section_id: parseInt(this.section),
             workspaceId: parseInt(this.mainWorkspace.id),
           }
         },

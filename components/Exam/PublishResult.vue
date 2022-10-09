@@ -77,19 +77,20 @@
                     >
                       Total
                     </th>
-                    <th
-                      v-if="student[1] == 1 || student[1] == 2"
-                      style="color: darkblue"
-                    >
-                      Average
-                    </th>
+                    <th style="color: darkblue">Average</th>
                     <th v-if="student[1] == 3" style="color: darkblue">
                       Cum Total
                     </th>
                     <th v-if="student[1] == 3" style="color: darkblue">
                       Cum Avg
                     </th>
-                    <th style="color: darkgreen">Position</th>
+                    <th v-if="student[1] == 3" style="color: darkgreen">
+                      {{ student[1] }}rd Position
+                    </th>
+                    <th v-else style="color: darkgreen">Position</th>
+                    <th v-if="student[1] == 3" style="color: darkgreen">
+                      Cumulative Position
+                    </th>
 
                     <th v-if="student[1] == 3" style="color: darkgreen">
                       Status
@@ -109,10 +110,7 @@
                     >
                       {{ record.total }}
                     </td>
-                    <td
-                      v-if="student[1] == 1 || student[1] == 2"
-                      style="color: darkblue"
-                    >
+                    <td style="color: darkblue">
                       {{ record.avg }}
                     </td>
                     <td v-if="student[1] == 3" style="color: darkblue">
@@ -124,6 +122,10 @@
                     <td
                       style="color: darkgreen"
                       v-html="postion(record.position)"
+                    ></td>
+                    <td
+                      style="color: darkgreen"
+                      v-html="postion(record.cum_position)"
                     ></td>
                     <td v-if="student[1] == 3">
                       {{ record.ps }}

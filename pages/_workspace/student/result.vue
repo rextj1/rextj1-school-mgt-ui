@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4 student-result">
     <template v-if="nowLoading">
       <Preload />
     </template>
     <template v-else>
       <b-card class="p-3 mb-4 d-flex">
-        <b-form @submit.prevent="markSubmit">
+        <b-form @submit.prevent="studentResult">
           <b-row>
             <b-col md="2">
               <b-form-group label="Classes">
@@ -54,29 +54,6 @@
             </b-col>
 
             <b-col md="2">
-              <b-form-group label="Sections">
-                <b-form-select
-                  id="sections"
-                  v-model="form.section"
-                  value-field="id"
-                  text-field="name"
-                  :options="sections"
-                  class="mb-3"
-                  size="lg"
-                >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- select section--</b-form-select-option
-                    >
-                  </template>
-
-                  <!-- These options will appear after the ones from 'options' prop -->
-                </b-form-select>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="2">
               <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
@@ -100,21 +77,28 @@
             </b-col>
             <b-button
               type="submit"
-              variant="danger"
+              variant="primary"
               size="lg"
               style="height: 3.85rem; margin-top: 2.85rem"
-              >Submit</b-button
+              :disabled="isBusy"
+              ><b-spinner
+                v-if="isBusy"
+                variant="light"
+                class="mr-1 mb-1"
+                small
+              />
+              Submit</b-button
             >
           </b-row>
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="libarian__wrapper">
+      <div v-show="timetableDropdownClass">
         <ExamSingleStudentResult
-          :klase-results="klaseResults"
+          v-if="studentExamResult"
           :student-exam-result="studentExamResult"
           :student-mark-result="studentMarkResult"
-          :student="[form.class, form.term, form.session, form.section]"
+          :student="[form.class, form.term, form.session]"
         />
       </div>
     </template>
@@ -124,32 +108,27 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
-import {
-  EXAM_RECORD_QUERIES,
-  STUDENT_EXAM_RESULT_QUERIES,
-} from '~/graphql/examRecord/queries'
+import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import {
   STUDENT_MARK_RESULT_QUERIES,
   TERM_QUERIES,
 } from '~/graphql/marks/queries'
-import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
-      klaseResults: [],
-      studentExamResult: [],
+      studentExamResult: null,
       studentMarkResult: [],
       user: [],
+      isBusy: false,
       timetableDropdownClass: false,
       form: {
         class: null,
         session: null,
         term: null,
-        section: null,
       },
 
       dynamicClass: '',
@@ -159,7 +138,7 @@ export default {
     }
   },
   apollo: {
-   klases: {
+    klases: {
       query: KLASE_QUERIES,
       variables() {
         return {
@@ -170,14 +149,7 @@ export default {
     terms: {
       query: TERM_QUERIES,
     },
-    sections: {
-      query: SECTION_QUERIES,
-      variables() {
-        return {
-          workspaceId: parseInt(this.mainWorkspace.id),
-        }
-      },
-    },
+
     sessions: {
       query: SESSION_QUERIES,
       variables() {
@@ -197,12 +169,9 @@ export default {
   },
   computed: {
     nowLoading() {
-      return (
-        
-        this.$apollo.queries.sessions.loading
-      )
+      return this.$apollo.queries.sessions.loading
     },
-     ...mapState(useWorkspaceStore, {
+    ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
   },
@@ -210,49 +179,28 @@ export default {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
-    markSubmit() {
+    studentResult() {
       if (
         this.form.class === null ||
         this.form.term === null ||
-        this.form.session === null || 
-         this.form.section === null
+        this.form.session === null 
       ) {
         return false
       } else {
-        this.timetableDropdownClass = true
-      }
+        this.isBusy = true
+        this.timetableDropdownClass = false
 
-      setTimeout(() => {
-        this.$apollo.addSmartQuery('klaseResults', {
-          query: EXAM_RECORD_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.form.class),
-              term_id: parseInt(this.form.term),
-              session_id: parseInt(this.form.session),
-              section_id: parseInt(this.form.section),
-               workspaceId: parseInt(this.mainWorkspace.id),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.klaseResults = data.klaseResults
-            }
-          },
-        })
-      }, 100)
-      setTimeout(() => {
-        const studentId = this.user.student.id
         this.$apollo.addSmartQuery('studentExamResult', {
           query: STUDENT_EXAM_RESULT_QUERIES,
           variables() {
             return {
               klase_id: parseInt(this.form.class),
-              student_id: parseInt(studentId),
+              student_id: parseInt(this.user.student.id),
               term_id: parseInt(this.form.term),
-              section_id: parseInt(this.form.section),
+
               session_id: parseInt(this.form.session),
-               workspaceId: parseInt(this.mainWorkspace.id),
+              status: 'published',
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
           result({ loading, data }, key) {
@@ -261,36 +209,37 @@ export default {
             }
           },
         })
-      }, 100)
-      setTimeout(() => {
-        const studentId = this.user.student.id
+
         this.$apollo.addSmartQuery('studentMarkResult', {
           query: STUDENT_MARK_RESULT_QUERIES,
           variables() {
             return {
               klase_id: parseInt(this.form.class),
-              student_id: parseInt(studentId),
+              student_id: parseInt(this.user.student.id),
               term_id: parseInt(this.form.term),
-              section_id: parseInt(this.form.section),
               session_id: parseInt(this.form.session),
-               workspaceId: parseInt(this.mainWorkspace.id),
+              status: 'published',
+              workspaceId: parseInt(this.mainWorkspace.id),
             }
           },
 
           result({ loading, data }, key) {
             if (!loading) {
               this.studentMarkResult = data.studentMarkResult
+
+              this.isBusy = false
+              this.timetableDropdownClass = true
             }
           },
         })
-      }, 100)
+      }
     },
   },
 }
 </script>
 
 <style lang="scss">
-.view-payment {
+.student-result {
   font-size: 1.6rem;
 
   .custom-select:focus {
@@ -303,40 +252,6 @@ export default {
     height: 4rem;
     font-size: 1.4rem;
     color: #000;
-  }
-
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -3.5rem;
-        left: 14.2rem;
-        background-color: #fff;
-      }
-
-      li:not(:last-child) {
-        background-color: #fff;
-        padding: 1rem 4.8rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
   }
 }
 </style>

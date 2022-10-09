@@ -2,7 +2,6 @@ import gql from 'graphql-tag'
 
 import {
   STUDENT_FIELDS_FRAGMENT,
-  SINGLE_STUDENT_FIELD_FRAGMENT,
 } from './fragments'
 
 export const STUDENT_QUERIES = gql`
@@ -45,10 +44,7 @@ export const USER_STUDENT_QUERY = gql`
         id
         name
       }
-      city {
-        id
-        name
-      }
+      city
       lga
       student {
         id
@@ -73,6 +69,10 @@ export const USER_STUDENT_QUERY = gql`
         guardian_email
         guardian_address
         term {
+          id
+          name
+        }
+        section {
           id
           name
         }

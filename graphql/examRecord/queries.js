@@ -47,6 +47,7 @@ export const STUDENT_EXAM_RESULT_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int
+    $status: String
     $workspaceId: Int
   ) {
     studentExamResult(
@@ -55,6 +56,7 @@ export const STUDENT_EXAM_RESULT_QUERIES = gql`
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      status: $status
       workspaceId: $workspaceId
     ) {
       ...ExamRecordFields

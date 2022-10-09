@@ -111,6 +111,8 @@
                   debounce="500"
                   name="phone"
                   type="number"
+                  min="1234567899"
+                  max="12345678919"
                   size="lg"
                   placeholder="Enter phone number"
                   trim
@@ -119,6 +121,27 @@
                 <b-form-invalid-feedback :state="!form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
                 </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3" class="p-4">
+              <b-form-group label="Gender">
+                <b-form-select
+                  v-model="form.gender"
+                  :options="genders"
+                  class="mb-3"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- Please select gender --</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
               </b-form-group>
             </b-col>
 
@@ -171,27 +194,19 @@
             </b-col>
 
             <b-col md="3" class="p-4">
-              <div v-if="!state">
-                <b-form-group label="City">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div v-else>
-                <b-form-group label="City">
-                  <b-form-select v-model="form.city" class="mb-3">
-                    <b-form-select-option
-                      v-for="k in state.cities"
-                      :key="k.id"
-                      :value="k.id"
-                      required
-                      >{{ k.name }}</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
+              <b-form-group id="city" label="City">
+                <b-form-input
+                  id="city"
+                  v-model="form.city"
+                  type="text"
+                  placeholder="Enter city"
+                  name="city"
+                  required
+                ></b-form-input>
+                <b-form-invalid-feedback :state="!form.errors.has('city')">
+                  {{ form.errors.get('city') }}
+                </b-form-invalid-feedback>
+              </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
@@ -267,10 +282,12 @@ export default {
         phone: null,
         country: null,
         state: null,
+        gender: null,
         city: null,
         lga: null,
         busy: false,
       }),
+      genders: ['Male', 'Female'],
     }
   },
 
@@ -326,12 +343,13 @@ export default {
           this.form.name = school.name
           this.form.slug = school.slug
           this.form.email = school.email
+          this.form.gender = school.gender
           this.form.last_name = school.user.last_name
           this.form.first_name = school.user.first_name
           this.form.phone = school.user.phone
           this.form.country = school.user.country.id
           this.form.state = school.user.state.id
-          this.form.city = school.user.city.id
+          this.form.city = school.user.city
           this.form.lga = school.user.lga
         }
       },
@@ -350,13 +368,14 @@ export default {
             id: parseInt(this.slug[0]),
             name: this.form.name,
             slug: this.form.slug,
+            gender: this.form.gender,
             email: this.form.email,
-            phone: parseInt(this.form.phone),
+            phone: this.form.phone,
             last_name: this.form.last_name,
             first_name: this.form.first_name,
             country: parseInt(this.form.country),
             state: parseInt(this.form.state),
-            city: parseInt(this.form.city),
+            city: this.form.city,
             lga: this.form.lga,
           },
           update: (store, { data: { updateSchool } }) => {

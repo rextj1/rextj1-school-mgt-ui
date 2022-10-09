@@ -17,33 +17,30 @@
         pdf-orientation="landscape"
         pdf-content-width=""
       >
-          <section slot="pdf-content">
-            <b-row no-gutters>
-              <b-col md="12">
-                <h3 class="text-center mb-4">
-                  <!-- <div v-for="klase in examTimetables[0]" :key="klase.id">
-                        {{ klase.name }}
-                      </div> -->
-                  {{ editCurrentClass[1] }} (Exam Timetable)
-                </h3>
-                <div class="card-body">
-                  <div class="card-student p-3">
-                    <b-table
-                      hover
-                      bordered
-                      head-variant="dark"
-                      caption-top
-                      no-border-collapse
-                      :responsive="true"
-                      :items="timetables"
-                      :fields="fields"
-                    >
-                    </b-table>
-                  </div>
+        <section slot="pdf-content">
+          <b-row no-gutters>
+            <b-col md="12">
+              <h3 class="text-center mb-4">
+                {{ editCurrentClass[1] }} (Exam Timetable)
+              </h3>
+              <div class="card-body">
+                <div class="card-student p-3">
+                  <b-table
+                    hover
+                    bordered
+                    head-variant="dark"
+                    caption-top
+                    no-border-collapse
+                    :responsive="true"
+                    :items="timetables"
+                    :fields="fields"
+                  >
+                  </b-table>
                 </div>
-              </b-col>
-            </b-row>
-          </section>
+              </div>
+            </b-col>
+          </b-row>
+        </section>
       </vue-html2pdf>
 
       <div class="text-center mb-4">
@@ -93,6 +90,7 @@ export default {
       variables() {
         return {
           klase_id: parseInt(this.editCurrentClass[0]),
+          section_id: parseInt(this.editCurrentClass[2]),
           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },

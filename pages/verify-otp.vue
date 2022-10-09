@@ -23,11 +23,22 @@
               <!-- <button @click="handleClearInput()">Clear</button> -->
 
               <b-button
+                v-if="!form.busy"
                 type="submit"
-                variant="primary"
-                class="shadow-sm"
+                class="shadow-sm verification-code"
                 size="lg"
                 :disabled="timer == 0"
+              >
+                Verify
+              </b-button>
+
+              <b-button
+                v-if="form.busy"
+                type="submit"
+                class="shadow-sm verification-code"
+                size="lg"
+                style="width: 53px"
+                :disabled="timer == 0 || form.busy"
               >
                 <b-spinner
                   v-if="form.busy"
@@ -35,11 +46,16 @@
                   small
                   class="mr-1 mb-1"
                 />
-                Verify
               </b-button>
             </div>
+
             <div class="timer mt-3">0:{{ timer }}</div>
-            <b-button :disabled="timer > 0" @click="resendOtp">
+            <b-button
+              class="verification-code"
+              size="md"
+              :disabled="timer > 0"
+              @click="resendOtp"
+            >
               <b-spinner
                 v-if="busy"
                 variant="light"
@@ -74,6 +90,7 @@ export default {
       busy: null,
       showPassword: false,
       onComplete: null,
+      onChange: '',
       emailAlert: '',
       timer: 30,
       form: new this.$form({
@@ -89,14 +106,15 @@ export default {
   methods: {
     handleOnComplete(value) {
       this.form.otp = value
-      console.log('OTP completed: ', value)
+      // console.log('OTP completed: ', value)
     },
     handleOnChange(value) {
+      this.onChange = value
       console.log('OTP changed: ', value)
     },
-    handleClearInput() {
-      this.$refs.otpInput.clearInput()
-    },
+    // handleClearInput() {
+    //   this.$refs.otpInput.clearInput()
+    // },
     setTimer() {
       setTimeout(() => {
         if (this.timer > 0) {
@@ -220,6 +238,14 @@ export default {
         // color: #000;
         max-width: 50%;
         margin: 35vh auto;
+
+        .verification-code {
+          background: linear-gradient(
+            to bottom,
+            #ff2200,
+            #0019f9e9 99%
+          ) !important;
+        }
 
         .otp-input {
           width: 40px;

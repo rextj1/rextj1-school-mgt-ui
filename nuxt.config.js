@@ -10,7 +10,7 @@ export default {
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Ronazon School',
+    title: 'School App',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -106,7 +106,7 @@ export default {
       login: '/login',
       logout: '/login',
       callback: false,
-      home: '/school/dashboard',
+      home: '/default/dashboard',
     },
     strategies: {
       graphql: {

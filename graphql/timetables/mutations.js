@@ -9,6 +9,7 @@ export const CREATE_TIMETABLE_MUTATION = gql`
     $friday: String
     $time: String
     $klase_id: Int!
+    $section_id: Int!
     $workspaceId: Int
   ) {
     createTimetable(
@@ -19,6 +20,7 @@ export const CREATE_TIMETABLE_MUTATION = gql`
       friday: $friday
       time: $time
       klase_id: $klase_id
+      section_id: $section_id
       workspaceId: $workspaceId
     ) {
       id

@@ -4,15 +4,11 @@ import { NOTICE_FIELDS_FRAGMENT } from './fragments'
 export const CREATE_NOTICE_MUTATION = gql`
   mutation CreateMutation(
     $description: String
-    $title: String
-    $photo: Upload
     $date: String
     $workspaceId: Int!
   ) {
     createNotice(
       description: $description
-      title: $title
-      photo: $photo
       date: $date
       workspaceId: $workspaceId
     ) {
@@ -26,16 +22,12 @@ export const UPDATE_NOTICE_MUTATION = gql`
   mutation UpdateMutation(
     $id: ID!
     $description: String
-    $title: String
-    $photo: Upload
     $date: String
     $workspaceId: Int!
   ) {
     updateNotice(
       id: $id
       description: $description
-      title: $title
-      photo: $photo
       date: $date
       workspaceId: $workspaceId
     ) {
@@ -56,17 +48,10 @@ export const PUBLISH_NOTICE_MUTATION = gql`
   mutation PublishNoticeMutation($workspaceId: Int!, $id: Int!) {
     publishNotice(workspaceId: $workspaceId, id: $id) {
       id
-      published
+      status
     }
   }
 `
-// export const CREATE_ROW_MUTATION = gql`
-//   mutation UpdatexMutation($description: [ObjectT]) {
-//     createRow(description: $description) {
-//       id
-//     }
-//   }
-// `
 
 export const BULK_DELETE_NOTICE_MUTATION = gql`
   mutation BulkDeleteNoticeMutation($workspaceId: Int!, $ids: [String!]) {

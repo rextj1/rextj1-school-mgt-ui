@@ -115,8 +115,41 @@
 
       <div class="card" v-show="timetableDropdownClass">
         <div class="card-body">
-          <h3 v-if="klaseResults.length == 0" class="text-center">No record found</h3>
+          <h3 v-if="klaseResults.length == 0" class="text-center">
+            No record found
+          </h3>
+
           <div class="p-3 roles-table" v-else>
+            <div v-if="klaseResults[0].status == 'unpublished'">
+              <div v-if="form.term == 1 || form.term == 2 || form.term == 3">
+                <h4
+                  class="d-flex justify-content-center align-items-center"
+                  style="
+                    height: 4rem;
+                    background-color: #d9530f;
+                    color: #fff;
+                    font-weight: bold;
+                  "
+                >
+                  Result Not Yet Published
+                </h4>
+              </div>
+            </div>
+            <div v-else>
+              <div v-if="student[1] == 1 || student[1] == 2 || student[1] == 3">
+                <h4
+                  class="d-flex justify-content-center align-items-center"
+                  style="
+                    height: 4rem;
+                    background-color: green;
+                    color: #fff;
+                    font-weight: bold;
+                  "
+                >
+                  Result Published
+                </h4>
+              </div>
+            </div>
             <h2
               class="p-4 d-flex justify-content-center"
               style="font-weight: bold"
@@ -260,6 +293,7 @@ export default {
       query: SECTION_QUERIES,
       variables() {
         return {
+          klase_id: parseInt(this.form.class),
           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },

@@ -37,12 +37,6 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
       name
     }
     birthday
-    # guardian: Guardian @belongsTo
-    # klase: Klase @belongsTo
-    # user: User @belongsTo
-    # subject: [Subject] @hasMany
-    # timetable: Timetable @belongsTo
-    # exam_timetable: ExamTimetable @belongsTo
 
     guardian {
       id
@@ -51,9 +45,6 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     klase {
       ...KlaseFields
     }
-    # timetable {
-    #   ...SingleTimetableFields
-    # }
     user {
       id
       lga
@@ -71,10 +62,7 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
         id
         name
       }
-      city {
-        id
-        name
-      }
+      city
     }
   }
 
@@ -106,6 +94,10 @@ export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
       name
     }
     session {
+      id
+      name
+    }
+    section {
       id
       name
     }

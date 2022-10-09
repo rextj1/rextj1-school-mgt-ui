@@ -6,7 +6,7 @@
         <b-form @submit.prevent="markSubmit">
           <b-row>
             <b-col md="2">
-              <b-form-group label="Clases">
+              <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
                   v-model="form.class"
@@ -52,7 +52,7 @@
             </b-col>
 
             <b-col md="2">
-              <b-form-group label="Section">
+              <b-form-group label="Sections">
                 <b-form-select
                   id="sections"
                   v-model="form.section"
@@ -75,7 +75,7 @@
             </b-col>
 
             <b-col md="2">
-              <b-form-group label="Session">
+              <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
                   v-model="form.session"
@@ -100,7 +100,7 @@
               type="submit"
               variant="primary"
               size="lg"
-              style="height: 3.8rem; margin-top: 2.8rem"
+              style="height: 3.85rem; margin-top: 2.85rem"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -113,16 +113,65 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass">
-        <ExamPublishResult
-          v-if="records"
-          :records="records"
-          :marks="marks"
-          :first-term="firstTerm"
-          :secound-term="secoundTerm"
-          :third-term="thirdTerm"
-          :student="[form.class, form.term, form.session, form.section]"
-        />
+      <div class="card" v-show="timetableDropdownClass">
+        <div class="card-body">
+          <h3 v-if="klaseResults.length == 0" class="text-center">No record found</h3>
+          <div class="p-3 roles-table" v-else>
+            <h2
+              class="p-4 d-flex justify-content-center"
+              style="font-weight: bold"
+            >
+              Student Result Section
+            </h2>
+            <b-table :items="klaseResults" :fields="fields">
+              <template #cell(#)="data">
+                {{ data.index + 1 }}
+              </template>
+
+              <template #cell(student)="data">
+                {{ data.value.first_name }} {{ data.value.last_name }}
+              </template>
+
+              <template #cell(adm_no)="data">
+                {{ data.item.student.adm_no }}
+              </template>
+
+              <template #cell(term)="data">
+                {{ data.item.term.name }}
+              </template>
+
+              <template #cell(session)="data">
+                {{ data.item.session.name }}
+              </template>
+
+              <template #cell(klase)="data">
+                {{ data.item.klase.name }}
+              </template>
+
+              <template #cell(actions)="data">
+                <b-button
+                  variant="warning"
+                  style="font-weight: bold"
+                  :to="{
+                    name: 'workspace-admin-exam-slug',
+                    params: {
+                      workspace: mainWorkspace.slug,
+                      slug: data.item.student.id,
+                    },
+                    query: {
+                      student,
+                      klaseResults,
+                      numStudents,
+                    },
+                  }"
+                >
+                  <b-icon icon="eye" class="mr-1" />
+                  View Result
+                </b-button>
+              </template>
+            </b-table>
+          </div>
+        </div>
       </div>
     </template>
   </div>
@@ -131,41 +180,68 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
-import {
-  EXAM_RECORD_QUERIES,
-  FIRST_TERM_QUERIES,
-  PUBLISH_RESULT_QUERY,
-  SECOUND_TERM_QUERIES,
-  THIRD_TERM_QUERIES,
-} from '~/graphql/examRecord/queries'
+import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import { MARK_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
-      records: null,
       klaseResults: [],
-      marks: [],
-      firstTerm: [],
-      secoundTerm: [],
-      thirdTerm: [],
-      publishResult: null,
+      student: [],
+      isBusy: false,
+      numStudents: null,
       timetableDropdownClass: false,
       form: {
         class: null,
+        section: null,
         session: null,
         term: null,
-        section: null,
       },
 
       dynamicClass: '',
       activeTab: '',
       registerMenu: false,
       registrationMenuClass: '',
-      isBusy: false,
+      fields: [
+        {
+          key: '#',
+          sortable: false,
+        },
+        {
+          key: 'student',
+          label: 'Full Name',
+          sortable: false,
+        },
+        {
+          key: 'adm_no',
+          label: 'Adm_no.',
+        },
+        {
+          key: 'klase',
+          label: 'Class',
+        },
+        {
+          key: 'term',
+          label: 'Term.',
+        },
+        {
+          key: 'session',
+          label: 'Session.',
+        },
+
+        {
+          key: '',
+          sortable: false,
+        },
+        {
+          key: 'actions',
+          label: 'Actions',
+          sortable: false,
+        },
+      ],
     }
   },
   apollo: {
@@ -177,7 +253,6 @@ export default {
         }
       },
     },
-
     terms: {
       query: TERM_QUERIES,
     },
@@ -217,7 +292,6 @@ export default {
     },
     markSubmit() {
       this.timetableDropdownClass = false
-
       if (
         this.form.class === null ||
         this.form.term === null ||
@@ -226,7 +300,16 @@ export default {
       ) {
         return false
       } else {
+      }
+
+      setTimeout(() => {
         this.isBusy = true
+        this.student = [
+          this.form.class,
+          this.form.term,
+          this.form.session,
+          this.form.section,
+        ]
         this.$apollo.addSmartQuery('klaseResults', {
           query: EXAM_RECORD_QUERIES,
           variables() {
@@ -240,87 +323,16 @@ export default {
           },
           result({ loading, data }, key) {
             if (!loading) {
-              this.records = data.klaseResults
-            }
-          },
-        })
+              this.klaseResults = data.klaseResults
 
-        this.$apollo.addSmartQuery('marks', {
-          query: MARK_QUERIES,
-          variables: {
-            klase_id: parseInt(this.form.class),
-            session_id: parseInt(this.form.session),
-            section_id: parseInt(this.form.section),
-            term_id: parseInt(this.form.term),
-            workspaceId: parseInt(this.mainWorkspace.id),
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.marks = data.marks
+              const numStudents = Object.keys(this.klaseResults).length
+              this.numStudents = numStudents
+              this.isBusy = false
               this.timetableDropdownClass = true
             }
           },
         })
-
-        this.$apollo.addSmartQuery('firstTerm', {
-          query: FIRST_TERM_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.form.class),
-              term_id: 1,
-              session_id: parseInt(this.form.session),
-              section_id: parseInt(this.form.section),
-              workspaceId: parseInt(this.mainWorkspace.id),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.firstTerm = data.firstTerm
-            }
-          },
-        })
-
-        this.$apollo.addSmartQuery('secoundTerm', {
-          query: SECOUND_TERM_QUERIES,
-          variables() {
-            return {
-              klase_id: parseInt(this.form.class),
-              term_id: 2,
-              session_id: parseInt(this.form.session),
-              section_id: parseInt(this.form.section),
-              workspaceId: parseInt(this.mainWorkspace.id),
-            }
-          },
-          result({ loading, data }, key) {
-            if (!loading) {
-              this.secoundTerm = data.secoundTerm
-            }
-          },
-        })
-
-        setTimeout(() => {
-          this.isBusy = true
-          this.$apollo.addSmartQuery('thirdTerm', {
-            query: THIRD_TERM_QUERIES,
-            variables() {
-              return {
-                klase_id: parseInt(this.form.class),
-                term_id: 3,
-                session_id: parseInt(this.form.session),
-                section_id: parseInt(this.form.section),
-                workspaceId: parseInt(this.mainWorkspace.id),
-              }
-            },
-            result({ loading, data }, key) {
-              if (!loading) {
-                this.thirdTerm = data.thirdTerm
-                this.isBusy = false
-                this.timetableDropdownClass = true
-              }
-            },
-          })
-        }, 100)
-      }
+      }, 100)
     },
   },
 }

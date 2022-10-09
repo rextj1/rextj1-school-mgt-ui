@@ -86,3 +86,22 @@ export const UPDATE_RESUMPTION_MUTATION = gql`
   }
   ${EXAM_RECORD_FIELDS_FRAGMENT}
 `
+// graduate students
+
+export const CREATE_GRADUATE_MUTATION = gql`
+  mutation CreateGraduateMutation(
+    $klase_id: Int!
+    $session_id: Int!
+    $status: String!
+    $workspaceId: Int!
+  ) {
+    createGraduates(
+      klase_id: $klase_id
+      session_id: $session_id
+      status: $status
+      workspaceId: $workspaceId
+    ) {
+      ...ExamRecordFields
+    }
+  }${EXAM_RECORD_FIELDS_FRAGMENT}
+`

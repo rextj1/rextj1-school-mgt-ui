@@ -77,7 +77,7 @@
             <b-form-group label="First Name">
               <b-form-input
                 id="firstName"
-                v-model="form.teacherTable.first_name"
+                v-model="form.accountantTable.first_name"
                 debounce="500"
                 name="first_name"
                 size="lg"
@@ -86,9 +86,9 @@
                 required
               ></b-form-input>
               <b-form-invalid-feedback
-                :state="!form.errors.has('teacherTable.first_name')"
+                :state="!form.errors.has('accountantTable.first_name')"
               >
-                {{ form.errors.get('teacherTable.first_name') }}
+                {{ form.errors.get('accountantTable.first_name') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -97,24 +97,24 @@
             <b-form-group id="last_name" label="Last Name">
               <b-form-input
                 id="first_name"
-                v-model="form.teacherTable.last_name"
+                v-model="form.accountantTable.last_name"
                 type="text"
                 placeholder="Enter last name"
                 name="last_name"
                 trim
                 required
               ></b-form-input>
-              <b-form-invalid-feedback :state="!form.errors.has('teacherTable.last_name')">
-                {{ form.errors.get('teacherTable.last_name') }}
+              <b-form-invalid-feedback :state="!form.errors.has('accountantTable.last_name')">
+                {{ form.errors.get('accountantTable.last_name') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
 
           <b-col md="4" class="p-4">
-            <b-form-group id="input-group-1" label="middle Name (optional)">
+            <b-form-group id="input-group-1" label="Middle Name (optional)">
               <b-form-input
                 id="input-1"
-                v-model="form.teacherTable.middle_name"
+                v-model="form.accountantTable.middle_name"
                 type="text"
                 placeholder="Enter middle name"
                 name="last_name"
@@ -123,7 +123,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group id="input-group-1" label="Email:">
               <b-form-input
                 id="email"
@@ -140,11 +140,11 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group id="input-group-1" label="Phone no:">
               <b-form-input
                 id="phone"
-                v-model="form.teacherTable.phone"
+                v-model="form.accountantTable.phone"
                 type="number"
                 min="1234567899"
                 max="12345678919"
@@ -158,20 +158,20 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group label="Qualification">
               <b-form-input
                 id="qualification"
-                v-model="form.teacherTable.qualification"
+                v-model="form.accountantTable.qualification"
                 type="text"
                 placeholder="Enter qualification"
                 name="qualification"
                 required
               ></b-form-input>
               <b-form-invalid-feedback
-                :state="!form.errors.has('teacherTable.qualification')"
+                :state="!form.errors.has('accountantTable.qualification')"
               >
-                {{ form.errors.get('teacherTable.qualification') }}
+                {{ form.errors.get('accountantTable.qualification') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -196,7 +196,7 @@
           <b-col md="4" class="p-4">
             <b-form-group label="Gender">
               <b-form-select
-                v-model="form.teacherTable.gender"
+                v-model="form.accountantTable.gender"
                 :options="genders"
                 class="mb-3"
                 size="lg"
@@ -214,11 +214,11 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
-            <b-form-group label="Date of birth">
+          <b-col md="5" class="p-4">
+            <b-form-group label="Date of Birth">
               <b-form-datepicker
                 id="datepicker-buttons"
-                v-model="form.teacherTable.birthday"
+                v-model="form.accountantTable.birthday"
                 today-button
                 reset-button
                 close-button
@@ -226,13 +226,13 @@
                 size="md"
                 name="birthday"
               ></b-form-datepicker>
-              <b-form-invalid-feedback :state="!form.errors.has('teacherTable.birthday')">
-                {{ form.errors.get('teacherTable.birthday') }}
+              <b-form-invalid-feedback :state="!form.errors.has('accountantTable.birthday')">
+                {{ form.errors.get('accountantTable.birthday') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="3" class="p-4">
             <b-form-group label="Blood Group">
               <b-form-select
                 id="bloodGroups"
@@ -254,8 +254,26 @@
               </b-form-select>
             </b-form-group>
           </b-col>
+          
+            <b-col md="5" class="p-4">
+              <b-form-group label="Date of Employment">
+                <b-form-datepicker
+                  id="datepicker-employment"
+                  v-model="form.accountantTable.employment"
+                  today-button
+                  reset-button
+                  close-button
+                  locale="en"
+                  size="lg"
+                  name="employment"
+                ></b-form-datepicker>
+                <b-form-invalid-feedback :state="!form.errors.has('accountantTable.employment')">
+                  {{ form.errors.get('accountantTable.employment') }}
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group label="Country">
               <b-form-select
                 id="country"
@@ -279,7 +297,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <div v-if="!country">
               <b-form-group label="State">
                 <b-form-select class="mb-3">
@@ -302,30 +320,23 @@
             </div>
           </b-col>
 
-          <b-col md="3" class="p-4">
-            <div v-if="!state">
-              <b-form-group label="City">
-                <b-form-select class="mb-3">
-                  <b-form-select-option value="null"> </b-form-select-option>
-                </b-form-select>
+             <b-col md="4" class="p-4">
+              <b-form-group id="input-group-1" label="City">
+                <b-form-input
+                  id="city"
+                  v-model="form.userTable.city"
+                  type="text"
+                  placeholder="Enter city"
+                  name="city"
+                  required
+                ></b-form-input>
+                <b-form-invalid-feedback :state="!form.errors.has('userTable.city')">
+                  {{ form.errors.get('userTable.city') }}
+                </b-form-invalid-feedback>
               </b-form-group>
-            </div>
+            </b-col>
 
-            <div v-else>
-              <b-form-group label="City">
-                <b-form-select v-model="form.userTable.city" class="mb-3" required>
-                  <b-form-select-option
-                    v-for="k in state.cities"
-                    :key="k.id"
-                    :value="k.id"
-                    >{{ k.name }}</b-form-select-option
-                  >
-                </b-form-select>
-              </b-form-group>
-            </div>
-          </b-col>
-
-          <b-col md="3" class="p-4">
+          <b-col md="4" class="p-4">
             <b-form-group id="input-group-1" label="L.G.A">
               <b-form-input
                 id="lga"
@@ -409,12 +420,12 @@ export default {
           bloodGroup: null,
           religion: null,
         },
-        teacherTable: {
+        accountantTable: {
           first_name: '',
           last_name: '',
           middle_name: null,
           gender: null,
-
+          employment: null,
           photo: null,
           birthday: null,
           phone: null,
@@ -471,19 +482,20 @@ export default {
       },
       result({ data, loading }) {
         if (!loading) {
-          this.form.teacherTable.first_name = data.accountant.first_name
-          this.form.teacherTable.last_name = data.accountant.last_name
-          this.form.teacherTable.middle_name = data.accountant.middle_name
-          this.form.teacherTable.birthday = data.accountant.birthday
-          this.form.teacherTable.qualification = data.accountant.qualification
+          this.form.accountantTable.first_name = data.accountant.first_name
+          this.form.accountantTable.last_name = data.accountant.last_name
+          this.form.accountantTable.middle_name = data.accountant.middle_name
+          this.form.accountantTable.birthday = data.accountant.birthday
+          this.form.accountantTable.qualification = data.accountant.qualification
           this.form.photo = data.accountant.photo
-          this.form.teacherTable.phone = data.accountant.phone
-          this.form.teacherTable.gender = data.accountant.gender
+          this.form.accountantTable.employment = data.accountant.employment
+          this.form.accountantTable.phone = data.accountant.phone
+          this.form.accountantTable.gender = data.accountant.gender
 
           this.form.id = parseInt(data.accountant.id)
           this.form.userTable.country = data.accountant.user.country.id
           this.form.userTable.state = data.accountant.user.state.id
-          this.form.userTable.city = data.accountant.user.city.id
+          this.form.userTable.city = data.accountant.user.city
           this.form.userTable.religion = data.accountant.user.religion
           this.form.userTable.email = data.accountant.user.email
           this.form.userTable.bloodGroup = data.accountant.user.blood_group.id
@@ -507,7 +519,7 @@ export default {
         this.preview_url = e.target.result
       }
       reader.readAsDataURL(file)
-      this.form.teacherTable.photo = file
+      this.form.accountantTable.photo = file
 
       this.isValidFile(file)
     },
@@ -556,7 +568,7 @@ export default {
             variables: {
               id: parseInt(this.accountantInfo[0]),
               userTable: this.form.userTable,
-              teacherTable: this.form.teacherTable,
+              accountantTable: this.form.accountantTable,
               workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { updateAccountant } }) => {
