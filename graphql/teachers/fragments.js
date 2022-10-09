@@ -15,6 +15,7 @@ export const TEACHER_FIELDS_FRAGMENT = gql`
     photo
     birthday
     qualification
+    employment
   }
 `
 export const TEACHERS_FIELDS_FRAGMENT = gql`
@@ -30,6 +31,7 @@ export const TEACHERS_FIELDS_FRAGMENT = gql`
     photo
     birthday
     qualification
+    employment
     klases {
       ...KlaseFields
     }

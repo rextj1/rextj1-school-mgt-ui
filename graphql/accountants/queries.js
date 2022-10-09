@@ -36,10 +36,7 @@ export const USER_ACCOUNTANT_QUERY = gql`
         id
         name  
       }
-      city {
-        id
-        name
-      }
+      city 
       accountant {
         ...AccountantUserFields
       }

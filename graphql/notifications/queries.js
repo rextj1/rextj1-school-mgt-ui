@@ -8,7 +8,8 @@ export const USER_NOTIFICATION_QUERIES = gql`
         id
         type
         data {
-          data
+          description
+          workspace_id
         }
         read_at
         created_at

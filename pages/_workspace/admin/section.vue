@@ -1,8 +1,54 @@
 <template>
   <div class="p-4">
-    <template v-if="$apollo.queries.sections.loading"><Preload /></template>
+    <template v-if="$apollo.queries.klases.loading"><Preload /></template>
     <template v-else>
-      <div>
+      <b-card class="mb-4 d-flex">
+        <b-form @submit.prevent="timetableDropdown">
+          <b-row no-gutters>
+            <b-col md="3">
+              <b-form-group label="Current Class:">
+                <b-form-select
+                  id="klase"
+                  v-model="form.class"
+                  value-field="id"
+                  text-field="name"
+                  :options="klases"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select class --</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-button
+              type="submit"
+              variant="primary"
+              size="lg"
+              style="height: 3.75rem; margin-top: 2.9rem"
+              :disabled="isBusy"
+              ><b-spinner
+                class="mr-1 mb-1"
+                small
+                variant="light"
+                v-if="isBusy"
+              />Submit</b-button
+            >
+          </b-row>
+        </b-form>
+      </b-card>
+      <div
+        v-show="timetableDropdownClass"
+        class="p-4"
+        style="background-color: #fff"
+      >
         <b-card no-body>
           <div class="p-4">
             <div class="p-3">
@@ -70,37 +116,33 @@
                 </b-col>
 
                 <b-col md="4">
-                  
-                    <b-form-group>
-                      <b-form-input
-                        v-model="form.name"
-                        placeholder="Enter section"
-                        type="text"
-                        required
-                        size="lg"
-                      ></b-form-input>
-                      <b-form-invalid-feedback
-                        :state="!form.errors.has('name')"
-                      >
-                        {{ form.errors.get('name') }}
-                      </b-form-invalid-feedback>
-                    </b-form-group>
-
-                    <b-button
-                      type="submit"
-                      variant="primary"
-                      class="mr-4"
+                  <b-form-group>
+                    <b-form-input
+                      v-model="form.name"
+                      placeholder="Enter section"
+                      type="text"
+                      required
                       size="lg"
-                      :disabled="form.busy"
-                    >
-                      <b-spinner
-                        v-if="form.busy"
-                        variant="light"
-                        class="mr-1 mb-1"
-                        small
-                      />Add Section</b-button
-                    >
-              
+                    ></b-form-input>
+                    <b-form-invalid-feedback :state="!form.errors.has('name')">
+                      {{ form.errors.get('name') }}
+                    </b-form-invalid-feedback>
+                  </b-form-group>
+
+                  <b-button
+                    type="submit"
+                    variant="primary"
+                    class="mr-4"
+                    size="lg"
+                    :disabled="form.busy"
+                  >
+                    <b-spinner
+                      v-if="form.busy"
+                      variant="light"
+                      class="mr-1 mb-1"
+                      small
+                    />Add Section</b-button
+                  >
                 </b-col>
               </b-row>
             </b-form>
@@ -120,6 +162,7 @@ import {
   CREATE_SECTION_MUTATION,
   UPDATE_SECTION_MUTATION,
 } from '~/graphql/sections/mutations'
+import { KLASE_QUERIES } from '~/graphql/klases/queries'
 export default {
   middleware: 'auth',
   data() {
@@ -127,11 +170,13 @@ export default {
       id: 0,
       sectionEditingId: '',
       section: {},
-      busy: false,
+      isBusy: null,
+      sections: [],
       form: new this.$form({
         id: 0,
         name: null,
         names: null,
+        class: null,
         busy: false,
       }),
       fields: [
@@ -149,11 +194,12 @@ export default {
         },
       ],
       show: true,
+      timetableDropdownClass: false,
     }
   },
   apollo: {
-    sections: {
-      query: SECTION_QUERIES,
+    klases: {
+      query: KLASE_QUERIES,
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
@@ -168,6 +214,32 @@ export default {
   },
 
   methods: {
+    timetableDropdown() {
+      this.isBusy = true
+      this.timetableDropdownClass = false
+
+      if (this.form.class === null) {
+        return false
+      } else {
+        this.$apollo.addSmartQuery('sections', {
+          query: SECTION_QUERIES,
+          variables() {
+            return {
+              workspaceId: parseInt(this.mainWorkspace.id),
+              klase_id: parseInt(this.form.class),
+            }
+          },
+          result({ data, loading }) {
+            if (!loading) {
+              this.sections = data.sections
+              this.isBusy = false
+              this.timetableDropdownClass = true
+            }
+          },
+        })
+      }
+    },
+
     // inline editing
     setToEditing(item) {
       this.sectionEditingId = item
@@ -246,13 +318,17 @@ export default {
             mutation: CREATE_SECTION_MUTATION,
             variables: {
               name: this.form.name,
+              klase_id: parseInt(this.form.class),
               workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createSection } }) => {
               // Read the data from our cache for this query.
               const data = store.readQuery({
                 query: SECTION_QUERIES,
-                variables: { workspaceId: parseInt(this.mainWorkspace.id) },
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                  klase_id: parseInt(this.form.class),
+                },
               })
               // console.log(this.form.class);
 
@@ -263,7 +339,10 @@ export default {
               // Write back to the cache
               store.writeQuery({
                 query: SECTION_QUERIES,
-                variables: { workspaceId: parseInt(this.mainWorkspace.id) },
+                variables: {
+                  workspaceId: parseInt(this.mainWorkspace.id),
+                  klase_id: parseInt(this.form.class),
+                },
                 data,
               })
             },

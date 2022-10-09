@@ -33,6 +33,7 @@ import { GUARDIAN_DASHBOARD_QUERIES } from '@/graphql/guardians/queries'
 import { TEACHER_DASHBOARD_QUERIES } from '@/graphql/teachers/queries'
 import { STUDENT_DASHBOARD_QUERIEX } from '@/graphql/students/queries'
 export default {
+  middleware: 'auth',
   data() {
     return {
       studentsDashboard: [],

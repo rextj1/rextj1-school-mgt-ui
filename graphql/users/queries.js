@@ -70,12 +70,10 @@ export const USERS_ROLE_QUERY = gql`
 export const USER_QUERY = gql`
   query user($id: ID!) {
     user(id: $id) {
-      id
-      first_name
-      last_name
-      user_type
+      ...UserRolesFields
     }
   }
+  ${USERS_FIELDS_FRAGMENT}
 `
 
 export const USERS_QUERY = gql`
@@ -150,6 +148,8 @@ export const USER_WORKSPACE_QUERY = gql`
         slug
         logo
         stamp
+        status
+        gender
         paystack_secret_key
       }
     }

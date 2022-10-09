@@ -1,8 +1,8 @@
 <template>
   <div class="p-4">
-    <template v-if="nowloading"><Preload /></template>
+    <template v-if="$fetchState.pending"><Preload /></template>
     <template v-else>
-      <div v-if="timetables.length > 0" class="timetable-wrapper">
+      <b-card v-if="timetables.length > 0" class="p-4">
         <vue-html2pdf
           ref="html2Pdf"
           :show-layout="true"
@@ -20,39 +20,40 @@
           <section slot="pdf-content">
             <b-row no-gutters>
               <b-col md="12">
-                <h3 class="d-flex justify-content-center mb-4">
-                  Class timetable
+                <h3 class="text-center mt-5 mb-4">
+                  <span style="color: green"
+                    >({{ user.student.klase.name }})</span
+                  >
+                  Exam Timetable
                 </h3>
-                <div class="card-body">
-                  <div class="card-student p-3">
-                    <b-table
-                      hover
-                      bordered
-                      head-variant="dark"
-                      caption-top
-                      no-border-collapse
-                      
-                      :responsive="true"
-                      :items="timetables"
-                      :fields="fields"
-                    >
-                    </b-table>
-                  </div>
+
+                <div class="p-3">
+                  <b-table
+                    hover
+                    bordered
+                    head-variant="dark"
+                    caption-top
+                    no-border-collapse
+                    :responsive="true"
+                    :items="timetables"
+                    :fields="fields"
+                  >
+                  </b-table>
                 </div>
               </b-col>
             </b-row>
           </section>
         </vue-html2pdf>
 
-         <div class="d-flex justify-content-center mb-4">
+        <div class="text-center mb-4">
           <b-button variant="danger" size="lg" @click.prevent="generateReport"
             >download</b-button
           >
         </div>
-      </div>
-      <div v-else-if="timetables.length == 0">
-        <h2 style="text-align: center">No record found</h2>
-      </div>
+      </b-card>
+      <b-card v-else-if="timetables.length == 0" class="p-4">
+        <h2 class="text-center">No record found</h2>
+      </b-card>
     </template>
   </div>
 </template>
@@ -64,12 +65,11 @@ import { TIMETABLE_QUERIES } from '~/graphql/timetables/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 export default {
   middleware: 'auth',
-  data() {
+   data() {
     return {
-      timetables: {},
-
+      timetables: [],
+      user: {},
       klaseId: '',
-      klaseName: '',
       items: [],
       fields: [
         { key: 'time', label: 'Time' },
@@ -85,56 +85,42 @@ export default {
       ],
     }
   },
-  apollo: {
-    user: {
+  async fetch() {
+    const { app, route, redirect } = this.$nuxt.context
+
+    const {
+      apolloProvider: { defaultClient: apolloClient },
+    } = app
+
+    const {
+      data: { user },
+    } = await apolloClient.query({
       query: USER_STUDENT_QUERY,
-      variables() {
-        return {
-          id: parseInt(this.$auth.user.id),
-        }
+      variables: { id: parseInt(this.$auth.user.id) },
+    })
+    this.user = user
+
+    const {
+      data: { timetables },
+    } = await apolloClient.query({
+      query: TIMETABLE_QUERIES,
+      variables: {
+        klase_id: parseInt(user.student.klase.id),
+        section_id: parseInt(user.student.section.id),
+        workspaceId: parseInt(this.mainWorkspace.id),
       },
-    },
+    })
+    this.timetables = timetables
+ 
   },
+  fetchDelay: 1000,
 
   computed: {
-    nowloading() {
-      return this.$apollo.queries.user.loading
-    },
-    StudentklaseId() {
-      return this.user.student.klase.id
-    },
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
   },
 
-  beforeUpdate() {
-    this.$apollo.addSmartQuery('timetables', {
-      query: TIMETABLE_QUERIES,
-      variables() {
-        return {
-          klase_id: parseInt(this.StudentklaseId),
-          workspaceId: parseInt(this.mainWorkspace.id),
-        }
-      },
-
-      result({ loading, data }, key) {
-        if (!loading) {
-          this.timetables = data.timetables
-        }
-      },
-    })
-  },
-  // apollo: {
-  //   timetables: {
-  //     query: TIMETABLE_QUERIES,
-  //     variables() {
-  //       return {
-  //         klase_id: parseInt(this.StudentklaseId),
-  //       }
-  //     },
-  //   },
-  // },
   methods: {
     generateReport() {
       this.$refs.html2Pdf.generatePdf()
@@ -143,23 +129,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.timetable-wrapper {
-  font-size: 1.4rem !important;
-  padding: 2rem;
-  background-color: #fff;
-
-  .add-student {
-    font-size: 1.6rem;
-    box-shadow: 0 5px 5px 0 #1f64b367;
-  }
-  .card-body {
-    padding: 0;
-    .card-student {
-      border: none;
-      border-radius: 0.5rem;
-      height: auto;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

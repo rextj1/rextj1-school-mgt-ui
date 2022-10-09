@@ -24,7 +24,7 @@
                   <div class="profile-avatar mb-2">
                     <div v-if="preview_url_logo == null" class="photo-preview">
                       <img
-                        src="@/assets/svg/graduate-student.svg"
+                        src="@/assets/svg/logo.svg"
                         alt=""
                         style="border-radius: 50%"
                       />
@@ -85,7 +85,7 @@
                   <div class="profile-avatar mb-2">
                     <div v-if="preview_url_stamp == null" class="photo-preview">
                       <img
-                        src="@/assets/svg/graduate-student.svg"
+                        src="@/assets/svg/stamp.svg"
                         alt=""
                         style="border-radius: 50%"
                       />
@@ -145,80 +145,127 @@
               </div>
             </section>
 
-            <section class="p-4">
-              <h3 class="text-center mt-4">Setup Online Payment</h3>
-              <hr />
-              <div class="paymnet-method">
-                <!-- online payment -->
-                <div class="paymnet-input-field">
-                  <b-form-group label="Enter secret key">
+            <hr />
+
+            <section class="online-payment">
+              <b-row>
+                <b-col md="6">
+                  <h3 class="mt-2 p-3" style="">PAY THROUGH BANK</h3>
+
+                  <div class="d-flex">
+                    <label class="p-2">Account_name:</label>
+                    <b-form-input
+                      id="account_name"
+                      v-model="form.account_name"
+                      type="text"
+                      placeholder="Account nane..."
+                      style="height: 3.3rem; font-size: 1.8rem"
+                      class="w-50 mb-4"
+                      size="lg"
+                    ></b-form-input>
+                  </div>
+
+                  <div class="d-flex">
+                    <label class="p-2">Account_no:</label>
+                    <b-form-input
+                      id="account_no"
+                      v-model="form.account_no"
+                      type="number"
+                      placeholder="Account no..."
+                      style="height: 3.3rem; font-size: 1.8rem"
+                      class="w-50 mb-4"
+                      size="lg"
+                    ></b-form-input>
+                  </div>
+
+                  <div class="d-flex">
+                    <label class="p-2">Bank_name</label>
+                    <b-form-input
+                      id="bank"
+                      v-model="form.bank"
+                      type="text"
+                      placeholder="Bank name..."
+                      name="bank"
+                      style="height: 3.3rem; font-size: 1.8rem"
+                      class="w-50"
+                      size="lg"
+                    ></b-form-input>
+                  </div>
+                </b-col>
+                <b-col md="6">
+                  <h3 class="mt-2 p-3" style="">PAY WITH CARD</h3>
+
+                  <div class="d-flex image">
+                    <b-img
+                      src="@/assets/svg/visa.svg"
+                      class="svg-image"
+                    ></b-img>
+                    <b-img
+                      src="@/assets/svg/mastercard.svg"
+                      class="svg-image"
+                    ></b-img>
+                  </div>
+
+                  <!-- online payment -->
+                  <div class="d-flex">
+                    <label class="p-2">Secret_key</label>
                     <b-form-input
                       id="paystack_secret_key"
                       v-model="form.paystack_secret_key"
                       type="text"
-                      placeholder="Enter your paystack secret key"
+                      placeholder="Paystack secret key"
                       name="paystack_secret_key"
+                      style="height: 3.3rem; font-size: 1.8rem"
                       trim
                       size="lg"
                     ></b-form-input>
-                  </b-form-group>
-                  <b-form-invalid-feedback
-                    :state="!form.errors.has('paystack_secret_key')"
-                  >
-                    {{ form.errors.get('paystack_secret_key') }}
-                  </b-form-invalid-feedback>
-                </div>
-              </div>
-            </section>
 
-            <section>
-              <h2 class="d-flex justify-content-center mt-2 p-3" style="">
-                TEST CARD PAYMENT
-              </h2>
-
-              <b-row>
-                <b-col md="6">
-                  <b-img src="@/assets/svg/paystack.svg" width="250"></b-img
-                ></b-col>
-                <b-col md="6" style="margin-top: 3.5rem">
-                  <b-form
-                    method="POST"
-                    @submit.prevent="initializePaystack()"
-                    @keydown="form.onKeydown($event)"
-                    @reset.prevent="onReset"
-                  >
-                    <b-row>
-                      <b-col md="6">
-                        <b-form-group label="Enter Amount">
-                          <b-form-input
-                            id="amount"
-                            v-model="amount"
-                            value-field="id"
-                            type="number"
-                            placeholder="Enter amount..."
-                            style="height: 4rem; font-size: 1.8rem"
-                            class="mb-3"
-                            size="lg"
-                            required
-                          >
-                          </b-form-input>
-                        </b-form-group>
-                      </b-col>
-                    </b-row>
-                    <b-button
-                      type="submit"
-                      variant="primary"
-                      size="lg"
-                      style="
-                        height: 3.8rem;
-                        font-size: 1.8rem;
-                        margin-top: 2.83rem;
-                        width: 100%;
-                        font-weight: bold;
-                      "
-                      >Test Now</b-button
+                    <b-form-invalid-feedback
+                      :state="!form.errors.has('paystack_secret_key')"
                     >
-                  </b-form>
+                      {{ form.errors.get('paystack_secret_key') }}
+                    </b-form-invalid-feedback>
+                  </div>
+
+                  <!--  -->
+                  <div>
+                    <b-form
+                      method="POST"
+                      @submit.prevent="initializePaystack()"
+                      @keydown="form.onKeydown($event)"
+                      @reset.prevent="onReset"
+                    >
+                      <div class="d-flex">
+                        <label class="p-2">Amount</label>
+                        <b-form-input
+                          id="amount"
+                          v-model="form.amount"
+                          value-field="id"
+                          type="number"
+                          placeholder="Enter amount..."
+                          min="0"
+                          style="height: 3.3rem; font-size: 1.8rem"
+                          class="mb-3"
+                          size="lg"
+                        >
+                        </b-form-input>
+                      </div>
+
+                      <b-button
+                        type="submit"
+                        variant="primary"
+                        size="lg"
+                        style="
+                          height: 3.6rem;
+                          font-size: 1.8rem;
+                          margin-top: 1.83rem;
+                          width: 100%;
+                          font-weight: bold;
+                        "
+                        >Test Payment</b-button
+                      >
+                    </b-form>
+                  </div>
                 </b-col>
               </b-row>
             </section>
@@ -226,7 +273,7 @@
             <b-button
               type="submit"
               variant="warning"
-              class="mr-4"
+              class="mr-4 mt-4"
               size="lg"
               style="width: 100%; height: 3.8rem; font-size: 1.8rem"
             >
@@ -259,9 +306,13 @@ export default {
       logo: null,
       stamp: null,
       amount: null,
+
       form: new this.$form({
         logo: null,
         stamp: null,
+        bank: null,
+        account_name: null,
+        account_no: null,
         paystack_secret_key: null,
       }),
       show: true,
@@ -282,6 +333,9 @@ export default {
           this.form.paystack_secret_key = adminWorkspace.paystack_secret_key
           this.logo = adminWorkspace.logo
           this.stamp = adminWorkspace.stamp
+          this.form.bank = adminWorkspace.bank
+          this.form.account_name = adminWorkspace.account_name
+          this.form.account_no = adminWorkspace.account_no
         }
       },
     },
@@ -377,6 +431,9 @@ export default {
               workspaceId: parseInt(this.mainWorkspace.id),
               logo: this.form.logo,
               stamp: this.form.stamp,
+              bank: this.form.bank,
+              account_name: this.form.account_name,
+              account_no: this.form.account_no,
               paystack_secret_key: this.form.paystack_secret_key,
             },
             update: (store, { data: { updateAdminSettings } }) => {
@@ -454,6 +511,7 @@ export default {
 <style lang="scss">
 .settings {
   background-color: #fff;
+  font-size: 1.6rem;
 
   .profile-avatar {
     position: relative;
@@ -492,12 +550,13 @@ export default {
       border-radius: 50%;
     }
   }
-  .paymnet-method {
-    display: flex;
-
-    & .paymnet-input-field {
-      margin-top: 4rem;
-      margin-left: 4rem;
+  .online-payment {
+    & .image {
+      width: 100%;
+      margin-bottom: 2rem;
+      .svg-image {
+        width: 10rem;
+      }
     }
   }
 }

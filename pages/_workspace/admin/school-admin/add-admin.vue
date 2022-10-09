@@ -1,22 +1,20 @@
 <template>
-  <div class="student">
+  <div class="add-admin">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-button
         :to="{
-          name: 'workspace-admin-teacher',
+          name: 'workspace-admin-school-admin',
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
         size="lg"
-        class="add-student mb-4"
+        class="mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <div class="p-4 student__wrapper">
-        <h2 class="d-flex justify-content-center mb-4 mt-4">
-          Register Teacher
-        </h2>
+      <div class="p-4 admin__wrapper">
+        <h2 class="d-flex justify-content-center mb-4 mt-4">Register Admin</h2>
         <hr />
         <b-form
           v-if="show"
@@ -64,9 +62,9 @@
                   />
                 </div>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.photo')"
+                  :state="!form.errors.has('schoolAdminTable.photo')"
                 >
-                  {{ form.errors.get('teacherTable.photo') }}
+                  {{ form.errors.get('schoolAdminTable.photo') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </div>
@@ -94,7 +92,7 @@
               <b-form-group label="First Name">
                 <b-form-input
                   id="firstName"
-                  v-model="form.teacherTable.first_name"
+                  v-model="form.schoolAdminTable.first_name"
                   debounce="500"
                   name="first_name"
                   size="lg"
@@ -103,9 +101,9 @@
                   required
                 ></b-form-input>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.first_name')"
+                  :state="!form.errors.has('schoolAdminTable.first_name')"
                 >
-                  {{ form.errors.get('teacherTable.first_name') }}
+                  {{ form.errors.get('schoolAdminTable.first_name') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -114,7 +112,7 @@
               <b-form-group id="last_name" label="Last Name">
                 <b-form-input
                   id="first_name"
-                  v-model="form.teacherTable.last_name"
+                  v-model="form.schoolAdminTable.last_name"
                   type="text"
                   placeholder="Enter last name"
                   name="last_name"
@@ -122,9 +120,9 @@
                   required
                 ></b-form-input>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.last_name')"
+                  :state="!form.errors.has('schoolAdminTable.last_name')"
                 >
-                  {{ form.errors.get('teacherTable.last_name') }}
+                  {{ form.errors.get('schoolAdminTable.last_name') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -133,7 +131,7 @@
               <b-form-group id="input-group-1" label="middle Name (optional)">
                 <b-form-input
                   id="input-1"
-                  v-model="form.teacherTable.middle_name"
+                  v-model="form.schoolAdminTable.middle_name"
                   type="text"
                   placeholder="Enter middle name"
                   name="last_name"
@@ -165,7 +163,7 @@
               <b-form-group id="input-group-1" label="Phone no:">
                 <b-form-input
                   id="phone"
-                  v-model="form.teacherTable.phone"
+                  v-model="form.schoolAdminTable.phone"
                   type="number"
                   placeholder="Enter phone no."
                   name="phone"
@@ -175,9 +173,9 @@
                   required
                 ></b-form-input>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.phone')"
+                  :state="!form.errors.has('schoolAdminTable.phone')"
                 >
-                  {{ form.errors.get('teacherTable.phone') }}
+                  {{ form.errors.get('schoolAdminTable.phone') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -186,7 +184,7 @@
               <b-form-group label="Qualification">
                 <b-form-input
                   id="qualification"
-                  v-model="form.teacherTable.qualification"
+                  v-model="form.schoolAdminTable.qualification"
                   type="text"
                   placeholder="Enter qualification"
                   name="qualification"
@@ -194,9 +192,9 @@
                   required
                 ></b-form-input>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.qualification')"
+                  :state="!form.errors.has('schoolAdminTable.qualification')"
                 >
-                  {{ form.errors.get('teacherTable.qualification') }}
+                  {{ form.errors.get('schoolAdminTable.qualification') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -223,7 +221,7 @@
             <b-col md="3" class="p-4">
               <b-form-group label="Gender">
                 <b-form-select
-                  v-model="form.teacherTable.gender"
+                  v-model="form.schoolAdminTable.gender"
                   :options="genders"
                   class="mb-3"
                   size="lg"
@@ -245,7 +243,7 @@
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
-                  v-model="form.teacherTable.birthday"
+                  v-model="form.schoolAdminTable.birthday"
                   today-button
                   reset-button
                   close-button
@@ -255,9 +253,9 @@
                   required
                 ></b-form-datepicker>
                 <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.birthday')"
+                  :state="!form.errors.has('schoolAdminTable.birthday')"
                 >
-                  {{ form.errors.get('teacherTable.birthday') }}
+                  {{ form.errors.get('schoolAdminTable.birthday') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -320,7 +318,11 @@
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.userTable.state" class="mb-3" required>
+                  <b-form-select
+                    v-model="form.userTable.state"
+                    class="mb-3"
+                    required
+                  >
                     <b-form-select-option
                       v-for="k in country.state"
                       :key="k.id"
@@ -332,27 +334,20 @@
               </div>
             </b-col>
 
-            <b-col md="3" class="p-4">
-              <div v-if="!state">
-                <b-form-group label="City">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div v-else>
-                <b-form-group label="City">
-                  <b-form-select v-model="form.userTable.city" class="mb-3" required>
-                    <b-form-select-option
-                      v-for="k in state.cities"
-                      :key="k.id"
-                      :value="k.id"
-                      >{{ k.name }}</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
+            <b-col md="4" class="p-4">
+              <b-form-group id="input-group-1" label="City">
+                <b-form-input
+                  id="lga"
+                  v-model="form.userTable.city"
+                  type="text"
+                  placeholder="Enter city"
+                  name="lga"
+                  required
+                ></b-form-input>
+                <b-form-invalid-feedback :state="!form.errors.has('userTable.city')">
+                  {{ form.errors.get('userTable.city') }}
+                </b-form-invalid-feedback>
+              </b-form-group>
             </b-col>
 
             <b-col md="3" class="p-4">
@@ -415,7 +410,7 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
-import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
+import { CREATE_SCHOOL_ADMIN_MUTATION } from '~/graphql/admin/mutations'
 
 export default {
   middleware: 'auth',
@@ -434,7 +429,7 @@ export default {
           bloodGroup: null,
           religion: null,
         },
-        teacherTable: {
+        schoolAdminTable: {
           first_name: '',
           last_name: '',
           middle_name: null,
@@ -501,7 +496,7 @@ export default {
         this.preview_url = e.target.result
       }
       reader.readAsDataURL(file)
-      this.form.teacherTable.photo = file
+      this.form.schoolAdminTable.photo = file
 
       this.isValidFile(file)
     },
@@ -546,11 +541,11 @@ export default {
         await this.$apollo
           .mutate(
             {
-              mutation: CREATE_TEACHER_MUTATION,
+              mutation: CREATE_SCHOOL_ADMIN_MUTATION,
               variables: {
                 workspaceId: parseInt(this.mainWorkspace.id),
                 userTable: this.form.userTable,
-                teacherTable: this.form.teacherTable,
+                schoolAdminTable: this.form.schoolAdminTable,
               },
             },
             {
@@ -562,7 +557,7 @@ export default {
           .then(() => {
             Swal.fire({
               timer: 1500,
-              text: 'teacher added successfully',
+              text: 'School admin added successfully',
               position: 'top-right',
               color: '#fff',
               background: '#4bb543',
@@ -572,7 +567,7 @@ export default {
             })
             this.form.busy = false
             this.$router.push({
-              name: 'workspace-admin-teacher',
+              name: 'workspace-admin-school-admin',
               params: { workspaceId: parseInt(this.mainWorkspace.id) },
             })
           })
@@ -605,7 +600,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.student {
+.add-admin {
   font-size: 1.4rem;
   padding: 2rem;
   .form-control,
@@ -653,7 +648,7 @@ export default {
     }
   }
 
-  .student__wrapper {
+  .admin__wrapper {
     background-color: var(--color-white);
     border-radius: 0.5rem;
     border: none;

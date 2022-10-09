@@ -294,6 +294,7 @@
                           value-field="id"
                           text-field="first_name"
                           :options="teachers"
+                          required
                           class="mb-3"
                           size="lg"
                         >
@@ -318,6 +319,7 @@
                         type="submit"
                         variant="primary"
                         class="mr-4"
+                        :disabled="busy"
                         size="lg"
                       >
                         <b-spinner
@@ -350,7 +352,7 @@ import {
   DELETE_SUBJECT_MUTATION,
   ASSIGN_SUBJECT_TO_TEACHER_MUTATION,
 } from '@/graphql/subjects/mutations'
-import { TEACHERS_QUERIES, TEACHER_QUERIES } from '~/graphql/teachers/queries'
+import { TEACHERS_QUERIES } from '~/graphql/teachers/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
@@ -412,6 +414,7 @@ export default {
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
+          klase_id: parseInt(this.form.class)
         }
       },
     },

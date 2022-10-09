@@ -15,6 +15,7 @@
 <script>
 import { mapActions } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
+import { useToggleMenu } from '@/stores/toggle'
 import { GUARDIAN_DASHBOARD_QUERIES } from '~/graphql/guardians/queries'
 import { STUDENT_DASHBOARD_QUERIEX } from '~/graphql/students/queries'
 import { TEACHER_DASHBOARD_QUERIES } from '~/graphql/teachers/queries'
@@ -40,7 +41,7 @@ export default {
       query: USER_WORKSPACE_QUERY,
       variables: { id: parseInt(this.$auth.user.id) },
     })
-    console.log(userWorkspace)
+
     const {
       data: { guardiansDashboard },
     } = await apolloClient.query({
@@ -57,6 +58,7 @@ export default {
         workspaceId: parseInt(userWorkspace.workspace.id),
       },
     })
+    
     const {
       data: { studentsDashboard },
     } = await apolloClient.query({
@@ -67,19 +69,37 @@ export default {
     })
 
     if (
-      this.$auth.user.email === 'tojurex@yahoo.com' &&
-      userWorkspace.workspace.slug === 'defaultWorkspace'
+      this.$auth.user.email === 'tojufutughe@gmail.com' &&
+      userWorkspace.workspace.slug === 'defaultworkspace'
     ) {
       return redirect({
         name: 'workspace-school',
         params: { workspace: userWorkspace.workspace.slug },
       })
-    } else {
+    } else if (
+      userWorkspace.workspace.status === 1 &&
+      this.$auth.user.email !== 'tojufutughe@gmail.com' &&
+      userWorkspace.workspace.slug !== 'defaultWorkspace'
+    ) {
       return redirect({
         name: 'workspace-dashboard',
         params: { workspace: userWorkspace.workspace.slug },
       })
+    } else if (
+      userWorkspace.workspace.status === 0 &&
+      this.$auth.user.email !== 'tojufutughe@gmail.com' &&
+      userWorkspace.workspace.slug !== 'defaultWorkspace'
+    ) {
+      return redirect({
+        name: 'workspace-account-status',
+        params: { workspace: userWorkspace.workspace.slug },
+      })
     }
+  },
+
+  created() {
+    window.addEventListener('resize', this.checkScreen)
+    this.checkScreen()
   },
   // fetchDelay: 8000,
 
@@ -100,6 +120,7 @@ export default {
 
   methods: {
     ...mapActions(useWorkspaceStore, ['setWorkspace']),
+    ...mapActions(useToggleMenu, ['toggleIcon']),
     async setWorkspaces() {
       const {
         apolloProvider: { defaultClient: apolloClient },
@@ -112,6 +133,18 @@ export default {
         variables: { id: parseInt(this.$auth.user.id) },
       })
       this.setWorkspace(userWorkspace.workspace)
+    },
+    
+
+    checkScreen() {
+      this.windowWidth = window.innerWidth
+      if (this.windowWidth <= 750) {
+        
+        this.toggleIcon(false)
+        return
+      }
+      this.toggleIcon(true)
+      return
     },
   },
 }
@@ -126,7 +159,7 @@ export default {
   .main {
     flex: 1;
     overflow-y: auto;
-    overflow-x: hidden; 
+    overflow-x: hidden;
   }
 }
 </style>

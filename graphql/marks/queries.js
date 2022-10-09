@@ -31,6 +31,7 @@ export const STUDENT_MARK_RESULT_QUERIES = gql`
     $term_id: Int!
     $session_id: Int!
     $section_id: Int
+    $status: String
     $workspaceId: Int
   ) {
     studentMarkResult(
@@ -39,6 +40,7 @@ export const STUDENT_MARK_RESULT_QUERIES = gql`
       term_id: $term_id
       session_id: $session_id
       section_id: $section_id
+      status: $status
       workspaceId: $workspaceId
       
     ) {

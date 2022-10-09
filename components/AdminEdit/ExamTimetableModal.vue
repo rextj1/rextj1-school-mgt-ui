@@ -91,6 +91,7 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { UPDATE_EXAM_TIMETABLE_MUTATION } from '~/graphql/examTimetables/mutations'
 import { EXAM_TIMETABLE_QUERY } from '~/graphql/examTimetables/queries'
+import Swal from 'sweetalert2'
 export default {
   props: {
     slug: Array,
@@ -199,20 +200,20 @@ export default {
         })
         .then(() => {
           this.form.busy = false
-           Swal.fire({
-          text: 'timetable updated successfully',
-          position: 'top-right',
-          color: '#fff',
-          background: '#d9534f',
-          toast: false,
-          backdrop: false,
-        })
+          Swal.fire({
+            timer: 1500,
+            text: 'exam timetable updated successfully',
+            position: 'top-right',
+            color: '#fff',
+            background: '#5cb85c',
+            toast: false,
+            backdrop: false,
+            showConfirmButton: false
+          })
 
           this.$bvModal.hide(this.closeModal)
         })
-        .catch((e) => {
-          console.log(e)
-        })
+        .catch(() => {})
     },
   },
 }

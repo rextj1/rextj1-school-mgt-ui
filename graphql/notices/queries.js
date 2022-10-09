@@ -10,3 +10,11 @@ export const NOTICE_QUERIES = gql`
   }
   ${NOTICE_FIELDS_FRAGMENT}
 `
+export const SCHOOL_NOTICE_QUERIES = gql`
+  query SchoolNoticesWorkspaceQuery($workspaceId: Int!) {
+    schoolNotices(workspaceId: $workspaceId) {
+      ...NoticeFields
+    }
+  }
+  ${NOTICE_FIELDS_FRAGMENT}
+`

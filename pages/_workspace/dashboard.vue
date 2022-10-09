@@ -8,79 +8,72 @@
           role.name == 'main admin' ||
           role.name == 'guardian' ||
           role.name == 'student' ||
-          role.name == 'teacher'
+          role.name == 'teacher' ||
+          role.name == 'admin'
         "
       >
         <b-row no-gutters>
           <b-col class="p-3">
-            <div class="card card1 shadow p-3">
-              <div class="card-body">
-                <img
-                  src="@/assets/svg/users-svgrepo.svg"
-                  width="100"
-                  class="red"
-                  alt=""
-                />
+            <b-card class="card1 p-3 shadow">
+              <img
+                src="@/assets/svg/users-svgrepo.svg"
+                width="100"
+                class="red"
+                alt=""
+              />
 
-                <div class="xxx">
-                  <h3>{{ studentsDashboard.length }}</h3>
-                  <h2 class="mr-1">Students</h2>
-                </div>
+              <div class="xxx">
+                <h3>{{ studentsDashboard.length }}</h3>
+                <h2 class="mr-1">Students</h2>
               </div>
-            </div>
+            </b-card>
           </b-col>
 
           <b-col class="p-3">
-            <div class="card card2 shadow p-3">
-              <div class="card-body">
-                <img
-                  src="@/assets/svg/people-svgrepo.svg"
-                  width="100"
-                  class="red"
-                  alt=""
-                />
-                <div class="xxx">
-                  <h3>{{ teachersDashboard.length }}</h3>
-                  <h2>Teachers</h2>
-                </div>
+            <b-card class="card2 shadow p-3">
+              <img
+                src="@/assets/svg/people-svgrepo.svg"
+                width="100"
+                class="red"
+                alt=""
+              />
+              <div class="xxx">
+                <h3>{{ teachersDashboard.length }}</h3>
+                <h2>Teachers</h2>
               </div>
-            </div>
+            </b-card>
           </b-col>
 
           <b-col class="p-3">
-            <div class="card card3 shadow p-3">
-              <div class="card-body">
-                <img
-                  src="@/assets/svg/users-svgrepo.svg"
-                  width="100"
-                  class="red"
-                  alt=""
-                />
-                <div class="xxx">
-                  <h3>{{ guardiansDashboard.length }}</h3>
-                  <h2>Guardians</h2>
-                </div>
+            <b-card class="card card3 shadow p-3">
+              <img
+                src="@/assets/svg/users-svgrepo.svg"
+                width="100"
+                class="red"
+                alt=""
+              />
+              <div class="xxx">
+                <h3>{{ guardiansDashboard.length }}</h3>
+                <h2>Guardians</h2>
               </div>
-            </div>
+            </b-card>
           </b-col>
 
           <span v-for="role in user.roles" :key="role.id">
             <span v-if="role.name == 'super admin'">
               <b-col class="p-3">
-                <div class="card card3 shadow p-3">
-                  <div class="card-body">
-                    <img
-                      src="@/assets/svg/users-svgrepo.svg"
-                      width="100"
-                      class="red"
-                      alt=""
-                    />
-                    <div class="xxx">
-                      <h3>{{ guardiansDashboard.length }}</h3>
-                      <h2>Parents</h2>
-                    </div>
+                <b-card class="card3 shadow p-3">
+                  <img
+                    src="@/assets/svg/users-svgrepo.svg"
+                    width="100"
+                    class="red"
+                    alt=""
+                  />
+                  <div class="xxx">
+                    <h3>{{ guardiansDashboard.length }}</h3>
+                    <h2>Parents</h2>
                   </div>
-                </div>
+                </b-card>
               </b-col>
             </span>
           </span>
@@ -88,53 +81,48 @@
 
         <b-row no-gutters>
           <b-col md="6" class="p-3 pie-chart">
-            <div class="card-body cardA">
+            <b-card class="cardA">
               <apexchart
                 width="380"
                 type="pie"
                 :options="options"
                 :series="admin"
               ></apexchart>
-            </div>
+            </b-card>
           </b-col>
 
           <b-col md="6" class="p-3 donut-chart">
-            <div class="card-body cardA">
+            <b-card class="cardA">
               <apexchart
                 width="380"
                 type="donut"
                 :options="options"
                 :series="admin"
               ></apexchart>
-            </div>
+            </b-card>
           </b-col>
         </b-row>
       </span>
     </div>
 
-    <b-row no-gutters>
-      <b-col md="12">
-        <div class="cardB shadow p-2">
-          <div class="mt-4">
-            <b-tabs card>
-              <b-tab active class="card-overflow">
-                <template #title>
-                  <div class="d-flex align-items-center">
-                    <b-spinner type="grow" variant="danger" small></b-spinner
-                    ><strong> Notice Board</strong>
-                  </div>
-                </template>
-                <EventNoticeSchoolNotice />
-              </b-tab>
+    <div class="cardB shadow p-2">
+      <b-tabs card>
+        <b-tab active class="card-overflow">
+          <template #title>
+            <div class="d-flex align-items-center">
+              <b-spinner type="grow" variant="danger" small></b-spinner
+              ><strong> Notice Board</strong>
+            </div>
+          </template>
+          <EventNoticeSchoolNotice />
+        </b-tab>
 
-              <b-tab lazy class="card-overflow">
-                <template #title> School Event </template>
-                <EventNoticeSchoolEvent />
-              </b-tab>
-            </b-tabs>
-          </div>
-        </div> </b-col
-    ></b-row>
+        <b-tab lazy class="card-overflow">
+          <template #title> School Event </template>
+          <EventNoticeSchoolEvent />
+        </b-tab>
+      </b-tabs>
+    </div>
   </div>
 </template>
 
@@ -330,20 +318,6 @@ export default {
     .nav-link.active:hover {
       border-top: 5px solid limegreen;
     }
-  }
-
-  .input-group > .input-group-append > .btn,
-  .input-group > .input-group-append > .input-group-text,
-  .input-group > .input-group-prepend:not(:first-child) > .btn,
-  .input-group > .input-group-prepend:not(:first-child) > .input-group-text,
-  .input-group > .input-group-prepend:first-child > .btn:not(:first-child),
-  .input-group
-    > .input-group-prepend:first-child
-    > .input-group-text:not(:first-child) {
-    background: var(--color-primary);
-    color: #fff;
-    font-size: 1rem;
-    text-align: justify;
   }
 }
 </style>

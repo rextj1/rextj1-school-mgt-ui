@@ -15,24 +15,37 @@
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="student shadow">
-        <h1>About {{ student.last_name }}</h1>
-        <div class="d-flex justify-content-center mb-4">
+      <b-card class="user shadow">
+        <div v-if="student.user.photo == null" class="text-center mb-4 mt-4">
           <b-img
-            src="~/assets/images/teacher.jpeg"
+            src="@/assets/svg/user-avatar.svg"
+            thumbnail
+            fluid
+            alt="School image"
+            width="150"
+          ></b-img>
+        </div>
+
+        <div v-else class="text-center mb-4 mt-4">
+          <b-img
+            :src="`${$config.APIRoot}/storage/user/${student.user.photo}`"
             thumbnail
             fluid
             alt="Responsive image"
-            width="230"
+            width="150"
           ></b-img>
         </div>
-        <b-row no-gutters class="sm-query">
-          <b-col md="6" class="first-detail p-4">
+
+        <div class="d-flex justify-content-between p-5">
+          <div>
             <p>Full Name</p>
             <p>Phone no:</p>
-            <p>Qualifications</p>
-            <p>Code</p>
+            <p>Admission no:</p>
+            <p>class</p>
+            <p>Section</p>
+            <p>Registration Code</p>
             <p>Gender</p>
+            <p>Email</p>
             <p>Country</p>
             <p>State</p>
             <p>L.G.A</p>
@@ -43,15 +56,20 @@
                 >Subjects Assigned</b-badge
               >
             </p>
-          </b-col>
-          <b-col md="6" class="first-details p-4">
+          </div>
+          <div style="font-weight: bold">
             <p>
               {{ student.last_name }} {{ student.first_name }}
               {{ student.middle_name | '' }}
             </p>
             <p>{{ student.phone }}</p>
-        
-            <p>{{ student.code }}</p>
+
+            
+            <p>{{ student.adm_no }}</p>
+             <p>{{ student.klase.name }}</p>
+             <p>{{ student.code }}</p>
+
+
             <p>{{ student.guardian_name }}</p>
             <p>{{ student.guardian_no }}</p>
             <p>{{ student.guardian_email }}</p>
@@ -76,35 +94,17 @@
             <p>
               {{ student.user.state.name }}
             </p>
+             <p>
+              {{ student.user.city }}
+            </p>
             <p>
               {{ student.user.lga }}
             </p>
-            <!-- <p>{{ student.facebook }}</p> -->
+
             <p>{{ student.klase.name }}</p>
-            <!-- <h3 v-for="klase in student.klase" :key="klase">
-              <p>
-                <b-badge
-                  style="line-height: 1.6"
-                  variant="warning"
-                  class="px-2"
-                  :id="klase.id"
-                  >{{ klase.name }}</b-badge
-                >
-              </p>
-              <b-popover :target="klase.id" triggers="hover click">
-                <b-nav vertical>
-                  <b-nav-item
-                    v-for="subject in klase.subjects"
-                    :key="subject.id"
-                  >
-                    <div style="font-size: 1.4rem">{{ subject.subject }}</div>
-                  </b-nav-item>
-                </b-nav>
-              </b-popover>
-            </h3> -->
-          </b-col>
-        </b-row>
-      </b-jumbotron></template
+          </div>
+        </div>
+      </b-card></template
     >
   </div>
 </template>

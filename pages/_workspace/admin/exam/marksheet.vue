@@ -62,12 +62,7 @@
                   class="mb-3"
                   size="lg"
                 >
-                  <!-- This slot appears above the options from 'options' prop -->
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >-- Section term--</b-form-select-option
-                    >
-                  </template>
+                 
 
                   <!-- These options will appear after the ones from 'options' prop -->
                 </b-form-select>
@@ -136,7 +131,11 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="p-4" style="background-color: #fff">
+      <div
+        v-show="timetableDropdownClass"
+        class="p-4"
+        style="background-color: #fff"
+      >
         <div>
           <ExamEditExamScores
             v-if="marks"
@@ -171,6 +170,7 @@ export default {
     return {
       marks: null,
       klases: [],
+      sections: [],
       isBusy: false,
       timetableDropdownClass: false,
       form: {
@@ -213,6 +213,7 @@ export default {
       query: SECTION_QUERIES,
       variables() {
         return {
+          klase_id: parseInt(this.form.class),
           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
@@ -283,9 +284,7 @@ export default {
           .then(() => {
             this.isBusy = false
           })
-          .catch(() => {
-            
-          })
+          .catch(() => {})
 
         setTimeout(() => {
           this.$apollo.addSmartQuery('marks', {

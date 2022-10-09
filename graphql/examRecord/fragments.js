@@ -8,6 +8,7 @@ export const EXAM_RECORD_FIELDS_FRAGMENT = gql`
     cum_total
     cum_avg
     position
+    cum_position
     p_comment
     t_comment
     ps

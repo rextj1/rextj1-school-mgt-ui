@@ -22,9 +22,6 @@
             <b-row no-gutters>
               <b-col md="12">
                 <h3 class="text-center mb-4">
-                  <!-- <div v-for="klase in examTimetables[0]" :key="klase.id">
-                        {{ klase.name }}
-                      </div> -->
                   {{ editCurrentClass[1] }} (Exam Timetable)
                 </h3>
                 <div class="card-body">
@@ -72,7 +69,6 @@ export default {
   data() {
     return {
       klaseId: '',
-      klaseName: '',
       examTimetables: [],
 
       fields: [
@@ -95,6 +91,7 @@ export default {
       variables() {
         return {
           klase_id: parseInt(this.editCurrentClass[0]),
+          section_id: parseInt(this.editCurrentClass[2]),
           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },

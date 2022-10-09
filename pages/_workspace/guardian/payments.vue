@@ -15,10 +15,7 @@
 
             <div v-else>
               <b-form-group label="Select Student">
-                <b-form-select
-                  v-model="form.student_id"
-                  class="mb-3 option-width"
-                >
+                <b-form-select v-model="form.student_id" class="mb-3">
                   <b-form-select-option
                     v-for="student in user.guardian.students"
                     :key="student.id"
@@ -49,7 +46,7 @@
 
       <div v-show="timetableDropdownClass">
         <PaymentGuardianPaymentRecords
-          v-if="DuePaymentrecords || PaidPaymentrecords"
+          v-if="DuePaymentrecords"
           :PaidPaymentrecords="PaidPaymentrecords"
           :DuePaymentrecords="DuePaymentrecords"
           :email="user.guardian.email"
@@ -62,9 +59,7 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
-import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { STUDENT_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
-import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { USER_GUARDIAN_QUERY } from '~/graphql/guardians/queries'
 
 export default {
@@ -73,7 +68,7 @@ export default {
     return {
       PaidPaymentrecords: null,
       DuePaymentrecords: null,
-      studentPaymentRecords: {},
+      studentPaymentRecords: [],
       timetableDropdownClass: true,
       isBusy: false,
       form: {
@@ -88,17 +83,6 @@ export default {
   },
 
   apollo: {
-    terms: {
-      query: TERM_QUERIES,
-    },
-    sessions: {
-      query: SESSION_QUERIES,
-      variables() {
-        return {
-          workspaceId: parseInt(this.mainWorkspace.id),
-        }
-      },
-    },
     user: {
       query: USER_GUARDIAN_QUERY,
       variables() {
@@ -110,10 +94,7 @@ export default {
   },
   computed: {
     nowLoading() {
-      return (
-        this.$apollo.queries.terms.loading &&
-        this.$apollo.queries.sessions.loading
-      )
+      return this.$apollo.queries.user.loading
     },
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
@@ -134,14 +115,13 @@ export default {
           query: STUDENT_PAYMENT_RECORD_QUERIES,
           variables: {
             student_id: parseInt(this.form.student_id),
-            session_id: parseInt(this.form.session),
-            term_id: parseInt(this.form.term),
             workspaceId: parseInt(this.mainWorkspace.id),
             status: 'Due',
           },
           result({ loading, data }, key) {
             if (!loading) {
               this.DuePaymentrecords = data.studentPaymentRecords
+              console.log(this.DuePaymentrecords.length)
             }
           },
         })
@@ -150,8 +130,6 @@ export default {
           query: STUDENT_PAYMENT_RECORD_QUERIES,
           variables: {
             student_id: parseInt(this.form.student_id),
-            session_id: parseInt(this.form.session),
-            term_id: parseInt(this.form.term),
             workspaceId: parseInt(this.mainWorkspace.id),
             status: 'Paid',
           },
@@ -173,14 +151,6 @@ export default {
 .view-payment {
   font-size: 1.6rem;
 
-  .option-width {
-    width: 35rem;
-
-    @include media-breakpoint-down(sm) {
-      width: 25rem;
-    }
-  }
-
   .custom-select:focus {
     box-shadow: none;
   }
@@ -189,7 +159,11 @@ export default {
   .mb-3 {
     height: 4rem;
     font-size: 1.4rem;
+    width: 35rem;
     color: #000;
+    @include media-breakpoint-down(sm) {
+      width: 25rem;
+    }
   }
 }
 </style>

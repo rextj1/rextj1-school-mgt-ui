@@ -125,12 +125,12 @@
                   <template #cell(actions)="row" class="d-flex">
                     <div class="d-flex">
                       <b-button
-                        v-if="row.item.published == false"
+                        v-if="row.item.status == false"
                         size="smd"
-                        variant="warning"
+                        variant="success"
                         class="mr-3 d-flex"
                         @click="
-                          handlePublishNotice(row.item.id, row.item.published)
+                          handlePublishNotice(row.item.id, row.item.status)
                         "
                       >
                         <b-spinner
@@ -144,12 +144,12 @@
                       </b-button>
 
                       <b-button
-                        v-if="row.item.published == true"
+                        v-if="row.item.status == true"
                         size="smd"
-                        variant="primary"
+                        variant="danger"
                         class="mr-3 d-flex"
                         @click="
-                          handlePublishNotice(row.item.id, row.item.published)
+                          handlePublishNotice(row.item.id, row.item.status)
                         "
                       >
                         <b-spinner
@@ -283,8 +283,6 @@ export default {
       invokedForEdit: null,
       form: new this.$form({
         description: null,
-        title: null,
-        photo: null,
         date: null,
         busy: false,
       }),
@@ -462,8 +460,7 @@ export default {
             showConfirmButton: false,
           })
         })
-        .catch((e) => {
-          console.log(e)
+        .catch(() => {
         })
         .finally(() => {
           this.$bvModal.hide('DeleteModal')
@@ -591,7 +588,7 @@ export default {
               })
 
               var publishedNotice = data.notices.filter(
-                (m) => m.published !== noticeId
+                (m) => m.status !== noticeId
               )
 
               publishedNotice = publishNotice
@@ -614,7 +611,7 @@ export default {
             this.form.date = null
             Swal.fire({
               text: `${
-                published === 'published' ? 'Published' : 'Unpublished'
+                published === false ? 'Published' : 'Unpublished'
               } successfully!`,
               position: 'top-right',
               color: '#fff',

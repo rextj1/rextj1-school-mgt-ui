@@ -3,7 +3,7 @@
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <PaymentStudentPaymentRecords
-        v-if="DuePaymentrecords || PaidPaymentrecords"
+        v-if="DuePaymentrecords"
         :PaidPaymentrecords="PaidPaymentrecords"
         :DuePaymentrecords="DuePaymentrecords"
       />
@@ -20,9 +20,9 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      PaidPaymentrecords: null,
+      PaidPaymentrecords: [],
       DuePaymentrecords: null,
-      studentPaymentRecords: {},
+      studentPaymentRecords: [],
     }
   },
 
@@ -31,7 +31,6 @@ export default {
       query: STUDENT_PAYMENT_RECORD_QUERIES,
       variables: {
         student_id: parseInt(this.user.student.id),
-
         workspaceId: parseInt(this.mainWorkspace.id),
         status: 'Due',
       },

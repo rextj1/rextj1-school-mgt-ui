@@ -1,8 +1,8 @@
 <template>
   <div class="p-4">
-    <div v-if="nowLoading"><Preload /></div>
-    <div class="libarian__wrapper" v-else>
-      <div class="margin-down">
+    <template v-if="nowLoading"><Preload /></template>
+    <template class="" v-else>
+     
         <!-- expense type -->
         <b-card no-body>
           <b-tabs card>
@@ -34,7 +34,7 @@
               </div>
             </b-tab>
 
-            <b-tab lazy class="p-5">
+            <b-tab lazy class="p-5 mt-5">
               <template #title>
                 <b-icon icon="plus" /><strong>Create Grade</strong>
               </template>
@@ -49,7 +49,7 @@
                     <label for="input-small" class="label-padding">Name:</label>
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-input
                       id="name"
                       v-model="form.name"
@@ -65,14 +65,14 @@
                   </b-col>
                 </b-row>
 
-                <b-row>
+                <b-row class="mt-3">
                   <b-col md="1">
                     <label for="input-small" class="label-padding"
                       >Mark From:</label
                     >
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-input
                       id="mark_from"
                       v-model="form.mark_from"
@@ -90,14 +90,14 @@
                   </b-col>
                 </b-row>
 
-                <b-row>
+                <b-row class="mt-3">
                   <b-col md="1">
                     <label for="input-small" class="label-padding"
                       >Mark To:</label
                     >
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-input
                       id="name"
                       v-model="form.mark_to"
@@ -115,14 +115,14 @@
                   </b-col>
                 </b-row>
 
-                <b-row>
+                <b-row class="mt-3">
                   <b-col md="1">
                     <label for="input-small" class="label-padding"
                       >Remarks:</label
                     >
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-input
                       id="name"
                       v-model="form.remark"
@@ -162,14 +162,14 @@
             </b-tab>
           </b-tabs>
         </b-card>
-      </div>
+      
 
       <ExamGradeModal
         v-if="invokeGradeForEdit"
         v-model="showGradeModal"
         :grade="invokeGradeForEdit"
       />
-    </div>
+    </template>
   </div>
 </template>
 
@@ -261,10 +261,8 @@ export default {
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
-             
 
               data.grades.push(createGrade)
-             
 
               // Write our data back to the cache.
               // Write back to the cache
@@ -322,83 +320,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.libarian__wrapper {
-  padding: 2rem;
-  font-size: 1.4rem;
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  border: none;
-
-  .margin-down {
-    .label-padding {
-      padding-right: 15rem;
-      margin-bottom: 5rem;
-
-      @include media-breakpoint-down(sm) {
-        padding-right: 0;
-        margin-bottom: 0;
-      }
-    }
-
-    .custom-select:focus,
-    .form-control.focus,
-    .form-control:focus {
-      box-shadow: none;
-    }
-
-    .custom-select,
-    .form-control,
-    .mb-3 {
-      height: 4rem;
-      font-size: 1.4rem;
-      color: #000;
-      width: 40.6%;
-
-      @include media-breakpoint-down(sm) {
-        width: 100%;
-        margin-bottom: 2rem;
-      }
-    }
-  }
-  .table-down {
-    padding: 4rem;
-
-    .table {
-      margin-bottom: 4rem;
-    }
-  }
-
-  .custom-select-lg .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-
-  .card-body {
-    padding: 0;
-    .card-student {
-      border: none;
-      border-radius: 0.5rem;
-      height: auto;
-
-      .input-group > .input-group-append > .btn,
-      .input-group > .input-group-append > .input-group-text {
-        background: var(--color-primary);
-        color: #fff;
-        font-size: 1rem !important;
-      }
-      .input-group:not(.has-validation) > .custom-select:not(:last-child),
-      .input-group > .form-control:not(:first-child),
-      .input-group > .custom-select:not(:first-child),
-      .custom-select {
-        height: 3rem;
-        font-size: 1.2rem;
-      }
-      .form-control,
-      .mb-3 {
-        height: 3rem;
-        font-size: 1.2rem;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

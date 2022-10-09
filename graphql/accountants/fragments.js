@@ -14,6 +14,7 @@ export const ACCOUNTANT_FIELDS_FRAGMENT = gql`
     photo
     birthday
     qualification
+    employment
     user {
       ...UxerFields
     }
@@ -33,5 +34,6 @@ export const ACCOUNTANT_USER_FRAGMENT = gql`
     photo
     birthday
     qualification
+    employment
   }
 `

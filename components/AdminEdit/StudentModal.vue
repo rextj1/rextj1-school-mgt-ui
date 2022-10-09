@@ -331,8 +331,8 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
-              <b-form-group label="Date of birth">
+            <b-col md="5" class="p-4">
+              <b-form-group label="Date of Birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
                   v-model="form.student.birthday"
@@ -375,7 +375,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="3" class="p-4">
               <b-form-group label="Current Term">
                 <b-form-select
                   v-model="form.student.term"
@@ -518,31 +518,20 @@
               </div>
             </b-col>
 
-            <b-col md="4" class="p-4">
-              <div v-if="!state">
-                <b-form-group label="City">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div v-else>
-                <b-form-group label="City">
-                  <b-form-select
-                    v-model="form.userStudent.city"
-                    class="mb-3"
-                    required
-                  >
-                    <b-form-select-option
-                      v-for="k in state.cities"
-                      :key="k.id"
-                      :value="k.id"
-                      >{{ k.name }}</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
+              <b-col md="4" class="p-4">
+              <b-form-group id="input-group-1" label="City">
+                <b-form-input
+                  id="city"
+                  v-model="form.userStudent.city"
+                  type="text"
+                  placeholder="Enter city"
+                  name="city"
+                  required
+                ></b-form-input>
+                <b-form-invalid-feedback :state="!form.errors.has('userStudent.city')">
+                  {{ form.errors.get('userStudent.city') }}
+                </b-form-invalid-feedback>
+              </b-form-group>
             </b-col>
 
             <b-col md="4" class="p-4">
@@ -736,6 +725,7 @@ export default {
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
+          klase_id: parseInt(this.form.student.klase),
         }
       },
     },
@@ -779,7 +769,7 @@ export default {
           this.form.id = parseInt(data.student.id)
           this.form.userStudent.country = data.student.user.country.id
           this.form.userStudent.state = data.student.user.state.id
-          this.form.userStudent.city = data.student.user.city.id
+          this.form.userStudent.city = data.student.user.city
           this.form.userStudent.religion = data.student.user.religion
           this.form.userStudent.bloodGroup =
             data.student.user.blood_group != null
@@ -868,7 +858,7 @@ export default {
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
-              data.updateStudent = updateStudent
+              data.student = updateStudent
 
               // Mutate cache result
 

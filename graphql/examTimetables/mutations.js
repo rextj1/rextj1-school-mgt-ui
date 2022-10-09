@@ -10,6 +10,7 @@ export const CREATE_EXAM_TIMETABLE_MUTATION = gql`
     $time: String
     $date: String
     $klase_id: Int!
+    $section_id: Int!
     $workspaceId: Int
   ) {
     createExamTimetable(
@@ -21,6 +22,7 @@ export const CREATE_EXAM_TIMETABLE_MUTATION = gql`
       time: $time
       date: $date
       klase_id: $klase_id
+      section_id: $section_id
       workspaceId: $workspaceId
     ) {
       id

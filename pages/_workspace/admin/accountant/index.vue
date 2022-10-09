@@ -5,8 +5,9 @@
     </div>
     <div v-else>
       <b-button
+        v-if="accountants.length < 3"
         :to="{
-          name: 'workspace-admin-accountant-addAccountant',
+          name: 'workspace-admin-accountant-add-accountant',
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"

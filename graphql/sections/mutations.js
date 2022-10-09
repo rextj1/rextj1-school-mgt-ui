@@ -1,10 +1,18 @@
 import gql from 'graphql-tag'
 
 export const CREATE_SECTION_MUTATION = gql`
-  mutation createSectionMutation($name: String!, $workspaceId: Int) {
-    createSection(name: $name, workspaceId: $workspaceId) {
+  mutation createSectionMutation(
+    $name: String!
+    $workspaceId: Int
+    $klase_id: Int!
+  ) {
+    createSection(name: $name, workspaceId: $workspaceId, klase_id: $klase_id) {
       id
       name
+      klase {
+        id
+        name
+      }
     }
   }
 `
@@ -13,6 +21,10 @@ export const UPDATE_SECTION_MUTATION = gql`
     updateSection(id: $id, name: $name, workspaceId: $workspaceId) {
       id
       name
+      klase {
+        id
+        name
+      }
     }
   }
 `

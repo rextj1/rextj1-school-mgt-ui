@@ -2,33 +2,70 @@
   <div class="p-4 admin-timetable-wrapper">
     <template v-if="$apollo.queries.klases.loading"><Preload /></template>
     <template v-else>
-      <b-card class="px-3 mb-4 d-flex">
-        <b-row no-gutters>
-          <b-col md="6">
-            <b-form-group label="Current Class:">
-              <b-form-select
-                id="klase"
-                v-model="form.class"
-                value-field="id"
-                text-field="name"
-                :options="klases"
-                class="mb-3"
-                size="smd"
-                required
-                @change="timetableDropdown"
-              >
-                <!-- This slot appears above the options from 'options' prop -->
-                <template #first>
-                  <b-form-select-option :value="null" disabled
-                    >-- select class --</b-form-select-option
-                  >
-                </template>
+      <b-card class="mb-4 d-flex">
+        <b-form @submit.prevent="timetableDropdown">
+          <b-row no-gutters>
+            <b-col md="3">
+              <b-form-group label="Current Class:">
+                <b-form-select
+                  id="klase"
+                  v-model="form.class"
+                  value-field="id"
+                  text-field="name"
+                  :options="klases"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select class --</b-form-select-option
+                    >
+                  </template>
 
-                <!-- These options will appear after the ones from 'options' prop -->
-              </b-form-select>
-            </b-form-group>
-          </b-col>
-        </b-row>
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="3" class="ml-2">
+              <b-form-group label="Current Section:">
+                <b-form-select
+                  id="klase"
+                  v-model="form.section"
+                  value-field="id"
+                  text-field="name"
+                  :options="sections"
+                  size="lg"
+                  required
+                >
+                  <!-- This slot appears above the options from 'options' prop -->
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >-- select section --</b-form-select-option
+                    >
+                  </template>
+
+                  <!-- These options will appear after the ones from 'options' prop -->
+                </b-form-select>
+              </b-form-group>
+            </b-col>
+
+            <b-button
+              type="submit"
+              variant="primary"
+              size="lg"
+              style="height: 3.75rem; margin-top: 2.9rem"
+              :disabled="isBusy"
+              ><b-spinner
+                class="mr-1 mb-1"
+                small
+                variant="light"
+                v-if="isBusy"
+              />Submit</b-button
+            >
+          </b-row>
+        </b-form>
       </b-card>
 
       <div
@@ -41,7 +78,7 @@
             <b-tab active @click="hideMenu">
               <template #title>
                 <strong>Create Timetable</strong>
-                <b-icon scale="0.8" icon="caret-down-fill" />
+                <b-icon scale="0.8" icon="plus" />
               </template>
 
               <b-row no-gutters>
@@ -78,7 +115,7 @@
                               variant="danger"
                               size="lg"
                               class="ml-2"
-                              @click="deleteItem(data.item.id)"
+                              @click="handleDeleteTimetable(data.item)"
                               ><b-spinner
                                 variant="light"
                                 small
@@ -105,7 +142,6 @@
                 </b-col>
               </b-row>
 
-
               <div class="exam-timetble mt-4">
                 <b-form
                   v-show="show"
@@ -129,32 +165,46 @@
                       <tr>
                         <th scope="row">
                           <input
-                          class="form-control form-control-sm"
+                            class="form-control form-control-sm"
                             v-model="form.time"
-                           
                             type="text"
                           />
                         </th>
 
                         <th scope="row">
                           <input
-                          class="form-control form-control-sm" v-model="form.monday" type="text" />
+                            class="form-control form-control-sm"
+                            v-model="form.monday"
+                            type="text"
+                          />
                         </th>
                         <th scope="row">
                           <input
-                          class="form-control form-control-sm" v-model="form.tuesday" type="text" />
+                            class="form-control form-control-sm"
+                            v-model="form.tuesday"
+                            type="text"
+                          />
                         </th>
                         <th scope="row">
                           <input
-                          class="form-control form-control-sm" v-model="form.wednesday" type="text" />
+                            class="form-control form-control-sm"
+                            v-model="form.wednesday"
+                            type="text"
+                          />
                         </th>
                         <th scope="row">
                           <input
-                          class="form-control form-control-sm" v-model="form.thursday" type="text" />
+                            class="form-control form-control-sm"
+                            v-model="form.thursday"
+                            type="text"
+                          />
                         </th>
                         <th scope="row">
                           <input
-                          class="form-control form-control-sm" v-model="form.friday" type="text" />
+                            class="form-control form-control-sm"
+                            v-model="form.friday"
+                            type="text"
+                          />
                         </th>
                       </tr>
                     </tbody>
@@ -205,11 +255,42 @@
 
               <component
                 :is="activeTab"
-                :edit-current-class="[dynamicClass, klaseName]"
+                :edit-current-class="[dynamicClass, klaseName,form.section]"
               />
             </b-tab>
           </b-tabs>
         </b-card>
+
+        <!-- delete modal -->
+        <b-modal id="DeleteModal" centered hide-header hide-footer>
+          <div class="p-5 text-center">
+            <Spinner v-if="isDeleting" size="4" />
+            <template v-else>
+              <h5>Confirm delete timetable?</h5>
+
+              <p>This action cannot be undone.</p>
+
+              <div>
+                <b-button
+                  variant="light"
+                  class="px-4 mr-2 border"
+                  @click="handleCancelDelete"
+                >
+                  Cancel
+                </b-button>
+
+                <b-button
+                  variant="danger"
+                  class="px-4"
+                  @click="deleteInvokedTimetable"
+                >
+                  Delete
+                </b-button>
+              </div>
+            </template>
+          </div>
+        </b-modal>
+        <!-- end -->
       </div>
     </template>
   </div>
@@ -226,10 +307,12 @@ import {
   DELETE_TIMETABLE_MUTATION,
 } from '~/graphql/timetables/mutations'
 import Swal from 'sweetalert2'
+import { SECTION_QUERIES } from '~/graphql/sections/queries'
 export default {
   middleware: 'auth',
   data() {
     return {
+      isBusy: false,
       isEditTimetabledModal: false,
       invokedForEdit: null,
       timetables: [],
@@ -243,6 +326,7 @@ export default {
       show: true,
       form: new this.$form({
         class: null,
+        section: null,
         time: null,
         monday: null,
         tuesday: null,
@@ -264,11 +348,14 @@ export default {
         { key: 'friday', label: 'Friday' },
         { key: 'Action', label: 'Action' },
       ],
+      invokedForDelete: null,
+      isDeleting: false,
       dynamicClass: '',
 
       activeTab: '',
       registerMenu: false,
       registrationMenuClass: '',
+      timetableDropdownClass: false,
     }
   },
   apollo: {
@@ -277,6 +364,15 @@ export default {
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
+        }
+      },
+    },
+    sections: {
+      query: SECTION_QUERIES,
+      variables() {
+        return {
+          workspaceId: parseInt(this.mainWorkspace.id),
+          klase_id: parseInt(this.form.class),
         }
       },
     },
@@ -317,26 +413,25 @@ export default {
       }
     },
     timetableDropdown() {
+      this.isBusy = true
+      this.timetableDropdownClass = false
       this.$apollo.addSmartQuery('timetables', {
         query: TIMETABLE_QUERIES,
         variables() {
           return {
             klase_id: parseInt(this.form.class),
+            section_id: parseInt(this.form.section),
             workspaceId: parseInt(this.mainWorkspace.id),
           }
         },
         result({ data, loading }) {
           if (!loading) {
             this.timetables = data.timetables
+            this.isBusy = false
+            this.timetableDropdownClass = true
           }
         },
       })
-
-      if (this.form.class === null) {
-        return false
-      } else {
-        this.timetableDropdownClass = true
-      }
     },
 
     // -------- create mutation -------------- //
@@ -363,6 +458,7 @@ export default {
               thursday: this.form.thursday,
               friday: this.form.friday,
               klase_id: parseInt(this.form.class),
+              section_id: parseInt(this.form.section),
               workspaceId: parseInt(this.mainWorkspace.id),
             },
             update: (store, { data: { createTimetable } }) => {
@@ -371,6 +467,7 @@ export default {
                 query: TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
+                  section_id: parseInt(this.form.section),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
               })
@@ -385,6 +482,7 @@ export default {
                 query: TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
+                  section_id: parseInt(this.form.section),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
@@ -430,15 +528,30 @@ export default {
     // -------- end mutation -------------- //
 
     // -------- delete mutation -------------- //
-    deleteItem(item) {
+    handleCancelDelete() {
+      this.invokedForDelete = null
+
+      this.$bvModal.hide('DeleteModal')
+    },
+
+    handleDeleteTimetable(item) {
+      this.invokedForDelete = item
+
+      this.$bvModal.show('DeleteModal')
+    },
+
+    // -------- delete mutation -------------- //
+
+    deleteInvokedTimetable() {
+      this.isDeleting = true
       const klaseId = this.form.class
-      const deleteId = item
-      this.isDelete = item
+      const deleteId = this.invokedForDelete.id
+      this.isDelete = this.invokedForDelete.id
       this.$apollo
         .mutate({
           mutation: DELETE_TIMETABLE_MUTATION,
           variables: {
-            id: parseInt(item),
+            id: parseInt(deleteId),
             workspaceId: parseInt(this.mainWorkspace.id),
           },
           update: (store, { data: { deleteTimetable } }) => {
@@ -446,6 +559,7 @@ export default {
               query: TIMETABLE_QUERIES,
               variables: {
                 klase_id: parseInt(klaseId),
+                section_id: parseInt(this.form.section),
                 workspaceId: parseInt(this.mainWorkspace.id),
               },
             })
@@ -459,6 +573,7 @@ export default {
                 query: TIMETABLE_QUERIES,
                 variables: {
                   klase_id: parseInt(klaseId),
+                  section_id: parseInt(this.form.section),
                   workspaceId: parseInt(this.mainWorkspace.id),
                 },
                 data,
@@ -477,7 +592,6 @@ export default {
             backdrop: false,
             showConfirmButton: false,
           })
-          this.isDelete = null
         })
         .catch(() => {
           Swal.fire({
@@ -491,6 +605,11 @@ export default {
             timer: 1500,
             showConfirmButton: false,
           })
+        })
+        .finally(() => {
+          this.$bvModal.hide('DeleteModal')
+
+          this.isDeleting = false
         })
     },
     // -------- end mutation -------------- //
@@ -541,8 +660,7 @@ export default {
         cursor: pointer;
 
         &:hover {
-          background-color: var(-input
-          class="form-control form-control-sm");
+          background-color: var(-input class= 'form-control form-control-sm');
         }
       }
     }

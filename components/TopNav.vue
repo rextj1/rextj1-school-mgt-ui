@@ -42,21 +42,9 @@
                 <div class="align-content">
                   <img src="@/assets/images/background.jpg" alt="" />
                   <p>{{ $auth.user.first_name }}</p>
-                  <p>{{ $auth.user.email }}</p>
                 </div>
-
+                <hr />
                 <ul>
-                  <li>
-                    <nuxt-link
-                      :to="{
-                        name: 'workspace-admin-profile',
-                        params: { workspace: mainWorkspace.slug },
-                      }"
-                    >
-                      <span class="nav-profile"><b-icon icon="person" /></span
-                      >Profile
-                    </nuxt-link>
-                  </li>
                   <li @click="logout">
                     <span class="nav-profile"><b-icon icon="power" /></span
                     >Logout
@@ -161,8 +149,9 @@ export default {
   nav {
     font-size: 1.6rem;
     display: flex;
-    max-height: 100%;
+    height: 100%;
     justify-content: space-between;
+    align-items: center !important;
     flex: 1;
     z-index: 5;
 
@@ -184,7 +173,6 @@ export default {
         background-color: #ff0e0e;
         text-align: center;
         color: #fff;
-        // border: 1.4px solid #fff;
         min-width: 43%;
         min-height: 100%;
         font-size: 1.1rem;
@@ -198,10 +186,12 @@ export default {
 
     .profile-image {
       z-index: 99;
+
       .nav-image {
         display: flex;
         justify-content: flex-end;
         align-items: center;
+
         margin-right: 4rem;
         h5 {
           color: #fff;

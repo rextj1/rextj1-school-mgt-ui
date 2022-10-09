@@ -16,58 +16,52 @@
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-jumbotron header="" class="accountant shadow">
-        <h1>About {{ accountant.last_name }}</h1>
-        <div class="d-flex justify-content-center mb-4">
-          <span
-            v-if="accountant.gender == 'Female' && accountant.photo == null"
-          >
-            <b-img
-              src="~/assets/images/teacher.jpeg"
-              thumbnail
-              fluid
-              alt="Responsive image"
-              width="230"
-            ></b-img>
-          </span>
-          <span v-else>
-            <b-img
-              :src="`${$config.APIRoot}/storage/accountant/${accountant.photo}`"
-              thumbnail
-              fluid
-              alt="image"
-              width="230"
-            ></b-img>
-          </span>
+      <b-card class="user shadow">
+        <div v-if="accountant.user.photo == null" class="text-center mb-4 mt-4">
+          <b-img
+            src="@/assets/svg/user-avatar.svg"
+            thumbnail
+            fluid
+            alt="School image"
+            width="150"
+          ></b-img>
         </div>
-        <b-row no-gutters class="sm-query">
-          <b-col md="6" class="first-detail p-4">
+
+        <div v-else class="text-center mb-4 mt-4">
+          <b-img
+            :src="`${$config.APIRoot}/storage/user/${accountant.user.photo}`"
+            thumbnail
+            fluid
+            alt="Responsive image"
+            width="150"
+          ></b-img>
+        </div>
+
+        <div class="d-flex justify-content-between p-5">
+          <div>
             <p>Full Name</p>
-            <p>Phone no:</p>
             <p>Qualifications</p>
             <p>Code</p>
+            <p>Date of employment</p>
+            <p>Email</p>
+            <p>Phone no:</p>
             <p>Gender</p>
             <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
             <p>City</p>
             <p>L.G.A</p>
-
-            <!-- <p>
-              <b-badge style="font-size: 1.6rem" variant="warning"
-                >Subjects Assigned</b-badge
-              >
-            </p> -->
-          </b-col>
-          <b-col md="6" class="first-details p-4">
+          </div>
+          <div class="" style="font-weight: bold">
             <p>
               {{ accountant.last_name }} {{ accountant.first_name }}
               {{ accountant.middle_name }}
             </p>
-            <p>{{ accountant.phone }}</p>
             <p>{{ accountant.qualification }}</p>
             <p>{{ accountant.code }}</p>
-
+            <p>{{ accountant.employment }}</p>
+            <p>{{ accountant.user.email }}</p>
+            <p>{{ accountant.phone }}</p>
             <p>{{ accountant.gender }}</p>
             <p>
               {{
@@ -83,14 +77,14 @@
               {{ accountant.user.state.name }}
             </p>
             <p>
-              {{ accountant.user.city.name }}
+              {{ accountant.user.city }}
             </p>
             <p>
               {{ accountant.user.lga }}
             </p>
-          </b-col>
-        </b-row>
-      </b-jumbotron>
+          </div>
+        </div>
+      </b-card>
     </div>
   </div>
 </template>

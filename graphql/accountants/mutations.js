@@ -5,12 +5,12 @@ export const CREATE_ACCOUNTANT_MUTATION = gql`
   mutation CreateAccountantMutation(
     $workspaceId: Int
     $userTable: UsersInput
-    $teacherTable: WorkersInput
+    $accountantTable: WorkersInput
   ) {
     createAccountant(
       workspaceId: $workspaceId
       userTable: $userTable
-      teacherTable: $teacherTable
+      accountantTable: $accountantTable
     ) {
       id
     }
@@ -22,13 +22,13 @@ export const UPDATE_ACCOUNTANT_MUTATION = gql`
     $id: ID!
     $workspaceId: Int
     $userTable: EditUsersInput
-    $teacherTable: WorkersInput
+    $accountantTable: WorkersInput
   ) {
     updateAccountant(
       id: $id
       workspaceId: $workspaceId
       userTable: $userTable
-      teacherTable: $teacherTable
+      accountantTable: $accountantTable
     ) {
       ...AccountantFields
     }

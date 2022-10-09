@@ -2,8 +2,6 @@
   <div class="profile">
     <template v-if="$apollo.queries.user.loading"><Preload /></template>
     <template v-else>
-
-    
       <b-button
         class="shadow-sm mb-3"
         variant="warning"
@@ -11,25 +9,31 @@
         @click="changePassword"
         >Change Password</b-button
       >
-      <b-jumbotron bg-variant="light" class="teacher shadow">
-        <h1>
-          About
-          <b-badge variant="success"
-            >{{ teacher.last_name }} {{ teacher.first_name }}
-            {{ teacher.middle_name }}
-          </b-badge>
-        </h1>
-        <div class="d-flex justify-content-center mb-4">
-          <b-img
-            :src="`${$config.APIRoot}/storage/teacher/${teacher.photo}`"
-            thumbnail
-            fluid
-            alt="Responsive image"
-            width="230"
-          ></b-img>
+      <b-card class="teacher shadow">
+        <div class="text-center mb-4">
+          <div v-if="teacher.photo == 'null'">
+            <b-img
+              src="@/assets/svg/user-avatar.svg"
+              thumbnail
+              fluid
+              alt="Responsive image"
+              width="230"
+            ></b-img>
+          </div>
+          <div v-else>
+            <b-img
+               :src="`${$config.APIRoot}/storage/teacher/${teacher.photo}`"
+              thumbnail
+              fluid
+              alt="Responsive image"
+              width="230"
+            ></b-img>
+          </div>
         </div>
-        <b-row no-gutters class="sm-query">
-          <b-col md="6" class="first-detail p-4">
+
+        <div class="d-flex justify-content-between p-4">
+          <div>
+            <p>Full Name</p>
             <p>Phone no:</p>
             <p>Qualifications</p>
             <p>Code</p>
@@ -45,9 +49,13 @@
                 >Subjects Assigned</b-badge
               >
             </p>
-          </b-col>
-          <b-col md="6" class="first-details p-4">
-            <p></p>
+          </div>
+
+          <div style="font-weight: bold">
+            <p>
+              {{ teacher.last_name }} {{ teacher.first_name }}
+              {{ teacher.middle_name }}
+            </p>
             <p>{{ teacher.phone }}</p>
             <p>{{ teacher.qualification }}</p>
             <p>{{ teacher.code }}</p>
@@ -102,12 +110,14 @@
                 >
               </p>
             </h3>
-          </b-col>
-        </b-row>
-      </b-jumbotron>
+          </div>
+        </div>
+      </b-card>
+
+      <!-- change password modal -->
       <b-modal id="passwordModal" size="sm" centered hide-header hide-footer>
         <div class="p-5">
-          <div class="margin-down">
+          <div class="form">
             <!-- description -->
             <b-form
               method="POST"
@@ -116,19 +126,16 @@
               @reset.prevent="onReset"
             >
               <!-- description -->
-
               <b-form-group label="Old Password">
                 <b-form-input
                   v-model="form.oldPassword"
                   placeholder="Enter old Password"
                   type="password"
-                  :state="password"
                   required
                   size="lg"
                 ></b-form-input>
-                <b-form-invalid-feedback :state="password" class="mt-2">
-                  {{ validationPassword }}
-                </b-form-invalid-feedback>
+
+                <span style="color: red">{{ oldPassword }}</span>
               </b-form-group>
 
               <b-form-group label="Password">
@@ -143,16 +150,16 @@
 
               <b-form-group label="Confirm Password">
                 <b-form-input
+                  class="validation"
                   v-model="confirmPassword"
                   placeholder="Comfirm password"
                   type="password"
-                  :state="validation"
                   required
                   size="lg"
+                  @input="changeColor"
+                  :style="{ border: isGreen }"
                 ></b-form-input>
-                <b-form-invalid-feedback :state="validation" class="mt-2">
-                  Your password must be 6-11 characters long.
-                </b-form-invalid-feedback>
+                <span style="color: red">{{ passwordValidation }}</span>
               </b-form-group>
 
               <b-button
@@ -167,7 +174,7 @@
                   variant="light"
                   class="mr-1 mb-1"
                   small
-                />Add Subject</b-button
+                />Change Password</b-button
               >
             </b-form>
           </div>
@@ -183,8 +190,10 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      isGreen: '',
+      passwordValidation: null,
+      oldPassword: null,
       confirmPassword: '',
-      validationPassword: '',
       form: new this.$form({
         oldPassword: '',
         password: '',
@@ -211,10 +220,18 @@ export default {
     changePassword() {
       this.$bvModal.show('passwordModal')
     },
+    changeColor() {
+      if (this.form.password != null) {
+        if (this.confirmPassword == this.form.password) {
+          this.isGreen = 2 + 'px solid green'
+        } else {
+          this.isGreen = 2 + 'px solid red'
+        }
+      }
+    },
     onSubmit() {
       this.form.busy = true
-      if (this.password == this.form.confirmPassword) {
-        alert('uuu')
+      if (this.confirmPassword == this.form.password) {
         this.$apollo
           .mutate({
             mutation: CHANGE_USER_PASSWORD_MUTATION,
@@ -239,17 +256,26 @@ export default {
               this.confirmPassword = ''
               this.form.oldPassword = ''
               this.form.password = ''
-              this.validationPassword = ''
               this.form.busy = false
+              this.oldPassword = null
+
+              this.passwordValidation = null
+              this.isGreen = ''
               this.$bvModal.hide('passwordModal')
               return
             }
 
-            this.validationPassword = 'Wrong old password entered.'
+            this.oldPassword = 'Wrong user password entered.'
+            if (this.confirmPassword == this.form.password) {
+              this.passwordValidation = null
+            } else {
+              this.passwordValidation = 'Unmatched passwords'
+            }
             this.form.busy = false
           })
       } else {
-        return
+        this.passwordValidation = 'Unmatched passwords'
+        this.form.busy = false
       }
     },
   },

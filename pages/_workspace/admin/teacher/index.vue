@@ -4,7 +4,7 @@
     <template v-else>
       <b-button
         :to="{
-          name: 'workspace-admin-teacher-addTeacher',
+          name: 'workspace-admin-teacher-add-teacher',
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"

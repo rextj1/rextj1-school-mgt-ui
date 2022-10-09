@@ -24,7 +24,7 @@
 
         <!-- end of setPromotion -->
 
-        <b-form @submit.prevent="markSubmit">
+        <b-form @submit.prevent="promoteClassQuery">
           <b-row>
             <b-col md="2">
               <b-form-group label="Current Class">
@@ -135,7 +135,7 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="libarian__wrapper">
+      <div v-show="timetableDropdownClass" class="">
         <ExamStudentPromotion
           v-if="examRecords"
           :promote-students="promoteStudents"
@@ -252,7 +252,7 @@ export default {
         })
         .catch(() => {})
     },
-    markSubmit() {
+    promoteClassQuery() {
       if (
         this.form.class === null ||
         this.form.classTo === null ||
@@ -320,3 +320,7 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+
+</style>

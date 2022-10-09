@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-4">
     <template v-if="nowLoading">
       <Preload />
     </template>
@@ -72,8 +72,9 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="libarian__wrapper">
+      <div v-show="timetableDropdownClass" class="">
         <ExamResetPromotion
+          v-if="resetPromotion"
           :resetPromotion="resetPromotion"
           :resetKlase="resetKlase"
           :student="[form.class, form.session]"
@@ -98,7 +99,7 @@ export default {
   data() {
     return {
       isBusy: false,
-      resetPromotion: [],
+      resetPromotion: null,
       resetKlase: {},
       timetableDropdownClass: false,
       form: {
@@ -205,52 +206,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.view-payment {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select {
-    option {
-      font-size: 1.5rem !important;
-    }
-  }
-
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
-
-    .nav-link.active {
-      border-top: 5px solid limegreen;
-    }
-
-    .menu {
-      ul {
-        z-index: 999;
-        position: absolute;
-        border: none;
-        top: -3.5rem;
-        left: 14.2rem;
-        background-color: #fff;
-      }
-
-      li:not(:last-child) {
-        background-color: #fff;
-        padding: 1rem 4.8rem;
-        border-bottom: 1px solid gray;
-        cursor: pointer;
-
-        &:hover {
-          background-color: var(--color-input);
-        }
-      }
-    }
-  }
-}
-</style>

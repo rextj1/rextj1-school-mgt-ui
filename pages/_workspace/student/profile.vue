@@ -11,19 +11,11 @@
       >
 
       <!-- {{ user }} -->
-      <b-jumbotron bg-variant="light" class="teacher shadow">
-        <h1 class="d-flex align-items-center">
-          About
-          <b-badge variant="success"
-            >{{ student.first_name }} {{ student.last_name }}
-            {{ student.middle_name }}</b-badge
-          >
-        </h1>
-
-        <div class="d-flex justify-content-center mb-4">
+      <b-card class="shadow">
+        <div class="text-center mb-4">
           <div v-if="student.photo == 'null'">
             <b-img
-              src="~/assets/images/teacher.jpeg"
+              src="@/assets/svg/user-avatar.svg"
               thumbnail
               fluid
               alt="Responsive image"
@@ -40,8 +32,9 @@
             ></b-img>
           </div>
         </div>
-        <b-row no-gutters class="sm-query">
-          <b-col md="6" class="first-detail p-4">
+
+        <div class="d-flex justify-content-between p-4">
+          <div>
             <p>Gender</p>
             <p>Class</p>
             <p>Admission No:</p>
@@ -55,9 +48,12 @@
             <p>State</p>
             <p>city</p>
             <p>L.G.A</p>
-          </b-col>
-          <b-col md="6" class="first-details p-4">
-            <p></p>
+          </div>
+          <div style="font-weight: bold">
+            <p>
+              {{ student.first_name }} {{ student.last_name }}
+              {{ student.middle_name }}
+            </p>
             <p>{{ student.gender }}</p>
             <p>{{ student.klase.name }}</p>
             <p>{{ student.adm_no }}</p>
@@ -82,13 +78,14 @@
             <p>
               {{ user.lga }}
             </p>
-          </b-col>
-        </b-row>
-      </b-jumbotron>
+          </div>
+        </div>
+      </b-card>
 
+      <!-- change password modal -->
       <b-modal id="passwordModal" size="sm" centered hide-header hide-footer>
         <div class="p-5">
-          <div class="margin-down">
+          <div class="form">
             <!-- description -->
             <b-form
               method="POST"
@@ -97,19 +94,16 @@
               @reset.prevent="onReset"
             >
               <!-- description -->
-
               <b-form-group label="Old Password">
                 <b-form-input
                   v-model="form.oldPassword"
                   placeholder="Enter old Password"
                   type="password"
-                  :state="password"
                   required
                   size="lg"
                 ></b-form-input>
-                <b-form-invalid-feedback :state="password" class="mt-2">
-                  {{ validationPassword }}
-                </b-form-invalid-feedback>
+
+                <span style="color: red">{{ oldPassword }}</span>
               </b-form-group>
 
               <b-form-group label="Password">
@@ -124,16 +118,16 @@
 
               <b-form-group label="Confirm Password">
                 <b-form-input
+                  class="validation"
                   v-model="confirmPassword"
                   placeholder="Comfirm password"
                   type="password"
-                  :state="validation"
                   required
                   size="lg"
+                  @input="changeColor"
+                  :style="{ border: isGreen }"
                 ></b-form-input>
-                <b-form-invalid-feedback :state="validation" class="mt-2">
-                  Your password must be 6-11 characters long.
-                </b-form-invalid-feedback>
+                <span style="color: red">{{ passwordValidation }}</span>
               </b-form-group>
 
               <b-button
@@ -148,7 +142,7 @@
                   variant="light"
                   class="mr-1 mb-1"
                   small
-                />Add Subject</b-button
+                />Change Password</b-button
               >
             </b-form>
           </div>
@@ -164,8 +158,10 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      isGreen: '',
+      passwordValidation: null,
+      oldPassword: null,
       confirmPassword: '',
-      validationPassword: '',
       form: new this.$form({
         oldPassword: '',
         password: '',
@@ -192,10 +188,18 @@ export default {
     changePassword() {
       this.$bvModal.show('passwordModal')
     },
+    changeColor() {
+      if (this.form.password != null) {
+        if (this.confirmPassword == this.form.password) {
+          this.isGreen = 2 + 'px solid green'
+        } else {
+          this.isGreen = 2 + 'px solid red'
+        }
+      }
+    },
     onSubmit() {
       this.form.busy = true
-      if (this.password == this.form.confirmPassword) {
-        alert('uuu')
+      if (this.confirmPassword == this.form.password) {
         this.$apollo
           .mutate({
             mutation: CHANGE_USER_PASSWORD_MUTATION,
@@ -220,17 +224,26 @@ export default {
               this.confirmPassword = ''
               this.form.oldPassword = ''
               this.form.password = ''
-              this.validationPassword = ''
               this.form.busy = false
+              this.oldPassword = null
+
+              this.passwordValidation = null
+              this.isGreen = ''
               this.$bvModal.hide('passwordModal')
               return
             }
 
-            this.validationPassword = 'Wrong old password entered.'
+            this.oldPassword = 'Wrong user password entered.'
+            if (this.confirmPassword == this.form.password) {
+              this.passwordValidation = null
+            } else {
+              this.passwordValidation = 'Unmatched passwords'
+            }
             this.form.busy = false
           })
       } else {
-        return
+        this.passwordValidation = 'Unmatched passwords'
+        this.form.busy = false
       }
     },
   },
@@ -241,32 +254,5 @@ export default {
 .profile {
   font-size: 1.6rem;
   padding: 1rem;
-
-  .first-detail p {
-    display: block;
-    margin-left: 40%;
-  }
-  .first-details p {
-    display: block;
-    margin-left: 30%;
-    font-weight: bold;
-  }
-  @include media-breakpoint-down(md) {
-    .first-detail p {
-      margin-left: 0;
-    }
-    .first-details p {
-      margin-left: 0;
-    }
-  }
-  @include media-breakpoint-down(sm) {
-    .col-md-6 {
-      flex: 0 0 50%;
-      max-width: 50%;
-    }
-    .first-details p {
-      margin-left: 50%;
-    }
-  }
 }
 </style>
