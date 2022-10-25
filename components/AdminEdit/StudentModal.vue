@@ -2,7 +2,7 @@
   <div class="student">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
-      <div class="p-4 student__wrapper">
+      <div class="student__wrapper">
         <b-form
           v-if="show"
           method="POST"
@@ -73,8 +73,8 @@
           </div>
 
           <!--  -->
-          <b-row class="p-4">
-            <b-col md="4" class="p-4">
+          <b-row class="p-3">
+            <b-col md="4" class="p-3">
               <b-form-group label="First Name">
                 <b-form-input
                   id="firstName"
@@ -93,7 +93,7 @@
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Last Name">
                 <b-form-input
                   id="last_name"
@@ -113,7 +113,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Middle Name (optional)">
                 <b-form-input
                   id="middle_name"
@@ -127,7 +127,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Email">
                 <b-form-input
                   id="email"
@@ -147,7 +147,7 @@
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Phone No.">
                 <b-form-input
                   id="phone"
@@ -169,7 +169,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Guardian Name">
                 <b-form-input
                   id="guardian_name"
@@ -189,7 +189,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Guardian Email">
                 <b-form-input
                   id="guardian_email"
@@ -209,7 +209,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Address">
                 <b-form-input
                   id="address"
@@ -228,7 +228,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Guardian no.">
                 <b-form-input
                   id="guardian_no"
@@ -250,7 +250,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Admission no.">
                 <b-form-input
                   id="adm_no"
@@ -270,7 +270,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Admitted Year">
                 <b-form-input
                   id="admitted_year"
@@ -290,7 +290,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Religion">
                 <b-form-input
                   id="religion"
@@ -310,7 +310,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Gender">
                 <b-form-select
                   v-model="form.student.gender"
@@ -331,7 +331,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="5" class="p-4">
+            <b-col md="5" class="p-3">
               <b-form-group label="Date of Birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
@@ -351,7 +351,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Current Class">
                 <b-form-select
                   id="klases"
@@ -375,7 +375,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Current Term">
                 <b-form-select
                   v-model="form.student.term"
@@ -398,7 +398,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Section">
                 <b-form-select
                   v-model="form.student.section"
@@ -421,7 +421,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Session">
                 <b-form-select
                   v-model="form.student.session"
@@ -444,7 +444,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
@@ -467,7 +467,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
@@ -491,7 +491,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
@@ -518,7 +518,7 @@
               </div>
             </b-col>
 
-              <b-col md="4" class="p-4">
+              <b-col md="4" class="p-3">
               <b-form-group id="input-group-1" label="City">
                 <b-form-input
                   id="city"
@@ -534,7 +534,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group label="L.G.A">
                 <b-form-input
                   id="lga"
@@ -553,7 +553,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="8" class="p-4">
+            <b-col md="8" class="p-3">
               <b-form-group label="Guardian Address">
                 <b-form-textarea
                   id="guardian_address"
@@ -572,7 +572,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
+            <b-col md="12" class="d-flex justify-content-center p-3 mt-2 mb-4"
               ><b-button
                 type="submit"
                 pill
@@ -591,8 +591,8 @@
               <b-button
                 pill
                 class="ml-4"
-                style="font-size: 1.4rem"
-                size="lg"
+                style="font-size: 14px"
+                size="md"
                 type="reset"
                 variant="danger"
                 >Reset</b-button
@@ -620,8 +620,10 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import Preload from '~/components/Preload.vue'
 
 export default {
+  components: {Preload},
   props: {
     slug: Array,
   },
@@ -926,13 +928,11 @@ export default {
   left: 50%;
 }
 .student {
-  font-size: 1.4rem;
-  padding: 2rem;
   .form-control,
   .mb-3 {
     background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 43px;
+    font-size: 16px;
   }
   .grow {
     position: absolute;
@@ -943,8 +943,8 @@ export default {
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -980,7 +980,7 @@ export default {
 
   .student__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

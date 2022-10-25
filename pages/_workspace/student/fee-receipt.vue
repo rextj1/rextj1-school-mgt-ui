@@ -1,6 +1,6 @@
 <template>
-  <div class="p-4">
-    <template v-if="nowLoading"><Preload /></template>
+  <div class="p-3">
+    <template v-if="$fetchState.pending"><Preload /></template>
     <template v-else>
       <PaymentStudentPaymentReceipt
         v-if="DuePaymentrecords"
@@ -14,68 +14,72 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
-import { STUDENT_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
+import {
+  STUDENT_PAID_PAYMENT_RECORD_QUERIES,
+  STUDENT_PAYMENT_RECORD_QUERIES,
+} from '~/graphql/payments/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
+import PaymentStudentPaymentReceipt from '~/components/Payment/StudentPaymentReceipt.vue'
+import Preload from '~/components/Preload.vue'
 
 export default {
+  components: { PaymentStudentPaymentReceipt, Preload },
   middleware: 'auth',
   data() {
     return {
       PaidPaymentrecords: [],
       DuePaymentrecords: null,
       studentPaymentRecords: [],
+      studentPaidPaymentRecords: [],
+      user: {},
     }
   },
 
-  beforeUpdate() {
-    this.$apollo.addSmartQuery('studentPaymentRecords', {
-      query: STUDENT_PAYMENT_RECORD_QUERIES,
-      variables: {
-        student_id: parseInt(this.user.student.id),
-        workspaceId: parseInt(this.mainWorkspace.id),
-        status: 'Due',
-      },
-      result({ loading, data }, key) {
-        if (!loading) {
-          this.DuePaymentrecords = data.studentPaymentRecords
-        }
-      },
-    })
+  async fetch() {
+    const { app, route, redirect } = this.$nuxt.context
 
-    this.$apollo.addSmartQuery('studentPaymentRecords', {
-      query: STUDENT_PAYMENT_RECORD_QUERIES,
-      variables: {
-        student_id: parseInt(this.user.student.id),
-        workspaceId: parseInt(this.mainWorkspace.id),
-        status: 'Paid',
-      },
-      result({ loading, data }, key) {
-        if (!loading) {
-          this.PaidPaymentrecords = data.studentPaymentRecords
-        }
-      },
-    })
-  },
+    const {
+      apolloProvider: { defaultClient: apolloClient },
+    } = app
 
-  apollo: {
-    user: {
+    const {
+      data: { user },
+    } = await apolloClient.query({
       query: USER_STUDENT_QUERY,
-      variables() {
-        return {
-          id: parseInt(this.$auth.user.id),
-        }
+      variables: { id: parseInt(this.$auth.user.id) },
+    })
+    this.user = user
+
+    const {
+      data: { studentPaymentRecords },
+    } = await apolloClient.query({
+      query: STUDENT_PAYMENT_RECORD_QUERIES,
+      variables: {
+        student_id: parseInt(user.student.id),
+        status: 'Due',
+        workspaceId: parseInt(this.mainWorkspace.id),
       },
-    },
+    })
+    this.DuePaymentrecords = studentPaymentRecords
+
+    const {
+      data: { studentPaidPaymentRecords },
+    } = await apolloClient.query({
+      query: STUDENT_PAID_PAYMENT_RECORD_QUERIES,
+      variables: {
+        student_id: parseInt(user.student.id),
+        status: 'Paid',
+        workspaceId: parseInt(this.mainWorkspace.id),
+      },
+    })
+    this.PaidPaymentrecords = studentPaidPaymentRecords
   },
+  fetchDelay: 1000,
+
   computed: {
-    nowLoading() {
-      return this.$apollo.queries.user.loading
-    },
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
   },
 }
 </script>
-
-<style lang="scss" scoped></style>

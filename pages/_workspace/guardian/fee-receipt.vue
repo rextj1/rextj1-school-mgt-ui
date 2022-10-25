@@ -1,38 +1,42 @@
 <template>
-  <div class="p-4 fee-receipt-wrapper">
+  <div class="p-3 fee-receipt-wrapper">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="px-3 mb-4">
         <b-form @submit.prevent="onSubmit">
           <div class="d-flex">
-     
-              <div v-if="!user">
-                <b-form-group label="Select Student">
-                  <b-form-select class="mb-3">
-                    <b-form-select-option value="null"> </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
+            <div v-if="!user">
+              <b-form-group label="Select Student">
+                <b-form-select class="mb-3">
+                  <b-form-select-option value="null"> </b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+            </div>
 
-              <div v-else>
-                <b-form-group label="Select Student">
-                  <b-form-select v-model="form.student_id" class="mb-3">
-                    <b-form-select-option
-                      v-for="student in user.guardian.students"
-                      :key="student.id"
-                      :value="student.id"
-                      >{{ student.last_name }} {{ student.first_name }}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-          
+            <div v-else>
+              <b-form-group label="Select Student">
+                <b-form-select v-model="form.student_id" class="mb-3">
+                  <b-form-select-option
+                    v-for="student in user.guardian.students"
+                    :key="student.id"
+                    :value="student.id"
+                    >{{ student.last_name }} {{ student.first_name }}
+                  </b-form-select-option>
+
+                  <template #first>
+                      <b-form-select-option :value="null" disabled
+                        >-- select student--</b-form-select-option
+                      >
+                    </template>
+                </b-form-select>
+              </b-form-group>
+            </div>
 
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.8rem; margin-top: 2.83rem"
+              size="md"
+              style="height: 46px; margin-top: 33px"
             >
               <b-spinner
                 v-if="isBusy"
@@ -48,10 +52,9 @@
 
       <div v-show="timetableDropdownClass">
         <PaymentStudentPaymentReceipt
-          v-if="PaidPaymentrecords"
+          v-if="DuePaymentrecords"
           :PaidPaymentrecords="PaidPaymentrecords"
           :DuePaymentrecords="DuePaymentrecords"
-          
         />
       </div>
     </div>
@@ -65,12 +68,15 @@ import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { STUDENT_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { USER_GUARDIAN_QUERY } from '~/graphql/guardians/queries'
+import PaymentStudentPaymentReceipt from '~/components/Payment/StudentPaymentReceipt.vue'
+import Preload from '~/components/Preload.vue'
 
 export default {
+  components: { PaymentStudentPaymentReceipt, Preload },
   middleware: 'auth',
   data() {
     return {
-      PaidPaymentrecords: null,
+      PaidPaymentrecords: [],
       DuePaymentrecords: null,
       studentPaymentRecords: [],
       timetableDropdownClass: false,
@@ -168,9 +174,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .fee-receipt-wrapper {
-  font-size: 1.6rem;
 
   .custom-select:focus {
     box-shadow: none;
@@ -178,15 +183,11 @@ export default {
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-     width: 35rem;
+    height: 50px;
+    width: 300px;
 
-    font-size: 1.4rem;
+    font-size: 16px;
     color: #000;
-     @include media-breakpoint-down(sm) {
-      width: 25rem;
-    }
   }
-
 }
 </style>

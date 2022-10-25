@@ -1,10 +1,6 @@
 <template>
   <div class="sidebar-wrapper">
-    <div
-      class="aside"
-      style="font-size: 1.6rem"
-      :class="`${isCollasped == true ? 'is-expanded' : ''}`"
-    >
+    <div class="aside shadow-sm" :class="`${isCollasped == true ? 'is-expanded' : ''}`">
       <div class="logo">
         <img src="@/assets/svg/ronazon-logo.svg" alt="" />
       </div>
@@ -22,11 +18,7 @@
               }"
               class="button"
             >
-              <b-icon
-                icon="columns-gap"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
+              <b-icon icon="grid" class="material-icons" @click="ToggleMenus" />
               <span class="text" @click="ToggleMenus">Schools</span>
             </nuxt-link>
 
@@ -45,7 +37,7 @@
               <span class="text" @click="ToggleMenus">Create School</span>
             </nuxt-link>
           </div>
-        </span>
+        </span>   
 
         <!-- Accountant -->
         <span v-if="role.name == 'accountant'">
@@ -59,11 +51,7 @@
               }"
               class="button"
             >
-              <b-icon
-                icon="columns-gap"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
+              <b-icon icon="grid" class="material-icons" @click="ToggleMenus" />
               <span class="text" @click="ToggleMenus">Dashboard</span>
             </nuxt-link>
 
@@ -75,7 +63,7 @@
               class="button"
             >
               <b-icon
-                icon="person-fill"
+                icon="person-circle"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -93,7 +81,7 @@
               <span class="text" @click="ToggleMenus()"
                 >Payment
                 <b-icon
-                  style="margin-left: 4rem"
+                  style="margin-left: 80px"
                   class="caret-down"
                   scale="0.8"
                   icon="caret-down"
@@ -124,16 +112,27 @@
                   }"
                   class="button"
                 >
-                  <span class="text" @click="ToggleMenus">Payment</span>
+                  <span class="text" @click="ToggleMenus">Fee Payments</span>
                 </nuxt-link>
+
                 <nuxt-link
                   :to="{
-                    name: 'workspace-accountant-viewPayments',
+                    name: 'workspace-accountant-payments',
                     params: { workspace: mainWorkspace.slug },
                   }"
                   class="button"
                 >
-                  <span class="text" @click="ToggleMenus">View</span>
+                  <span class="text" @click="ToggleMenus">Payments</span>
+                </nuxt-link>
+
+                <nuxt-link
+                  :to="{
+                    name: 'workspace-accountant-due-payments',
+                    params: { workspace: mainWorkspace.slug },
+                  }"
+                  class="button"
+                >
+                  <span class="text" @click="ToggleMenus">Due Payment</span>
                 </nuxt-link>
               </b-card>
             </b-collapse>
@@ -152,11 +151,7 @@
               }"
               class="button"
             >
-              <b-icon
-                icon="columns-gap"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
+              <b-icon icon="grid" class="material-icons" @click="ToggleMenus" />
               <span class="text" @click="ToggleMenus">Dashboard</span>
             </nuxt-link>
 
@@ -248,11 +243,7 @@
               }"
               class="button"
             >
-              <b-icon
-                icon="columns-gap"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
+              <b-icon icon="grid" class="material-icons" @click="ToggleMenus" />
               <span class="text" @click="ToggleMenus">Dashboard</span>
             </nuxt-link>
             <nuxt-link
@@ -331,7 +322,7 @@
               <span class="text" @click="ToggleMenus()"
                 >Payment
                 <b-icon
-                  style="margin-left: 4.5rem"
+                  style="margin-left: 85px"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -393,11 +384,7 @@
               }"
               class="button"
             >
-              <b-icon
-                icon="columns-gap"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
+              <b-icon icon="grid" class="material-icons" @click="ToggleMenus" />
               <span class="text" @click="ToggleMenus">Dashboard</span>
             </nuxt-link>
 
@@ -409,7 +396,7 @@
               class="button"
             >
               <b-icon
-                icon="person-fill"
+                icon="person-circle"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -493,6 +480,8 @@
           </div>
         </span>
 
+        <!-- admin -->
+
         <span v-if="role.name == 'admin'">
           <h3 class="h3-memu">School Admin</h3>
 
@@ -505,7 +494,7 @@
               class="button"
             >
               <b-icon
-                icon="columns-gap"
+                icon="grid"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -520,15 +509,15 @@
               to="admin"
               class="button"
             >
-              <b-icon
-                icon="vector-pen"
+               <b-icon
+                icon="people"
                 class="material-icons"
                 @click="ToggleMenus()"
               />
               <span class="text" @click="ToggleMenus()"
                 >Users
                 <b-icon
-                  style="margin-left: 6.6rem"
+                  style="margin-left: 103px"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -550,11 +539,11 @@
                   class="button"
                 >
                   <b-icon
-                    icon="person-fill"
+                    icon="person-circle"
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Teacher</span>
+                  <span class="text" @click="ToggleMenus">Teachers</span>
                 </nuxt-link>
 
                 <nuxt-link
@@ -569,7 +558,7 @@
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Student</span>
+                  <span class="text" @click="ToggleMenus">Students</span>
                 </nuxt-link>
                 <nuxt-link
                   :to="{
@@ -579,11 +568,11 @@
                   class="button"
                 >
                   <b-icon
-                    icon="people-fill"
+                    icon="person-circle"
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Accountant</span>
+                  <span class="text" @click="ToggleMenus">Accountants</span>
                 </nuxt-link>
               </b-card>
             </b-collapse>
@@ -604,7 +593,7 @@
               <span class="text" @click="ToggleMenus()"
                 >Exam
                 <b-icon
-                  style="margin-left: 6.7rem"
+                  style="margin-left: 103px"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -770,14 +759,12 @@
                   class="button"
                 >
                   <b-icon
-                    icon="arrow-left-circle"
+                    icon="arrow-right-circle"
                     scale="0.85"
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus"
-                    >Graduate class</span
-                  >
+                  <span class="text" @click="ToggleMenus">Graduate class</span>
                 </nuxt-link>
               </b-card>
             </b-collapse>
@@ -799,7 +786,7 @@
               <span class="text" @click="ToggleMenus()"
                 >Setup
                 <b-icon
-                  style="margin-left: 6.5rem"
+                  style="margin-left: 103px"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -934,11 +921,7 @@
               }"
               class="button"
             >
-              <b-icon
-                icon="columns-gap"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
+              <b-icon icon="grid" class="material-icons" @click="ToggleMenus" />
               <span class="text" @click="ToggleMenus">Dashboard</span>
             </nuxt-link>
 
@@ -951,14 +934,14 @@
               class="button"
             >
               <b-icon
-                icon="vector-pen"
+                icon="people"
                 class="material-icons"
                 @click="ToggleMenus()"
               />
               <span class="text" @click="ToggleMenus()"
                 >Users
                 <b-icon
-                  style="margin-left: 6.6rem"
+                  style="margin-left: 103px"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -980,11 +963,11 @@
                   class="button"
                 >
                   <b-icon
-                    icon="person-fill"
+                    icon="person-circle"
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Teacher</span>
+                  <span class="text" @click="ToggleMenus">Teachers</span>
                 </nuxt-link>
 
                 <nuxt-link
@@ -995,11 +978,11 @@
                   class="button"
                 >
                   <b-icon
-                    icon="people-fill"
+                    icon="person-circle"
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Student</span>
+                  <span class="text" @click="ToggleMenus">Students</span>
                 </nuxt-link>
                 <nuxt-link
                   :to="{
@@ -1009,11 +992,11 @@
                   class="button"
                 >
                   <b-icon
-                    icon="people-fill"
+                    icon="person-circle"
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus">Accountant</span>
+                  <span class="text" @click="ToggleMenus">Accountants</span>
                 </nuxt-link>
 
                 <nuxt-link
@@ -1049,7 +1032,7 @@
               <span class="text" @click="ToggleMenus()"
                 >Exam
                 <b-icon
-                  style="margin-left: 6.7rem"
+                  style="margin-left: 103px"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -1215,14 +1198,12 @@
                   class="button"
                 >
                   <b-icon
-                    icon="arrow-left-circle"
+                    icon="arrow-right-circle"
                     scale="0.85"
                     class="material-icon"
                     @click="ToggleMenus"
                   />
-                  <span class="text" @click="ToggleMenus"
-                    >Graduate Class</span
-                  >
+                  <span class="text" @click="ToggleMenus">Graduate Class</span>
                 </nuxt-link>
               </b-card>
             </b-collapse>
@@ -1237,14 +1218,14 @@
               class="button"
             >
               <b-icon
-                icon="vector-pen"
+                icon="x-diamond"
                 class="material-icons"
                 @click="ToggleMenus()"
               />
               <span class="text" @click="ToggleMenus()"
                 >Setup
                 <b-icon
-                  style="margin-left: 6.5rem"
+                  style="margin-left: 103px"
                   scale="0.8"
                   class="caret-down"
                   icon="caret-down"
@@ -1281,7 +1262,7 @@
                   class="button"
                 >
                   <b-icon
-                    icon="layers"
+                    icon="vr"
                     class="material-icons"
                     @click="ToggleMenus"
                   />
@@ -1296,7 +1277,7 @@
                   class="button"
                 >
                   <b-icon
-                    icon="layers"
+                    icon="pie-chart"
                     class="material-icons"
                     @click="ToggleMenus"
                   />
@@ -1372,7 +1353,7 @@
               }"
             >
               <b-icon
-                icon="calendar2-date"
+                icon="person-circle"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -1380,14 +1361,32 @@
             </nuxt-link>
 
             <nuxt-link
-                  :to="{
-                    name: 'workspace-admin-payments',
-                    params: { workspace: mainWorkspace.slug },
-                  }"
-                  class="button"
-                >
-                  <span class="text" @click="ToggleMenus">View Payment</span>
-                </nuxt-link>
+              :to="{
+                name: 'workspace-admin-payments',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+              ><b-icon
+                icon="list-stars"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">View Payment</span>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                name: 'workspace-admin-payments-due-payments',
+                params: { workspace: mainWorkspace.slug },
+              }"
+              class="button"
+              ><b-icon
+                icon="view-list"
+                class="material-icons"
+                @click="ToggleMenus"
+              />
+              <span class="text" @click="ToggleMenus">Due Payment</span>
+            </nuxt-link>
 
             <div class="d-flex"></div>
 
@@ -1420,9 +1419,6 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 import { useToggleMenu } from '@/stores/toggle'
 import { ROLEX_QUERIEX } from '~/graphql/users/queries'
 export default {
-  // mounted() {
-  //   this.isCollasped = localStorage.getItem('is_expanded') === 'true'
-  // },
   data() {
     return {
       rotate: '',
@@ -1448,6 +1444,12 @@ export default {
     ...mapActions(useToggleMenu, ['toggleIcon']),
     ToggleMenus() {
       this.toggleIcon(true)
+
+      this.windowWidth = window.innerWidth
+      if (this.windowWidth <= 750) {
+        this.toggleIcon(false)
+        return
+      }
     },
     // caretDown() {
     //   if (this.rotate === '') {
@@ -1465,6 +1467,7 @@ export default {
   top: 0;
   background-color: #fff;
   z-index: 3;
+  font-size: 19px;
 
   .aside {
     overflow-y: auto;
@@ -1472,51 +1475,23 @@ export default {
     display: flex;
     flex-direction: column;
     background-color: var(--color-white);
-
-    @include media-breakpoint-up(md) {
-      padding: 1rem;
-    }
+    padding: 10px;
 
     @include media-breakpoint-down(md) {
+      margin-top: 85px;
       width: 0;
+      padding: 0;
     }
 
-    width: calc(2rem + 32px);
+    width: calc(1rem + 32px);
     height: 100vh;
     transition: 0.3s ease-out;
 
     .logo {
-      margin-bottom: 1rem;
+      margin-bottom: 22px;
 
       img {
-        width: 10rem;
-      }
-    }
-
-    .menu-toggle-wrap {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 1rem;
-      position: relative;
-      top: 0;
-      transition: 0.2s ease-in-out;
-      cursor: pointer;
-
-      .menu-toggle {
-        transition: 0.2s ease-in-out;
-
-        .material-icons {
-          font-size: 2rem;
-          color: var(--primary);
-          transition: 0.2s ease-out;
-        }
-
-        &:hover {
-          .material-icons {
-            color: var(--primary);
-            transform: translateX(0.5rem);
-          }
-        }
+        width: 100px;
       }
     }
 
@@ -1528,7 +1503,7 @@ export default {
           border-radius: 0 !important;
           border-left: 0px solid red !important;
           width: 108%;
-          // margin-left: -1.4rem !important;
+          // margin-left: -1.40px !important;
         }
         &:hover {
           border-left: 0px solid red !important;
@@ -1542,37 +1517,35 @@ export default {
       opacity: 0;
       transition: opacity 0.1s ease-out;
       color: var(--color-primary);
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
+      font-size: 25px;
+      margin-bottom: 2px;
       text-transform: uppercase;
     }
 
     .menu {
-      margin: 0 -1rem;
+      margin: 0 -10px;
 
       .button {
         display: flex;
         align-items: center;
         text-decoration: none;
         transition: 0.1s ease-out;
-        padding: 0.5rem 1rem;
-        margin-bottom: 0.8rem;
+        padding: 5px 10px;
+        margin-bottom: 8px;
 
         .material-icons {
-          font-size: 2rem;
-          padding-right: 3rem;
           color: var(--color-body);
           transition: 0.1s ease-out;
-          margin-top: 0.3rem;
+          margin-top: 0;
         }
         .material-icon {
-          padding-right: 2.5rem;
+          padding-right: 20px;
           color: var(--color-body);
           transition: 0.1s ease-out;
-          margin-top: -0.3rem;
+          margin-top: -0.1px;
         }
         &.nuxt-link-exact-active {
-          border-radius: 0 2rem 2rem 0;
+          border-radius: 0 20px 20px 0;
           border-left: 5px solid limegreen;
 
           .material-icons,
@@ -1587,22 +1560,22 @@ export default {
         .text {
           color: var(--color-body);
           transition: 0.2s ease-out;
-          // height: 2rem;
+          // height: 20px;
           display: none;
         }
       }
     }
 
     &.is-expanded {
-      width: 20.5rem;
-      padding: 1rem;
+      width: 256px;
+      padding: 10px;
 
       .menu-toggle-wrap {
-        top: -3rem;
+        top: -30px;
         .menu-toggle {
           transform: rotate(-180deg);
-          margin-top: -1rem;
-          margin-bottom: 2rem;
+          margin-top: -10px;
+          margin-bottom: 20px;
         }
       }
 
@@ -1612,8 +1585,8 @@ export default {
       }
 
       .h3-memu {
-        margin-left: 2rem;
-        margin-bottom: 1rem;
+        margin-left: 20px;
+        margin-bottom: 10px;
         font-weight: 600;
       }
 
@@ -1622,12 +1595,13 @@ export default {
       }
       .button .text {
         display: block;
+        margin-left: 15px;
       }
 
       .menu {
         .button {
           .material-icons {
-            margin-right: 1rem;
+            margin-right: 10px;
           }
           .material-icon {
             margin-right: 0;
@@ -1639,7 +1613,7 @@ export default {
 
           &:hover {
             background-color: var(--color-primary);
-            border-radius: 0 2rem 2rem 0;
+            border-radius: 0 20px 20px 0;
             .material-icon,
             .material-icons,
             .text {
@@ -1650,7 +1624,7 @@ export default {
 
         .nuxt-link-exact-active {
           background-color: var(--color-primary);
-          border-radius: 0 2rem 2rem 0;
+          border-radius: 0 20px 20px 0;
           border-left: 5px solid limegreen;
 
           .material-icons,
@@ -1660,14 +1634,9 @@ export default {
           }
         }
       }
-
-      @include media-breakpoint-down(md) {
-        overflow: hidden;
-      }
     }
 
     @include media-breakpoint-down(md) {
-      top: 6.5rem;
       position: absolute;
       z-index: 999;
     }

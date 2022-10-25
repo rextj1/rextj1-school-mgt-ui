@@ -1,5 +1,5 @@
 <template>
-  <div class="student">
+  <div class="admin-teacher p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-button
@@ -8,15 +8,15 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <div class="p-4 student__wrapper">
-        <h2 class="d-flex justify-content-center mb-4 mt-4">
+      <div class="p-4 teacher__wrapper">
+        <h3 class="d-flex justify-content-center mb-4 mt-4">
           Register Teacher
-        </h2>
+        </h3>
         <hr />
         <b-form
           v-if="show"
@@ -91,6 +91,25 @@
 
           <b-row class="p-4">
             <b-col md="4" class="p-4">
+              <b-form-group id="last_name" label="Surname Name">
+                <b-form-input
+                  id="first_name"
+                  v-model="form.teacherTable.last_name"
+                  type="text"
+                  placeholder="Enter last name"
+                  name="last_name"
+                  trim
+                  required
+                ></b-form-input>
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('teacherTable.last_name')"
+                >
+                  {{ form.errors.get('teacherTable.last_name') }}
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="4" class="p-4">
               <b-form-group label="First Name">
                 <b-form-input
                   id="firstName"
@@ -106,25 +125,6 @@
                   :state="!form.errors.has('teacherTable.first_name')"
                 >
                   {{ form.errors.get('teacherTable.first_name') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="4" class="p-4">
-              <b-form-group id="last_name" label="Last Name">
-                <b-form-input
-                  id="first_name"
-                  v-model="form.teacherTable.last_name"
-                  type="text"
-                  placeholder="Enter last name"
-                  name="last_name"
-                  trim
-                  required
-                ></b-form-input>
-                <b-form-invalid-feedback
-                  :state="!form.errors.has('teacherTable.last_name')"
-                >
-                  {{ form.errors.get('teacherTable.last_name') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
@@ -220,7 +220,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Gender">
                 <b-form-select
                   v-model="form.teacherTable.gender"
@@ -241,7 +241,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Date of Birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
@@ -262,7 +262,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
@@ -285,8 +285,7 @@
               </b-form-group>
             </b-col>
 
-
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Date of Employment">
                 <b-form-datepicker
                   id="datepicker-employment"
@@ -307,7 +306,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
@@ -331,7 +330,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
@@ -342,19 +341,26 @@
 
               <div v-else>
                 <b-form-group label="State">
-                  <b-form-select v-model="form.userTable.state" class="mb-3" required>
+                  <b-form-select
+                    v-model="form.userTable.state"
+                    class="mb-3"
+                    required
+                  >
                     <b-form-select-option
                       v-for="k in country.state"
                       :key="k.id"
                       :value="k.id"
                       >{{ k.name }}</b-form-select-option
                     >
+                    
+                    
                   </b-form-select>
+                  
                 </b-form-group>
               </div>
             </b-col>
 
-             <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="City">
                 <b-form-input
                   id="city"
@@ -372,9 +378,7 @@
               </b-form-group>
             </b-col>
 
-         
-
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
                   id="lga"
@@ -398,7 +402,7 @@
                 pill
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="md"
               >
                 <b-spinner
                   v-if="form.busy"
@@ -410,8 +414,7 @@
               <b-button
                 pill
                 class="ml-4"
-                style="font-size: 1.4rem"
-                size="lg"
+                size="md"
                 type="reset"
                 variant="danger"
                 >Reset</b-button
@@ -427,6 +430,7 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
+import Preload from '~/components/Preload.vue'
 import Swal from 'sweetalert2'
 import {
   BLOOD_GROUP_QUERIES,
@@ -437,6 +441,7 @@ import {
 import { CREATE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
 
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -625,21 +630,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
-  .form-control,
-  .mb-3 {
-    background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
-  }
+.admin-teacher {
 
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -673,9 +670,9 @@ export default {
     }
   }
 
-  .student__wrapper {
+  .teacher__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

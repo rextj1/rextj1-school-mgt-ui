@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4 admin-timetable-wrapper">
+  <div class="p-3 admin-timetable-wrapper">
     <template v-if="$apollo.queries.klases.loading"><Preload /></template>
     <template v-else>
-      <b-card class="mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="timetableDropdown">
           <b-row no-gutters>
             <b-col md="3">
@@ -54,8 +54,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.75rem; margin-top: 2.9rem"
+              size="md"
+              style="height: 47px; margin-top: 32px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -70,77 +70,66 @@
 
       <div
         v-show="timetableDropdownClass"
-        class="libarian__wrapper"
+        class="timetable__wrapper"
         @click="hideMenu"
       >
         <b-card no-body @click="hideMenu">
-          <b-tabs card style="font-size: 1.4rem">
+          <b-tabs card>
             <b-tab active @click="hideMenu">
               <template #title>
                 <strong>Create Timetable</strong>
                 <b-icon scale="0.8" icon="plus" />
               </template>
 
-              <b-row no-gutters>
-                <b-col md="12">
-                  <h3 class="d-flex justify-content-center mb-4">
-                    <!-- <div v-for="time in timetable[0]" :key="time.id">
-                    {{ time['name'] }}
-                  </div> -->
-                    Timetable
-                  </h3>
+              <h4 class="text-center py-3">Timetable</h4>
 
-                  <div class="card-body">
-                    <div class="card-student p-3">
-                      <b-table
-                        hover
-                        bordered
-                        head-variant="dark"
-                        caption-top
-                        no-border-collapse
-                        :responsive="true"
-                        :items="timetables"
-                        :fields="fields"
+              <b-card>
+                <b-table
+                  hover
+                  bordered
+                  head-variant="dark"
+                  caption-top
+                  no-border-collapse
+                  :responsive="true"
+                  :items="timetables"
+                  :fields="fields"
+                >
+                  <template #cell(Action)="data">
+                    <div class="d-flex justify-content-center">
+                      <b-button
+                        variant="primary"
+                        size="md"
+                        @click="timetableEdit(data.item)"
+                        >Edit</b-button
                       >
-                        <template #cell(Action)="data">
-                          <div class="d-flex justify-content-center">
-                            <b-button
-                              variant="primary"
-                              size="lg"
-                              @click="timetableEdit(data.item)"
-                              >Edit</b-button
-                            >
 
-                            <b-button
-                              variant="danger"
-                              size="lg"
-                              class="ml-2"
-                              @click="handleDeleteTimetable(data.item)"
-                              ><b-spinner
-                                variant="light"
-                                small
-                                class="mr-1 mb-1"
-                                v-if="isDelete == data.item.id"
-                              />
-                              Delete</b-button
-                            >
-                          </div>
-                        </template>
-                      </b-table>
+                      <b-button
+                        variant="danger"
+                        size="md"
+                        class="ml-2"
+                        @click="handleDeleteTimetable(data.item)"
+                        ><b-spinner
+                          variant="light"
+                          small
+                          class="mr-1 mb-1"
+                          v-if="isDelete == data.item.id"
+                        />
+                        Delete</b-button
+                      >
                     </div>
-                  </div>
-                  <!-- Info modal -->
+                  </template>
+                </b-table>
+              </b-card>
+              <!-- Info modal -->
 
-                  <AdminEditTimetableModal
-                    v-if="invokedForEdit"
-                    v-model="isEditTimetabledModal"
-                    :slug="[slug, form.class, infoModal]"
-                    :timetable="invokedForEdit"
-                  />
+              <AdminEditTimetableModal
+                v-if="invokedForEdit"
+                v-model="isEditTimetabledModal"
+                :slug="[slug, form.class, infoModal]"
+                :timetable="invokedForEdit"
+              />
 
-                  <!-- end modal -->
-                </b-col>
-              </b-row>
+              <!-- end modal -->
 
               <div class="exam-timetble mt-4">
                 <b-form
@@ -209,12 +198,12 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div class="d-flex justify-content-center">
+                  <div class="text-center">
                     <b-button
                       type="submit"
                       variant="primary"
                       class="mr-4"
-                      size="lg"
+                      size="md"
                     >
                       <b-spinner
                         v-if="form.busy"
@@ -255,7 +244,7 @@
 
               <component
                 :is="activeTab"
-                :edit-current-class="[dynamicClass, klaseName,form.section]"
+                :edit-current-class="[dynamicClass, klaseName, form.section]"
               />
             </b-tab>
           </b-tabs>
@@ -308,7 +297,12 @@ import {
 } from '~/graphql/timetables/mutations'
 import Swal from 'sweetalert2'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import TimetableEditClassTimetable from '~/components/Timetable/EditClassTimetable.vue'
+import AdminEditTimetableModal from '~/components/AdminEdit/TimetableModal.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { AdminEditTimetableModal, TimetableEditClassTimetable, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -617,10 +611,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .admin-timetable-wrapper {
-  font-size: 1.6rem;
-
   .custom-select:focus {
     box-shadow: none;
   }
@@ -628,13 +620,11 @@ export default {
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 50px;
+    font-size: 16px;
     color: #000;
   }
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
+  .timetable__wrapper {
     background-color: var(--color-white);
     border-radius: 0.5rem;
     border: none;
@@ -648,14 +638,14 @@ export default {
         z-index: 999;
         position: absolute;
         border: none;
-        top: -9.5rem;
-        left: 15.5rem;
+        top: -80px;
+        left: 180px;
         background-color: #fff;
       }
 
       li {
         background-color: #fff;
-        padding: 1.3rem 5.5rem;
+        padding: 17px 80px;
         border-bottom: 1px solid gray;
         cursor: pointer;
 

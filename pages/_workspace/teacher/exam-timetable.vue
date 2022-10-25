@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="exam-timetable p-3">
     <template v-if="nowloading"><Preload /></template>
     <template v-else>
-      <b-card class="mb-4">
+      <b-card class="mb-2">
         <b-row no-gutters>
           <b-col md="3">
             <b-form-group label="Current Class:">
@@ -12,7 +12,6 @@
                 value-field="id"
                 text-field="name"
                 :options="klases"
-                class="mb-3"
                 size="lg"
                 required
               >
@@ -36,7 +35,6 @@
                 value-field="id"
                 text-field="name"
                 :options="sections"
-                class="mb-3"
                 size="lg"
                 required
                 @change="timetableDropdown"
@@ -48,7 +46,7 @@
       </b-card>
 
       <div v-show="timetableDropdownClass">
-        <div v-if="examTimetables.length > 0" class="exam-wrapper p-2">
+        <b-card v-if="examTimetables.length > 0">
           <vue-html2pdf
             ref="html2Pdf"
             :show-layout="true"
@@ -64,36 +62,43 @@
             pdf-content-width=""
           >
             <section slot="pdf-content">
-              <h3 class="text-center mb-4">
-                <span style="color: green">({{ sections[0].klase.name }})</span>
-                Exam timetable
-              </h3>
-              <b-card>
-                <b-table
-                  hover
-                  bordered
-                  head-variant="dark"
-                  caption-top
-                  no-border-collapse
-                  fixed
-                  responsive="true"
-                  :items="examTimetables"
-                  :fields="fields"
+              <h5 class="text-center mt-4 mb-4">
+                <span style="color: green"
+                  >{{
+                    sections[0] != null ? sections[0].klase.name : ''
+                  }}</span
                 >
-                </b-table>
-              </b-card>
+                Exam timetable
+              </h5>
+
+              <b-table
+                hover
+                bordered
+                head-variant="dark"
+                caption-top
+                no-border-collapse
+                fixed
+                responsive="true"
+                :items="examTimetables"
+                :fields="fields"
+              >
+              </b-table>
             </section>
           </vue-html2pdf>
 
-          <div class="d-flex justify-content-center mb-4">
-            <b-button variant="danger" size="lg" @click.prevent="generateReport"
+          <div class="text-center mb-4">
+            <b-button
+              variant="danger"
+              size="md"
+              pill
+              @click.prevent="generateReport"
               >download</b-button
             >
           </div>
-        </div>
-        <div v-else-if="examTimetables.length == 0" class="exam-wrapper p-4">
-          <h2 class="text-center p-4">No record found</h2>
-        </div>
+        </b-card>
+        <b-card v-else-if="examTimetables.length == 0" class="p-4">
+          <h3 class="text-center p-4">No record found</h3>
+        </b-card>
       </div>
     </template>
   </div>
@@ -106,7 +111,10 @@ import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -198,10 +206,17 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.exam-wrapper {
-  font-size: 1.4rem !important;
-  padding: 4rem;
-  background-color: #fff;
+<style lang="scss" scoped>
+.exam-timetable {
+  .custom-select:focus {
+    box-shadow: none;
+  }
+  .custom-select,
+  .form-control,
+  .mb-3 {
+    height: 50px;
+    font-size: 16px;
+    color: #000;
+  }
 }
 </style>

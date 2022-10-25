@@ -26,8 +26,8 @@ export const UPDATE_PUBLISH_RESULT_MUTATION = gql`
 export const UPDATE_P_TC_OMMENTS_MUTATION = gql`
   mutation UpdateP_T_CommentMutation(
     $id: ID!
-    $p_comment: String!
-    $t_comment: String!
+    $p_comment: String
+    $t_comment: String
     $workspace_id: Int!
   ) {
     updatePTComment(

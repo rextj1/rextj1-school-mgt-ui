@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
-      <b-card class="mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="timetableDropdown">
           <b-row no-gutters>
             <b-col md="3">
@@ -54,8 +54,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.75rem; margin-top: 2.9rem"
+              size="md"
+              style="height: 45px; margin-top: 32px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -72,11 +72,11 @@
       <div
         v-show="timetableDropdownClass"
         class="p-4"
-        style="background-color:#fff"
+        style="background-color: #fff"
         @click="hideMenu"
       >
         <b-card no-body @click="hideMenu">
-          <b-tabs card style="font-size: 1.4rem">
+          <b-tabs card>
             <b-tab active @click="hideMenu">
               <template #title>
                 <b-icon icon="plus" /><strong>Create Subjects</strong>
@@ -84,7 +84,7 @@
 
               <div class="p-4">
                 <div class="p-3">
-                  <h3 class="mb-3">All Classes</h3>
+                  <h4 class="mb-3">All Classes</h4>
                   <b-table :items="subjects" :fields="fields">
                     <template #cell(#)="data">
                       {{ data.index + 1 }}
@@ -130,7 +130,7 @@
                             v-for="teacher in data.value"
                             :key="teacher.id"
                           >
-                            <h5 style="font-size: 1.3rem">
+                            <h5>
                               <nuxt-link :to="`/admin/teacher/${teacher.slug}`">
                                 {{ teacher.first_name }}
                                 {{ teacher.last_name }}</nuxt-link
@@ -197,7 +197,7 @@
                       <label
                         for="input-small"
                         class="label-padding"
-                        style="font-size: 2rem"
+                        style="font-size: 18px"
                         >Name:</label
                       >
                     </b-col>
@@ -222,7 +222,7 @@
                         type="submit"
                         variant="primary"
                         class="mr-4"
-                        size="lg"
+                        size="md"
                         :disabled="form.busy"
                       >
                         <b-spinner
@@ -242,8 +242,6 @@
               <template #title>
                 <strong>Assign Teachers</strong>
               </template>
-              <h3 class="p-4">Assign Subjects to Teacher</h3>
-            
 
               <div class="margin-down">
                 <!-- description -->
@@ -256,8 +254,8 @@
                 >
                   <b-row class="mb-4">
                     <b-col md="2">
-                      <label for="input-small" class="label-padding"
-                        >Subjects:</label
+                      <h5 for="input-small" class="label-padding"
+                        >Subjects:</h5
                       >
                     </b-col>
 
@@ -266,7 +264,7 @@
                         <b-form-select
                           id="subjects"
                           v-model="subjectx"
-                          style="height: 20rem"
+                          style="height: 18rem"
                           value-field="id"
                           text-field="subject"
                           :options="subjects"
@@ -282,8 +280,8 @@
 
                   <b-row class="py-4">
                     <b-col md="2">
-                      <label for="input-small" class="label-padding"
-                        >Assign Teacher:</label
+                      <h5 for="input-small" class="label-padding"
+                        >Assign Teacher:</h5
                       >
                     </b-col>
                     <b-col md="4">
@@ -320,7 +318,7 @@
                         variant="primary"
                         class="mr-4"
                         :disabled="busy"
-                        size="lg"
+                        size="md"
                       >
                         <b-spinner
                           v-if="busy"
@@ -355,7 +353,10 @@ import {
 import { TEACHERS_QUERIES } from '~/graphql/teachers/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -414,7 +415,7 @@ export default {
       variables() {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
-          klase_id: parseInt(this.form.class)
+          klase_id: parseInt(this.form.class),
         }
       },
     },

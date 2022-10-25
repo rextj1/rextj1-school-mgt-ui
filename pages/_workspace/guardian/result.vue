@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4 guardian-student-result">
+  <div class="p-3 guardian-student-result">
     <template v-if="nowloading"><Preload /></template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="studentResultQuery">
           <b-row>
             <b-col md="2">
@@ -51,7 +51,7 @@
               </b-form-group>
             </b-col>
 
-             <b-col md="2">
+            <b-col md="2">
               <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
@@ -92,6 +92,13 @@
                       :value="student.id"
                       >{{ student.last_name }} {{ student.first_name }}
                     </b-form-select-option>
+
+                    <!-- This slot appears above the options from 'options' prop -->
+                    <template #first>
+                      <b-form-select-option :value="null" disabled
+                        >-- select student--</b-form-select-option
+                      >
+                    </template>
                   </b-form-select>
                 </b-form-group>
               </div>
@@ -100,8 +107,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.85rem; margin-top: 2.85rem"
+              size="md"
+              style="height: 46px; margin-top: 33px"
               :disabled="isBusy"
               ><b-spinner
                 v-if="isBusy"
@@ -138,7 +145,11 @@ import {
   TERM_QUERIES,
 } from '~/graphql/marks/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import ExamSingleStudentResult from '~/components/Exam/SingleStudentResult.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { ExamSingleStudentResult, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -215,7 +226,7 @@ export default {
         this.form.term === null ||
         this.form.session === null
       ) {
-        return 
+        return
       } else {
         this.isBusy = true
         this.timetableDropdownClass = false
@@ -267,10 +278,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .guardian-student-result {
-  font-size: 1.6rem;
-
   .custom-select:focus {
     box-shadow: none;
   }
@@ -278,8 +287,8 @@ export default {
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 50px;
+    font-size: 16px;
     color: #000;
   }
 }

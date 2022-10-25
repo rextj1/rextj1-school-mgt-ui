@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile p-3">
     <template v-if="$apollo.queries.student.loading">
       <Preload />
     </template>
@@ -10,7 +10,7 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
@@ -52,7 +52,7 @@
             <p>Social Media Links</p>
 
             <p>
-              <b-badge style="font-size: 1.6rem" variant="warning"
+              <b-badge variant="warning"
                 >Subjects Assigned</b-badge
               >
             </p>
@@ -113,7 +113,10 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { STUDENT_QUERY } from '~/graphql/students/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {Preload},
   apollo: {
     student: {
       query: STUDENT_QUERY,
@@ -135,8 +138,6 @@ export default {
 
 <style lang="scss" scoped>
 .profile {
-  font-size: 1.6rem;
-  padding: 1rem;
 
   .first-detail p {
     display: block;

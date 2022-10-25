@@ -1,11 +1,12 @@
 <template>
-  <div class="profile p-4">
+  <div class="profile p-3">
     <template v-if="$apollo.queries.user.loading"><Preload /></template>
     <template v-else>
       <b-button
         class="shadow-sm mb-3"
-        variant="warning"
-        size="lg"
+        variant="light"
+        pill
+        size="md"
         @click="changePassword"
         >Change Password</b-button
       >
@@ -154,7 +155,10 @@
 
 <script>
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -250,9 +254,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.profile {
-  font-size: 1.6rem;
-  padding: 1rem;
-}
-</style>
+

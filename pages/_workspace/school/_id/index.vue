@@ -32,7 +32,10 @@
 import { GUARDIAN_DASHBOARD_QUERIES } from '@/graphql/guardians/queries'
 import { TEACHER_DASHBOARD_QUERIES } from '@/graphql/teachers/queries'
 import { STUDENT_DASHBOARD_QUERIEX } from '@/graphql/students/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {

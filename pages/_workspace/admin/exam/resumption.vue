@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-3">
     <template v-if="nowLoading">
       <Preload />
     </template>
     <template v-else>
       <b-card class="p-3 mb-4">
-         <h3 class="text-center mb-4 p-4">Enter Student Resumption Date</h3>
+        <h4 class="text-center mb-4 p-4">Enter Student Resumption Date</h4>
         <!-- end of setPromotion -->
 
         <b-form @submit.prevent="onSubmit">
@@ -52,7 +52,6 @@
                 class="mb-3"
                 size="lg"
                 required
-
               >
                 <!-- This slot appears above the options from 'options' prop -->
                 <template #first>
@@ -85,7 +84,7 @@
             </b-col>
           </b-row>
 
-          <b-row>
+          <b-row class="mt-3"> 
             <b-col md="2">
               <label for="input-small" class="label-padding">Session:</label>
             </b-col>
@@ -107,8 +106,8 @@
           <b-button
             type="submit"
             variant="primary"
-            size="lg"
-            style="height: 3.85rem; margin-top: 2.85rem"
+            size="md"
+            style="margin-top: 2.85rem"
             :disabled="form.busy"
             ><b-spinner
               class="mr-1 mb-1"
@@ -130,7 +129,10 @@ import Swal from 'sweetalert2'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { UPDATE_RESUMPTION_MUTATION } from '~/graphql/examRecord/mutations'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -172,8 +174,13 @@ export default {
     dynamicStudentClass(item) {
       this.dynamicClass = item
     },
-  async  onSubmit() {
-      if (this.form.term === null || this.form.session === null || this.form.start === null || this.form.end === null) {
+    async onSubmit() {
+      if (
+        this.form.term === null ||
+        this.form.session === null ||
+        this.form.start === null ||
+        this.form.end === null
+      ) {
         Swal.fire({
           title: 'Ooop...',
           icon: 'warning',

@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile p-3">
     <template v-if="$apollo.queries.teacher.loading"><Preload /></template>
     <template v-else>
       <b-button
@@ -8,7 +8,7 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
@@ -17,7 +17,7 @@
       <b-card class="user shadow">
         <div v-if="teacher.user.photo == null" class="text-center mb-4 mt-4">
           <b-img
-             src="@/assets/svg/user-avatar.svg"
+            src="@/assets/svg/user-avatar.svg"
             thumbnail
             fluid
             alt="School image"
@@ -51,7 +51,7 @@
             <p>L.G.A</p>
 
             <p>
-              <b-badge style="font-size: 1.6rem" variant="warning"
+              <b-badge style="font-size: 1.6px" variant="warning"
                 >Subjects Assigned</b-badge
               >
             </p>
@@ -104,7 +104,7 @@
                     v-for="subject in klase.subjects"
                     :key="subject.id"
                   >
-                    <div style="font-size: 1.4rem">{{ subject.subject }}</div>
+                    <div style="font-size: 1.4px">{{ subject.subject }}</div>
                   </b-nav-item>
                 </b-nav>
               </b-popover>
@@ -120,7 +120,10 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { TEACHER_QUERY } from '@/graphql/teachers/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   apollo: {
     teacher: {
       query: TEACHER_QUERY,
@@ -142,8 +145,6 @@ export default {
 
 <style lang="scss" scoped>
 .profile {
-  font-size: 1.6rem;
-  padding: 1rem;
 
   .first-detail p {
     display: block;

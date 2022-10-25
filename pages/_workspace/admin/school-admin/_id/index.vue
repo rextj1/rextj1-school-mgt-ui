@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile p-3">
     <template v-if="$apollo.queries.schoolAdmin.loading"><Preload /></template>
     <template v-else>
       <b-button
@@ -8,7 +8,7 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
@@ -89,7 +89,10 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { SCHOOL_ADMIN_QUERY } from '~/graphql/admin/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {Preload},
   apollo: {
     schoolAdmin: {
       query: SCHOOL_ADMIN_QUERY,
@@ -111,8 +114,6 @@ export default {
 
 <style lang="scss" scoped>
 .profile {
-  font-size: 1.6rem;
-  padding: 1rem;
 
   .first-detail p {
     display: block;

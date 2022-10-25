@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-3 view-payment">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="px-2 mb-4">
@@ -22,6 +22,12 @@
                     :value="student.id"
                     >{{ student.last_name }} {{ student.first_name }}
                   </b-form-select-option>
+                  
+                  <template #first>
+                      <b-form-select-option :value="null" disabled
+                        >-- select student--</b-form-select-option
+                      >
+                    </template>
                 </b-form-select>
               </b-form-group>
             </div>
@@ -29,8 +35,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.8rem; margin-top: 2.83rem"
+              size="md"
+              style="height: 46px; margin-top: 33px"
             >
               <b-spinner
                 v-if="isBusy"
@@ -61,12 +67,15 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { STUDENT_PAYMENT_RECORD_QUERIES } from '~/graphql/payments/queries'
 import { USER_GUARDIAN_QUERY } from '~/graphql/guardians/queries'
+import PaymentGuardianPaymentRecords from '~/components/Payment/GuardianPaymentRecords.vue'
+import Preload from '~/components/Preload.vue'
 
 export default {
+  components: { PaymentGuardianPaymentRecords, Preload },
   middleware: 'auth',
   data() {
     return {
-      PaidPaymentrecords: null,
+      PaidPaymentrecords: [],
       DuePaymentrecords: null,
       studentPaymentRecords: [],
       timetableDropdownClass: true,
@@ -121,7 +130,6 @@ export default {
           result({ loading, data }, key) {
             if (!loading) {
               this.DuePaymentrecords = data.studentPaymentRecords
-              console.log(this.DuePaymentrecords.length)
             }
           },
         })
@@ -147,23 +155,18 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .view-payment {
-  font-size: 1.6rem;
-
   .custom-select:focus {
     box-shadow: none;
   }
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    width: 35rem;
+    height: 50px;
+    font-size: 16px;
+    width: 300px;
     color: #000;
-    @include media-breakpoint-down(sm) {
-      width: 25rem;
-    }
   }
 }
 </style>

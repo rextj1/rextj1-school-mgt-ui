@@ -1,5 +1,5 @@
 <template>
-  <div class="add-admin">
+  <div class="add-admin  p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-button
@@ -8,13 +8,13 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <div class="p-4 admin__wrapper">
-        <h2 class="d-flex justify-content-center mb-4 mt-4">Register Admin</h2>
+      <div class="p-3 admin__wrapper">
+        <h3 class="text-center mb-4 mt-4">Register Admin</h3>
         <hr />
         <b-form
           v-if="show"
@@ -87,8 +87,8 @@
 
           <!--  -->
 
-          <b-row class="p-4">
-            <b-col md="4" class="p-4">
+          <b-row class="p-3">
+            <b-col md="4" class="p-3">
               <b-form-group label="First Name">
                 <b-form-input
                   id="firstName"
@@ -108,7 +108,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group id="last_name" label="Last Name">
                 <b-form-input
                   id="first_name"
@@ -127,7 +127,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group id="input-group-1" label="middle Name (optional)">
                 <b-form-input
                   id="input-1"
@@ -140,7 +140,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group id="input-group-1" label="Email:">
                 <b-form-input
                   id="input-1"
@@ -159,7 +159,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group id="input-group-1" label="Phone no:">
                 <b-form-input
                   id="phone"
@@ -180,7 +180,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Qualification">
                 <b-form-input
                   id="qualification"
@@ -199,7 +199,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Religion">
                 <b-form-input
                   id="religion"
@@ -218,7 +218,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Gender">
                 <b-form-select
                   v-model="form.schoolAdminTable.gender"
@@ -239,7 +239,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Date of birth">
                 <b-form-datepicker
                   id="datepicker-buttons"
@@ -260,7 +260,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
@@ -283,7 +283,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
@@ -307,7 +307,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
@@ -334,7 +334,7 @@
               </div>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-3">
               <b-form-group id="input-group-1" label="City">
                 <b-form-input
                   id="lga"
@@ -344,13 +344,15 @@
                   name="lga"
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userTable.city')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userTable.city')"
+                >
                   {{ form.errors.get('userTable.city') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-3">
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
                   id="lga"
@@ -368,13 +370,13 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
+            <b-col md="12" class="d-flex justify-content-center p-3 mt-2 mb-4"
               ><b-button
                 type="submit"
                 pill
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="md"
               >
                 <b-spinner
                   v-if="form.busy"
@@ -386,8 +388,7 @@
               <b-button
                 pill
                 class="ml-4"
-                style="font-size: 1.4rem"
-                size="lg"
+                size="md"
                 type="reset"
                 variant="danger"
                 >Reset</b-button
@@ -411,8 +412,10 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { CREATE_SCHOOL_ADMIN_MUTATION } from '~/graphql/admin/mutations'
+import Preload from '~/components/Preload.vue'
 
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -601,20 +604,12 @@ export default {
 
 <style lang="scss" scoped>
 .add-admin {
-  font-size: 1.4rem;
-  padding: 2rem;
-  .form-control,
-  .mb-3 {
-    background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
-  }
 
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -650,7 +645,7 @@ export default {
 
   .admin__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

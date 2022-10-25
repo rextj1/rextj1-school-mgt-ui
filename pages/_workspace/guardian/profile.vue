@@ -1,17 +1,17 @@
 <template>
-  <div class="profile p-4">
+  <div class="p-3">
     <template v-if="$apollo.queries.user.loading"> <Preload /></template>
     <template v-else>
       <b-button
         class="shadow-sm mb-3"
-        variant="warning"
-        size="lg"
+        variant="light"
+        pill
+        size="md"
         @click="changePassword"
         >Change Password</b-button
       >
-      <!-- {{ user.guardian.students[0] }} -->
 
-      <b-card class="students shadow">
+      <b-card class="students shadow-sm">
         <div class="text-center mb-4">
           <b-img
             src="@/assets/svg/user-avatar.svg"
@@ -129,8 +129,11 @@
 <script>
 import { USER_GUARDIAN_QUERY } from '@/graphql/guardians/queries'
 import { CHANGE_USER_PASSWORD_MUTATION } from '~/graphql/users/mutations'
+import Preload from '~/components/Preload.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -225,37 +228,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.profile {
-  font-size: 1.6rem;
-  padding: 1rem;
-
-  // .first-detail p {
-  //   display: block;
-  //   margin-left: 40%;
-  // }
-  // .first-details p {
-  //   display: block;
-  //   margin-left: 30%;
-  //   font-weight: bold;
-  // }
-  // @include media-breakpoint-down(md) {
-  //   .first-detail p {
-  //     margin-left: 0;
-  //   }
-  //   .first-details p {
-  //     margin-left: 0;
-  //   }
-  // }
-  // @include media-breakpoint-down(sm) {
-  //   .col-md-6 {
-  //     flex: 0 0 50%;
-  //     max-width: 50%;
-  //   }
-  //   .first-details p {
-  //     margin-left: 50%;
-  //   }
-  // }
-}
-</style>

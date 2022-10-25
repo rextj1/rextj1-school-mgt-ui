@@ -75,6 +75,23 @@ export const STUDENT_PAYMENT_RECORD_QUERIES = gql`
   ${PAYMENT_RECORD_FIELDS_FRAGMENT}
 `
 
+export const STUDENT_PAID_PAYMENT_RECORD_QUERIES = gql`
+  query StudentPaidPaymentRecordQueries(
+    $student_id: Int
+    $status: String!
+    $workspaceId: Int
+  ) {
+    studentPaidPaymentRecords(
+      student_id: $student_id
+      status: $status
+      workspaceId: $workspaceId
+    ) {
+      ...PaymentRecordFields
+    }
+  }
+  ${PAYMENT_RECORD_FIELDS_FRAGMENT}
+`
+
 export const STUDENT_PAYMENT_RECORD_QUERY = gql`
   query StudentPaymentRecordQuery(
     $student_id: Int

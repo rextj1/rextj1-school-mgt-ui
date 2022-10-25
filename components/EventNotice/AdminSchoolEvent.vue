@@ -1,6 +1,6 @@
 <template>
-  <div class="liberian">
-    <div class="shadow p-4 liberian__wrapper mt-4">
+  <div class="event">
+    <div class="shadow p-4 event__wrapper mt-4">
       <h1 class="d-flex justify-content-center mb-4 mt-4">Event Board</h1>
 
       <b-row no-gutters>
@@ -82,16 +82,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.liberian {
-  font-size: 1.6rem;
-  padding: 2rem;
+.event {
+  padding: 20px;
   .form-control {
     background-color: var(--color-input);
   }
 
-  .liberian__wrapper {
+  .event__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

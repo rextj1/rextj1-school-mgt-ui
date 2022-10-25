@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal
-      size="md"
+      size="lg"
       centered
       :value="value"
       :visible="value"
@@ -160,12 +160,10 @@ export default {
 @import '~@/assets/scss/variables';
 
 .edit-lead-modal {
-  padding: 4rem;
-  font-size: 17px;
+  padding: 40px;
 
   .form-control {
     border-radius: 10px;
-    font-size: 15px;
   }
 }
 </style>

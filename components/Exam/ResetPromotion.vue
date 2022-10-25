@@ -276,21 +276,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.card {
-  font-size: 1.5rem;
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-  .custom-select {
-    option {
-      font-size: 1.5rem !important;
-    }
-  }
-}
-</style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="$fetchState.pending"><Preload /></template>
     <template v-else>
-      <b-card class="p-4">
+      <b-card>
         <div v-if="examTimetables.length > 0">
           <vue-html2pdf
             ref="html2Pdf"
@@ -21,14 +21,14 @@
             <section slot="pdf-content">
               <b-row no-gutters>
                 <b-col md="12">
-                  <h3 class="text-center mt-5 mb-4">
+                  <h4 class="text-center mt-5 mb-4">
                     <span style="color: green"
                       >({{ user.student.klase.name }})</span
                     >
                     Exam timetable
-                  </h3>
+                  </h4>
 
-                  <div class="p-3">
+                  <div>
                     <b-table
                       hover
                       bordered
@@ -47,12 +47,12 @@
           </vue-html2pdf>
 
           <div class="text-center mb-4">
-            <b-button variant="danger" size="lg" @click.prevent="generateReport"
+            <b-button variant="danger" size="md" @click.prevent="generateReport"
               >download</b-button
             >
           </div>
         </div>
-        <div v-else class="p-4">
+        <div v-else>
           <h2 class="text-center">No record found</h2>
         </div>
       </b-card>
@@ -65,7 +65,10 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { EXAM_TIMETABLE_QUERIES } from '~/graphql/examTimetables/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -130,5 +133,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped></style>

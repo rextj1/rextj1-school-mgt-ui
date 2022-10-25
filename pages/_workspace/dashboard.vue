@@ -1,5 +1,5 @@
 <template>
-  <div class="home wrapper p-4">
+  <div class="home dashboard-wrapper p-3">
     <div v-if="!user"></div>
     <div v-else v-for="role in user.roles" :key="role.id">
       <span
@@ -12,8 +12,8 @@
           role.name == 'admin'
         "
       >
-        <b-row no-gutters>
-          <b-col class="p-3">
+        <b-row>
+          <b-col md="4" class="py-2">
             <b-card class="card1 p-3 shadow">
               <img
                 src="@/assets/svg/users-svgrepo.svg"
@@ -23,13 +23,13 @@
               />
 
               <div class="xxx">
-                <h3>{{ studentsDashboard.length }}</h3>
-                <h2 class="mr-1">Students</h2>
+                <h5>{{ studentsDashboard.length }}</h5>
+                <h4 class="mr-1">Students</h4>
               </div>
             </b-card>
           </b-col>
 
-          <b-col class="p-3">
+          <b-col  md="4" class="py-2">
             <b-card class="card2 shadow p-3">
               <img
                 src="@/assets/svg/people-svgrepo.svg"
@@ -38,13 +38,13 @@
                 alt=""
               />
               <div class="xxx">
-                <h3>{{ teachersDashboard.length }}</h3>
-                <h2>Teachers</h2>
+                <h5>{{ teachersDashboard.length }}</h5>
+                <h4>Teachers</h4>
               </div>
             </b-card>
           </b-col>
 
-          <b-col class="p-3">
+          <b-col  md="4" class="py-2">
             <b-card class="card card3 shadow p-3">
               <img
                 src="@/assets/svg/users-svgrepo.svg"
@@ -53,34 +53,15 @@
                 alt=""
               />
               <div class="xxx">
-                <h3>{{ guardiansDashboard.length }}</h3>
-                <h2>Guardians</h2>
+                <h5>{{ guardiansDashboard.length }}</h5>
+                <h4>Guardians</h4>
               </div>
             </b-card>
           </b-col>
-
-          <span v-for="role in user.roles" :key="role.id">
-            <span v-if="role.name == 'super admin'">
-              <b-col class="p-3">
-                <b-card class="card3 shadow p-3">
-                  <img
-                    src="@/assets/svg/users-svgrepo.svg"
-                    width="100"
-                    class="red"
-                    alt=""
-                  />
-                  <div class="xxx">
-                    <h3>{{ guardiansDashboard.length }}</h3>
-                    <h2>Parents</h2>
-                  </div>
-                </b-card>
-              </b-col>
-            </span>
-          </span>
         </b-row>
 
-        <b-row no-gutters>
-          <b-col md="6" class="p-3 pie-chart">
+        <b-row>
+          <b-col md="6" class="py-3 pie-chart">
             <b-card class="cardA">
               <apexchart
                 width="380"
@@ -91,7 +72,7 @@
             </b-card>
           </b-col>
 
-          <b-col md="6" class="p-3 donut-chart">
+          <b-col md="6" class="py-3 donut-chart">
             <b-card class="cardA">
               <apexchart
                 width="380"
@@ -105,7 +86,7 @@
       </span>
     </div>
 
-    <div class="cardB shadow p-2">
+    <div class="cardB shadow">
       <b-tabs card>
         <b-tab active class="card-overflow">
           <template #title>
@@ -133,8 +114,11 @@ import { GUARDIAN_DASHBOARD_QUERIES } from '@/graphql/guardians/queries'
 import { TEACHER_DASHBOARD_QUERIES } from '@/graphql/teachers/queries'
 import { STUDENT_DASHBOARD_QUERIEX } from '@/graphql/students/queries'
 import { ROLEX_QUERIEX } from '~/graphql/users/queries'
+import EventNoticeSchoolNotice from '~/components/EventNotice/SchoolNotice.vue'
+import EventNoticeSchoolEvent from '~/components/EventNotice/SchoolEvent.vue'
 
 export default {
+  components: { EventNoticeSchoolNotice, EventNoticeSchoolEvent },
   middleware: 'auth',
   data() {
     return {
@@ -206,13 +190,11 @@ export default {
 
 <style lang="scss">
 .home {
-  // margin-top: 5rem;
-  font-size: 1.6rem;
-  &.wrapper {
+  &.dashboard-wrapper {
     flex: 1 1 0;
 
     @media (max-width: 768px) {
-      padding-left: 2rem;
+      padding-left: 1.7rem;
     }
     .pie-chart {
       @include media-breakpoint-down(md) {
@@ -252,14 +234,15 @@ export default {
       .xxx {
         display: flex;
         flex-direction: column;
+
       }
     }
 
     border: none;
-    margin-bottom: 4rem;
-    border-radius: 0.5rem;
+    margin-bottom: 10px;
+    border-radius: 5px;
     position: relative;
-    height: 18rem;
+    height: 11rem;
 
     .card-image {
       position: absolute;
@@ -267,10 +250,10 @@ export default {
       right: 0;
       height: 100%;
     }
-    h4,
-    h3 {
+    h5,
+    h4 {
       color: #fff;
-      padding: 2.2rem 1.3rem;
+      padding: 22px 13px;
     }
 
     .beep {
@@ -294,22 +277,22 @@ export default {
   }
   .cardA {
     border: none;
-    margin-bottom: 4rem;
-    border-radius: 0.5rem;
-    height: 26rem;
+    margin-bottom: 40px;
+    border-radius: 5px;
+    height: 250px;
     background-color: #fff;
   }
 
-  .cardB {
+  .cardB { 
     border: none;
-    margin-bottom: 2rem;
-    border-radius: 0.5rem;
+    margin-bottom: 2px;
+    border-radius: 5px;
     position: sticky;
     background-color: #fff;
 
     .card-overflow {
       overflow: auto;
-      height: 45rem;
+      height: 395px;
     }
 
     .nav-link.active {

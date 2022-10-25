@@ -1,13 +1,13 @@
 <template>
-  <div class="p-4 student-result">
+  <div class="p-3 student-result">
     <template v-if="nowLoading">
       <Preload />
     </template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="studentResult">
           <b-row>
-            <b-col md="2">
+            <b-col md="3">
               <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
@@ -30,7 +30,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="2">
+            <b-col md="3">
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
@@ -53,7 +53,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="2">
+            <b-col md="3">
               <b-form-group label="Sessions">
                 <b-form-select
                   id="sessions"
@@ -78,8 +78,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.85rem; margin-top: 2.85rem"
+              size="md"
+              style="height: 45px; margin-top: 32px"
               :disabled="isBusy"
               ><b-spinner
                 v-if="isBusy"
@@ -116,7 +116,11 @@ import {
 } from '~/graphql/marks/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
+import ExamSingleStudentResult from '~/components/Exam/SingleStudentResult.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { ExamSingleStudentResult, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -183,7 +187,7 @@ export default {
       if (
         this.form.class === null ||
         this.form.term === null ||
-        this.form.session === null 
+        this.form.session === null
       ) {
         return false
       } else {
@@ -238,9 +242,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .student-result {
-  font-size: 1.6rem;
 
   .custom-select:focus {
     box-shadow: none;
@@ -249,8 +252,8 @@ export default {
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 50px;
+    font-size: 16px;
     color: #000;
   }
 }

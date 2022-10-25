@@ -1,16 +1,16 @@
 <template>
-  <div class="student">
+  <div class="timetable-modal p-3">
     <b-modal
       :value="value"
       :visible="value"
       :hide-backdrop="false"
       title="Edit Data"
       centered
-      size="lg"
+      size="xl"
       :hide-footer="true"
       @change="$emit('input', $event)"
     >
-      <div class="p-4 student__wrapper">
+      <div class="p-3 timetable__wrapper">
         <div class="exam-timetble">
           <b-form
             method="POST"
@@ -19,7 +19,7 @@
           >
             <table class="table table-sm table-bordered">
               <thead>
-                <tr style="font-size: 1.4rem">
+                <tr>
                   <th scope="col">Time</th>
                   <th scope="col">Monday</th>
                   <th scope="col">Tuesday</th>
@@ -30,13 +30,13 @@
               </thead>
 
               <tbody>
-                <tr style="font-size: 1.4rem">
+                <tr>
                   <th scope="row">
                     <input
                       class="form-control form-control-sm"
                       v-model="form.time"
                       type="text"
-                      style="font-size: 1.4rem"
+                    
                     />
                   </th>
 
@@ -45,7 +45,7 @@
                       class="form-control form-control-sm"
                       v-model="form.monday"
                       type="text"
-                      style="font-size: 1.4rem"
+                    
                     />
                   </th>
                   <th scope="row">
@@ -53,7 +53,7 @@
                       class="form-control form-control-sm"
                       v-model="form.tuesday"
                       type="text"
-                      style="font-size: 1.4rem"
+                    
                     />
                   </th>
                   <th scope="row">
@@ -61,7 +61,7 @@
                       class="form-control form-control-sm"
                       v-model="form.wednesday"
                       type="text"
-                      style="font-size: 1.4rem"
+                    
                     />
                   </th>
                   <th scope="row">
@@ -69,7 +69,7 @@
                       class="form-control form-control-sm"
                       v-model="form.thursday"
                       type="text"
-                      style="font-size: 1.4rem"
+                    
                     />
                   </th>
                   <th scope="row">
@@ -77,14 +77,14 @@
                       class="form-control form-control-sm"
                       v-model="form.friday"
                       type="text"
-                      style="font-size: 1.4rem"
+                    
                     />
                   </th>
                 </tr>
               </tbody>
             </table>
             <div class="d-flex justify-content-center">
-              <b-button type="submit" variant="primary" class="mr-4" size="lg">
+              <b-button type="submit" variant="primary" class="mr-4" size="md">
                 <b-spinner
                   v-if="form.busy"
                   variant="light"
@@ -248,13 +248,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
-
-  .student__wrapper {
+.timetable-modal {
+  .timetable__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

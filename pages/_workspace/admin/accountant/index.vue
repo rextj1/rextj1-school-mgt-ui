@@ -1,5 +1,5 @@
 <template>
-  <div class="accountant">
+  <div class="accountant p-3">
     <div v-if="$apollo.queries.accountants.loading">
       <Preload />
     </div>
@@ -22,9 +22,9 @@
         <b-col md="12">
           <div class="card-body">
             <div class="card-student shadow p-3" style="background-color: #fff">
-              <h2 class="d-flex justify-content-center mb-4 mt-4">
+              <h4 class="d-flex justify-content-center mb-4 mt-4">
                 All Accountants
-              </h2>
+              </h4>
               <hr />
               <b-container fluid>
                 <!-- User Interface controls -->
@@ -176,7 +176,6 @@
                   small
                   striped
                   hover
-                  style="font-size: 1.3rem"
                   :responsive="true"
                   @filtered="onFiltered"
                 >
@@ -213,30 +212,30 @@
                           },
                         }"
                         variant="primary"
-                        size="md"
+                        size="sm"
                         class="px-3"
                       >
                         <b-icon icon="eye" class="mr-1"></b-icon>
-                        View
+                        
                       </b-button>
 
                       <b-button
                         variant="info"
-                        size="md"
-                        class="px-3"
+                        size="sm"
+                         class="px-3 ml-1"
                         @click="handleEditModal(data.item.id)"
                       >
-                        Edit
+                        <b-icon icon="pen" class="mr-1"></b-icon>
                       </b-button>
 
                       <b-button
                         variant="danger"
                         size="sm"
-                        class="px-3"
+                        class="px-3 ml-1"
                         @click="handleDeleteModal(data.item)"
                       >
                         <b-icon icon="trash" class="mr-1" />
-                        Delete
+                        
                       </b-button>
                     </div>
                   </template>
@@ -257,8 +256,8 @@
                   class="modal"
                   :hide-backdrop="false"
                   scrollable
-                  title="Edit Teacher Data"
-                  size="lg"
+                  title="Edit Accountant Data"
+                  size="xl"
                   :hide-footer="true"
                 >
                   <AdminEditAccountantModal
@@ -273,7 +272,7 @@
     </div>
 
     <!-- delete modal -->
-    <b-modal id="DeleteModal" size="sm" centered hide-header hide-footer>
+    <b-modal id="DeleteModal" size="md" centered hide-header hide-footer>
       <div class="p-5 text-center">
         <Spinner v-if="isDeleting" size="4" />
         <template v-else>
@@ -319,8 +318,13 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { DELETE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
 import { ACCOUNTANT_QUERIES } from '~/graphql/accountants/queries'
+import Preload from '~/components/Preload.vue'
+import AdminEditAccountantModal from '~/components/AdminEdit/AccountantModal.vue'
+import Spinner from '~/components/Global/Spinner.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { Preload,AdminEditAccountantModal,Spinner },
   middleware: 'auth',
   data() {
     return {
@@ -522,39 +526,33 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .accountant {
-  font-size: 1.4rem !important;
-  padding: 2rem;
 
   .add-student {
-    font-size: 1.6rem;
     box-shadow: 0 5px 5px 0 #1f64b367;
   }
   .card-body {
     padding: 0;
     .card-student {
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 5px;
       height: auto;
 
       .input-group > .input-group-append > .btn,
       .input-group > .input-group-append > .input-group-text {
         background: var(--color-primary);
         color: #fff;
-        font-size: 1rem;
       }
       .input-group:not(.has-validation) > .custom-select:not(:last-child),
       .input-group > .form-control:not(:first-child),
       .input-group > .custom-select:not(:first-child),
       .custom-select {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 38px;
       }
       .form-control,
       .mb-3 {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 38px;
       }
     }
   }

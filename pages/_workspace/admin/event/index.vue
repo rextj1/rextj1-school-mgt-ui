@@ -1,10 +1,10 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="$apollo.queries.events.loading"><Preload /></template>
     <template v-else>
       <div>
         <b-card no-body>
-          <b-tabs card style="font-size: 1.4rem">
+          <b-tabs card>
             <b-tab active>
               <template #title>
                 <b-icon icon="plus" /><strong>Add Event</strong>
@@ -37,7 +37,7 @@
                         reset-button
                         close-button
                         locale="en"
-                        size="lg"
+                        size="md"
                       ></b-form-datepicker>
                       <b-form-invalid-feedback
                         :state="!form.errors.has('date')"
@@ -53,7 +53,7 @@
                       pill
                       variant="primary"
                       class="mr-4"
-                      size="lg"
+                      size="md"
                     >
                       <b-spinner
                         v-if="form.busy"
@@ -65,8 +65,7 @@
                     <b-button
                       pill
                       class="ml-4"
-                      style="font-size: 1.4rem"
-                      size="lg"
+                      size="md"
                       type="reset"
                       variant="danger"
                       >Reset</b-button
@@ -83,7 +82,7 @@
 
               <div class="d-flex justify-content-between">
                 <b-form-checkbox
-                  style="margin-left: 2.2rem"
+                  style="margin-left: 22px"
                   @change="selectAllEvents"
                 >
                 </b-form-checkbox>
@@ -116,7 +115,6 @@
                   </template>
                   <template #cell(date)="date">
                     <b-badge
-                      style="font-size: 1.4rem"
                       class="d-inline-block"
                       variant="warning"
                       >{{ date.value }}</b-badge
@@ -140,7 +138,7 @@
                           class="mr-1 mb-1"
                         />
 
-                        <h5>Publish</h5>
+                        Publish
                       </b-button>
 
                       <b-button
@@ -159,7 +157,7 @@
                           class="mr-1 mb-1"
                         />
 
-                        <h5>Unpublish</h5>
+                        Unpublish
                       </b-button>
 
                       <b-button
@@ -265,8 +263,13 @@ import {
   PUBLISH_EVENT_MUTATION,
 } from '~/graphql/events/mutations'
 import { EVENT_QUERIES } from '~/graphql/events/queries'
+import AdminEditEventModal from '~/components/AdminEdit/EventModal.vue'
+import Preload from '~/components/Preload.vue'
+import Spinner from '~/components/Global/Spinner.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: {AdminEditEventModal, Preload, Spinner},
   middleware: 'auth',
   // to remove html tags
   // filters: {
@@ -347,10 +350,7 @@ export default {
               })
 
               data.events.push(createEvent)
-              // console.log(dataCopy)
-
-              // Write our data back to the cache.
-              // Write back to the cache
+            
               store.writeQuery({
                 query: EVENT_QUERIES,
                 variables: {

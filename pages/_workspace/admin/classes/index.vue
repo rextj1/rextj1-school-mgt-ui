@@ -1,112 +1,129 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <div v-if="nowLoading">
       <Preload />
     </div>
     <div v-else>
       <div>
         <b-card no-body>
-          <b-tabs card style="font-size: 1.4rem">
+          <b-tabs card>
             <b-tab active>
               <template #title>
                 <b-icon icon="plus" /><strong>Create Classes</strong>
               </template>
               <div class="p-4">
-                <div class="p-3">
-                  <h3 class="mb-3">All Classes</h3>
-                  <b-table :items="klases" :fields="fields">
-                    <template #cell(#)="data">
-                      {{ data.index + 1 }}
-                    </template>
-
-                    <template #cell(name)="data">
-                      <div v-if="klaseEditingId == data.item.id">
-                        <b-row no-gutters>
-                          <b-col md="4">
-                            <input
-                              v-model="form.names"
-                              style="width: 10rem"
-                              type="text"
-                              required
-                              size="lg"
-                              @blur="updatingKlase(data.value)"
-                              @keydown.enter="editFiled(data.item.id)"
-                            />
-                          </b-col>
-                        </b-row>
-                      </div>
-
-                      <div v-else @click="setToEditing(data.item.id)">
-                        {{ data.value }}
-                      </div>
-                    </template>
-
-                    <template #cell(teachers)="data">
-                      <b-badge
-                        :id="`teachers-${data.index}`"
-                        variant="info"
-                        class="px-2"
-                      >
-                        {{ data.value.length }} Teacheers
-                      </b-badge>
-                      <b-popover
-                        v-if="data.value.length > 0"
-                        :target="`teachers-${data.index}`"
-                        triggers="hover click"
-                      >
-                        <b-nav vertical>
-                          <b-nav-item
-                            v-for="teacher in data.value"
-                            :key="teacher.id"
-                          >
-                            <h5 style="font-size: 1.3rem">
-                              <nuxt-link :to="`/admin/teacher/${teacher.slug}`">
-                                {{ teacher.first_name }}
-                                {{ teacher.last_name }}</nuxt-link
-                              >
-                            </h5>
-                          </b-nav-item>
-                        </b-nav>
-                      </b-popover>
-                    </template>
-                    <template #cell(actions)="data">
-                      <b-button
-                        variant="primary"
-                        size="sm"
-                        class="px-3"
-                        @click="setToEditing(data.item.id)"
-                      >
-                        <b-icon icon="pencil" class="mr-1"> </b-icon>
-                        Edit
-                      </b-button>
-
-                      <b-button
-                        v-if="data.item.id == loadingId"
-                        variant="danger"
-                        size="sm"
-                        class="px-3"
-                      >
-                        <b-spinner
-                          class="mr-1 mb-1"
-                          small
-                          variant="light"
-                          v-if="loading"
-                        />
-                        Revoke teacher
-                      </b-button>
-
-                      <b-button
-                        v-else
-                        variant="danger"
-                        size="sm"
-                        class="px-3"
-                        @click="deleteClass(data.item.id)"
-                      >
-                        Revoke teacher
-                      </b-button>
-                    </template>
-                  </b-table>
+                <div class="d-flex justify-content-between">
+                  <h4 class="mb-3">All Classes</h4>
+                  <b-button
+                    class="shadow mb-4"
+                    pill
+                    variant="warning"
+                    size="md"
+                    @click="refreshClass"
+                  >
+                    <b-spinner
+                      v-if="isBusy"
+                      small
+                      variant="light"
+                      class="mr-1 mb-1"
+                    />
+                    Refresh Class</b-button
+                  >
                 </div>
+
+                <b-table :items="klases" :fields="fields">
+                  <template #cell(#)="data">
+                    {{ data.index + 1 }}
+                  </template>
+
+                  <template #cell(name)="data">
+                    <div v-if="klaseEditingId == data.item.id">
+                      <b-row no-gutters>
+                        <b-col md="4">
+                          <input
+                            v-model="form.names"
+                            type="text"
+                            required
+                            size="lg"
+                            @blur="updatingKlase(data.value)"
+                            @keydown.enter="editFiled(data.item.id)"
+                          />
+                        </b-col>
+                      </b-row>
+                    </div>
+
+                    <div v-else @click="setToEditing(data.item.id)">
+                      {{ data.value }}
+                    </div>
+                  </template>
+
+                  <template #cell(teachers)="data">
+                    <b-badge
+                      :id="`teachers-${data.index}`"
+                      variant="info"
+                      class="px-2"
+                    >
+                      {{ data.value.length }} Teacheers
+                    </b-badge>
+                    <b-popover
+                      v-if="data.value.length > 0"
+                      :target="`teachers-${data.index}`"
+                      triggers="hover click"
+                    >
+                      <b-nav vertical>
+                        <b-nav-item
+                          v-for="teacher in data.value"
+                          :key="teacher.id"
+                        >
+                          <h5>
+                            <nuxt-link :to="`/admin/teacher/${teacher.slug}`">
+                              {{ teacher.first_name }}
+                              {{ teacher.last_name }}</nuxt-link
+                            >
+                          </h5>
+                        </b-nav-item>
+                      </b-nav>
+                    </b-popover>
+                  </template>
+                  <template #cell(actions)="data">
+                    <b-button
+                      variant="primary"
+                      size="sm"
+                      class="px-3"
+                      @click="setToEditing(data.item.id)"
+                    >
+                      <b-icon icon="pencil" class="mr-1"> </b-icon>
+                      Edit
+                    </b-button>
+
+                    <b-button
+                      v-if="data.item.id == loadingId"
+                      variant="danger"
+                      size="sm"
+                      class="px-3"
+                    >
+                      <b-spinner
+                        class="mr-1 mb-1"
+                        small
+                        variant="light"
+                        v-if="loading"
+                      />
+                      <b-icon icon="circle" class="mr-1"> </b-icon>
+                      Revoke teacher
+                    </b-button>
+
+                    <b-button
+                      v-else
+                      variant="danger"
+                      size="sm"
+                      class="px-3"
+                      @click="deleteClass(data.item.id)"
+                    >
+                      <b-icon icon="circle" class="mr-1"> </b-icon>
+                      Revoke teacher
+                    </b-button>
+                  </template>
+                </b-table>
               </div>
 
               <!-- Info modal -->
@@ -125,7 +142,7 @@
                       <label
                         for="input-small"
                         class="label-padding"
-                        style="font-size: 1.6rem"
+                        style="font-size: 18px"
                         >Name:</label
                       >
                     </b-col>
@@ -140,7 +157,7 @@
                           trim
                           type="text"
                           required
-                          size="smd"
+                          size="lg"
                         >
                         </b-form-input>
                         <b-form-invalid-feedback
@@ -154,7 +171,7 @@
                         type="submit"
                         variant="primary"
                         class="mr-4"
-                        size="lg"
+                        size="md"
                         :disabled="form.busy"
                       >
                         <b-spinner
@@ -198,7 +215,7 @@
                           text-field="name"
                           :options="klases"
                           class="mb-3"
-                          size="smd"
+                          size="md"
                           required
                         >
                           <template #first>
@@ -245,7 +262,7 @@
                         variant="primary"
                         class="mr-4"
                         :disabled="busy"
-                        size="lg"
+                        size="md"
                       >
                         <b-spinner
                           v-if="busy"
@@ -278,11 +295,15 @@ import {
   UPDATE_KLASE_MUTATION,
 } from '@/graphql/klases/mutations'
 import { TEACHERS_QUERIES } from '~/graphql/teachers/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
       id: 0,
+      isBusy: false,
       loadingId: null,
       loading: false,
       klaseEditingId: '',
@@ -349,6 +370,16 @@ export default {
     }),
   },
   methods: {
+    refreshClass() {
+      this.isBusy = true
+      setTimeout(() => {
+        if (this.isBusy == true) {
+          this.$apollo.queries.klases.refresh()
+
+          this.isBusy = false
+        }
+      }, 1500)
+    },
     // inline editing
     setToEditing(item) {
       this.klaseEditingId = item
@@ -491,19 +522,6 @@ export default {
               klase: parseInt(this.form.klase),
               teacher: this.form.teacher,
             },
-            update: (store, { data: { assignKlaseToTeacher } }) => {
-              // Read the data from our cache for this query.
-              const data = store.readQuery({
-                query: KLASE_QUERIES,
-                workspaceId: parseInt(this.mainWorkspace.id),
-              })
-              data.klases = assignKlaseToTeacher
-              store.writeQuery({
-                query: KLASE_QUERIES,
-                workspaceId: parseInt(this.mainWorkspace.id),
-                data,
-              })
-            },
           })
           .then(() => {
             this.busy = false
@@ -546,27 +564,6 @@ export default {
           variables: {
             id: parseInt(deleteId),
           },
-          update: (store, { data: { deleteKlase } }) => {
-            const data = store.readQuery({
-              query: KLASE_QUERIES,
-              variables: {
-                workspaceId: parseInt(this.mainWorkspace.id),
-              },
-            })
-
-            data.klases.filter((m) => m.id === deleteId)
-            data.klases = deleteKlase
-
-            // const index = data.subjects.findIndex((m) => m.id == deleteId)
-
-            store.readQuery({
-              query: KLASE_QUERIES,
-              variables: {
-                workspaceId: parseInt(this.mainWorkspace.id),
-              },
-              data,
-            })
-          },
         })
         .then(() => {
           Swal.fire({
@@ -577,6 +574,7 @@ export default {
             background: '#4bb543',
             toast: false,
             backdrop: false,
+            showConfirmButton: false,
           })
           this.loading = false
         })

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="$apollo.queries.klases.loading"><Preload /></template>
     <template v-else>
       <b-card class="mb-4 d-flex">
@@ -31,8 +31,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.75rem; margin-top: 2.9rem"
+              size="md"
+              style="height: 45px; margin-top: 32px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -50,7 +50,7 @@
         style="background-color: #fff"
       >
         <b-card no-body>
-          <div class="p-4">
+        
             <div class="p-3">
               <h3 class="mb-3">All Sections</h3>
               <b-table :items="sections" :fields="fields">
@@ -92,7 +92,7 @@
                 </template>
               </b-table>
             </div>
-          </div>
+       
 
           <!-- Add Classes -->
           <div class="margin-down">
@@ -110,7 +110,7 @@
                   <label
                     for="input-small"
                     class="label-padding ml-4"
-                    style="font-size: 1.6rem"
+                    style="font-size: 18px"
                     >Name:</label
                   >
                 </b-col>
@@ -133,7 +133,7 @@
                     type="submit"
                     variant="primary"
                     class="mr-4"
-                    size="lg"
+                    size="md"
                     :disabled="form.busy"
                   >
                     <b-spinner
@@ -163,7 +163,10 @@ import {
   UPDATE_SECTION_MUTATION,
 } from '~/graphql/sections/mutations'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {

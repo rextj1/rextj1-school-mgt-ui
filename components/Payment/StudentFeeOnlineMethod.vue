@@ -1,5 +1,5 @@
 <template>
-  <div class="fonts">
+  <div class="online-payment">
     <b-row no-gutters>
       <b-col md="12">
         <div class="card-body">
@@ -105,38 +105,33 @@ export default {
 </script>
 
 <style lang="scss">
-.fonts {
-  font-size: 1.4rem !important;
-  padding: 2rem;
+.online-payment {
+  padding: 20px;
 
-  .add-student {
-    font-size: 1.6rem;
-    box-shadow: 0 5px 5px 0 #1f64b367;
-  }
   .card-body {
     padding: 0;
     .card-student {
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 5px;
       height: auto;
 
       .input-group > .input-group-append > .btn,
       .input-group > .input-group-append > .input-group-text {
         background: var(--color-primary);
         color: #fff;
-        font-size: 1rem;
+        font-size: 10px;
       }
       .input-group:not(.has-validation) > .custom-select:not(:last-child),
       .input-group > .form-control:not(:first-child),
       .input-group > .custom-select:not(:first-child),
       .custom-select {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 32px;
+        font-size: 12px;
       }
       .form-control,
       .mb-3 {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 32px;
+        font-size: 12px;
       }
     }
   }

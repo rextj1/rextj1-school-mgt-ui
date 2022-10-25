@@ -1,8 +1,8 @@
 <template>
-  <div class="fee-payment p-4">
+  <div class="fee-payment p-3">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
             <b-col md="2">
@@ -77,9 +77,9 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
+              size="md"
               :disabled="isBusy"
-              style="height: 3.8rem; margin-top: 2.83rem"
+              style="height: 46px; margin-top: 33px"
               ><b-spinner
                 class="mr-1 mb-1"
                 small
@@ -92,13 +92,13 @@
         </b-form>
       </b-card>
 
-      <b-card v-show="paymentDropdownClass" class="p-4">
+      <div v-show="paymentDropdownClass">
         <PaymentStudentPayment
           :paymentRecords="paymentRecords"
           :paidPaymentRecords="paidPaymentRecords"
           :student="[form.class, form.term, form.session]"
         />
-      </b-card>
+      </div>
     </div>
   </div>
 </template>
@@ -113,7 +113,11 @@ import {
   PAYMENT_RECORD_QUERIES,
 } from '~/graphql/payments/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import PaymentStudentPayment from '~/components/Payment/StudentPayment.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { PaymentStudentPayment, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -214,7 +218,6 @@ export default {
 
 <style lang="scss" scoped>
 .fee-payment {
-  font-size: 1.6rem;
 
   .custom-select:focus {
     box-shadow: none;
@@ -223,8 +226,8 @@ export default {
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 50px;
+    font-size: 16px;
     color: #000;
   }
 }

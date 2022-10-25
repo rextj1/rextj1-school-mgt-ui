@@ -1,5 +1,5 @@
 <template>
-  <div class="student">
+  <div class="student p-3">
     <template v-if="$apollo.queries.students.loading"><Preload /></template>
     <template v-else>
       <b-button
@@ -10,7 +10,7 @@
         variant="primary"
         pill
         size="md"
-        class="add-student mb-4"
+        class="add-student mb-2"
       >
         <b-icon icon="plus" />Register Student
       </b-button>
@@ -18,10 +18,10 @@
       <b-row no-gutters>
         <b-col md="12">
           <div class="card-body">
-            <div class="card-student shadow p-3" style="background-color: #fff">
-              <h2 class="d-flex justify-content-center mb-4 mt-4">
+            <div class="card-student shadow-sm p-3" style="background-color: #fff">
+              <h3 class="d-flex justify-content-center mb-4 mt-4">
                 All Student
-              </h2>
+              </h3>
               <hr />
 
               <b-container fluid>
@@ -174,7 +174,6 @@
                   small
                   striped
                   hover
-                  style="font-size: 1.3rem"
                   :responsive="true"
                   @filtered="onFiltered"
                 >
@@ -205,13 +204,8 @@
                     </b-avatar>
                   </template>
 
-                  <template #cell(paid)="row">
-                    <div v-if="row.item.paid">
-                      <b-badge variant="warning">{{ row.value }}</b-badge>
-                    </div>
-                    <div v-else>
-                      <b-badge variant="danger">{{ row.value }}</b-badge>
-                    </div>
+                  <template #cell(section)="data">
+                  <div>{{ data.item.section.name }}</div>
                   </template>
 
                   <!-- view modal -->
@@ -219,6 +213,8 @@
                     <div class="d-flex">
                       <b-button
                         variant="primary"
+                        size="sm"
+                         class="px-3"
                         :to="{
                           name: 'workspace-admin-student-id',
                           params: {
@@ -228,26 +224,27 @@
                         }"
                       >
                         <b-icon icon="eye" class="mr-1"></b-icon>
-                        View
+                       
                       </b-button>
 
                       <b-button
                         variant="info"
-                        size="md"
-                        class="px-3"
+                        size="sm"
+                        class="px-3 ml-1"
                         @click="info(data.item.id)"
                       >
-                        Edit
+                       <b-icon icon="pen" class="mr-1"></b-icon>
+                        
                       </b-button>
 
                       <b-button
                         variant="danger"
-                        size="md"
-                        class="px-3"
+                        size="sm"
+                         class="px-3 ml-1"
                         @click="handleDeleteModal(data.item)"
                       >
                         <b-icon icon="trash" class="mr-1" />
-                        Delete
+                        
                       </b-button>
                     </div>
                   </template>
@@ -270,7 +267,7 @@
                   :hide-backdrop="false"
                   scrollable
                   title="Edit Student Data"
-                  size="lg"
+                  size="xl"
                   :hide-footer="true"
                 >
                   <AdminEditStudentModal :slug="[id, infoModal]" />
@@ -283,7 +280,7 @@
     </template>
 
     <!-- delete modal -->
-    <b-modal id="DeleteModal" size="sm" centered hide-header hide-footer>
+    <b-modal id="DeleteModal" size="md" centered hide-header hide-footer>
       <div class="p-5 text-center">
         <Spinner v-if="isDeleting" size="4" />
         <template v-else>
@@ -293,7 +290,7 @@
           <b-form-group label="Delete Key">
             <b-form-input
               v-model="deleteKey"
-              size="lg"
+              size="md"
               placeholder="Enter delete key..."
               trim
               required
@@ -330,7 +327,12 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { DELETE_STUDENT_MUTATION } from '~/graphql/students/mutations'
 import { STUDENT_QUERIES } from '~/graphql/students/queries'
+import Preload from '~/components/Preload.vue'
+import AdminEditStudentModal from '~/components/AdminEdit/StudentModal.vue'
+import Spinner from '~/components/Global/Spinner.vue'
+
 export default {
+  components: { AdminEditStudentModal, Spinner, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -390,6 +392,13 @@ export default {
           sortable: true,
           sortDirection: 'desc',
         },
+      
+         {
+          key: 'section',
+           label: 'Section',
+          sortable: true,
+          sortDirection: 'desc',
+        },
         {
           key: 'phone',
           label: 'Phone',
@@ -414,12 +423,7 @@ export default {
           sortable: true,
           sortDirection: 'desc',
         },
-        // {
-        //   key: 'guardian_email',
-        //   label: 'Guardian Email',
-        //   sortable: true,
-        //   sortDirection: 'desc',
-        // },
+        
         { key: 'actions', label: 'Actions' },
       ],
       id: '',
@@ -555,42 +559,37 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .modal {
   background-color: rgba(0, 0, 0, 0.295) !important;
 }
 .student {
-  font-size: 1.4rem !important;
-  padding: 2rem;
 
   .add-student {
-    font-size: 1.6rem;
     box-shadow: 0 5px 5px 0 #1f64b367;
   }
   .card-body {
     padding: 0;
     .card-student {
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 5px;
       height: auto;
 
       .input-group > .input-group-append > .btn,
       .input-group > .input-group-append > .input-group-text {
         background: var(--color-primary);
         color: #fff;
-        font-size: 1rem;
+        font-size: 12px;
       }
       .input-group:not(.has-validation) > .custom-select:not(:last-child),
       .input-group > .form-control:not(:first-child),
       .input-group > .custom-select:not(:first-child),
       .custom-select {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 32px;
       }
       .form-control,
       .mb-3 {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 32px;
       }
     }
   }

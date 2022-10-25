@@ -1,5 +1,5 @@
 <template>
-  <div class="student">
+  <div class="student p-3">
     <template v-if="nowLoading">
       <Preload />
     </template>
@@ -10,7 +10,7 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
@@ -343,7 +343,7 @@
               </b-form-group>
             </b-col>
 
-               <b-col md="3" class="p-4">
+            <b-col md="3" class="p-4">
               <b-form-group label="Blood Group">
                 <b-form-select
                   id="bloodGroups"
@@ -433,7 +433,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="4">
               <b-form-group label="Section">
                 <b-form-select
                   id="sections"
@@ -457,7 +457,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="4">
               <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
@@ -481,9 +481,7 @@
               </b-form-group>
             </b-col>
 
-         
-
-            <b-col md="3">
+            <b-col md="4">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
@@ -507,7 +505,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3">
+            <b-col md="4" class="p-4">
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
@@ -534,7 +532,7 @@
               </div>
             </b-col>
 
-              <b-col md="4" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group id="input-group-1" label="City">
                 <b-form-input
                   id="city"
@@ -544,13 +542,15 @@
                   name="city"
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userStudent.city')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userStudent.city')"
+                >
                   {{ form.errors.get('userStudent.city') }}
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="4" class="p-4">
               <b-form-group label="L.G.A">
                 <b-form-input
                   id="lga"
@@ -569,7 +569,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="5" class="p-4">
+            <b-col md="8" class="p-3">
               <b-form-group label="Guardian Address">
                 <b-form-textarea
                   id="guardian_address"
@@ -595,7 +595,7 @@
                 variant="primary"
                 class="mr-4"
                 :disabled="form.busy"
-                size="lg"
+                size="md"
               >
                 <b-spinner
                   v-if="form.busy"
@@ -607,8 +607,7 @@
               <b-button
                 pill
                 class="ml-4"
-                style="font-size: 1.4rem"
-                size="lg"
+                size="md"
                 type="reset"
                 variant="danger"
                 >Reset</b-button
@@ -636,8 +635,10 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import Preload from '~/components/Preload.vue'
 
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -860,14 +861,6 @@ export default {
 
 <style lang="scss" scoped>
 .student {
-  font-size: 1.4rem;
-  padding: 2rem;
-  .form-control,
-  .mb-3 {
-    background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
-  }
   .grow {
     position: absolute;
     transform: translate(-50%, -50%);
@@ -877,8 +870,8 @@ export default {
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -914,7 +907,7 @@ export default {
 
   .student__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

@@ -150,6 +150,9 @@ export const USER_WORKSPACE_QUERY = gql`
         stamp
         status
         gender
+        bank
+        account_no
+        account_name
         paystack_secret_key
       }
     }

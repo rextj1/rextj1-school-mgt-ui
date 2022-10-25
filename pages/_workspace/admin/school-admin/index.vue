@@ -1,8 +1,9 @@
 <template>
-  <div class="schoolAdmin">
+  <div class="schoolAdmin p-3">
     <template v-if="$apollo.queries.schoolAdmins.loading"><Preload /></template>
     <template v-else>
-      <b-button v-if="schoolAdmins.length == 0"
+      <b-button
+        v-if="schoolAdmins.length == 0"
         :to="{
           name: 'workspace-admin-school-admin-add-admin',
           params: { workspace: mainWorkspace.slug },
@@ -19,7 +20,7 @@
         <b-col md="12">
           <div class="card-body">
             <div class="card-student shadow p-3" style="background-color: #fff">
-              <h2 class="d-flex justify-content-center mb-4 mt-4">All Admin</h2>
+              <h3 class="d-flex justify-content-center mb-4 mt-4">All Admin</h3>
               <hr />
               <b-container fluid>
                 <!-- User Interface controls -->
@@ -169,7 +170,6 @@
                   small
                   striped
                   hover
-                  style="font-size: 1.3rem"
                   :responsive="true"
                   @filtered="onFiltered"
                 >
@@ -197,30 +197,30 @@
                           },
                         }"
                         variant="primary"
-                        size="md"
+                        size="sm"
                         class="px-3"
                       >
                         <b-icon icon="eye" class="mr-1"></b-icon>
-                        View
+                        
                       </b-button>
 
                       <b-button
                         variant="info"
-                        size="md"
-                        class="px-3"
+                        size="sm"
+                        class="px-3 ml-1"
                         @click="handleSchoolAdminEditModal(data.item.id)"
                       >
-                        Edit
+                       <b-icon icon="pen" class="mr-1"></b-icon> 
                       </b-button>
 
                       <b-button
                         variant="danger"
-                        size="md"
-                        class="px-3"
+                        size="sm"
+                        class="px-3 ml-1"
                         @click="handleDeleteModal(data.item)"
                       >
                         <b-icon icon="trash" class="mr-1" />
-                        Delete
+                        
                       </b-button>
                     </div>
                   </template>
@@ -243,10 +243,12 @@
                   :hide-backdrop="false"
                   scrollable
                   title="Edit School Admin"
-                  size="lg"
+                  size="xl"
                   :hide-footer="true"
                 >
-                  <AdminEditSchoolAdminModal :AdminInfo="[adminId, infoModal]" />
+                  <AdminEditSchoolAdminModal
+                    :AdminInfo="[adminId, infoModal]"
+                  />
                 </b-modal>
               </b-container>
             </div>
@@ -256,7 +258,7 @@
     </template>
 
     <!-- delete modal -->
-    <b-modal id="DeleteModal" size="sm" centered hide-header hide-footer>
+    <b-modal id="DeleteModal" size="md" centered hide-header hide-footer>
       <div class="p-5 text-center">
         <Spinner v-if="isDeleting" size="4" />
         <template v-else>
@@ -303,8 +305,12 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { SCHOOL_ADMIN_QUERIES } from '@/graphql/admin/queries'
 import { DELETE_SCHOOL_ADMIN_MUTATION } from '~/graphql/admin/mutations'
+import AdminEditSchoolAdminModal from '~/components/AdminEdit/SchoolAdminModal.vue'
+import Preload from '~/components/Preload.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { AdminEditSchoolAdminModal, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -503,39 +509,33 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .schoolAdmin {
-  font-size: 1.4rem !important;
-  padding: 2rem;
 
-  .add-admin {
-    font-size: 1.6rem;
+  .add-student {
     box-shadow: 0 5px 5px 0 #1f64b367;
   }
   .card-body {
     padding: 0;
     .card-student {
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 5px;
       height: auto;
 
       .input-group > .input-group-append > .btn,
       .input-group > .input-group-append > .input-group-text {
         background: var(--color-primary);
         color: #fff;
-        font-size: 1rem;
       }
       .input-group:not(.has-validation) > .custom-select:not(:last-child),
       .input-group > .form-control:not(:first-child),
       .input-group > .custom-select:not(:first-child),
       .custom-select {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 38px;
       }
       .form-control,
       .mb-3 {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 38px;
       }
     }
   }

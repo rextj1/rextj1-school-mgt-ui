@@ -1,15 +1,15 @@
 <template>
-  <div class="p-4">
+  <div class="p-3 promotion">
     <template v-if="nowLoading">
       <Preload />
     </template>
     <template v-else>
-      <b-card class="p-2 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <!-- setPromotion -->
 
-        <h3>Set promotion mark</h3>
+        <h4>Set promotion mark</h4>
         <b-row>
-          <b-col md="3" class="mb-4">
+          <b-col md="3" class="mb-2">
             <input
               v-model="setPromotion.name"
               type="number"
@@ -121,8 +121,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.75rem; margin-top: 2.9rem"
+              size="md"
+              style="height: 46px; margin-top: 32px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -160,7 +160,11 @@ import {
 import { CREATE_SET_PROMOTION_MUTATION } from '@/graphql/promotions/mutations'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
+import ExamStudentPromotion from '~/components/Exam/StudentPromotion.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {ExamStudentPromotion, Preload},
   middleware: 'auth',
   data() {
     return {
@@ -320,7 +324,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -1,7 +1,8 @@
 <template>
-  <div class="student">
-    <div class="p-4 student__wrapper">
+  <div class="examTimetable">
+    <div class="examTimetable__wrapper">
       <div class="exam-timetble">
+      
         <b-form
           method="POST"
           @submit.prevent="onSubmit"
@@ -25,14 +26,14 @@
                 <th scope="row">
                   <b-input
                     v-model="form.date"
-                    style="width: 11rem"
+                    style="width: 110px"
                     type="text"
                   ></b-input>
                 </th>
                 <th scope="row">
                   <b-input
                     v-model="form.time"
-                    style="width: 11rem"
+                    style="width: 110px"
                     type="text"
                   ></b-input>
                 </th>
@@ -71,7 +72,7 @@
             </tbody>
           </table>
           <div class="d-flex justify-content-center">
-            <b-button type="submit" variant="primary" class="mr-4" size="lg">
+            <b-button type="submit"  variant="primary" class="mr-4" size="md">
               <b-spinner
                 v-if="form.busy"
                 variant="light"
@@ -208,7 +209,7 @@ export default {
             background: '#5cb85c',
             toast: false,
             backdrop: false,
-            showConfirmButton: false
+            showConfirmButton: false,
           })
 
           this.$bvModal.hide(this.closeModal)
@@ -220,15 +221,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
-  .form-control,
-  .mb-3 {
-    background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
-  }
+.examTimetable {
+
   .custom-select:focus {
     box-shadow: none;
   }
@@ -236,21 +230,15 @@ export default {
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 40px;
     color: #000;
+     font-size: 16px;
   }
   .grow {
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
-  }
-
-  .student__wrapper {
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    border: none;
   }
 }
 </style>

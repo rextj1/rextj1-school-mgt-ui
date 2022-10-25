@@ -336,7 +336,11 @@ import {
   DELETE_SCHOOL_MUTATION,
   SUSPEND_SCHOOL_MUTATION,
 } from '~/graphql/workspace/mutations'
+import SchoolEditModal from '~/components/School/EditModal.vue'
+import Spinner from '~/components/Global/Spinner.vue'
+import Preload from '~/components/Preload.vue'
 export default {
+  components: { SchoolEditModal, Spinner, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -371,7 +375,7 @@ export default {
           sortable: true,
           // sortDirection: 'desc',
         },
-         {
+        {
           key: 'gender',
           label: 'Gender',
           sortable: true,

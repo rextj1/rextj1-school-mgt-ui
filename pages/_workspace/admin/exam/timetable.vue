@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4 view-payment">
+  <div class="p-3 exam-timetable">
     <template v-if="$apollo.queries.klases.loading"><Preload /></template>
     <template v-else>
       <b-card class="mb-4 d-flex">
         <b-form @submit.prevent="timetableDropdown">
           <b-row no-gutters>
-            <b-col md="2">
+            <b-col md="3">
               <b-form-group label="Current Class:">
                 <b-form-select
                   id="klase"
@@ -28,7 +28,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="2" class="ml-2">
+            <b-col md="3" class="ml-2">
               <b-form-group label="Current Section:">
                 <b-form-select
                   id="klase"
@@ -54,8 +54,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.75rem; margin-top: 2.9rem"
+              size="md"
+              style="height: 48px; margin-top: 33px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -70,11 +70,11 @@
 
       <div
         v-show="timetableDropdownClass"
-        class="libarian__wrapper"
+        class="timetable__wrapper"
         @click="hideMenu"
       >
         <b-card no-body @click="hideMenu">
-          <b-tabs card style="font-size: 1.4rem">
+          <b-tabs card>
             <b-tab active @click="hideMenu">
               <template #title>
                 <strong>Create Timetable</strong>
@@ -128,7 +128,8 @@
                     class="modal"
                     :hide-backdrop="false"
                     title="Edit  Data"
-                    size="lg"
+                    centered
+                    size="xl"
                     :hide-footer="true"
                   >
                     <AdminEditExamTimetableModal
@@ -164,14 +165,14 @@
                         <th scope="row">
                           <b-input
                             v-model="form.date"
-                            style="width: 11rem"
+                            style="width: 110px"
                             type="text"
                           ></b-input>
                         </th>
                         <th scope="row">
                           <b-input
                             v-model="form.time"
-                            style="width: 11rem"
+                            style="width: 110px"
                             type="text"
                           ></b-input>
                         </th>
@@ -214,7 +215,7 @@
                       type="submit"
                       variant="primary"
                       class="mr-4"
-                      size="lg"
+                      size="md"
                     >
                       <b-spinner
                         v-if="form.busy"
@@ -306,7 +307,13 @@ import {
   DELETE_EXAM_TIMETABLE_MUTATION,
 } from '~/graphql/examTimetables/mutations'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
+import Preload from '~/components/Preload.vue'
+import Spinner from '~/components/Global/Spinner.vue'
+import TimetableEditClassExamTimetable from '~/components/Timetable/EditClassExamTimetable.vue'
+import AdminEditExamTimetableModal from '~/components/AdminEdit/ExamTimetableModal.vue'
+
 export default {
+  components: { AdminEditExamTimetableModal, TimetableEditClassExamTimetable, Preload, Spinner },
   middleware: 'auth',
   data() {
     return {
@@ -568,10 +575,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.view-payment {
-  font-size: 1.6rem;
-
+<style lang="scss" scoped>
+.exam-timetable {
   .custom-select:focus {
     box-shadow: none;
   }
@@ -579,15 +584,13 @@ export default {
   .custom-select,
   .form-control,
   .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 53px;
+    font-size: 16px;
     color: #000;
   }
-  .libarian__wrapper {
-    padding: 2rem;
-    font-size: 1.4rem;
+  .timetable__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
 
     .nav-link.active {
@@ -599,14 +602,14 @@ export default {
         z-index: 999;
         position: absolute;
         border: none;
-        top: -9.5rem;
-        left: 15.5rem;
+        top: -95px;
+        left: 195px;
         background-color: #fff;
       }
 
       li {
         background-color: #fff;
-        padding: 1.3rem 5.5rem;
+        padding: 16px 70px;
         border-bottom: 1px solid gray;
         cursor: pointer;
 

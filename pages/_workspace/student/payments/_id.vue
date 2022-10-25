@@ -4,120 +4,106 @@
       ><Preload
     /></template>
     <template v-else>
-      <b-row no-gutters>
-        <b-col md="12">
-          <div class="card-body">
-            <div class="card-student" style="background-color: #fff">
-              <div style="padding: 5rem; margin: auto; min-height: 100vh">
-                <!-- {{ studentPaymentRecord }} -->
+      <div class="card-body">
+        <div class="card-student" style="background-color: #fff">
+          <div style="padding: 2rem; margin: auto; min-height: 100vh">
+            <!-- {{ studentPaymentRecord }} -->
 
-                <div class="mt-4">
-                  <div class="text-center mb-4">
-                    <b-img
-                      src="@/assets/svg/ronazon-logo.svg"
-                      width="100"
-                    ></b-img>
-                  </div>
+            <div class="mt-4">
+              <div class="text-center mb-4">
+                <b-img src="@/assets/svg/ronazon-logo.svg" width="100"></b-img>
+              </div>
 
-                  <h1
-                    class="text-center"
-                    style="color: #1c0988; font-weight: bold"
-                  >
-                    {{ mainWorkspace.name }}
-                  </h1>
-                  <h4
-                    class="text-center"
-                    style="
-                      text-transform: uppercase;
-                      color: #1c0988;
-                      font-weight: bold;
-                      margin-bottom: 5rem;
-                    "
-                  >
-                    {{ studentPaymentRecord.term.name }} Payment Receipt ({{
-                      studentPaymentRecord.session.name
-                    }}
-                    Session)
-                  </h4>
-                </div>
+              <h2 class="text-center" style="color: #1c0988; font-weight: bold">
+                {{ mainWorkspace.name }}
+              </h2>
+              <h6
+                class="text-center"
+                style="
+                  text-transform: uppercase;
+                  color: #1c0988;
+                  font-weight: bold;
+                  margin-bottom: 5rem;
+                "
+              >
+                {{ studentPaymentRecord.term.name }} Payment Receipt ({{
+                  studentPaymentRecord.session.name
+                }}
+                Session)
+              </h6>
+            </div>
 
-                <div
-                  class="d-flex justify-content-align mt-2 p-3"
-                  style="background-color: #007bff; color: #fff"
-                >
-                  STUDENT INFORMATION
-                </div>
+            <div
+              class="d-flex justify-content-align mt-2 p-2"
+              style="background-color: #007bff; color: #fff"
+            >
+              STUDENT INFORMATION
+            </div>
 
-                <div class="d-flex justify-content-center">
-                  <b-img
-                    class="mt-3"
-                    thumbnail
-                    src="@/assets/images/teacher.jpeg"
-                    width="100"
-                  ></b-img>
-                </div>
+            <div class="d-flex justify-content-center">
+              <b-img
+                class="mt-3"
+                thumbnail
+                src="@/assets/images/teacher.jpeg"
+                width="100"
+              ></b-img>
+            </div>
 
-                <div class="d-flex justify-content-between mt-5">
-                  <div>
-                    <h4>FULL NAME:</h4>
-                    <h4>ADM_NO:</h4>
-                    <h4>CLASS:</h4>
-                  </div>
+            <div class="d-flex justify-content-between mt-5">
+              <div>
+                <h6>FULL NAME:</h6>
+                <h6>ADM_NO:</h6>
+                <h6>CLASS:</h6>
+              </div>
 
-                  <div style="text-transform: uppercase">
-                    <h4>
-                      {{ studentPaymentRecord.student.first_name }}
-                      {{ studentPaymentRecord.student.last_name }}
-                      {{ studentPaymentRecord.student.middle_name }}
-                    </h4>
-                    <h4>
-                      {{ studentPaymentRecord.student.adm_no }}
-                    </h4>
-                    <h4>{{ studentPaymentRecord.student.last_name }}</h4>
-                    <h4>{{ studentPaymentRecord.klase.name }}</h4>
-                  </div>
-                </div>
+              <div style="text-transform: uppercase">
+                <h6>
+                  {{ studentPaymentRecord.student.first_name }}
+                  {{ studentPaymentRecord.student.last_name }}
+                  {{ studentPaymentRecord.student.middle_name }}
+                </h6>
+                <h6>
+                  {{ studentPaymentRecord.student.adm_no }}
+                </h6>
+                <h6>{{ studentPaymentRecord.student.last_name }}</h6>
+                <h6>{{ studentPaymentRecord.klase.name }}</h6>
+              </div>
+            </div>
 
-                <h3
-                  class="d-flex justify-content-align mt-4 p-3"
-                  style="background-color: #007bff; color: #fff"
-                >
-                  PAYMENT INFORMATION
-                </h3>
-                <div class="d-flex justify-content-between mt-4">
-                  <div>
-                    <h4>TITLE:</h4>
+            <h5
+              class="d-flex justify-content-align mt-4 p-2"
+              style="background-color: #007bff; color: #fff"
+            >
+              PAYMENT INFORMATION
+            </h5>
+            <div class="d-flex justify-content-between mt-4">
+              <div>
+                <h6>TITLE:</h6>
 
-                    <h4>REFERENCE:</h4>
+                <h6>REFERENCE:</h6>
 
-                    <h4>Amount</h4>
+                <h6>Amount</h6>
 
-                    <h4>Amount Paid:</h4>
+                <h6>Amount Paid:</h6>
 
-                    <h4>Balance</h4>
-                    <h4>Payment Date</h4>
-                  </div>
+                <h6>Balance</h6>
+                <h6>Payment Date</h6>
+              </div>
 
-                  <div style="margin-left: 3rem">
-                    <h4>{{ studentPaymentRecord.title }}</h4>
-                    <h4>{{ studentPaymentRecord.ref_no }}</h4>
-                    <h4>
-                      <span>&#x20A6;</span>{{ studentPaymentRecord.amount }}
-                    </h4>
-                    <h4>
-                      <span>&#x20A6;</span>{{ studentPaymentRecord.amt_paid }}
-                    </h4>
-                    <h4>
-                      <span>&#x20A6;</span>{{ studentPaymentRecord.balance }}
-                    </h4>
-                    <h4>{{ studentPaymentRecord.created_at | formatDate }}</h4>
-                  </div>
-                </div>
+              <div style="margin-left: 3rem">
+                <h6>{{ studentPaymentRecord.title }}</h6>
+                <h6>{{ studentPaymentRecord.ref_no }}</h6>
+                <h6><span>&#x20A6;</span>{{ studentPaymentRecord.amount }}</h6>
+                <h6>
+                  <span>&#x20A6;</span>{{ studentPaymentRecord.amt_paid }}
+                </h6>
+                <h6><span>&#x20A6;</span>{{ studentPaymentRecord.balance }}</h6>
+                <h6>{{ studentPaymentRecord.created_at | formatDate }}</h6>
               </div>
             </div>
           </div>
-        </b-col>
-      </b-row>
+        </div>
+      </div>
     </template>
   </div>
 </template>
@@ -127,7 +113,10 @@ import moment from 'moment'
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { STUDENT_PAYMENT_RECORD_QUERY } from '~/graphql/payments/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   filters: {
     formatDate(value) {
