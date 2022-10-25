@@ -267,7 +267,10 @@ import {
 } from '~/graphql/users/queries'
 import { UPDATE_SCHOOL_MUTATION } from '~/graphql/workspace/mutations'
 import { SCHOOL_QUERY } from '~/graphql/workspace/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   props: {
     slug: Array,
   },

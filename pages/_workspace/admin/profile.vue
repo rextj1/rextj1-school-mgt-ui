@@ -1,12 +1,13 @@
 <template>
-  <div class="admin-profile p-4">
+  <div class="admin-profile p-3">
     <template v-if="$apollo.queries.user.loading"><Preload /></template>
     <template v-else>
       <b-button
         v-if="mainWorkspace.slug != 'ronazonworkspace'"
         class="shadow-sm mb-3"
-        variant="warning"
-        size="lg"
+        variant="light"
+        pill
+        size="md"
         @click="changePassword"
         >Change Password</b-button
       >
@@ -36,7 +37,7 @@
           <div>
             <p>User Role</p>
             <p>Full Name</p>
-              <p>Email</p>
+            <p>Email</p>
             <p>Phone no:</p>
             <p>Gender</p>
             <p>Country</p>
@@ -60,7 +61,7 @@
       </b-card>
 
       <!-- change password modal -->
-      <b-modal id="passwordModal" size="sm" centered hide-header hide-footer>
+      <b-modal id="passwordModal" size="md" centered hide-header hide-footer>
         <div class="p-5">
           <div class="form">
             <!-- description -->
@@ -77,7 +78,7 @@
                   placeholder="Enter old Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
 
                 <span style="color: red">{{ oldPassword }}</span>
@@ -89,7 +90,7 @@
                   placeholder="Enter Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
               </b-form-group>
 
@@ -100,7 +101,7 @@
                   placeholder="Comfirm password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                   @input="changeColor"
                   :style="{ border: isGreen }"
                 ></b-form-input>
@@ -109,9 +110,9 @@
 
               <b-button
                 type="submit"
-                variant="primary"
-                class="mr-4"
-                size="lg"
+                variant="warning"
+                class="shadow-sm mr-4"
+                size="md"
                 :disabled="form.busy"
               >
                 <b-spinner
@@ -134,8 +135,11 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { USER_QUERY } from '~/graphql/users/queries'
 import { CHANGE_USER_PASSWORD_MUTATION } from '~/graphql/users/mutations'
+import Preload from '~/components/Preload.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -211,7 +215,7 @@ export default {
               this.oldPassword = null
 
               this.passwordValidation = null
-               this.isGreen = ''
+              this.isGreen = ''
               this.$bvModal.hide('passwordModal')
               return
             }
@@ -225,7 +229,6 @@ export default {
             this.form.busy = false
           })
       } else {
-       
         this.passwordValidation = 'Unmatched passwords'
         this.form.busy = false
       }
@@ -234,9 +237,22 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .admin-profile {
-  font-size: 1.6rem;
-  padding: 1rem;
+  .custom-select {
+    font-size: 16px;
+  }
+
+  .custom-select:focus {
+    box-shadow: none;
+  }
+
+  .custom-select,
+  .form-control,
+  .mb-3 {
+    height: 50px;
+    font-size: 16px;
+    color: #000;
+  }
 }
 </style>

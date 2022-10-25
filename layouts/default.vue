@@ -1,5 +1,5 @@
 <template>
-  <div class="default-layout">
+  <div class="default-layout" @click="closeTopNavDropdown">
     <template v-if="$fetchState.pending"><Preload /></template>
     <template v-else-if="$fetchState.error">Error Message</template>
     <template v-else>
@@ -20,7 +20,12 @@ import { GUARDIAN_DASHBOARD_QUERIES } from '~/graphql/guardians/queries'
 import { STUDENT_DASHBOARD_QUERIEX } from '~/graphql/students/queries'
 import { TEACHER_DASHBOARD_QUERIES } from '~/graphql/teachers/queries'
 import { ROLEX_QUERIEX, USER_WORKSPACE_QUERY } from '~/graphql/users/queries'
+import Preload from '~/components/Preload.vue'
+import TopNav from '~/components/TopNav.vue'
+import SideBar from '~/components/SideBar.vue'
+
 export default {
+  components: { TopNav, SideBar, Preload },
   async fetch() {
     const { app, route, redirect } = this.$nuxt.context
 
@@ -58,7 +63,7 @@ export default {
         workspaceId: parseInt(userWorkspace.workspace.id),
       },
     })
-    
+
     const {
       data: { studentsDashboard },
     } = await apolloClient.query({
@@ -121,6 +126,7 @@ export default {
   methods: {
     ...mapActions(useWorkspaceStore, ['setWorkspace']),
     ...mapActions(useToggleMenu, ['toggleIcon']),
+    ...mapActions(useToggleMenu, ['hideNav']),
     async setWorkspaces() {
       const {
         apolloProvider: { defaultClient: apolloClient },
@@ -134,12 +140,14 @@ export default {
       })
       this.setWorkspace(userWorkspace.workspace)
     },
-    
+
+    closeTopNavDropdown() {
+      this.hideNav(false)
+    },
 
     checkScreen() {
       this.windowWidth = window.innerWidth
       if (this.windowWidth <= 750) {
-        
         this.toggleIcon(false)
         return
       }

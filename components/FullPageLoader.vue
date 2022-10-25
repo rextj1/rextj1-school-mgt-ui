@@ -17,9 +17,9 @@
   align-items: center;
 
   .spinner-border {
-    height: 5rem;
-    width: 5rem;
-    border-width: 0.5rem;
+    height: 50px;
+    width: 50px;
+    border-width: 5px;
   }
 }
 </style>

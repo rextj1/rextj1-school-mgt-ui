@@ -1,5 +1,5 @@
 <template>
-  <div class="font">
+
     <div class="form-wrapper">
       <div class="cover-box">
         <div class="form-width">
@@ -63,8 +63,7 @@
               <b-button
                 type="submit"
                 variant="primary"
-                class=""
-                size="lg"
+                size="md"
                 pill
                 :disabled="form.busy"
               >
@@ -83,7 +82,7 @@
 
       <div class="left-side"></div>
     </div>
-  </div>
+ 
 </template>
 
 <script>
@@ -138,8 +137,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.font {
-  font-size: 1.6rem;
   .form-wrapper {
     display: flex;
 
@@ -149,8 +146,8 @@ export default {
 
     .form-control,
     .mb-3 {
-      height: 4.5rem;
-      font-size: 1.4rem;
+      height: 3.2rem;
+      font-size: 1.2rem;
       border-radius: 0.5rem;
     }
 
@@ -189,17 +186,18 @@ export default {
     }
 
     .left-side {
-      background: linear-gradient(to right, #5142f5, #047edf 99%);
-      animation: fide-slide-down 2s 0.5s ease-out forwards;
-      background-image: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0),
-          rgba(0, 0, 0, 0.528)
-        ),
-        url('~/assets/images/background.jpg');
-      background-position: center;
-      height: 100vh;
-      background-size: cover;
+      background-color: #2753d7;
+      // background: linear-gradient(to right, #5142f5, #047edf 99%);
+      // animation: fide-slide-down 2s 0.5s ease-out forwards;
+      // background-image: linear-gradient(
+      //     to bottom,
+      //     rgba(0, 0, 0, 0),
+      //     rgba(0, 0, 0, 0.528)
+      //   ),
+      //   url('~/assets/images/background.jpg');
+      // background-position: center;
+      // height: 100vh;
+      // background-size: cover;
       width: 50%;
 
       @include media-breakpoint-down(md) {
@@ -207,5 +205,5 @@ export default {
       }
     }
   }
-}
+
 </style>

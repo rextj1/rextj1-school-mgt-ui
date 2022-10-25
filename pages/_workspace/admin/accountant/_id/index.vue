@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile p-3">
     <div v-if="$apollo.queries.accountant.loading" class="preload">
       <Preload />
     </div>
@@ -11,7 +11,7 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
@@ -93,7 +93,10 @@
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {Preload},
   middleware: 'auth',
   data() {
     return {}
@@ -119,8 +122,6 @@ export default {
 
 <style lang="scss" scoped>
 .profile {
-  font-size: 1.6rem;
-  padding: 1rem;
   .first-detail p {
     display: block;
     margin-left: 40%;

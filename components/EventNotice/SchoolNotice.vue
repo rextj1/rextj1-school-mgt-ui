@@ -11,7 +11,7 @@
         <div class="d-flex flex-column">
           <div>
             <b-badge
-              style="font-size: 1.4rem"
+              style="font-size: 14px"
               class="d-inline-block"
               variant="danger"
               >{{ row.item.date }}</b-badge

@@ -1,11 +1,11 @@
 <template>
-  <div class="fee-payment p-4">
+  <div class="p-3">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="paymentQuery">
           <b-row>
-            <b-col md="2">
+            <b-col md="3">
               <b-form-group label="Classes">
                 <b-form-select
                   id="klases"
@@ -28,7 +28,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="2">
+            <b-col md="3">
               <b-form-group label="Terms">
                 <b-form-select
                   id="terms"
@@ -51,7 +51,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="2">
+            <b-col md="3">
               <b-form-group label="Session">
                 <b-form-select
                   id="sessions"
@@ -77,9 +77,9 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
+              size="md"
               :disabled="isBusy"
-              style="height: 3.8rem; margin-top: 2.83rem"
+              style="height: 46px; margin-top: 32px"
               ><b-spinner
                 class="mr-1 mb-1"
                 small
@@ -92,7 +92,7 @@
         </b-form>
       </b-card>
 
-      <b-card v-show="paymentDropdownClass" class="p-4">
+      <b-card v-show="paymentDropdownClass" class="p-3">
         <PaymentAdminPayment
           :paymentRecords="paymentRecords"
           :paidPaymentRecords="paidPaymentRecords"
@@ -113,7 +113,11 @@ import {
   PAYMENT_RECORD_QUERIES,
 } from '~/graphql/payments/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import PaymentAdminPayment from '~/components/Payment/AdminPayment.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { PaymentAdminPayment, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -211,21 +215,4 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.fee-payment {
-  font-size: 1.6rem;
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 4rem;
-    font-size: 1.4rem;
-    color: #000;
-  }
-}
-</style>
+  

@@ -4,10 +4,20 @@
       ><Preload
     /></template>
     <template v-else>
+      <b-button
+        v-if="
+          mainWorkspace.bank != '' ||
+          mainWorkspace.account_no != '' ||
+          mainWorkspace.account_name != ''
+        "
+        class="shadow-sm mb-3"
+        variant="primary"
+        size="lg"
+        @click="handleBankDetails"
+        >Click yet to see bank details</b-button
+      >
       <b-card>
         <div style="padding: 5rem; margin: auto; min-height: 100vh">
-          <!-- {{ studentPaymentRecord }} -->
-
           <div class="mt-4">
             <div class="text-center mb-4">
               <b-img src="@/assets/svg/ronazon-logo.svg" width="100"></b-img>
@@ -156,6 +166,28 @@
             </div>
           </section>
         </div>
+
+        <!-- change password modal -->
+        <b-modal id="bankDetails" size="md" centered hide-footer>
+          <div class="p-2">
+            <h3 class="text-center mb-5">
+              <span style="color: green">Bank Details</span>
+            </h3>
+            <div class="d-flex justify-content-between p-4">
+              <div>
+                <h4>Account Name</h4>
+                <h4>Account Number</h4>
+                <h4>Bank</h4>
+              </div>
+
+              <div style="font-weight: bold">
+                <h4>{{ mainWorkspace.account_name }}</h4>
+                <h4>{{ mainWorkspace.account_no }}</h4>
+                <h4>{{ mainWorkspace.bank }}</h4>
+              </div>
+            </div>
+          </div>
+        </b-modal>
       </b-card>
     </template>
   </div>
@@ -168,7 +200,10 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { CREATE_STUDENT_PAYMENT_MUTATION } from '~/graphql/payments/mutations'
 import { STUDENT_PAYMENT_RECORD_QUERY } from '~/graphql/payments/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {Preload},
   middleware: 'auth',
   filters: {
     formatDate(value) {
@@ -222,6 +257,12 @@ export default {
     },
   },
   methods: {
+    handleBankDetails() {
+      this.$bvModal.show('bankDetails')
+    },
+    handleCancel() {
+      this.$bvModal.hide('bankDetails')
+    },
     initializePaystack() {
       this.$paystack({
         key: this.mainWorkspace.paystack_secret_key,

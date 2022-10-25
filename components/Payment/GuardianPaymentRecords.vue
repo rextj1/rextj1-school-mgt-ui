@@ -1,14 +1,14 @@
 <template>
   <div>
-    <b-card no-body>
-      <b-tabs card style="font-size: 1.4rem">
+    <b-card no-body style="border-radius: 6px">
+      <b-tabs card>
         <b-tab active>
           <template #title>
             <strong>Due Payment</strong>
           </template>
-          <h3 v-if="DuePaymentrecords.length == 0" class="text-center mt-4">
+          <h5 v-if="DuePaymentrecords == null" class="text-center mt-4">
             No record found
-          </h3>
+          </h5>
           <div class="table-down" v-else>
             <b-table-simple hover responsive>
               <b-thead>
@@ -93,9 +93,9 @@
           <template #title>
             <strong>Paid Payment</strong>
           </template>
-          <h3 v-if="PaidPaymentrecords.length == 0" class="text-center mt-4">
+          <h5 v-if="PaidPaymentrecords.length == 0" class="text-center mt-4">
             No record found
-          </h3>
+          </h5>
           <div class="table-down" v-else>
             <b-table-simple hover responsive>
               <b-thead>
@@ -166,16 +166,16 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 export default {
   props: {
     PaidPaymentrecords: {
-      type: null,
-      default: [],
+      type: Array,
+      required: false,
     },
     DuePaymentrecords: {
       type: Array,
-      default: [],
+      required: false,
     },
     email: {
       type: String,
-      require: false,
+      required: false,
     },
   },
 

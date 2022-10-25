@@ -1,12 +1,12 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="$apollo.queries.sessions.loading"><Preload /></template>
     <template v-else>
       <div>
         <b-card no-body>
-          <div class="p-4">
-            <div class="p-3">
-              <h3 class="mb-3">All Sessions</h3>
+         
+            <div class="p-4 mt-3">
+              <h4 class="mb-3">All Sessions</h4>
               <b-table :items="sessions" :fields="fields">
                 <template #cell(#)="data">
                   {{ data.index + 1 }}
@@ -47,7 +47,7 @@
                 </template>
               </b-table>
             </div>
-          </div>
+       
 
           <!-- Add Classes -->
           <div class="margin-down">
@@ -64,7 +64,7 @@
                   <label
                     for="input-small"
                     class="label-padding ml-4"
-                    style="font-size: 1.6rem"
+                    style="font-size: 18px"
                     >Name:</label
                   >
                 </b-col>
@@ -91,7 +91,7 @@
                       type="submit"
                       variant="primary"
                       class="mr-4"
-                      size="lg"
+                      size="md"
                     >
                       <b-spinner
                         v-if="form.busy"
@@ -120,7 +120,10 @@ import {
   CREATE_SESSION_MUTATION,
   UPDATE_SESSION_MUTATION,
 } from '~/graphql/sessions/mutations'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {Preload},
   middleware: 'auth',
   data() {
     return {

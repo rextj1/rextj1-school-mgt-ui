@@ -1,253 +1,233 @@
 <template>
-  <div class="payment-wrapper p-4">
+  <div class="create-payment p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
-      <b-card no-body>
-        <b-tabs card style="font-size: 1.4rem">
+      <b-card no-body style="border-radius: 6px">
+        <b-tabs card>
           <b-tab active>
             <template #title>
               <strong>All Fees</strong>
             </template>
-            <div class="table-down">
-              <b-row no-gutters>
-                <b-col md="12">
-                  <div class="card-body">
-                    <div class="card-student" style="background-color: #fff">
-                      <hr />
-                      <b-container fluid>
-                        <!-- User Interface controls -->
-                        <b-row>
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              v-slot="{ ariaDescribedby }"
-                              label="Sort"
-                              label-for="sort-by-select"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-input-group size="md">
-                                <b-form-select
-                                  id="sort-by-select"
-                                  v-model="sortBy"
-                                  :options="sortOptions"
-                                  :aria-describedby="ariaDescribedby"
-                                  class="w-75"
-                                  style="background-color: #f9f9f9"
-                                >
-                                  <template #first>
-                                    <option value="">-- none --</option>
-                                  </template>
-                                </b-form-select>
 
-                                <b-form-select
-                                  v-model="sortDesc"
-                                  :disabled="!sortBy"
-                                  :aria-describedby="ariaDescribedby"
-                                  size="md"
-                                  class="w-10"
-                                >
-                                  <option :value="false">Asc</option>
-                                  <option :value="true">Desc</option>
-                                </b-form-select>
-                              </b-input-group>
-                            </b-form-group>
-                          </b-col>
-
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              label="Initial sort"
-                              label-for="initial-sort-select"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-form-select
-                                id="initial-sort-select"
-                                v-model="sortDirection"
-                                :options="['asc', 'desc', 'last']"
-                                size="sm"
-                              ></b-form-select>
-                            </b-form-group>
-                          </b-col>
-
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              label="Filter"
-                              label-for="filter-input"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-input-group size="md">
-                                <b-form-input
-                                  id="filter-input"
-                                  v-model="filter"
-                                  type="search"
-                                  placeholder="Type to Search"
-                                  style="background-color: #f9f9f9"
-                                ></b-form-input>
-
-                                <b-input-group-append>
-                                  <b-button
-                                    :disabled="!filter"
-                                    @click="filter = ''"
-                                    >Clear</b-button
-                                  >
-                                </b-input-group-append>
-                              </b-input-group>
-                            </b-form-group>
-                          </b-col>
-
-                          <b-col lg="6" class="my-1">
-                            <b-form-group
-                              v-slot="{ ariaDescribedby }"
-                              v-model="sortDirection"
-                              label="Filter On"
-                              description="Leave all unchecked to filter on all data"
-                              label-cols-sm="3"
-                              label-align-sm="right"
-                              label-size="sm"
-                              class="mb-0"
-                            >
-                              <b-form-checkbox-group
-                                v-model="filterOn"
-                                :aria-describedby="ariaDescribedby"
-                                class="mt-1"
-                              >
-                                <b-form-checkbox value="name"
-                                  >Name</b-form-checkbox
-                                >
-                                <b-form-checkbox value="photo"
-                                  >Photo</b-form-checkbox
-                                >
-                                <b-form-checkbox value="paid"
-                                  >Paid Fee</b-form-checkbox
-                                >
-                                <b-form-checkbox value="gender"
-                                  >Gender</b-form-checkbox
-                                >
-                              </b-form-checkbox-group>
-                            </b-form-group>
-                          </b-col>
-                        </b-row>
-
-                        <b-row>
-                          <b-col md="1"></b-col>
-                          <b-col sm="5" md="3" class="my-1">
-                            <b-form-group
-                              label="Show"
-                              label-for="per-page-select"
-                              label-cols-sm="6"
-                              label-cols-md="4"
-                              label-cols-lg="3"
-                              label-align-sm="right"
-                              label-size="md"
-                              class="mb-0"
-                            >
-                              <b-form-select
-                                id="per-page-select"
-                                v-model="perPage"
-                                :options="pageOptions"
-                                size="lg"
-                                style="background-color: #f9f9f9"
-                              ></b-form-select>
-                            </b-form-group> </b-col
-                        ></b-row>
-
-                        <br /><br />
-                        <!-- Main table element -->
-                        <b-table
-                          :items="payments"
-                          :fields="fields"
-                          :current-page="currentPage"
-                          :per-page="perPage"
-                          :filter="filter"
-                          :filter-included-fields="filterOn"
-                          :sort-by.sync="sortBy"
-                          :sort-desc.sync="sortDesc"
-                          :sort-direction="sortDirection"
-                          stacked="sm"
-                          show-empty
-                          small
-                          striped
-                          hover
-                          style="font-size: 1.3rem"
-                          :responsive="true"
-                          @filtered="onFiltered"
+            <b-card class="card-student">
+              <hr />
+              <b-container fluid>
+                <!-- User Interface controls -->
+                <b-row>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      v-slot="{ ariaDescribedby }"
+                      label="Sort"
+                      label-for="sort-by-select"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
+                    >
+                      <b-input-group size="md">
+                        <b-form-select
+                          id="sort-by-select"
+                          v-model="sortBy"
+                          :options="sortOptions"
+                          :aria-describedby="ariaDescribedby"
+                          class="w-75"
+                          style="background-color: #f9f9f9"
                         >
-                          <template #cell(index)="data">
-                            {{ data.index + 1 }}
+                          <template #first>
+                            <option value="">-- none --</option>
                           </template>
+                        </b-form-select>
 
-                          <template #cell(klase)="data">
-                            {{ data.item.klase.name }}
-                          </template>
-                          <template #cell(term)="data">
-                            {{ data.item.term.name }}
-                          </template>
-                          <template #cell(session)="data">
-                            {{ data.item.session.name }}
-                          </template>
+                        <b-form-select
+                          v-model="sortDesc"
+                          :disabled="!sortBy"
+                          :aria-describedby="ariaDescribedby"
+                          size="md"
+                          class="w-10"
+                        >
+                          <option :value="false">Asc</option>
+                          <option :value="true">Desc</option>
+                        </b-form-select>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
 
-                          <template #cell(amount)="data">
-                            <div v-if="amountId == data.item.id">
-                              <b-row no-gutters>
-                                <b-col md="4">
-                                  <input
-                                    v-model="form.amounts"
-                                    style="width: 10rem"
-                                    type="text"
-                                    required
-                                    size="lg"
-                                    @blur="updatingAmount(data.value)"
-                                    @keydown.enter="editField(data.item.id)"
-                                  />
-                                </b-col>
-                              </b-row>
-                            </div>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      label="Initial sort"
+                      label-for="initial-sort-select"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
+                    >
+                      <b-form-select
+                        id="initial-sort-select"
+                        v-model="sortDirection"
+                        :options="['asc', 'desc', 'last']"
+                        size="sm"
+                      ></b-form-select>
+                    </b-form-group>
+                  </b-col>
 
-                            <div v-else @click="setToEditing(data.item.id)">
-                              {{ data.value }}
-                            </div>
-                          </template>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      label="Filter"
+                      label-for="filter-input"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
+                    >
+                      <b-input-group size="md">
+                        <b-form-input
+                          id="filter-input"
+                          v-model="filter"
+                          type="search"
+                          placeholder="Type to Search"
+                          style="background-color: #f9f9f9"
+                        ></b-form-input>
 
-                          <!-- view modal -->
-                          <template #cell(actions)="data">
-                            <b-button
-                              variant="info"
-                              size="md"
-                              class="px-3"
-                              @click="setToEditing(data.item.id)"
-                            >
-                              Edit
-                            </b-button>
+                        <b-input-group-append>
+                          <b-button :disabled="!filter" @click="filter = ''"
+                            >Clear</b-button
+                          >
+                        </b-input-group-append>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
 
-                            <b-button variant="danger" size="md" class="px-3">
-                              <b-icon icon="trash" class="mr-1"></b-icon>
-                              Delete
-                            </b-button>
-                          </template>
+                  <b-col lg="6" class="my-1">
+                    <b-form-group
+                      v-slot="{ ariaDescribedby }"
+                      v-model="sortDirection"
+                      label="Filter On"
+                      description="Leave all unchecked to filter on all data"
+                      label-cols-sm="3"
+                      label-align-sm="right"
+                      label-size="sm"
+                      class="mb-0"
+                    >
+                      <b-form-checkbox-group
+                        v-model="filterOn"
+                        :aria-describedby="ariaDescribedby"
+                        class="mt-1"
+                      >
+                        <b-form-checkbox value="name">Name</b-form-checkbox>
+                        <b-form-checkbox value="photo">Photo</b-form-checkbox>
+                        <b-form-checkbox value="paid">Paid Fee</b-form-checkbox>
+                        <b-form-checkbox value="gender">Gender</b-form-checkbox>
+                      </b-form-checkbox-group>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
 
-                          <template #row-details="row">
-                            <b-card>
-                              <ul>
-                                <li v-for="(value, key) in row.item" :key="key">
-                                  {{ key }}: {{ value }}
-                                </li>
-                              </ul>
-                            </b-card>
-                          </template>
-                        </b-table>
-                      </b-container>
+                <b-row>
+                  <b-col md="1"></b-col>
+                  <b-col sm="5" md="3" class="my-1">
+                    <b-form-group
+                      label="Show"
+                      label-for="per-page-select"
+                      label-cols-sm="6"
+                      label-cols-md="4"
+                      label-cols-lg="3"
+                      label-align-sm="right"
+                      label-size="md"
+                      class="mb-0"
+                    >
+                      <b-form-select
+                        id="per-page-select"
+                        v-model="perPage"
+                        :options="pageOptions"
+                        size="lg"
+                        style="background-color: #f9f9f9"
+                      ></b-form-select>
+                    </b-form-group> </b-col
+                ></b-row>
+
+                <br /><br />
+                <!-- Main table element -->
+                <b-table
+                  :items="payments"
+                  :fields="fields"
+                  :current-page="currentPage"
+                  :per-page="perPage"
+                  :filter="filter"
+                  :filter-included-fields="filterOn"
+                  :sort-by.sync="sortBy"
+                  :sort-desc.sync="sortDesc"
+                  :sort-direction="sortDirection"
+                  show-empty
+                  small
+                  striped
+                  hover
+                  :responsive="true"
+                  @filtered="onFiltered"
+                >
+                  <template #cell(index)="data">
+                    {{ data.index + 1 }}
+                  </template>
+
+                  <template #cell(klase)="data">
+                    {{ data.item.klase.name }}
+                  </template>
+                  <template #cell(term)="data">
+                    {{ data.item.term.name }}
+                  </template>
+                  <template #cell(session)="data">
+                    {{ data.item.session.name }}
+                  </template>
+
+                  <template #cell(amount)="data">
+                    <div v-if="amountId == data.item.id">
+                      <b-row no-gutters>
+                        <b-col md="4">
+                          <input
+                            v-model="form.amounts"
+                            style="width: 10rem"
+                            type="text"
+                            required
+                            size="lg"
+                            @blur="updatingAmount(data.value)"
+                            @keydown.enter="editField(data.item.id)"
+                          />
+                        </b-col>
+                      </b-row>
                     </div>
-                  </div>
-                </b-col>
-              </b-row>
-            </div>
+
+                    <div v-else @click="setToEditing(data.item.id)">
+                      {{ data.value }}
+                    </div>
+                  </template>
+
+                  <!-- view modal -->
+                  <template #cell(actions)="data">
+                    <b-button
+                      variant="info"
+                      size="sm"
+                      class="px-3"
+                      @click="setToEditing(data.item.id)"
+                    >
+                      Edit
+                    </b-button>
+
+                    <b-button variant="danger" size="sm" class="px-3">
+                      Delete
+                    </b-button>
+                  </template>
+
+                  <template #row-details="row">
+                    <b-card>
+                      <ul>
+                        <li v-for="(value, key) in row.item" :key="key">
+                          {{ key }}: {{ value }}
+                        </li>
+                      </ul>
+                    </b-card>
+                  </template>
+                </b-table>
+              </b-container>
+            </b-card>
           </b-tab>
 
           <b-tab lazy>
@@ -255,7 +235,7 @@
               <b-icon icon="plus" /><strong>Create Payment</strong>
             </template>
 
-            <div class="margin-down p-5 ml-4">
+            <div class="mt-5 ml-4">
               <!-- expense type -->
 
               <b-form
@@ -271,9 +251,9 @@
                     >
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-group>
-                      <b-form-select v-model="title" class="mb-3" size="lg">
+                      <b-form-select v-model="title" size="lg">
                         <!-- This slot appears above the options from 'options' prop -->
                         <template #first>
                           <b-form-select-option :value="null"
@@ -288,15 +268,15 @@
                 </b-row>
 
                 <!-- class -->
-                <b-row>
+                <b-row class="mt-2">
                   <b-col md="2">
                     <label for="input-small" class="label-padding"
                       >Class:</label
                     >
                   </b-col>
 
-                  <b-col md="8">
-                    <b-form-select v-model="form.class" required class="mb-3">
+                  <b-col md="4">
+                    <b-form-select v-model="form.class" required>
                       <template #first>
                         <b-form-select-option :value="null" disabled
                           >--- select class ---</b-form-select-option
@@ -313,12 +293,12 @@
                   </b-col>
                 </b-row>
 
-                <b-row>
+                <b-row class="mt-3">
                   <b-col md="2">
                     <label for="input-small" class="label-padding">Term:</label>
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-group>
                       <b-form-select
                         id="terms"
@@ -326,7 +306,6 @@
                         value-field="id"
                         text-field="name"
                         :options="terms"
-                        class="mb-3"
                         size="lg"
                         required
                       >
@@ -344,13 +323,13 @@
                 </b-row>
 
                 <b-row>
-                  <b-col md="2">
+                  <b-col md="2" class="mt-3">
                     <label for="input-small" class="label-padding"
                       >Session:</label
                     >
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-group>
                       <b-form-select
                         id="sessions"
@@ -358,7 +337,6 @@
                         value-field="id"
                         text-field="name"
                         :options="sessions"
-                        class="mb-3"
                         size="lg"
                         required
                       >
@@ -376,13 +354,13 @@
                 </b-row>
 
                 <b-row>
-                  <b-col md="2">
+                  <b-col md="2" class="mt-3">
                     <label for="input-small" class="label-padding"
                       >Amount(&#x20A6;):</label
                     >
                   </b-col>
 
-                  <b-col md="8">
+                  <b-col md="4">
                     <b-form-input
                       id="amount"
                       v-model="form.amount"
@@ -402,14 +380,12 @@
                 <!-- description -->
 
                 <b-row>
-                  <b-col
-                    md="10"
-                    class="d-flex justify-content-center p-4 mt-2 mb-4"
+                  <b-col md="10" class="text-center p-4 mt-2 mb-4"
                     ><b-button
                       type="submit"
                       variant="primary"
                       class="mr-4"
-                      size="lg"
+                      size="md"
                       :disabled="form.busy"
                     >
                       <b-spinner
@@ -442,7 +418,10 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
 import Swal from 'sweetalert2'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -725,83 +704,39 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.payment-wrapper {
-  font-size: 1.4rem;
-
+<style lang="scss" scoped>
+.create-payment {
   border-radius: 0.5rem;
   border: none;
 
-  .margin-down {
-    margin-top: 5rem;
+  .card-student {
+    border: none;
+    border-radius: 0.5rem;
+    height: auto;
 
-    .label-padding {
-      padding-right: 15rem;
-      margin-bottom: 5rem;
-
-      @include media-breakpoint-down(sm) {
-        padding-right: 0;
-        margin-bottom: 0;
-      }
+    .input-group > .input-group-append > .btn,
+    .input-group > .input-group-append > .input-group-text {
+      background: var(--color-primary);
+      color: #fff;
     }
-
-    .custom-select:focus,
-    .form-control.focus,
-    .form-control:focus {
-      box-shadow: none;
+    .input-group:not(.has-validation) > .custom-select:not(:last-child),
+    .input-group > .form-control:not(:first-child),
+    .input-group > .custom-select:not(:first-child),
+    .custom-select {
+      height: 38px;
+      font-size: 16px;
     }
-
-    .custom-select,
     .form-control,
     .mb-3 {
-      height: 4rem;
-      font-size: 1.4rem;
-      color: #000;
-      width: 40.6%;
-
-       @include media-breakpoint-down(sm) {
-        width: 100%;
-      }
+      height: 38px;
+      font-size: 16px;
     }
   }
-  .table-down {
-    padding: 4rem;
-
-    .table {
-      margin-bottom: 4rem;
+  .custom-select,
+  .form-control,
+    .mb-3 {
+      height: 45px;
+      font-size: 16px;
     }
-  }
-
-  .custom-select-lg .nav-link.active {
-    border-top: 5px solid limegreen;
-  }
-
-  .card-body {
-    padding: 0;
-    .card-student {
-      border: none;
-      border-radius: 0.5rem;
-      height: auto;
-
-      .input-group > .input-group-append > .btn,
-      .input-group > .input-group-append > .input-group-text {
-        background: var(--color-primary);
-        color: #fff;
-        font-size: 1rem !important;
-      }
-      .input-group:not(.has-validation) > .custom-select:not(:last-child),
-      .input-group > .form-control:not(:first-child),
-      .input-group > .custom-select:not(:first-child),
-      .custom-select {
-        height: 3.5rem;
-        font-size: 1.2rem;
-      }
-      .form-control,
-      .mb-3 {
-        height: 3.5rem;
-        font-size: 1.2rem;
-      }
-    }
-  }
 }
 </style>

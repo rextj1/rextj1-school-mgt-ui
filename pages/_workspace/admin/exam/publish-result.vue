@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
             <b-col md="2">
@@ -99,8 +99,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.8rem; margin-top: 2.8rem"
+              size="md"
+              style="height: 45px; margin-top: 34px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -134,7 +134,6 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 import {
   EXAM_RECORD_QUERIES,
   FIRST_TERM_QUERIES,
-  PUBLISH_RESULT_QUERY,
   SECOUND_TERM_QUERIES,
   THIRD_TERM_QUERIES,
 } from '~/graphql/examRecord/queries'
@@ -142,7 +141,11 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { MARK_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import ExamPublishResult from '~/components/Exam/PublishResult.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { ExamPublishResult, Preload },
   middleware: 'auth',
   data() {
     return {

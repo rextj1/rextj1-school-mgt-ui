@@ -2,9 +2,7 @@ import gql from 'graphql-tag'
 import { KLASE_FIELDS_FRAGMENT } from '../klases/fragments'
 
 import {
-  TEACHER_FIELDS_FRAGMENT,
   TEACHERS_FIELDS_FRAGMENT,
-  ASSIGN_TEACHER_FRAGMENT,
 } from './fragments'
 // dashboard
 export const TEACHER_DASHBOARD_QUERIES = gql`
@@ -71,7 +69,7 @@ export const USER_TEACHER_QUERY = gql`
         photo
         birthday
         qualification
-        year_of_hire
+        employment
         subjects {
           id
           subject

@@ -1,28 +1,28 @@
 <template>
   <div class="attendance">
     <template v-if="classAttendances[0] == null">
-      <h3 class="text-center">No record found</h3>
+      <h4 class="text-center">No record found</h4>
     </template>
 
     <template v-else>
-      <h2 class="text-center p-4">
+      <h4 class="text-center p-3">
         <span style="color: green; font-weight: bold"
           >{{ classAttendances[0].klase.name }} Class Attendance</span
         >
-      </h2>
+      </h4>
 
       <b-form
         method="POST"
         @submit.prevent="onLogin"
         @keydown="form.onKeydown($event)"
       >
-        <h3 class="text-center">
+        <h4 class="text-center">
           Total number of days
           <span style="color: red">{{ classAttendances[0].num_total }} </span>
-        </h3>
+        </h4>
 
         <b-row>
-          <b-col md="1">
+          <b-col md="2">
             <b-form-group label="Total Days">
               <b-form-input
                 v-model="form.num_total"
@@ -73,14 +73,14 @@
                         'num_present'
                       )
                     "
-                    style="width: 6rem; padding-left: 0.5rem"
+                    style="width: 60px; padding-left: 5px"
                   />
                 </td>
               </tr>
             </tbody>
           </table>
-          <div class="d-flex justify-content-center mt-4">
-            <b-button size="lg" type="submit" variant="danger" :disabled="busy"
+          <div class="text-center mt-4">
+            <b-button size="md" type="submit" variant="primary" :disabled="busy"
               ><b-spinner
                 v-if="busy"
                 variant="light"
@@ -181,9 +181,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.attendance {
-  font-size: 1.4rem;
-}
-</style>

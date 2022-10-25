@@ -1,8 +1,7 @@
 <template>
   <div>
-    <b-card no-body>
-      
-      <b-tabs card style="font-size: 1.4rem">
+    <b-card no-body style="border-radius: 6px">
+      <b-tabs card>
         <b-tab active>
           <template #title>
             <strong>Due Payment</strong>
@@ -14,6 +13,7 @@
             <b-table-simple hover responsive>
               <b-thead>
                 <tr>
+                  <b-th>S/N</b-th>
                   <b-th>Full Name</b-th>
                   <b-th>Ref No</b-th>
                   <b-th>class</b-th>
@@ -29,7 +29,11 @@
               </b-thead>
 
               <tbody>
-                <b-tr v-for="DuePaymentrecord in DuePaymentrecords" :key="DuePaymentrecord.id">
+                <b-tr
+                  v-for="(DuePaymentrecord, index) in DuePaymentrecords"
+                  :key="DuePaymentrecord.id"
+                >
+                  <b-td>{{ index + 1 }}</b-td>
                   <b-td>
                     {{ DuePaymentrecord.student.first_name }}
                     {{ DuePaymentrecord.student.last_name }}
@@ -64,6 +68,8 @@
                   <b-td>
                     <b-button
                       variant="primary"
+                      size="sm"
+                      pill
                       :to="{
                         name: 'workspace-student-payments-id',
                         params: {
@@ -96,6 +102,7 @@
             <b-table-simple hover responsive>
               <b-thead>
                 <tr>
+                  <b-th>S/N</b-th>
                   <b-th>Full Name</b-th>
                   <b-th>Ref No</b-th>
                   <b-th>class</b-th>
@@ -106,12 +113,15 @@
                   <b-th>Balance</b-th>
                   <b-th>Status</b-th>
                   <b-th>Receipt</b-th>
-                  <b-th>Action</b-th>
                 </tr>
               </b-thead>
 
               <tbody>
-                <b-tr v-for="PaidPaymentrecord in PaidPaymentrecords" :key="PaidPaymentrecord.id">
+                <b-tr
+                  v-for="(PaidPaymentrecord, index) in PaidPaymentrecords"
+                  :key="PaidPaymentrecord.id"
+                >
+                  <b-td>{{ index + 1 }}</b-td>
                   <b-td>
                     {{ PaidPaymentrecord.student.first_name }}
                     {{ PaidPaymentrecord.student.last_name }}

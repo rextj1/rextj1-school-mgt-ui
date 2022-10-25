@@ -1,5 +1,5 @@
 <template>
-  <div class="leads-page">
+  <div class="leads-page p-3">
     <div class="mb-2">
       <h5 class="mb-4">All Due Fee Payment</h5>
     </div>
@@ -11,8 +11,9 @@
           ><b-form-select
             v-model="show"
             :options="shows"
-            size="sm"
-            class="ml-2"
+            size="md"
+            class="ml-2 p-4"
+            style="background-color:#d2cfe0"
           ></b-form-select>
           <span class="ml-1">entries</span>
         </div>
@@ -117,10 +118,11 @@
             </b-table-simple>
           </section>
         </vue-html2pdf>
+        
         <div class="text-center">
-          <b-button
+          <b-button v-if="allDuePaymentRecords.data.length > 0"
             class="px-3 ml-2 text-center"
-            variant="danger"
+            variant="secondary"
             size="md"
             pill
             @click.prevent="generateReports"
@@ -148,7 +150,7 @@
       <b-card class="shadow-sm border-0 text-center no-lead mt-2">
         <div>
           <h6 class="mt-4 light-text">
-            You have no leads yet. Click on "Create New" above to get started.
+            No record found
           </h6>
         </div>
       </b-card>
@@ -181,6 +183,7 @@ export default {
         { value: null, text: 10 },
         { value: 20, text: 20 },
         { value: 50, text: 50 },
+         { value: 1000, text: 'more' },
       ],
     }
   },
@@ -237,7 +240,6 @@ export default {
 @import '~@/assets/scss/variables';
 
 .leads-page {
-  padding: 40px 45px 10px 45px;
   .lead-wrapper {
     display: flex;
     justify-content: space-between;

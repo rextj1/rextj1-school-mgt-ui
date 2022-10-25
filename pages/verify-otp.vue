@@ -209,7 +209,6 @@ export default {
 
 <style lang="scss">
 .verify-otp {
-  font-size: 1.6rem;
   .form-wrapper-otp {
     display: flex;
 
@@ -219,7 +218,7 @@ export default {
 
     .form-control,
     .mb-3 {
-      height: 4.5rem;
+      height: 3.2rem;
       font-size: 1.4rem;
       border-radius: 0.5rem;
     }

@@ -1,7 +1,7 @@
 <template>
-  <div class="student">
+  <div class="accountant-modal">
     <div v-if="nowLoading"><Preload /></div>
-    <div class="p-4 student__wrapper" v-else>
+    <div class="student__wrapper" v-else>
       <b-form
         v-if="show"
         method="POST"
@@ -72,8 +72,8 @@
         </div>
 
         <!--  -->
-        <b-row class="p-4" style="font-size: 1.6rem">
-          <b-col md="4" class="p-4">
+        <b-row class="p-3">
+          <b-col md="4" class="p-3">
             <b-form-group label="First Name">
               <b-form-input
                 id="firstName"
@@ -93,7 +93,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <b-form-group id="last_name" label="Last Name">
               <b-form-input
                 id="first_name"
@@ -104,13 +104,15 @@
                 trim
                 required
               ></b-form-input>
-              <b-form-invalid-feedback :state="!form.errors.has('accountantTable.last_name')">
+              <b-form-invalid-feedback
+                :state="!form.errors.has('accountantTable.last_name')"
+              >
                 {{ form.errors.get('accountantTable.last_name') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <b-form-group id="input-group-1" label="Middle Name (optional)">
               <b-form-input
                 id="input-1"
@@ -123,7 +125,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <b-form-group id="input-group-1" label="Email:">
               <b-form-input
                 id="email"
@@ -134,13 +136,15 @@
                 trim
                 required
               ></b-form-input>
-              <b-form-invalid-feedback :state="!form.errors.has('userTable.email')">
+              <b-form-invalid-feedback
+                :state="!form.errors.has('userTable.email')"
+              >
                 {{ form.errors.get('userTable.email') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <b-form-group id="input-group-1" label="Phone no:">
               <b-form-input
                 id="phone"
@@ -158,7 +162,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <b-form-group label="Qualification">
               <b-form-input
                 id="qualification"
@@ -176,7 +180,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="3" class="p-3">
             <b-form-group label="Religion">
               <b-form-input
                 id="religion"
@@ -193,7 +197,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <b-form-group label="Gender">
               <b-form-select
                 v-model="form.accountantTable.gender"
@@ -214,7 +218,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="5" class="p-4">
+          <b-col md="5" class="p-3">
             <b-form-group label="Date of Birth">
               <b-form-datepicker
                 id="datepicker-buttons"
@@ -226,13 +230,15 @@
                 size="md"
                 name="birthday"
               ></b-form-datepicker>
-              <b-form-invalid-feedback :state="!form.errors.has('accountantTable.birthday')">
+              <b-form-invalid-feedback
+                :state="!form.errors.has('accountantTable.birthday')"
+              >
                 {{ form.errors.get('accountantTable.birthday') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
 
-          <b-col md="3" class="p-4">
+          <b-col md="3" class="p-3">
             <b-form-group label="Blood Group">
               <b-form-select
                 id="bloodGroups"
@@ -254,26 +260,28 @@
               </b-form-select>
             </b-form-group>
           </b-col>
-          
-            <b-col md="5" class="p-4">
-              <b-form-group label="Date of Employment">
-                <b-form-datepicker
-                  id="datepicker-employment"
-                  v-model="form.accountantTable.employment"
-                  today-button
-                  reset-button
-                  close-button
-                  locale="en"
-                  size="lg"
-                  name="employment"
-                ></b-form-datepicker>
-                <b-form-invalid-feedback :state="!form.errors.has('accountantTable.employment')">
-                  {{ form.errors.get('accountantTable.employment') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="5" class="p-3">
+            <b-form-group label="Date of Employment">
+              <b-form-datepicker
+                id="datepicker-employment"
+                v-model="form.accountantTable.employment"
+                today-button
+                reset-button
+                close-button
+                locale="en"
+                size="lg"
+                name="employment"
+              ></b-form-datepicker>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('accountantTable.employment')"
+              >
+                {{ form.errors.get('accountantTable.employment') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+
+          <b-col md="4" class="p-3">
             <b-form-group label="Country">
               <b-form-select
                 id="country"
@@ -297,7 +305,7 @@
             </b-form-group>
           </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <div v-if="!country">
               <b-form-group label="State">
                 <b-form-select class="mb-3">
@@ -308,7 +316,11 @@
 
             <div v-else>
               <b-form-group label="State">
-                <b-form-select v-model="form.userTable.state" class="mb-3" required>
+                <b-form-select
+                  v-model="form.userTable.state"
+                  class="mb-3"
+                  required
+                >
                   <b-form-select-option
                     v-for="k in country.state"
                     :key="k.id"
@@ -320,23 +332,25 @@
             </div>
           </b-col>
 
-             <b-col md="4" class="p-4">
-              <b-form-group id="input-group-1" label="City">
-                <b-form-input
-                  id="city"
-                  v-model="form.userTable.city"
-                  type="text"
-                  placeholder="Enter city"
-                  name="city"
-                  required
-                ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userTable.city')">
-                  {{ form.errors.get('userTable.city') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
+          <b-col md="4" class="p-3">
+            <b-form-group id="input-group-1" label="City">
+              <b-form-input
+                id="city"
+                v-model="form.userTable.city"
+                type="text"
+                placeholder="Enter city"
+                name="city"
+                required
+              ></b-form-input>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('userTable.city')"
+              >
+                {{ form.errors.get('userTable.city') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
 
-          <b-col md="4" class="p-4">
+          <b-col md="4" class="p-3">
             <b-form-group id="input-group-1" label="L.G.A">
               <b-form-input
                 id="lga"
@@ -346,19 +360,21 @@
                 name="lga"
                 required
               ></b-form-input>
-              <b-form-invalid-feedback :state="!form.errors.has('userTable.lga')">
+              <b-form-invalid-feedback
+                :state="!form.errors.has('userTable.lga')"
+              >
                 {{ form.errors.get('userTable.lga') }}
               </b-form-invalid-feedback>
             </b-form-group>
           </b-col>
 
-          <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
+          <b-col md="12" class="d-flex justify-content-center p-3 mt-2 mb-4"
             ><b-button
               type="submit"
               pill
               variant="primary"
               class="mr-4"
-              size="lg"
+              size="md"
             >
               <b-spinner
                 v-if="form.busy"
@@ -370,8 +386,8 @@
             <b-button
               pill
               class="ml-4"
-              style="font-size: 1.4rem"
-              size="lg"
+              style="font-size: 14px"
+              size="md"
               type="reset"
               variant="danger"
               >Reset</b-button
@@ -393,10 +409,12 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
+import Preload from '~/components/Preload.vue'
 import { UPDATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
 import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 
 export default {
+  components: { Preload },
   middleware: 'auth',
   props: {
     accountantInfo: {
@@ -486,7 +504,8 @@ export default {
           this.form.accountantTable.last_name = data.accountant.last_name
           this.form.accountantTable.middle_name = data.accountant.middle_name
           this.form.accountantTable.birthday = data.accountant.birthday
-          this.form.accountantTable.qualification = data.accountant.qualification
+          this.form.accountantTable.qualification =
+            data.accountant.qualification
           this.form.photo = data.accountant.photo
           this.form.accountantTable.employment = data.accountant.employment
           this.form.accountantTable.phone = data.accountant.phone
@@ -641,14 +660,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
+.accountant-modal {
   .form-control,
   .mb-3 {
     background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 43px;
+    font-size: 16px;
   }
   .grow {
     position: absolute;
@@ -659,8 +676,8 @@ export default {
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -696,7 +713,7 @@ export default {
 
   .student__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

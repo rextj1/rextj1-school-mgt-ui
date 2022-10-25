@@ -1,5 +1,5 @@
 <template>
-  <div class="fonts">
+  <div class="edit-class-timetable py-3">
     <template v-if="$apollo.queries.timetables.loading"></template>
 
     <template v-else-if="timetables.length > 0">
@@ -19,12 +19,12 @@
       >
         <section slot="pdf-content">
           <b-row no-gutters>
-            <b-col md="12">
-              <h3 class="text-center mb-4">
+            <b-col>
+              <h4 class="text-center mb-4">
                 {{ editCurrentClass[1] }} (Exam Timetable)
-              </h3>
+              </h4>
               <div class="card-body">
-                <div class="card-student p-3">
+                <div class="card-student">
                   <b-table
                     hover
                     bordered
@@ -43,9 +43,9 @@
         </section>
       </vue-html2pdf>
 
-      <div class="text-center mb-4">
-        <b-button variant="danger" size="lg" @click.prevent="generateReport"
-          >download</b-button
+      <div class="text-center mb-2">
+        <b-button variant="secondary" size="md" pill @click.prevent="generateReport"
+          ><b-icon icon="printer"/> print</b-button
         >
       </div>
     </template>
@@ -110,15 +110,13 @@ export default {
 </script>
 
 <style lang="scss">
-.fonts {
-  font-size: 1.4rem !important;
-  padding: 2rem;
+.edit-class-timetable {
 
   .card-body {
     padding: 0;
     .card-student {
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 5px;
       height: auto;
     }
   }

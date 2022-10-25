@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
             <b-col md="2">
@@ -99,8 +99,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.85rem; margin-top: 2.85rem"
+              size="md"
+              style="height: 45px; margin-top: 33px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -119,20 +119,20 @@
             No record found
           </h3>
 
-          <div class="p-3 roles-table" v-else>
+          <div class="roles-table" v-else>
             <div v-if="klaseResults[0].status == 'unpublished'">
               <div v-if="form.term == 1 || form.term == 2 || form.term == 3">
-                <h4
+                <h5
                   class="d-flex justify-content-center align-items-center"
                   style="
-                    height: 4rem;
+                    height: 42px;
                     background-color: #d9530f;
                     color: #fff;
                     font-weight: bold;
                   "
                 >
                   Result Not Yet Published
-                </h4>
+                </h5>
               </div>
             </div>
             <div v-else>
@@ -140,7 +140,7 @@
                 <h4
                   class="d-flex justify-content-center align-items-center"
                   style="
-                    height: 4rem;
+                    height: 42px;
                     background-color: green;
                     color: #fff;
                     font-weight: bold;
@@ -183,6 +183,7 @@
 
               <template #cell(actions)="data">
                 <b-button
+                class="sm"
                   variant="warning"
                   style="font-weight: bold"
                   :to="{
@@ -218,7 +219,10 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {

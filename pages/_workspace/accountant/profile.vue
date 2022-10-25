@@ -1,11 +1,12 @@
 <template>
-  <div class="accountant-profile p-4">
+  <div class="p-3">
     <template v-if="$apollo.queries.user.loading"><Preload /></template>
     <template v-else>
       <b-button
         class="shadow-sm mb-3"
-        variant="warning"
-        size="lg"
+        variant="light"
+        size="md"
+        pill
         @click="changePassword"
         >Change Password</b-button
       >
@@ -62,7 +63,7 @@
       </b-card>
 
       <!-- change password modal -->
-      <b-modal id="passwordModal" size="sm" centered hide-header hide-footer>
+      <b-modal id="passwordModal" size="md" centered hide-header hide-footer>
         <div class="p-5">
           <div class="form">
             <!-- description -->
@@ -79,7 +80,7 @@
                   placeholder="Enter old Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
 
                 <span style="color: red">{{ oldPassword }}</span>
@@ -91,7 +92,7 @@
                   placeholder="Enter Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
               </b-form-group>
 
@@ -102,7 +103,7 @@
                   placeholder="Comfirm password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                   @input="changeColor"
                   :style="{ border: isGreen }"
                 ></b-form-input>
@@ -113,7 +114,7 @@
                 type="submit"
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="sm"
                 :disabled="form.busy"
               >
                 <b-spinner
@@ -136,8 +137,11 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { USER_ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 import { CHANGE_USER_PASSWORD_MUTATION } from '~/graphql/users/mutations'
+import Preload from '~/components/Preload.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -237,10 +241,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.accountant-profile {
-  font-size: 1.6rem;
-  padding: 1rem;
-}
-</style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="result-page p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
             <b-col md="2">
@@ -99,8 +99,8 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
-              style="height: 3.85rem; margin-top: 2.85rem"
+              size="md"
+              style="height: 46px; margin-top: 33px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -115,14 +115,47 @@
 
       <div class="card" v-show="timetableDropdownClass">
         <div class="card-body">
-          <h3 v-if="klaseResults.length == 0" class="text-center">No record found</h3>
-          <div class="p-3 roles-table" v-else>
-            <h2
-              class="p-4 d-flex justify-content-center"
+          <h3 v-if="klaseResults.length == 0" class="text-center">
+            No record found
+          </h3>
+
+          <div class="roles-table" v-else>
+            <div v-if="klaseResults[0].status == 'unpublished'">
+              <div v-if="form.term == 1 || form.term == 2 || form.term == 3">
+                <h5
+                  class="d-flex justify-content-center align-items-center mb-4"
+                  style="
+                    height: 2.5rem;
+                    background-color: #d9530f;
+                    color: #fff;
+                    font-weight: bold;
+                  "
+                >
+                  Result Not Yet Published
+                </h5>
+              </div>
+            </div>
+            <div v-else>
+              <div v-if="student[1] == 1 || student[1] == 2 || student[1] == 3">
+                <h5
+                  class="d-flex justify-content-center align-items-center mb-4"
+                  style="
+                    height: 2.5rem;
+                    background-color: green;
+                    color: #fff;
+                    font-weight: bold;
+                  "
+                >
+                  Result Published
+                </h5>
+              </div>
+            </div>
+            <h4
+              class="d-flex justify-content-center"
               style="font-weight: bold"
             >
               Student Result Section
-            </h2>
+            </h4>
             <b-table :items="klaseResults" :fields="fields">
               <template #cell(#)="data">
                 {{ data.index + 1 }}
@@ -152,8 +185,9 @@
                 <b-button
                   variant="warning"
                   style="font-weight: bold"
+                  size="sm"
                   :to="{
-                    name: 'workspace-admin-exam-slug',
+                    name: 'workspace-teacher-slug',
                     params: {
                       workspace: mainWorkspace.slug,
                       slug: data.item.student.id,
@@ -185,7 +219,10 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {Preload},
   middleware: 'auth',
   data() {
     return {
@@ -260,6 +297,7 @@ export default {
       query: SECTION_QUERIES,
       variables() {
         return {
+          klase_id: parseInt(this.form.class),
           workspaceId: parseInt(this.mainWorkspace.id),
         }
       },
@@ -337,3 +375,17 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.result-page  {
+  .custom-select:focus {
+    box-shadow: none;
+  }
+  .custom-select,
+  .form-control,
+  .mb-3 {
+    height: 50px;
+    font-size: 16px;
+    color: #000;
+  }
+}
+</style>

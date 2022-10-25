@@ -1,6 +1,6 @@
 <template>
-  <div class="timetable">
-    <h2 class="d-flex justify-content-center p-4">
+  <div class="exam-timetable py-3">
+    <h2 class="text-center">
       {{ currentClass }} Class Timetable
     </h2>
     <div class="exam-timetable">
@@ -23,7 +23,7 @@
               <input
                 v-model="form.date"
                 required
-                style="width: 8rem"
+                style="width: 80px"
                 type="text"
               />
             </th>
@@ -31,7 +31,7 @@
               <input
                 v-model="form.date"
                 required
-                style="width: 11rem"
+                style="width: 110px"
                 type="text"
               />
             </th>
@@ -44,7 +44,7 @@
         </tbody>
       </table>
       <div class="d-flex justify-content-center">
-        <b-button size="lg" variant="danger">Submit</b-button>
+        <b-button size="md" variant="danger">Submit</b-button>
       </div>
     </div>
   </div>
@@ -71,13 +71,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .exam-timetable {
-  font-size: 1.6rem;
-  background-color: var(--color-white);
 
   input {
-    max-width: 13.5rem;
+    max-width: 135px;
   }
 }
 </style>

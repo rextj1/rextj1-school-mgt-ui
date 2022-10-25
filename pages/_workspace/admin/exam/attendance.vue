@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="onSubmit">
           <b-row>
             <b-col md="2">
@@ -100,9 +100,9 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
+              size="md"
               :disabled="isBusy"
-              style="height: 3.8rem; margin-top: 2.83rem"
+              style="height: 47px; margin-top: 32px"
               ><b-spinner
                 class="mr-1 mb-1"
                 small
@@ -116,12 +116,12 @@
 
       <div
         v-show="timetableDropdownClass"
-        class="p-4"
+        class="p-3"
         style="background-color: #fff"
       >
         <div v-if="klases.length == 0">
           <h3 style="text-align: center; padding: 13rem 0">
-            There are no records to show
+            No record found
           </h3>
         </div>
         <div v-else>
@@ -145,7 +145,11 @@ import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SUBJECT_QUERIES } from '~/graphql/subjects/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
+import ExamClassAttendance from '~/components/Exam/ClassAttendance.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: {ExamClassAttendance, Preload},
   middleware: 'auth',
   data() {
     return {

@@ -1,6 +1,6 @@
 <template>
   <div class="top">
-    <nav class="" @click="hideTopNav">
+    <nav>
       <b-icon
         class="h1 toggle-menu"
         variant="light"
@@ -11,8 +11,8 @@
         <li>
           <span class="mainNotification">
             <b-icon
-              class="h1 bell"
-              scale="1.1"
+              class="h2 bell"
+              scale="1.2"
               variant="light"
               icon="bell-fill"
             />
@@ -32,16 +32,20 @@
           >
             <div class="nav-image">
               <img src="@/assets/images/background.jpg" alt="" />
-              <h5>
+              <h6>
                 {{ $auth.user.first_name
                 }}<b-icon icon="caret-down-fill" style="color: #fff"></b-icon>
-              </h5>
+              </h6>
             </div>
             <transition class="leave-cancelled">
-              <div v-show="profileBody" class="profile" :class="topNavClass">
+              <div
+                v-show="profileBody"
+                class="profile"
+                :class="isHideNav == true ? topNavClass : (profileBody = false)"
+              >
                 <div class="align-content">
                   <img src="@/assets/images/background.jpg" alt="" />
-                  <p>{{ $auth.user.first_name }}</p>
+                  <p>{{ $auth.user.last_name }} {{ $auth.user.first_name }}</p>
                 </div>
                 <hr />
                 <ul>
@@ -90,6 +94,7 @@ export default {
   },
   computed: {
     ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    ...mapState(useToggleMenu, ['isHideNav']),
     mainWorkspace() {
       return this.currentWorkspace
     },
@@ -107,23 +112,21 @@ export default {
 
   methods: {
     ...mapActions(useToggleMenu, ['toggleMenu']),
+    ...mapActions(useToggleMenu, ['hideNavs']),
     toggleThisMenu() {
       this.toggleMenu()
     },
     profileImage(e) {
+      this.hideNavs()
       if (this.topNavClass === '') {
         this.profileBody = true
         this.topNavClass = 'off'
         e.stopPropagation()
       } else {
-        this.profileBody = false
         this.topNavClass = ''
       }
     },
-    hideTopNav() {
-      this.profileBody = false
-      this.topNavClass = ''
-    },
+
     async logout() {
       this.$nuxt.$loading.start()
       await this.$auth.logout()
@@ -137,7 +140,6 @@ export default {
 
 <style lang="scss" scoped>
 .top {
-  // position: fixed;
   right: 0;
   bottom: 0;
   top: 0;
@@ -145,9 +147,9 @@ export default {
   position: sticky;
   z-index: 6;
   background: linear-gradient(to right, #5142f5, #047edf 99%);
-  height: 6.8rem;
+  height: 85px;
+
   nav {
-    font-size: 1.6rem;
     display: flex;
     height: 100%;
     justify-content: space-between;
@@ -156,14 +158,14 @@ export default {
     z-index: 5;
 
     .toggle-menu {
-      margin-left: 1rem;
-      margin-top: 2rem;
+      margin-left: 7px;
+      margin-top: 0.5px;
       cursor: pointer;
     }
 
     .bell {
-      margin-top: 1.4rem;
-      margin-right: 2rem;
+      margin-top: 10px;
+      margin-right: 17px;
       cursor: pointer;
     }
 
@@ -175,11 +177,11 @@ export default {
         color: #fff;
         min-width: 43%;
         min-height: 100%;
-        font-size: 1.1rem;
+        font-size: 14px;
         position: absolute;
         border-radius: 50%;
-        right: 1.2rem;
-        top: -1.9rem;
+        right: 12px;
+        top: -19px;
         cursor: pointer;
       }
     }
@@ -192,53 +194,48 @@ export default {
         justify-content: flex-end;
         align-items: center;
 
-        margin-right: 4rem;
-        h5 {
+        margin-right: 40px;
+        h6 {
           color: #fff;
-          margin-left: 0.5rem;
+          margin-left: 0.5px;
           cursor: pointer;
         }
       }
       img {
         cursor: pointer;
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
       }
       .profile {
         z-index: 999;
         position: absolute;
         background-color: #fff;
-        top: 7.8rem;
-        right: 3rem;
+        top: 90px;
+        right: 30px;
         border-radius: 5px;
         box-shadow: 0 3px 21px 0 rgba(0, 0, 0, 0.219);
-        font-size: 1.5rem;
 
         .align-content {
           display: flex;
           flex-direction: column;
           align-items: center;
 
-          p:nth-child(even) {
-            font-size: 1.3rem !important;
-          }
-
           img {
-            margin: 1rem 0 2rem 0;
+            margin: 15px 0 20px 0;
           }
         }
         a {
           color: var(--color-body);
         }
         & li {
-          padding: 0.8rem 7rem;
+          padding: 25px 90px;
           border-bottom: 1px solid #d8e0c0;
           cursor: pointer;
 
           .nav-profile {
             position: absolute;
-            right: 13rem;
+            right: 155px;
           }
         }
       }

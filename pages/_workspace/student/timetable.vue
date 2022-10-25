@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="$fetchState.pending"><Preload /></template>
     <template v-else>
-      <b-card v-if="timetables.length > 0" class="p-4">
+      <b-card v-if="timetables.length > 0">
         <vue-html2pdf
           ref="html2Pdf"
           :show-layout="true"
@@ -18,40 +18,34 @@
           pdf-content-width=""
         >
           <section slot="pdf-content">
-            <b-row no-gutters>
-              <b-col md="12">
-                <h3 class="text-center mt-5 mb-4">
-                  <span style="color: green"
-                    >({{ user.student.klase.name }})</span
-                  >
-                  Exam Timetable
-                </h3>
+            <h4 class="text-center mt-5 mb-4">
+              <span style="color: green">({{ user.student.klase.name }})</span>
+              Exam Timetable
+            </h4>
 
-                <div class="p-3">
-                  <b-table
-                    hover
-                    bordered
-                    head-variant="dark"
-                    caption-top
-                    no-border-collapse
-                    :responsive="true"
-                    :items="timetables"
-                    :fields="fields"
-                  >
-                  </b-table>
-                </div>
-              </b-col>
-            </b-row>
+            <div>
+              <b-table
+                hover
+                bordered
+                head-variant="dark"
+                caption-top
+                no-border-collapse
+                :responsive="true"
+                :items="timetables"
+                :fields="fields"
+              >
+              </b-table>
+            </div>
           </section>
         </vue-html2pdf>
 
-        <div class="text-center mb-4">
-          <b-button variant="danger" size="lg" @click.prevent="generateReport"
+        <div class="text-center mb-3">
+          <b-button variant="danger" size="md" @click.prevent="generateReport"
             >download</b-button
           >
         </div>
       </b-card>
-      <b-card v-else-if="timetables.length == 0" class="p-4">
+      <b-card v-else-if="timetables.length == 0" class="p-3">
         <h2 class="text-center">No record found</h2>
       </b-card>
     </template>
@@ -63,9 +57,12 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { TIMETABLE_QUERIES } from '~/graphql/timetables/queries'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
-   data() {
+  data() {
     return {
       timetables: [],
       user: {},
@@ -111,7 +108,6 @@ export default {
       },
     })
     this.timetables = timetables
- 
   },
   fetchDelay: 1000,
 
@@ -128,5 +124,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped></style>

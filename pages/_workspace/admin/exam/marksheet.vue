@@ -1,8 +1,8 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <b-form @submit.prevent="markSubmit">
           <b-row>
             <b-col md="2">
@@ -62,8 +62,6 @@
                   class="mb-3"
                   size="lg"
                 >
-                 
-
                   <!-- These options will appear after the ones from 'options' prop -->
                 </b-form-select>
               </b-form-group>
@@ -117,9 +115,9 @@
             <b-button
               type="submit"
               variant="primary"
-              size="lg"
+              size="md"
               :disabled="isBusy"
-              style="height: 3.8rem; margin-top: 2.83rem"
+              style="height: 48px; margin-top: 32px"
               ><b-spinner
                 class="mr-1 mb-1"
                 small
@@ -133,7 +131,7 @@
 
       <div
         v-show="timetableDropdownClass"
-        class="p-4"
+        class="p-3"
         style="background-color: #fff"
       >
         <div>
@@ -163,8 +161,12 @@ import { MARK_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SUBJECT_QUERIES } from '~/graphql/subjects/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import ExamEditExamScores from '~/components/Exam/EditExamScores.vue'
+import Preload from '~/components/Preload.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { ExamEditExamScores, Preload },
   middleware: 'auth',
   data() {
     return {

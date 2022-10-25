@@ -1,10 +1,10 @@
 <template>
-  <div class="p-4">
+  <div class="p-3 reset">
     <template v-if="nowLoading">
       <Preload />
     </template>
     <template v-else>
-      <b-card class="p-3 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <!-- end of setPromotion -->
 
         <b-form @submit.prevent="markSubmit">
@@ -59,7 +59,7 @@
               type="submit"
               variant="primary"
               size="md"
-              style="height: 3.85rem; margin-top: 2.85rem"
+              style="height: 47px; margin-top: 32px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -72,7 +72,7 @@
         </b-form>
       </b-card>
 
-      <div v-show="timetableDropdownClass" class="">
+      <div v-show="timetableDropdownClass">
         <ExamResetPromotion
           v-if="resetPromotion"
           :resetPromotion="resetPromotion"
@@ -94,7 +94,11 @@ import {
   RESET_PROMOTE_QUERIES,
 } from '@/graphql/promotions/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
+import ExamResetPromotion from '~/components/Exam/ResetPromotion.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { ExamResetPromotion, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -206,3 +210,19 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.reset {
+  .custom-select:focus {
+    box-shadow: none;
+  }
+
+  .custom-select,
+  .form-control,
+  .mb-3 {
+    height: 50px;
+     font-size: 16px;
+    color: #000;
+  }
+}
+</style>

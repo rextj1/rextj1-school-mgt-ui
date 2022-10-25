@@ -1,15 +1,15 @@
 <template>
-  <div class="exam-scores">
+  <div class="exam-scores p-3">
     <template v-if="marks.length == 0"
-      ><h3 class="text-center p4">No record found</h3></template
+      ><h3 class="text-center p-4">No record found</h3></template
     >
 
     <template v-else>
-      <h2 class="d-flex justify-content-center p-4">
+      <h3 class="text-center p-3">
         <span style="color: green; font-weight: bold"
-          >({{ marks[0].klase.name }}) Scoresheet</span
+          >{{ marks[0].klase.name }} Scoresheet</span
         >
-      </h2>
+      </h3>
       <div class="exam-timetable table-responsive">
         <b-form
           method="POST"
@@ -70,7 +70,7 @@
             </tbody>
           </table>
           <div class="d-flex justify-content-center mt-4">
-            <b-button size="lg" type="submit" variant="danger" :disabled="busy"
+            <b-button size="md" type="submit" variant="success" :disabled="busy"
               ><b-spinner
                 v-if="busy"
                 variant="light"
@@ -168,11 +168,10 @@ export default {
 
 <style lang="scss">
 .exam-scores {
-  font-size: 1.6rem;
   background-color: var(--color-white);
 
   input {
-    width: 6rem;
+    width: 60px;
     text-align: center;
   }
 }

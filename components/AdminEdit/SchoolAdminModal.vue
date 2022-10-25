@@ -1,8 +1,8 @@
 <template>
-  <div class="student">
+  <div class="admin-modal">
     <div v-if="nowLoading"><Preload /></div>
 
-    <div class="p-4 student__wrapper" v-else>
+    <div class="p-3 admin-modal__wrapper" v-else>
       <b-form
         v-if="show"
         method="POST"
@@ -319,21 +319,23 @@
             </div>
           </b-col>
 
-            <b-col md="3" class="p-4">
-              <b-form-group id="input-group-1" label="City">
-                <b-form-input
-                  id="city"
-                  v-model="form.userTable.city"
-                  type="text"
-                  placeholder="Enter city"
-                  name="city"
-                  required
-                ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userTable.city')">
-                  {{ form.errors.get('userTable.city') }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </b-col>
+          <b-col md="3" class="p-4">
+            <b-form-group id="input-group-1" label="City">
+              <b-form-input
+                id="city"
+                v-model="form.userTable.city"
+                type="text"
+                placeholder="Enter city"
+                name="city"
+                required
+              ></b-form-input>
+              <b-form-invalid-feedback
+                :state="!form.errors.has('userTable.city')"
+              >
+                {{ form.errors.get('userTable.city') }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
 
           <b-col md="3" class="p-4">
             <b-form-group id="input-group-1" label="L.G.A">
@@ -371,7 +373,7 @@
             <b-button
               pill
               class="ml-4"
-              style="font-size: 1.4rem"
+              style="font-size: 14px"
               size="lg"
               type="reset"
               variant="danger"
@@ -394,10 +396,12 @@ import {
   COUNTRY_QUERY,
   STATE_QUERY,
 } from '~/graphql/users/queries'
+import Preload from '~/components/Preload.vue'
 import { UPDATE_SCHOOL_ADMIN_MUTATION } from '~/graphql/admin/mutations'
 import { SCHOOL_ADMIN_QUERY } from '~/graphql/admin/queries'
 
 export default {
+  components: { Preload },
   middleware: 'auth',
   props: {
     AdminInfo: {
@@ -645,14 +649,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
+.admin-modal {
+  padding: 20px;
   .form-control,
   .mb-3 {
     background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 40px;
+    font-size: 14px;
   }
   .grow {
     position: absolute;
@@ -663,8 +666,8 @@ export default {
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -698,9 +701,9 @@ export default {
     }
   }
 
-  .student__wrapper {
+  .admin-modal__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

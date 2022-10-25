@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <div class="settings">
       <template v-if="$apollo.queries.adminWorkspace.loading"
         ><Preload
       /></template>
       <template v-else>
-        <div class="p-4">
+        <div class="p-1">
           <h3 class="ml-4 mt-5">Admin Settings</h3>
 
           <b-form
@@ -147,10 +147,10 @@
 
             <hr />
 
-            <section class="online-payment">
+            <section class="online-payment px-4">
               <b-row>
                 <b-col md="6">
-                  <h3 class="mt-2 p-3" style="">PAY THROUGH BANK</h3>
+                  <h3 class="mt-2" style="">Pay Through Bank</h3>
 
                   <div class="d-flex">
                     <label class="p-2">Account_name:</label>
@@ -159,7 +159,7 @@
                       v-model="form.account_name"
                       type="text"
                       placeholder="Account nane..."
-                      style="height: 3.3rem; font-size: 1.8rem"
+                      style="height: 37px;"
                       class="w-50 mb-4"
                       size="lg"
                     ></b-form-input>
@@ -172,7 +172,7 @@
                       v-model="form.account_no"
                       type="number"
                       placeholder="Account no..."
-                      style="height: 3.3rem; font-size: 1.8rem"
+                      style="height: 37px;"
                       class="w-50 mb-4"
                       size="lg"
                     ></b-form-input>
@@ -186,14 +186,14 @@
                       type="text"
                       placeholder="Bank name..."
                       name="bank"
-                      style="height: 3.3rem; font-size: 1.8rem"
+                      style="height: 37px;"
                       class="w-50"
                       size="lg"
                     ></b-form-input>
                   </div>
                 </b-col>
                 <b-col md="6">
-                  <h3 class="mt-2 p-3" style="">PAY WITH CARD</h3>
+                  <h3 class="mt-2" style="">Pay Through Bank</h3>
 
                   <div class="d-flex image">
                     <b-img
@@ -215,7 +215,7 @@
                       type="text"
                       placeholder="Paystack secret key"
                       name="paystack_secret_key"
-                      style="height: 3.3rem; font-size: 1.8rem"
+                      style="height: 37px;"
                       trim
                       size="lg"
                     ></b-form-input>
@@ -244,7 +244,7 @@
                           type="number"
                           placeholder="Enter amount..."
                           min="0"
-                          style="height: 3.3rem; font-size: 1.8rem"
+                          style="height: 37px;"
                           class="mb-3"
                           size="lg"
                         >
@@ -256,9 +256,8 @@
                         variant="primary"
                         size="lg"
                         style="
-                          height: 3.6rem;
-                          font-size: 1.8rem;
-                          margin-top: 1.83rem;
+                          height: 40px;
+                          margin-top: 20px;
                           width: 100%;
                           font-weight: bold;
                         "
@@ -275,7 +274,7 @@
               variant="warning"
               class="mr-4 mt-4"
               size="lg"
-              style="width: 100%; height: 3.8rem; font-size: 1.8rem"
+              style="width: 100%; height: 40px;"
             >
               <b-spinner
                 v-if="form.busy"
@@ -297,7 +296,10 @@ import { useWorkspaceStore } from '@/stores/wokspace'
 import Swal from 'sweetalert2'
 import { ADMIN_WORKSPACE_QUERIES } from '~/graphql/workspace/queries'
 import { UPDATE_SETTING_ADMIN_MUTATION } from '~/graphql/workspace/mutations'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -511,13 +513,12 @@ export default {
 <style lang="scss">
 .settings {
   background-color: #fff;
-  font-size: 1.6rem;
 
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -553,11 +554,27 @@ export default {
   .online-payment {
     & .image {
       width: 100%;
-      margin-bottom: 2rem;
+      margin-bottom: 20px;
       .svg-image {
-        width: 10rem;
+        width: 100px;
       }
     }
+
+    .custom-select {
+    font-size: 16px;
+  }
+
+  .custom-select:focus {
+    box-shadow: none;
+  }
+
+  .custom-select,
+  .form-control,
+  .mb-3 {
+    height: 50px;
+    font-size: 16px;
+    color: #000;
+  }
   }
 }
 </style>

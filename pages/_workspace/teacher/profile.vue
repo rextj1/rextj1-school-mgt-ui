@@ -1,15 +1,16 @@
 <template>
-  <div class="profile">
+  <div class="p-3">
     <template v-if="$apollo.queries.user.loading"><Preload /></template>
     <template v-else>
       <b-button
         class="shadow-sm mb-3"
-        variant="warning"
-        size="lg"
+        variant="light"
+        pill
+        size="md"
         @click="changePassword"
         >Change Password</b-button
       >
-      <b-card class="teacher shadow">
+      <b-card class="teacher shadow-sm">
         <div class="text-center mb-4">
           <div v-if="teacher.photo == 'null'">
             <b-img
@@ -22,7 +23,7 @@
           </div>
           <div v-else>
             <b-img
-               :src="`${$config.APIRoot}/storage/teacher/${teacher.photo}`"
+              :src="`${$config.APIRoot}/storage/teacher/${teacher.photo}`"
               thumbnail
               fluid
               alt="Responsive image"
@@ -36,8 +37,10 @@
             <p>Full Name</p>
             <p>Phone no:</p>
             <p>Qualifications</p>
-            <p>Code</p>
+            <p>Registration Code</p>
             <p>Gender</p>
+
+            <p>Date of Employment</p>
             <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
@@ -61,6 +64,7 @@
             <p>{{ teacher.code }}</p>
 
             <p>{{ teacher.gender }}</p>
+            <p>{{ teacher.employment }}</p>
             <p>
               {{ user.blood_group != null ? user.blood_group.name : '' }}
             </p>
@@ -71,7 +75,7 @@
               {{ user.state.name }}
             </p>
             <p>
-              {{ user.city.name }}
+              {{ user.city }}
             </p>
             <p>
               {{ user.lga }}
@@ -186,7 +190,10 @@
 
 <script>
 import { USER_TEACHER_QUERY } from '@/graphql/teachers/queries'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -281,37 +288,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.profile {
-  font-size: 1.6rem;
-  padding: 1rem;
-
-  .first-detail p {
-    display: block;
-    margin-left: 40%;
-  }
-  .first-details p {
-    display: block;
-    margin-left: 30%;
-    font-weight: bold;
-  }
-  @include media-breakpoint-down(md) {
-    .first-detail p {
-      margin-left: 0;
-    }
-    .first-details p {
-      margin-left: 0;
-    }
-  }
-  @include media-breakpoint-down(sm) {
-    .col-md-6 {
-      flex: 0 0 50%;
-      max-width: 50%;
-    }
-    .first-details p {
-      margin-left: 50%;
-    }
-  }
-}
-</style>

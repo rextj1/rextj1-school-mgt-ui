@@ -1,5 +1,5 @@
 <template>
-  <div class="student">
+  <div class="admin-accountant p-3">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-button
@@ -8,15 +8,15 @@
           params: { workspace: mainWorkspace.slug },
         }"
         variant="primary"
-        size="lg"
+        size="md"
         class="add-student mb-4"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <div class="p-4 student__wrapper">
-        <h2 class="d-flex justify-content-center mb-4 mt-4">
+      <div class="p-3 student__wrapper">
+        <h3 class="d-flex justify-content-center mb-4 mt-4">
           Register Accountant
-        </h2>
+        </h3>
         <hr />
         <b-form
           v-if="show"
@@ -375,7 +375,7 @@
                 pill
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="md"
               >
                 <b-spinner
                   v-if="form.busy"
@@ -387,8 +387,7 @@
               <b-button
                 pill
                 class="ml-4"
-                style="font-size: 1.4rem"
-                size="lg"
+                size="md"
                 type="reset"
                 variant="danger"
                 >Reset</b-button
@@ -412,8 +411,10 @@ import {
   STATE_QUERY,
 } from '~/graphql/users/queries'
 import { CREATE_ACCOUNTANT_MUTATION } from '~/graphql/accountants/mutations'
+import Preload from '~/components/Preload.vue'
 
 export default {
+  components: {Preload},
   middleware: 'auth',
   data() {
     return {
@@ -600,20 +601,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
+.admin-accountant {
   .form-control,
   .mb-3 {
     background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
+    height: 53px;
+    font-size: 16px;
   }
+
   .profile-avatar {
     position: relative;
     text-align: center;
-    width: 10rem;
-    height: 10rem;
+    width: 100px;
+    height: 100px;
 
     .photo-preview {
       width: 100px;
@@ -649,7 +649,7 @@ export default {
 
   .student__wrapper {
     background-color: var(--color-white);
-    border-radius: 0.5rem;
+    border-radius: 5px;
     border: none;
   }
 }

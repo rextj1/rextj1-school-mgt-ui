@@ -1,5 +1,5 @@
 <template>
-  <div class="teacher">
+  <div class="teacher p-3">
     <template v-if="$apollo.queries.teachers.loading"><Preload /></template>
     <template v-else>
       <b-button
@@ -19,9 +19,9 @@
         <b-col md="12">
           <div class="card-body">
             <div class="card-student shadow p-3" style="background-color: #fff">
-              <h2 class="d-flex justify-content-center mb-4 mt-4">
+              <h3 class="d-flex justify-content-center mb-4 mt-4">
                 All Teacher
-              </h2>
+              </h3>
               <hr />
               <b-container fluid>
                 <!-- User Interface controls -->
@@ -173,7 +173,6 @@
                   small
                   striped
                   hover
-                  style="font-size: 1.3rem"
                   :responsive="true"
                   @filtered="onFiltered"
                 >
@@ -203,7 +202,7 @@
                           <div
                             v-for="kl in klases.subjects"
                             :key="kl.id"
-                            style="margin-left: 5rem; font-size: 1.4rem"
+                            style="margin-left: 55px;"
                           >
                             <div>{{ kl.subject }}</div>
                           </div>
@@ -241,8 +240,7 @@
                           },
                         }"
                         variant="primary"
-                        size="md"
-                        class="px-3"
+                        size="sm"
                       >
                         <b-icon icon="eye" class="mr-1"></b-icon>
                         View
@@ -250,17 +248,18 @@
 
                       <b-button
                         variant="info"
-                        size="md"
-                        class="px-3"
+                        size="sm"
+                        class="ml-1"
                         @click="handleteacherEditModal(data.item.id)"
                       >
+                        <b-icon icon="pen" class="mr-1"></b-icon>
                         Edit
                       </b-button>
 
                       <b-button
                         variant="danger"
-                        size="md"
-                        class="px-3"
+                        size="sm"
+                        class="ml-1"
                         @click="handleDeleteModal(data.item)"
                       >
                         <b-icon icon="trash" class="mr-1" />
@@ -287,7 +286,7 @@
                   :hide-backdrop="false"
                   scrollable
                   title="Edit Teacher Data"
-                  size="lg"
+                  size="xl"
                   :hide-footer="true"
                 >
                   <AdminEditTeacherModal
@@ -302,7 +301,7 @@
     </template>
 
     <!-- delete modal -->
-    <b-modal id="DeleteModal" size="sm" centered hide-header hide-footer>
+    <b-modal id="DeleteModal" size="md" centered hide-header hide-footer>
       <div class="p-5 text-center">
         <Spinner v-if="isDeleting" size="4" />
         <template v-else>
@@ -349,8 +348,13 @@ import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
 import { TEACHERS_QUERIES } from '@/graphql/teachers/queries'
 import { DELETE_TEACHER_MUTATION } from '~/graphql/teachers/mutations'
+import AdminEditTeacherModal from '~/components/AdminEdit/TeacherModal.vue'
+import Preload from '~/components/Preload.vue'
+import Spinner from '~/components/Global/Spinner.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { AdminEditTeacherModal, Spinner, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -388,6 +392,11 @@ export default {
         {
           key: 'photo',
           label: 'Photo',
+          sortable: true,
+          //   class: 'text-center',
+        },
+        {
+          key: 'qualification',
           sortable: true,
           //   class: 'text-center',
         },
@@ -554,39 +563,34 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .teacher {
-  font-size: 1.4rem !important;
-  padding: 2rem;
 
   .add-student {
-    font-size: 1.6rem;
     box-shadow: 0 5px 5px 0 #1f64b367;
   }
   .card-body {
     padding: 0;
     .card-student {
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 5px;
       height: auto;
 
       .input-group > .input-group-append > .btn,
       .input-group > .input-group-append > .input-group-text {
         background: var(--color-primary);
         color: #fff;
-        font-size: 1rem;
+        font-size: 10px;
       }
       .input-group:not(.has-validation) > .custom-select:not(:last-child),
       .input-group > .form-control:not(:first-child),
       .input-group > .custom-select:not(:first-child),
       .custom-select {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 37px;
       }
       .form-control,
       .mb-3 {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 32px;
       }
     }
   }

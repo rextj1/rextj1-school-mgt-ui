@@ -1,5 +1,5 @@
 <template>
-  <div class="student">
+  <div>
     <b-modal
       :value="value"
       :visible="value"
@@ -18,7 +18,7 @@
           @reset.prevent="onReset"
         >
           <b-row>
-            <b-col md="1">
+            <b-col md="2">
               <label for="input-small" class="label-padding"
                 >Principal Comment:</label
               >
@@ -30,9 +30,8 @@
                 v-model="form.p_comment"
                 debounce="500"
                 name="p_comment"
-                size="lg"
+                size="md"
                 placeholder="Enter principal comment"
-                trim
               ></b-form-input>
               <b-form-invalid-feedback :state="!form.errors.has('p_comment')">
                 {{ form.errors.get('p_comment') }}
@@ -41,7 +40,7 @@
           </b-row>
 
           <b-row>
-            <b-col md="1">
+            <b-col md="2">
               <label for="input-small" class="label-padding"
                 >Teacher Comment:</label
               >
@@ -53,9 +52,8 @@
                 v-model="form.t_comment"
                 debounce="500"
                 name="t_comment"
-                size="lg"
+                size="md"
                 placeholder="Enter teacher's comment"
-                trim
               ></b-form-input>
               <b-form-invalid-feedback :state="!form.errors.has('t_comment')">
                 {{ form.errors.get('t_comment') }}
@@ -69,7 +67,7 @@
                 type="submit"
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="md"
                 :disabled="form.busy"
               >
                 <b-spinner
@@ -206,31 +204,3 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
-
-  .margin-down {
-    .label-padding {
-      padding-right: 15rem;
-      margin-bottom: 5rem;
-    }
-
-    .custom-select:focus,
-    .form-control.focus,
-    .form-control:focus {
-      box-shadow: none;
-    }
-
-    .custom-select,
-    .form-control,
-    .mb-3 {
-      height: 4rem;
-      font-size: 1.4rem;
-      color: #000;
-      width: 40.6%;
-    }
-  }
-}
-</style>

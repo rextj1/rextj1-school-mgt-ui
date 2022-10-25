@@ -41,21 +41,21 @@
               </div>
               <div v-else>
                 <div v-if="student[1] == 1 || student[1] == 2">
-                  <h4
+                  <h6
                     class="d-flex justify-content-center align-items-center"
                     style="
-                      height: 4rem;
+                      height: 40px;
                       background-color: green;
                       color: #fff;
                       font-weight: bold;
                     "
                   >
                     Result Published
-                  </h4>
+                  </h6>
                 </div>
               </div>
 
-              <h2 style="text-align: center; font-weight: bold">
+              <h5 style="text-align: center; font-weight: bold">
                 <span style="color: green" v-if="student[1] == 3"
                   >{{ student[1] }}rd Term</span
                 >
@@ -64,97 +64,21 @@
                 >
                 <span style="color: green" v-else>{{ student[1] }}st Term</span>
                 Tabulation sheet
-              </h2>
+              </h5>
               <table class="table table-responsive table-striped">
-                <thead>
-                  <tr>
-                    <th>S/N</th>
-                    <th>Full Name</th>
-
-                    <th
-                      v-if="student[1] == 1 || student[1] == 2"
-                      style="color: darkred"
-                    >
-                      Total
-                    </th>
-                    <th style="color: darkblue">Average</th>
-                    <th v-if="student[1] == 3" style="color: darkblue">
-                      Cum Total
-                    </th>
-                    <th v-if="student[1] == 3" style="color: darkblue">
-                      Cum Avg
-                    </th>
-                    <th v-if="student[1] == 3" style="color: darkgreen">
-                      {{ student[1] }}rd Position
-                    </th>
-                    <th v-else style="color: darkgreen">Position</th>
-                    <th v-if="student[1] == 3" style="color: darkgreen">
-                      Cumulative Position
-                    </th>
-
-                    <th v-if="student[1] == 3" style="color: darkgreen">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(record, value) in records" :key="record.id">
-                    <td>{{ value + 1 }}</td>
-                    <td style="">
-                      {{ record.student.first_name }}
-                      {{ record.student.last_name }}
-                    </td>
-                    <td
-                      v-if="student[1] == 1 || student[1] == 2"
-                      style="color: darkblue"
-                    >
-                      {{ record.total }}
-                    </td>
-                    <td style="color: darkblue">
-                      {{ record.avg }}
-                    </td>
-                    <td v-if="student[1] == 3" style="color: darkblue">
-                      {{ record.cum_total }}
-                    </td>
-                    <td v-if="student[1] == 3" style="color: darkblue">
-                      {{ record.cum_avg }}
-                    </td>
-                    <td
-                      style="color: darkgreen"
-                      v-html="postion(record.position)"
-                    ></td>
-                    <td
-                      style="color: darkgreen"
-                      v-html="postion(record.cum_position)"
-                    ></td>
-                    <td v-if="student[1] == 3">
-                      {{ record.ps }}
-                    </td>
-
-                    <!-- 
-                    <td v-for="first in firstTerm" :key="first.id">
-                      {{ first.cum_avg }}
-                    </td>
-
-                    <td v-for="secound in secoundTerm" :key="secound.id">
-                      {{ secound.cum_avg }}
-                    </td>
-
-                    <td v-for="third in thirdTerm" :key="third.id">
-                      {{ third.cum_avg }}
-                    </td> -->
-
-                    <!-- <td style="color: darkred">{{ record.total }}</td> -->
-                  </tr>
-                </tbody>
+                <tr>
+                 
+                </tr>
               </table>
             </div>
             <div class="d-flex justify-content-center mb-4">
               <b-button
-                variant="danger"
-                size="lg"
+                class="px-3"
+                variant="secondary"
+                pill
+                size="md"
                 @click.prevent="generateReport"
-                >Download</b-button
+                ><b-icon icon="printer" /> Print</b-button
               >
             </div>
           </div>
@@ -176,8 +100,8 @@ export default {
     examRecords: Array,
     firstTerm: Array,
     secoundTerm: Array,
+    marks: Array,
     thirdTerm: Array,
-
     student: Array,
   },
 
@@ -287,16 +211,8 @@ export default {
             showConfirmButton: false,
           })
         })
-        .catch((e) => {
-          console.log(e)
-        })
+        .catch(() => {})
     },
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.card {
-  font-size: 1.5rem;
-}
-</style>

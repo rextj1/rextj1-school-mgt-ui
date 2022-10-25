@@ -1,10 +1,10 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="$apollo.queries.notices.loading"><Preload /></template>
     <template v-else>
       <div>
         <b-card no-body>
-          <b-tabs card style="font-size: 1.4rem">
+          <b-tabs card>
             <b-tab active>
               <template #title>
                 <b-icon icon="plus" /><strong>Add Notice</strong>
@@ -52,7 +52,7 @@
                       pill
                       variant="primary"
                       class="mr-4"
-                      size="lg"
+                      size="md"
                     >
                       <b-spinner
                         v-if="form.busy"
@@ -64,8 +64,7 @@
                     <b-button
                       pill
                       class="ml-4"
-                      style="font-size: 1.4rem"
-                      size="lg"
+                      size="md"
                       type="reset"
                       variant="danger"
                       >Reset</b-button
@@ -82,7 +81,7 @@
 
               <div class="d-flex justify-content-between">
                 <b-form-checkbox
-                  style="margin-left: 2.2rem"
+                  style="margin-left: 22px"
                   @change="selectAllNotices"
                 >
                 </b-form-checkbox>
@@ -116,7 +115,6 @@
 
                   <template #cell(date)="date">
                     <b-badge
-                      style="font-size: 1.4rem"
                       class="d-inline-block"
                       variant="warning"
                       >{{ date.value }}</b-badge
@@ -140,7 +138,7 @@
                           class="mr-1 mb-1"
                         />
 
-                        <h5>Publish</h5>
+                        Publish
                       </b-button>
 
                       <b-button
@@ -159,7 +157,7 @@
                           class="mr-1 mb-1"
                         />
 
-                        <h5>Unpublish</h5>
+                        Unpublish
                       </b-button>
 
                       <b-button
@@ -269,8 +267,13 @@ import {
   PUBLISH_NOTICE_MUTATION,
 } from '~/graphql/notices/mutations'
 import { NOTICE_QUERIES } from '~/graphql/notices/queries'
+import AdminEditNoticeModal from '~/components/AdminEdit/NoticeModal.vue'
+import Preload from '~/components/Preload.vue'
+import Spinner from '~/components/Global/Spinner.vue'
 import Swal from 'sweetalert2'
+
 export default {
+  components: { AdminEditNoticeModal, Preload, Spinner },
   middleware: 'auth',
   data() {
     return {
@@ -460,8 +463,7 @@ export default {
             showConfirmButton: false,
           })
         })
-        .catch(() => {
-        })
+        .catch(() => {})
         .finally(() => {
           this.$bvModal.hide('DeleteModal')
 

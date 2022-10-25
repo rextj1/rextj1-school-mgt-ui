@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="fonts">
     <b-row no-gutters>
       <b-col md="12">
@@ -157,7 +157,6 @@
                 small
                 striped
                 hover
-                style="font-size: 1.3rem"
                 :responsive="true"
                 @filtered="onFiltered"
               >
@@ -392,37 +391,32 @@ export default {
 
 <style lang="scss">
 .fonts {
-  font-size: 1.4rem !important;
-  padding: 2rem;
-
-  .add-student {
-    font-size: 1.6rem;
-    box-shadow: 0 5px 5px 0 #1f64b367;
-  }
+  padding: 2;
+  
   .card-body {
     padding: 0;
     .card-student {
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 5px;
       height: auto;
 
       .input-group > .input-group-append > .btn,
       .input-group > .input-group-append > .input-group-text {
         background: var(--color-primary);
         color: #fff;
-        font-size: 1rem;
+        font-size: 10px;
       }
       .input-group:not(.has-validation) > .custom-select:not(:last-child),
       .input-group > .form-control:not(:first-child),
       .input-group > .custom-select:not(:first-child),
       .custom-select {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 32px;
+        font-size: 12px;
       }
       .form-control,
       .mb-3 {
-        height: 3.2rem;
-        font-size: 1.2rem;
+        height: 32px;
+        font-size: 12px;
       }
     }
   }

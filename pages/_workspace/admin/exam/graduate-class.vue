@@ -1,13 +1,13 @@
 <template>
-  <div class="p-4">
+  <div class="p-3">
     <template v-if="nowLoading">
       <Preload />
     </template>
     <template v-else>
-      <b-card class="p-2 mb-4 d-flex">
+      <b-card class="mb-2 d-flex">
         <!-- setPromotion -->
 
-        <h3>Promotion mark</h3>
+        <h4>Promotion mark</h4>
         <b-row>
           <b-col md="3" class="mb-3">
             <input
@@ -75,7 +75,7 @@
               type="submit"
               variant="primary"
               size="lg"
-              style="height: 3.75rem; margin-top: 2.9rem"
+              style="height: 47px; margin-top: 32px"
               :disabled="isBusy"
               ><b-spinner
                 class="mr-1 mb-1"
@@ -108,7 +108,11 @@ import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import { SET_PROMOTION_QUERIES } from '@/graphql/promotions/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
+import ExamGraduateStudents from '~/components/Exam/GraduateStudents.vue'
+import Preload from '~/components/Preload.vue'
+
 export default {
+  components: { ExamGraduateStudents, Preload },
   middleware: 'auth',
   data() {
     return {
@@ -214,5 +218,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped></style>
