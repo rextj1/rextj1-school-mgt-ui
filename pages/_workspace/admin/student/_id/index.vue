@@ -4,35 +4,48 @@
       <Preload />
     </template>
     <template v-else>
-      <b-button
-        :to="{
-          name: 'workspace-admin-student',
-          params: { workspace: mainWorkspace.slug },
-        }"
-        variant="primary"
-        size="md"
-        class="add-student mb-4"
-      >
-        <b-icon icon="arrow-left" /> Back
-      </b-button>
-      <b-card class="user shadow">
-        <div v-if="student.user.photo == null" class="text-center mb-4 mt-4">
+      <div class="d-flex justify-content-between">
+        <b-button
+          :to="{
+            name: 'workspace-admin-student',
+            params: { workspace: mainWorkspace.slug },
+          }"
+          variant="light"
+          size="md"
+          class="add-student mb-4"
+        >
+          <b-icon icon="arrow-left" /> Back
+        </b-button>
+
+        <b-button
+          variant="primary"
+          pill
+          size="md"
+          class="mb-4"
+          @click="showGuardianProfile"
+        >
+          Guardian Details
+        </b-button>
+      </div>
+
+      <b-card class="user shadow-sm">
+        <div v-if="student.photo == null" class="text-center mb-4 mt-4">
           <b-img
             src="@/assets/svg/user-avatar.svg"
-            thumbnail
+            
             fluid
-            alt="School image"
-            width="150"
+            alt="student"
+            width="200"
           ></b-img>
         </div>
 
         <div v-else class="text-center mb-4 mt-4">
-          <b-img
-            :src="`${$config.APIRoot}/storage/user/${student.user.photo}`"
+          <b-img style="border-radius:50%"
+            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${student.photo}`"
             thumbnail
             fluid
-            alt="Responsive image"
-            width="150"
+            alt="student"
+            width="200"
           ></b-img>
         </div>
 
@@ -42,20 +55,16 @@
             <p>Phone no:</p>
             <p>Admission no:</p>
             <p>class</p>
-            <p>Section</p>
             <p>Registration Code</p>
+            <p>Section</p>
             <p>Gender</p>
             <p>Email</p>
+            <p>Religion</p>
+            <p>Blood Group</p>
             <p>Country</p>
             <p>State</p>
+            <p>City</p>
             <p>L.G.A</p>
-            <p>Social Media Links</p>
-
-            <p>
-              <b-badge variant="warning"
-                >Subjects Assigned</b-badge
-              >
-            </p>
           </div>
           <div style="font-weight: bold">
             <p>
@@ -64,15 +73,10 @@
             </p>
             <p>{{ student.phone }}</p>
 
-            
             <p>{{ student.adm_no }}</p>
-             <p>{{ student.klase.name }}</p>
-             <p>{{ student.code }}</p>
-
-
-            <p>{{ student.guardian_name }}</p>
-            <p>{{ student.guardian_no }}</p>
-            <p>{{ student.guardian_email }}</p>
+            <p>{{ student.klase.name }}</p>
+            <p>{{ student.code }}</p>
+            <p>{{ student.section.name }}</p>
 
             <p>{{ student.gender }}</p>
             <p>
@@ -94,18 +98,61 @@
             <p>
               {{ student.user.state.name }}
             </p>
-             <p>
+            <p>
               {{ student.user.city }}
             </p>
             <p>
               {{ student.user.lga }}
             </p>
-
-            <p>{{ student.klase.name }}</p>
           </div>
         </div>
-      </b-card></template
-    >
+      </b-card>
+
+      <!-- change password modal -->
+      <b-modal id="guardian-profile" size="lg" centered hide-header hide-footer>
+        <b-card class="user shadow-sm">
+          <h5 style="color: green">Guardian Details</h5>
+          <div
+            v-if="student.guardian.user.photo == null"
+            class="text-center mb-4 mt-4"
+          >
+            <b-img
+              src="@/assets/svg/user-avatar.svg"
+              fluid
+              alt="student"
+              width="150"
+            ></b-img>
+          </div>
+
+          <div v-else class="text-center mb-4 mt-4">
+            <b-img
+              :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/guardians/${student.guardian.user.photo}`"
+              fluid
+              alt="guardian"
+              width="150"
+            ></b-img>
+          </div>
+
+          <div class="d-flex justify-content-between p-3">
+            <div>
+              <p>Full Name</p>
+              <p>Phone no:</p>
+
+              <p>Email</p>
+              <p>Guardian Address</p>
+            </div>
+            <div style="font-weight: bold">
+              <p>{{ student.guardian_name }}</p>
+
+              <p>{{ student.guardian_no }}</p>
+
+              <p>{{ student.guardian_email }}</p>
+              <p>{{ student.guardian_address }}</p>
+            </div>
+          </div>
+        </b-card>
+      </b-modal>
+    </template>
   </div>
 </template>
 
@@ -116,7 +163,7 @@ import { STUDENT_QUERY } from '~/graphql/students/queries'
 import Preload from '~/components/Preload.vue'
 
 export default {
-  components: {Preload},
+  components: { Preload },
   apollo: {
     student: {
       query: STUDENT_QUERY,
@@ -133,12 +180,16 @@ export default {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
   },
+  methods: {
+    showGuardianProfile() {
+      this.$bvModal.show('guardian-profile')
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .profile {
-
   .first-detail p {
     display: block;
     margin-left: 40%;

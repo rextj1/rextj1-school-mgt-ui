@@ -732,11 +732,5 @@ export default {
       font-size: 16px;
     }
   }
-  .custom-select,
-  .form-control,
-    .mb-3 {
-      height: 45px;
-      font-size: 16px;
-    }
 }
 </style>

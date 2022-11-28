@@ -27,6 +27,7 @@ export const USER_GUARDIAN_QUERY = gql`
   query userGuardian($id: ID!) {
     user(id: $id) {
       id
+      photo
       blood_group {
         name
       }

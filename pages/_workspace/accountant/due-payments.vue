@@ -180,10 +180,10 @@ export default {
       },
 
       shows: [
-        { value: null, text: 10 },
-        { value: 20, text: 20 },
+        { value: null, text: 20 },
         { value: 50, text: 50 },
-         { value: 1000, text: 'more' },
+        { value: 100, text: 100 },
+         { value: 2000, text: 'more' },
       ],
     }
   },
@@ -218,7 +218,7 @@ export default {
         return {
           workspaceId: parseInt(this.mainWorkspace.id),
           search: this.search,
-          first: parseInt(this.show || 10),
+          first: parseInt(this.show || 20),
           page: parseInt(this.currentPage),
         }
       },

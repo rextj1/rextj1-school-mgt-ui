@@ -1,5 +1,5 @@
 <template>
-  <div class="payment-wrapper p-4">
+  <div class="payment-wrapper p-3">
     <template v-if="$apollo.queries.studentPaymentRecord.loading"
       ><Preload
     /></template>
@@ -11,22 +11,29 @@
           mainWorkspace.account_name != ''
         "
         class="shadow-sm mb-3"
-        variant="primary"
-        size="lg"
+        variant="light"
+        pill
+        size="md"
         @click="handleBankDetails"
         >Click yet to see bank details</b-button
       >
       <b-card>
-        <div style="padding: 5rem; margin: auto; min-height: 100vh">
+        <div style="padding: 1px; margin: auto; min-height: 100vh">
           <div class="mt-4">
             <div class="text-center mb-4">
-              <b-img src="@/assets/svg/ronazon-logo.svg" width="100"></b-img>
+              <div v-if="mainWorkspace.logo == null"></div>
+              <b-img
+                v-else
+                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
+                alt=""
+                width="100"
+              ></b-img>
             </div>
 
             <h1 class="text-center" style="color: #1c0988; font-weight: bold">
               {{ mainWorkspace.name }}
             </h1>
-            <h4
+            <h6
               class="text-center"
               style="
                 text-transform: uppercase;
@@ -39,82 +46,83 @@
                 studentPaymentRecord.session.name
               }}
               Session)
-            </h4>
+            </h6>
           </div>
 
           <div
-            class="d-flex justify-content-align mt-2 p-3"
+            class="d-flex justify-content-align mt-2 p-2"
             style="background-color: #007bff; color: #fff"
           >
             STUDENT INFORMATION
           </div>
 
-          <div class="d-flex justify-content-center">
-            <b-img
-              class="mt-3"
-              thumbnail
-              src="@/assets/images/teacher.jpeg"
-              width="100"
-            ></b-img>
+          <div class="d-flex justify-content-center mt-3">
+            <div v-if="studentPaymentRecord.student.photo == null"></div>
+            <img
+              v-else
+              :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${studentPaymentRecord.student.photo}`"
+              alt="student"
+              width="150"
+            />
           </div>
 
           <div class="d-flex justify-content-between mt-5">
             <div>
-              <h4>FULL NAME:</h4>
-              <h4>ADM_NO:</h4>
-              <h4>CLASS:</h4>
+              <h6>FULL NAME:</h6>
+              <h6>ADM_NO:</h6>
+              <h6>CLASS:</h6>
             </div>
 
             <div style="text-transform: uppercase">
-              <h4>
+              <h6>
                 {{ studentPaymentRecord.student.first_name }}
                 {{ studentPaymentRecord.student.last_name }}
                 {{ studentPaymentRecord.student.middle_name }}
-              </h4>
-              <h4>
+              </h6>
+              <h6>
                 {{ studentPaymentRecord.student.adm_no }}
-              </h4>
-              <h4>{{ studentPaymentRecord.student.last_name }}</h4>
-              <h4>{{ studentPaymentRecord.klase.name }}</h4>
+              </h6>
+              <h6>{{ studentPaymentRecord.student.last_name }}</h6>
+              <h6>{{ studentPaymentRecord.klase.name }}</h6>
             </div>
           </div>
 
-          <h3
-            class="d-flex justify-content-align mt-4 p-3"
+          <h5
+            class="d-flex justify-content-align mt-4 p-2"
             style="background-color: #007bff; color: #fff"
           >
             PAYMENT INFORMATION
-          </h3>
+          </h5>
           <div class="d-flex justify-content-between mt-4">
             <div>
-              <h4>TITLE:</h4>
+              <h6>TITLE:</h6>
 
-              <h4>REFERENCE:</h4>
+              <h6>REFERENCE:</h6>
 
-              <h4>Amount</h4>
+              <h6>Amount</h6>
 
-              <h4>Amount Paid:</h4>
+              <h6>Amount Paid:</h6>
 
-              <h4>Balance</h4>
-              <h4>Payment Date</h4>
+              <h6>Balance</h6>
+              <h6>Payment Date</h6>
             </div>
 
             <div style="margin-left: 3rem">
-              <h4>{{ studentPaymentRecord.title }}</h4>
-              <h4>{{ studentPaymentRecord.ref_no }}</h4>
-              <h4><span>&#x20A6;</span>{{ studentPaymentRecord.amount }}</h4>
-              <h4><span>&#x20A6;</span>{{ studentPaymentRecord.amt_paid }}</h4>
-              <h4><span>&#x20A6;</span>{{ studentPaymentRecord.balance }}</h4>
-              <h4>{{ studentPaymentRecord.created_at | formatDate }}</h4>
+              <h6>{{ studentPaymentRecord.title }}</h6>
+              <h6>{{ studentPaymentRecord.ref_no }}</h6>
+              <h6><span>&#x20A6;</span>{{ studentPaymentRecord.amount }}</h6>
+              <h6><span>&#x20A6;</span>{{ studentPaymentRecord.amt_paid }}</h6>
+              <h6><span>&#x20A6;</span>{{ studentPaymentRecord.balance }}</h6>
+              <h6>{{ studentPaymentRecord.created_at | formatDate }}</h6>
             </div>
           </div>
           <hr />
 
           <section
-            v-if="studentPaymentRecord.balance > 0"
+            v-if="studentPaymentRecord.balance > 0 && mainWorkspace.paystack_secret_key != null"
             class="online-payment"
           >
-            <h2 class="text-center mt-2 p-3" style="">PAY WITH CARD</h2>
+            <h5 class="text-center mt-2 p-3" style="">PAY WITH CARD</h5>
 
             <div class="d-flex justify-content-center image">
               <b-img src="@/assets/svg/visa.svg" class="svg-image"></b-img>
@@ -152,10 +160,10 @@
                 <b-button
                   type="submit"
                   variant="warning"
-                  size="lg"
+                  size="md"
                   style="
                     height: 3.6rem;
-                    font-size: 1.8rem;
+                    font-size: 20px;
                     margin-top: 1.83rem;
                     width: 100%;
                     font-weight: bold;
@@ -170,20 +178,20 @@
         <!-- change password modal -->
         <b-modal id="bankDetails" size="md" centered hide-footer>
           <div class="p-2">
-            <h3 class="text-center mb-5">
+            <h5 class="text-center mb-5">
               <span style="color: green">Bank Details</span>
-            </h3>
+            </h5>
             <div class="d-flex justify-content-between p-4">
               <div>
-                <h4>Account Name</h4>
-                <h4>Account Number</h4>
-                <h4>Bank</h4>
+                <h6>Account Name</h6>
+                <h6>Account Number</h6>
+                <h6>Bank</h6>
               </div>
 
               <div style="font-weight: bold">
-                <h4>{{ mainWorkspace.account_name }}</h4>
-                <h4>{{ mainWorkspace.account_no }}</h4>
-                <h4>{{ mainWorkspace.bank }}</h4>
+                <h6>{{ mainWorkspace.account_name }}</h6>
+                <h6>{{ mainWorkspace.account_no }}</h6>
+                <h6>{{ mainWorkspace.bank }}</h6>
               </div>
             </div>
           </div>
@@ -203,7 +211,7 @@ import { STUDENT_PAYMENT_RECORD_QUERY } from '~/graphql/payments/queries'
 import Preload from '~/components/Preload.vue'
 
 export default {
-  components: {Preload},
+  components: { Preload },
   middleware: 'auth',
   filters: {
     formatDate(value) {
@@ -336,8 +344,6 @@ export default {
 
 <style lang="scss">
 .payment-wrapper {
-  font-size: 1.4rem !important;
-
   .online-payment {
     width: 40%;
     margin: 0 auto;

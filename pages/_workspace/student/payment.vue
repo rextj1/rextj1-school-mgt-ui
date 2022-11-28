@@ -84,19 +84,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.view-payment {
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    font-size: 16px;
-    color: #000;
-  }
-}
-</style>

@@ -73,182 +73,187 @@
         class="timetable__wrapper"
         @click="hideMenu"
       >
-        <b-card no-body @click="hideMenu">
-          <b-tabs card>
-            <b-tab active @click="hideMenu">
-              <template #title>
-                <strong>Create Timetable</strong>
-                <b-icon scale="0.8" icon="plus" />
-              </template>
+        <div v-if="timetables.length > 0">
+          <b-card no-body @click="hideMenu">
+            <b-tabs card>
+              <b-tab active @click="hideMenu">
+                <template #title>
+                  <strong>Create Timetable</strong>
+                  <b-icon scale="0.8" icon="plus" />
+                </template>
 
-              <h4 class="text-center py-3">Timetable</h4>
+                <h4 class="text-center py-3">Timetable</h4>
 
-              <b-card>
-                <b-table
-                  hover
-                  bordered
-                  head-variant="dark"
-                  caption-top
-                  no-border-collapse
-                  :responsive="true"
-                  :items="timetables"
-                  :fields="fields"
-                >
-                  <template #cell(Action)="data">
-                    <div class="d-flex justify-content-center">
+                <b-card>
+                  <b-table
+                    hover
+                    bordered
+                    head-variant="dark"
+                    caption-top
+                    no-border-collapse
+                    :responsive="true"
+                    :items="timetables"
+                    :fields="fields"
+                  >
+                    <template #cell(Action)="data">
+                      <div class="d-flex justify-content-center">
+                        <b-button
+                          variant="primary"
+                          size="md"
+                          @click="timetableEdit(data.item)"
+                          >Edit</b-button
+                        >
+
+                        <b-button
+                          variant="danger"
+                          size="md"
+                          class="ml-2"
+                          @click="handleDeleteTimetable(data.item)"
+                          ><b-spinner
+                            variant="light"
+                            small
+                            class="mr-1 mb-1"
+                            v-if="isDelete == data.item.id"
+                          />
+                          Delete</b-button
+                        >
+                      </div>
+                    </template>
+                  </b-table>
+                </b-card>
+                <!-- Info modal -->
+
+                <AdminEditTimetableModal
+                  v-if="invokedForEdit"
+                  v-model="isEditTimetabledModal"
+                  :slug="[slug, form.class, infoModal]"
+                  :timetable="invokedForEdit"
+                />
+
+                <!-- end modal -->
+
+                <div class="exam-timetble mt-4">
+                  <b-form
+                    v-show="show"
+                    method="POST"
+                    @submit.prevent="onSubmit"
+                    @keydown="form.onKeydown($event)"
+                  >
+                    <table class="table table-sm table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col">Time</th>
+                          <th scope="col">Monday</th>
+                          <th scope="col">Tuesday</th>
+                          <th scope="col">Wednesday</th>
+                          <th scope="col">Thursday</th>
+                          <th scope="col">Friday</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <th scope="row">
+                            <input
+                              class="form-control form-control-sm"
+                              v-model="form.time"
+                              type="text"
+                            />
+                          </th>
+
+                          <th scope="row">
+                            <input
+                              class="form-control form-control-sm"
+                              v-model="form.monday"
+                              type="text"
+                            />
+                          </th>
+                          <th scope="row">
+                            <input
+                              class="form-control form-control-sm"
+                              v-model="form.tuesday"
+                              type="text"
+                            />
+                          </th>
+                          <th scope="row">
+                            <input
+                              class="form-control form-control-sm"
+                              v-model="form.wednesday"
+                              type="text"
+                            />
+                          </th>
+                          <th scope="row">
+                            <input
+                              class="form-control form-control-sm"
+                              v-model="form.thursday"
+                              type="text"
+                            />
+                          </th>
+                          <th scope="row">
+                            <input
+                              class="form-control form-control-sm"
+                              v-model="form.friday"
+                              type="text"
+                            />
+                          </th>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="text-center">
                       <b-button
+                        type="submit"
                         variant="primary"
+                        class="mr-4"
                         size="md"
-                        @click="timetableEdit(data.item)"
-                        >Edit</b-button
                       >
-
-                      <b-button
-                        variant="danger"
-                        size="md"
-                        class="ml-2"
-                        @click="handleDeleteTimetable(data.item)"
-                        ><b-spinner
+                        <b-spinner
+                          v-if="form.busy"
                           variant="light"
                           small
                           class="mr-1 mb-1"
-                          v-if="isDelete == data.item.id"
-                        />
-                        Delete</b-button
+                        />Register</b-button
                       >
                     </div>
-                  </template>
-                </b-table>
-              </b-card>
-              <!-- Info modal -->
+                  </b-form>
+                </div>
+              </b-tab>
 
-              <AdminEditTimetableModal
-                v-if="invokedForEdit"
-                v-model="isEditTimetabledModal"
-                :slug="[slug, form.class, infoModal]"
-                :timetable="invokedForEdit"
-              />
+              <b-tab lazy @click="registrationMenu">
+                <template #title>
+                  <strong>View Timetable</strong>
+                  <b-icon scale="0.8" icon="caret-down-fill" />
+                </template>
 
-              <!-- end modal -->
+                <div class="menu" style="background-color: #fff">
+                  <ul
+                    v-show="registerMenu"
+                    class="shadow"
+                    :class="registrationMenuClass"
+                  >
+                    <span v-for="klase in klases" :key="klase.id">
+                      <li
+                        @click.prevent="
+                          dynamicStudentClass(klase.id, klase.name)
+                          activeTab = 'TimetableEditClassTimetable'
+                        "
+                      >
+                        <span class="d-flex">{{ klase.name }}</span>
+                      </li>
+                    </span>
+                  </ul>
+                </div>
 
-              <div class="exam-timetble mt-4">
-                <b-form
-                  v-show="show"
-                  method="POST"
-                  @submit.prevent="onSubmit"
-                  @keydown="form.onKeydown($event)"
-                >
-                  <table class="table table-sm table-bordered">
-                    <thead>
-                      <tr>
-                        <th scope="col">Time</th>
-                        <th scope="col">Monday</th>
-                        <th scope="col">Tuesday</th>
-                        <th scope="col">Wednesday</th>
-                        <th scope="col">Thursday</th>
-                        <th scope="col">Friday</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <tr>
-                        <th scope="row">
-                          <input
-                            class="form-control form-control-sm"
-                            v-model="form.time"
-                            type="text"
-                          />
-                        </th>
-
-                        <th scope="row">
-                          <input
-                            class="form-control form-control-sm"
-                            v-model="form.monday"
-                            type="text"
-                          />
-                        </th>
-                        <th scope="row">
-                          <input
-                            class="form-control form-control-sm"
-                            v-model="form.tuesday"
-                            type="text"
-                          />
-                        </th>
-                        <th scope="row">
-                          <input
-                            class="form-control form-control-sm"
-                            v-model="form.wednesday"
-                            type="text"
-                          />
-                        </th>
-                        <th scope="row">
-                          <input
-                            class="form-control form-control-sm"
-                            v-model="form.thursday"
-                            type="text"
-                          />
-                        </th>
-                        <th scope="row">
-                          <input
-                            class="form-control form-control-sm"
-                            v-model="form.friday"
-                            type="text"
-                          />
-                        </th>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="text-center">
-                    <b-button
-                      type="submit"
-                      variant="primary"
-                      class="mr-4"
-                      size="md"
-                    >
-                      <b-spinner
-                        v-if="form.busy"
-                        variant="light"
-                        small
-                        class="mr-1 mb-1"
-                      />Register</b-button
-                    >
-                  </div>
-                </b-form>
-              </div>
-            </b-tab>
-
-            <b-tab lazy @click="registrationMenu">
-              <template #title>
-                <strong>View Timetable</strong>
-                <b-icon scale="0.8" icon="caret-down-fill" />
-              </template>
-
-              <div class="menu" style="background-color: #fff">
-                <ul
-                  v-show="registerMenu"
-                  class="shadow"
-                  :class="registrationMenuClass"
-                >
-                  <span v-for="klase in klases" :key="klase.id">
-                    <li
-                      @click.prevent="
-                        dynamicStudentClass(klase.id, klase.name)
-                        activeTab = 'TimetableEditClassTimetable'
-                      "
-                    >
-                      <span class="d-flex">{{ klase.name }}</span>
-                    </li>
-                  </span>
-                </ul>
-              </div>
-
-              <component
-                :is="activeTab"
-                :edit-current-class="[dynamicClass, klaseName, form.section]"
-              />
-            </b-tab>
-          </b-tabs>
-        </b-card>
+                <component
+                  :is="activeTab"
+                  :edit-current-class="[dynamicClass, klaseName, form.section]"
+                />
+              </b-tab>
+            </b-tabs>
+          </b-card>
+        </div>
+        <div v-else>
+          <h3 class="p-5 text-center">No record found</h3>
+        </div>
 
         <!-- delete modal -->
         <b-modal id="DeleteModal" centered hide-header hide-footer>

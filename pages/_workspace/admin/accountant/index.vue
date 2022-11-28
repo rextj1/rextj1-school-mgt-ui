@@ -186,7 +186,7 @@
                   <template #cell(photo)="data">
                     <b-avatar
                       variant="primary"
-                      :src="`${$config.APIRoot}/storage/${mainWorkspace.slug}/accountant/${data.value}`"
+                      :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/accountants/${data.value}`"
                     >
                     </b-avatar>
                   </template>
@@ -337,7 +337,13 @@ export default {
       fields: [
         {
           key: 'index',
-          label: '#',
+          label: 'S/N',
+        },
+        {
+          key: 'last_name',
+          label: 'Surname Name',
+          sortable: true,
+          // sortDirection: 'desc',
         },
         {
           key: 'first_name',
@@ -346,17 +352,11 @@ export default {
           // sortDirection: 'desc',
         },
         {
-          key: 'last_name',
-          label: 'Last Name',
-          sortable: true,
-          // sortDirection: 'desc',
+          key: 'photo',
+          label: 'Photo',
+          //   class: 'text-center',
         },
-        {
-          key: 'middle_name',
-          label: 'Middle Name',
-          sortable: true,
-          // sortDirection: 'desc',
-        },
+       
         {
           key: 'qualification',
           label: 'Qualification',
@@ -365,16 +365,9 @@ export default {
         },
         {
           key: 'code',
-          label: 'Code',
+          label: 'Reg. Code',
           sortable: true,
           // sortDirection: 'desc',
-        },
-
-        {
-          key: 'photo',
-          label: 'Photo',
-          sortable: true,
-          //   class: 'text-center',
         },
         {
           key: 'gender',
@@ -391,6 +384,17 @@ export default {
           label: 'Phone',
           sortable: true,
           // sortDirection: 'desc',
+        },
+        {
+          key: 'employment',
+          label: 'Date of Employment',
+          sortable: true,
+          // sortDirection: 'desc',
+        },
+         {
+          key: 'birthday',
+          label: 'Birthday',
+          sortable: true,
         },
         { key: 'actions', label: 'Actions' },
       ],

@@ -14,11 +14,10 @@
       >
         <b-row>
           <b-col md="4" class="py-2">
-            <b-card class="card1 p-3 shadow">
+            <b-card class="card1 shadow-sm p-3">
               <img
                 src="@/assets/svg/users-svgrepo.svg"
-                width="100"
-                class="red"
+                class="top-card"
                 alt=""
               />
 
@@ -29,12 +28,11 @@
             </b-card>
           </b-col>
 
-          <b-col  md="4" class="py-2">
-            <b-card class="card2 shadow p-3">
+          <b-col md="4" class="py-2">
+            <b-card class="card2 shadow-sm p-3">
               <img
                 src="@/assets/svg/people-svgrepo.svg"
-                width="100"
-                class="red"
+                class="top-card"
                 alt=""
               />
               <div class="xxx">
@@ -44,12 +42,11 @@
             </b-card>
           </b-col>
 
-          <b-col  md="4" class="py-2">
-            <b-card class="card card3 shadow p-3">
+          <b-col md="4" class="py-2">
+            <b-card class="card card3 shadow-sm p-3">
               <img
                 src="@/assets/svg/users-svgrepo.svg"
-                width="100"
-                class="red"
+                class="top-card"
                 alt=""
               />
               <div class="xxx">
@@ -61,7 +58,7 @@
         </b-row>
 
         <b-row>
-          <b-col md="6" class="py-3 pie-chart">
+          <b-col lg="6" class="py-3 pie-chart">
             <b-card class="cardA">
               <apexchart
                 width="380"
@@ -72,7 +69,7 @@
             </b-card>
           </b-col>
 
-          <b-col md="6" class="py-3 donut-chart">
+          <b-col lg="6" class="py-3 donut-chart">
             <b-card class="cardA">
               <apexchart
                 width="380"
@@ -86,7 +83,7 @@
       </span>
     </div>
 
-    <div class="cardB shadow">
+    <div class="cardB shadow-sm">
       <b-tabs card>
         <b-tab active class="card-overflow">
           <template #title>
@@ -193,16 +190,23 @@ export default {
   &.dashboard-wrapper {
     flex: 1 1 0;
 
-    @media (max-width: 768px) {
-      padding-left: 1.7rem;
-    }
-    .pie-chart {
-      @include media-breakpoint-down(md) {
+    .top-card {
+      width: 80px;
+
+      @media only screen and (min-width: 750px) and (max-width: 1025px) {
+        width: 40%;
+      }
+       @media only screen and (min-width: 350px) and (max-width: 757px) {
+        width: 20%;
       }
     }
 
+    @media (max-width: 768px) {
+      padding-left: 1.7rem;
+    }
+
     .donut-chart {
-      @include media-breakpoint-down(sm) {
+      @include media-breakpoint-down(md) {
         display: none;
       }
     }
@@ -234,7 +238,6 @@ export default {
       .xxx {
         display: flex;
         flex-direction: column;
-
       }
     }
 
@@ -253,7 +256,12 @@ export default {
     h5,
     h4 {
       color: #fff;
-      padding: 22px 13px;
+      padding: 10px 13px;
+
+      @media only screen and (min-width: 750px) and (max-width: 1062px) {
+        font-size: 18px;
+        padding: 8px 0;
+      }
     }
 
     .beep {
@@ -283,7 +291,7 @@ export default {
     background-color: #fff;
   }
 
-  .cardB { 
+  .cardB {
     border: none;
     margin-bottom: 2px;
     border-radius: 5px;

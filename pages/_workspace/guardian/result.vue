@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 guardian-student-result">
+  <div class="p-3">
     <template v-if="nowloading"><Preload /></template>
     <template v-else>
       <b-card class="mb-2 d-flex">
@@ -127,7 +127,13 @@
           v-if="studentExamResult"
           :student-exam-result="studentExamResult"
           :student-mark-result="studentMarkResult"
-          :student="[form.class, form.term, form.session, form.student_id]"
+          :student="[
+            form.class,
+            form.term,
+            form.session,
+            form.student_id,
+            numStudents,
+          ]"
         />
       </div>
     </template>
@@ -137,7 +143,10 @@
 <script>
 import { mapState } from 'pinia'
 import { useWorkspaceStore } from '@/stores/wokspace'
-import { STUDENT_EXAM_RESULT_QUERIES } from '~/graphql/examRecord/queries'
+import {
+  EXAM_RECORD_QUERIES,
+  STUDENT_EXAM_RESULT_QUERIES,
+} from '~/graphql/examRecord/queries'
 import { USER_GUARDIAN_QUERY } from '~/graphql/guardians/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
 import {
@@ -154,6 +163,8 @@ export default {
   data() {
     return {
       k: null,
+      klaseResults: [],
+      numStudents: null,
       studentExamResult: null,
       studentMarkResult: [],
       user: [],
@@ -267,6 +278,27 @@ export default {
           result({ loading, data }, key) {
             if (!loading) {
               this.studentMarkResult = data.studentMarkResult
+            }
+          },
+        })
+
+        this.$apollo.addSmartQuery('klaseResults', {
+          query: EXAM_RECORD_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: parseInt(this.form.term),
+              session_id: parseInt(this.form.session),
+              workspaceId: parseInt(this.mainWorkspace.id),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.klaseResults = data.klaseResults
+
+              const numStudents = Object.keys(this.klaseResults).length
+              console.log(numStudents)
+              this.numStudents = numStudents
               this.isBusy = false
               this.timetableDropdownClass = true
             }
@@ -277,19 +309,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.guardian-student-result {
-  .custom-select:focus {
-    box-shadow: none;
-  }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    font-size: 16px;
-    color: #000;
-  }
-}
-</style>

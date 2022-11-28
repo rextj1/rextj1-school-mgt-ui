@@ -1,5 +1,5 @@
 <template>
-  <div class="result-page p-3">
+  <div class="p-3">
     <template v-if="nowLoading"><Preload /></template>
     <template v-else>
       <b-card class="mb-2 d-flex">
@@ -150,10 +150,7 @@
                 </h5>
               </div>
             </div>
-            <h4
-              class="d-flex justify-content-center"
-              style="font-weight: bold"
-            >
+            <h4 class="d-flex justify-content-center" style="font-weight: bold">
               Student Result Section
             </h4>
             <b-table :items="klaseResults" :fields="fields">
@@ -162,7 +159,15 @@
               </template>
 
               <template #cell(student)="data">
-                {{ data.value.first_name }} {{ data.value.last_name }}
+                {{ data.value.last_name }} {{ data.value.first_name }}
+              </template>
+
+              <template #cell(photo)="data">
+                <b-avatar
+                  variant="primary"
+                  :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${data.item.student.photo}`"
+                >
+                </b-avatar>
               </template>
 
               <template #cell(adm_no)="data">
@@ -222,7 +227,7 @@ import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import Preload from '~/components/Preload.vue'
 
 export default {
-  components: {Preload},
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {
@@ -252,6 +257,7 @@ export default {
           label: 'Full Name',
           sortable: false,
         },
+        { key: 'photo', label: 'Photo' },
         {
           key: 'adm_no',
           label: 'Adm_no.',
@@ -375,17 +381,3 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped>
-.result-page  {
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    font-size: 16px;
-    color: #000;
-  }
-}
-</style>

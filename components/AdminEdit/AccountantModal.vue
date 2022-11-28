@@ -13,8 +13,16 @@
           <div class="profile-avatar mb-2">
             <div v-if="preview_url == null" class="photo-preview">
               <img
-                :src="`http://sms.test/storage/accountant/${form.photo}`"
+                v-if="form.photo == null"
+                src="@/assets/svg/graduate-student.svg"
                 alt=""
+                style="border-radius: 50%"
+              />
+
+              <img
+                v-else
+                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/accountants/${form.photo}`"
+                alt="accountant"
                 width="100"
                 style="border-radius: 50%"
               />

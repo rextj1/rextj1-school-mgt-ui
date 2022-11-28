@@ -12,28 +12,28 @@
         }"
         variant="primary"
         size="md"
-        class="add-student mb-4"
+        class="add-student mb-2"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
-      <b-card class="user shadow">
-        <div v-if="accountant.user.photo == null" class="text-center mb-4 mt-4">
+      <b-card class="user shadow-sm">
+        <div v-if="accountant.photo == null" class="text-center mb-4 mt-4">
           <b-img
             src="@/assets/svg/user-avatar.svg"
-            thumbnail
+            
             fluid
-            alt="School image"
-            width="150"
+            alt="accountant"
+            width="200"
           ></b-img>
         </div>
 
         <div v-else class="text-center mb-4 mt-4">
-          <b-img
-            :src="`${$config.APIRoot}/storage/user/${accountant.user.photo}`"
+          <b-img style="border-radius:50%"
+            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/accountants/${accountant.photo}`"
             thumbnail
             fluid
-            alt="Responsive image"
-            width="150"
+            alt="accountant"
+            width="200"
           ></b-img>
         </div>
 
@@ -96,7 +96,7 @@ import { ACCOUNTANT_QUERY } from '~/graphql/accountants/queries'
 import Preload from '~/components/Preload.vue'
 
 export default {
-  components: {Preload},
+  components: { Preload },
   middleware: 'auth',
   data() {
     return {}

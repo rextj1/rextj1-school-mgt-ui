@@ -202,7 +202,7 @@
                           <div
                             v-for="kl in klases.subjects"
                             :key="kl.id"
-                            style="margin-left: 55px;"
+                            style="margin-left: 55px"
                           >
                             <div>{{ kl.subject }}</div>
                           </div>
@@ -214,7 +214,7 @@
                   <template #cell(photo)="data">
                     <b-avatar
                       variant="primary"
-                      :src="`http://sms.test/storage/teacher/${data.value}`"
+                      :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/teachers/${data.value}`"
                     >
                     </b-avatar>
                   </template>
@@ -368,7 +368,14 @@ export default {
       fields: [
         {
           key: 'index',
-          label: '#',
+          label: 'S/N',
+        },
+
+        {
+          key: 'last_name',
+          label: 'Surname Name',
+          sortable: true,
+          // sortDirection: 'desc',
         },
         {
           key: 'first_name',
@@ -376,25 +383,21 @@ export default {
           sortable: true,
           // sortDirection: 'desc',
         },
-        {
-          key: 'last_name',
-          label: 'Last Name',
-          sortable: true,
-          // sortDirection: 'desc',
-        },
-        {
-          key: 'code',
-          label: 'Code',
-          sortable: true,
-          // sortDirection: 'desc',
-        },
-
+        
         {
           key: 'photo',
           label: 'Photo',
           sortable: true,
           //   class: 'text-center',
         },
+
+        {
+          key: 'code',
+          label: 'Reg. Code',
+          sortable: true,
+          // sortDirection: 'desc',
+        },
+
         {
           key: 'qualification',
           sortable: true,
@@ -411,14 +414,14 @@ export default {
           filterByFormatted: true,
         },
         {
-          key: 'klases',
-          label: 'Class',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        {
           key: 'phone',
           label: 'Phone',
+          sortable: true,
+          // sortDirection: 'desc',
+        },
+        {
+          key: 'employment',
+          label: 'Date of Employment',
           sortable: true,
           // sortDirection: 'desc',
         },
@@ -426,7 +429,7 @@ export default {
           key: 'birthday',
           label: 'Birthday',
           sortable: true,
-          sortDirection: 'desc',
+          // sortDirection: 'desc',
         },
         { key: 'actions', label: 'Actions' },
       ],
@@ -434,7 +437,7 @@ export default {
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
-      pageOptions: [10, 25, 50, { value: 100, text: 'Show a lot' }],
+      pageOptions: [25, 50, { value: 200, text: 'Show a lot' }],
       sortBy: '',
       sortDesc: false,
       sortDirection: 'asc',
@@ -565,7 +568,6 @@ export default {
 
 <style lang="scss" scoped>
 .teacher {
-
   .add-student {
     box-shadow: 0 5px 5px 0 #1f64b367;
   }

@@ -60,10 +60,12 @@
                       >
                         <!-- :src="`${$config.APIRoot}/student/storage/${first.student.photo}`" -->
                         <div class="school-logo" style="">
+                          <div v-if="mainWorkspace.logo == null"></div>
                           <img
-                            src="@/assets/svg/ronazon-logo.svg"
+                            v-else
+                            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
                             alt="logo"
-                            width="100"
+                            width="50"
                           />
                         </div>
                         <div class="d-flex flex-column align-items-center">
@@ -75,10 +77,12 @@
                           </h6>
                         </div>
                         <div class="student-picture">
+                          <div v-if="first.student.photo == null"></div>
                           <img
-                            src="@/assets/images/teacher.jpeg"
-                            alt="student-photo"
-                            width="60"
+                            v-else
+                            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${first.student.photo}`"
+                            alt="student"
+                            width="100"
                           />
                         </div>
                       </div>
@@ -601,10 +605,7 @@
                         class="d-flex justify-content-between"
                         style="margin-top: 45px"
                       >
-                        <div
-                          class="mt-4"
-                          style="width: 320px;"
-                        >
+                        <div class="mt-4" style="width: 320px">
                           <div class="mr-2" style="width: 320px">
                             <div
                               class="text-center p-1"
@@ -638,10 +639,7 @@
                         <!-- comments -->
 
                         <div class="mt-4 ml-3">
-                          <div
-                            class="p-1"
-                            style="width: 620px;"
-                          >
+                          <div class="p-1" style="width: 620px">
                             <div
                               class="text-center p-1"
                               style="
@@ -658,10 +656,7 @@
                             </h6>
                           </div>
 
-                          <div
-                            class="p-1"
-                            style="width: 620px;"
-                          >
+                          <div class="p-1" style="width: 620px">
                             <div
                               class="text-center p-1"
                               style="
@@ -699,18 +694,19 @@
                               class="text-center p-1"
                               style="
                                 margin: 0;
-                                background-color: #007bff93;
+
                                 color: #fff;
                               "
-                            >
-                              Signature
-                            </div>
+                            ></div>
 
-                            <h6
-                              class="blue p-4"
-                              style="color: #000; font-style: italic"
-                            >
-                              kkkk
+                            <h6 class="p-4 text-center">
+                              <div v-if="mainWorkspace.stamp == null"></div>
+                              <img
+                                v-else
+                                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/stamp/${mainWorkspace.stamp}`"
+                                alt=""
+                                width="50"
+                              />
                             </h6>
                           </div>
                         </div>

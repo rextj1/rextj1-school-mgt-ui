@@ -7,11 +7,15 @@
       <div class="card-body">
         <div class="card-student" style="background-color: #fff">
           <div style="padding: 2rem; margin: auto; min-height: 100vh">
-            <!-- {{ studentPaymentRecord }} -->
-
             <div class="mt-4">
               <div class="text-center mb-4">
-                <b-img src="@/assets/svg/ronazon-logo.svg" width="100"></b-img>
+                <div v-if="mainWorkspace.logo == null"></div>
+                <img
+                  v-else
+                  :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
+                  alt="logo"
+                  width="100"
+                />
               </div>
 
               <h2 class="text-center" style="color: #1c0988; font-weight: bold">
@@ -40,13 +44,14 @@
               STUDENT INFORMATION
             </div>
 
-            <div class="d-flex justify-content-center">
-              <b-img
-                class="mt-3"
-                thumbnail
-                src="@/assets/images/teacher.jpeg"
+            <div class="text-center mt-3">
+              <div v-if="studentPaymentRecord.student.photo == null"></div>
+              <img
+                v-else
+                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${studentPaymentRecord.student.photo}`"
+                alt="student"
                 width="100"
-              ></b-img>
+              />
             </div>
 
             <div class="d-flex justify-content-between mt-5">

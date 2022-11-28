@@ -199,7 +199,7 @@
                   <template #cell(photo)="data">
                     <b-avatar
                       variant="primary"
-                      :src="`http://sms.test/storage/student/${data.value}`"
+                      :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${data.value}`"
                     >
                     </b-avatar>
                   </template>
@@ -343,19 +343,26 @@ export default {
       fields: [
         {
           key: 'index',
-          label: '#',
+          label: 'S/N',
         },
+       
         {
+          key: 'last_name',
+          label: 'Surname Name',
+          sortable: true,
+          // sortDirection: 'desc',
+        },
+         {
           key: 'first_name',
           label: 'First Name',
           sortable: true,
           // sortDirection: 'desc',
         },
-        {
-          key: 'last_name',
-          label: 'Last Name',
+         {
+          key: 'photo',
+          label: 'Photo',
           sortable: true,
-          // sortDirection: 'desc',
+          //   class: 'text-center',
         },
         {
           key: 'adm_no',
@@ -365,17 +372,12 @@ export default {
         },
         {
           key: 'code',
-          label: 'Code',
+          label: 'Reg. Code',
           sortable: true,
           // sortDirection: 'desc',
         },
 
-        {
-          key: 'photo',
-          label: 'Photo',
-          sortable: true,
-          //   class: 'text-center',
-        },
+       
         {
           key: 'gender',
           label: 'Gender',
@@ -411,19 +413,7 @@ export default {
           sortable: true,
           sortDirection: 'desc',
         },
-        {
-          key: 'guardian_name',
-          label: 'Guardian',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        {
-          key: 'guardian_no',
-          label: 'Guardian no.',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        
+                
         { key: 'actions', label: 'Actions' },
       ],
       id: '',

@@ -9,29 +9,28 @@
         }"
         variant="primary"
         size="md"
-        class="add-student mb-4"
+        class="add-student mb-2"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
 
-      <b-card class="user shadow">
-        <div v-if="teacher.user.photo == null" class="text-center mb-4 mt-4">
+      <b-card class="user shadow-sm">
+        <div v-if="teacher.photo == null" class="text-center mb-4 mt-2">
           <b-img
             src="@/assets/svg/user-avatar.svg"
-            thumbnail
             fluid
-            alt="School image"
-            width="150"
+            alt="teacher"
+            width="200"
           ></b-img>
         </div>
 
         <div v-else class="text-center mb-4 mt-4">
-          <b-img
-            :src="`${$config.APIRoot}/storage/user/${teacher.user.photo}`"
+          <b-img style="border-radius:50%"
+            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/teachers/${teacher.photo}`"
             thumbnail
             fluid
-            alt="Responsive image"
-            width="150"
+            alt="teacher"
+            width="200"
           ></b-img>
         </div>
 
@@ -39,7 +38,7 @@
           <div>
             <p>Full Name</p>
             <p>Qualifications</p>
-            <p>Code</p>
+            <p>Reg. Code</p>
             <p>Date of employment</p>
             <p>Email</p>
             <p>Phone no:</p>
@@ -50,11 +49,12 @@
             <p>City</p>
             <p>L.G.A</p>
 
-            <p>
-              <b-badge style="font-size: 1.6px" variant="warning"
-                >Subjects Assigned</b-badge
-              >
-            </p>
+            <h5>
+              <b-badge variant="primary">Subjects Assigned</b-badge>
+            </h5>
+            <h5>
+              <b-badge variant="warning">Class Assigned</b-badge>
+            </h5>
           </div>
           <div style="font-weight: bold">
             <p>
@@ -87,18 +87,16 @@
             <p>
               {{ teacher.user.lga }}
             </p>
-
-            <h3 v-for="klase in teacher.klases" :key="klase.id">
+            <h5 v-for="subject in teacher.subjects" :key="subject.id">
               <p>
                 <b-badge
-                  :id="klase.id"
-                  style="line-height: 1.6"
-                  variant="warning"
+                  style="line-height: 1.2"
+                  variant="primary"
                   class="px-2"
-                  >{{ klase.name }}</b-badge
+                  >{{ subject.subject }}</b-badge
                 >
               </p>
-              <b-popover :target="klase.id" triggers="hover click">
+              <!-- <b-popover :target="klase.id" triggers="hover click">
                 <b-nav vertical>
                   <b-nav-item
                     v-for="subject in klase.subjects"
@@ -107,8 +105,25 @@
                     <div style="font-size: 1.4px">{{ subject.subject }}</div>
                   </b-nav-item>
                 </b-nav>
-              </b-popover>
-            </h3>
+              </b-popover> -->
+            </h5>
+
+            <h5 v-for="klase in teacher.klases" :key="klase.id">
+              <b-badge :id="klase.id" variant="warning" class="px-2">{{
+                klase.name
+              }}</b-badge>
+
+              <!-- <b-popover :target="klase.id" triggers="hover click">
+                <b-nav vertical>
+                  <b-nav-item
+                    v-for="subject in klase.subjects"
+                    :key="subject.id"
+                  >
+                    <div style="font-size: 1.4px">{{ subject.subject }}</div>
+                  </b-nav-item>
+                </b-nav>
+              </b-popover> -->
+            </h5>
           </div>
         </div>
       </b-card>
@@ -124,6 +139,7 @@ import Preload from '~/components/Preload.vue'
 
 export default {
   components: { Preload },
+  middleware: 'auth',
   apollo: {
     teacher: {
       query: TEACHER_QUERY,
@@ -145,7 +161,6 @@ export default {
 
 <style lang="scss" scoped>
 .profile {
-
   .first-detail p {
     display: block;
     margin-left: 40%;

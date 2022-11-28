@@ -4,7 +4,11 @@
     <div v-else>
       <div class="card">
         <div class="card-header">
-          <b-button variant="primary" @click="handleEditCommits()"
+          <b-button
+            class="mb-2"
+            variant="warning"
+            pill
+            @click="handleEditCommits()"
             >Edit Comments</b-button
           >
 
@@ -38,8 +42,8 @@
                       v-for="first in studentExamResult"
                       :key="first.id"
                       style="
-                        margin-top: 1rem;
-                        padding: 0.5rem;
+                        margin-top: 13px;
+                        padding: 5px;
 
                         overflow-x: auto;
                         font-weight: bold;
@@ -56,25 +60,29 @@
                       >
                         <!-- :src="`${$config.APIRoot}/student/storage/${first.student.photo}`" -->
                         <div class="school-logo" style="">
+                          <div v-if="mainWorkspace.logo == null"></div>
                           <img
-                            src="@/assets/svg/ronazon-logo.svg"
+                            v-else
+                            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
                             alt="logo"
-                            width="100"
+                            width="50"
                           />
                         </div>
                         <div class="d-flex flex-column align-items-center">
-                          <h1 style="font-weight: bold; color: #1c0988">
-                            <em>Ronazon Academy International</em>
-                          </h1>
                           <h3 style="font-weight: bold; color: #1c0988">
-                            Result sheet {{ first.klase.name }}
+                            <em>Ronazon Academy International</em>
                           </h3>
+                          <h6 style="font-weight: bold; color: #1c0988">
+                            Result sheet {{ first.klase.name }}
+                          </h6>
                         </div>
                         <div class="student-picture">
+                          <div v-if="first.student.photo == null"></div>
                           <img
-                            src="@/assets/images/teacher.jpeg"
-                            alt="student-photo"
-                            width="60"
+                            v-else
+                            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${first.student.photo}`"
+                            alt="student"
+                            width="100"
                           />
                         </div>
                       </div>
@@ -93,385 +101,385 @@
                           "
                         >
                           <tr style="color: #1c0988">
-                            <th style="padding: 0.5rem" colspan="2">
+                            <th style="padding: 5px" colspan="2">
                               <span class="d-flex">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   NAME OF STUDENT:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.student.first_name }}
                                   {{ first.student.last_name }}
                                   {{ first.student.middle_name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
-                            <th style="padding: 0.5rem" colspan="1">
+                            <th style="padding: 5px" colspan="1">
                               <span class="d-flex">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   SEX:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.student.gender }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
-                            <th style="padding: 0.5rem" rowspan="1">
+                            <th style="padding: 5px" rowspan="1">
                               <span class="d-flex">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   ADMISSION NO:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.student.adm_no }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
-                            <th style="padding: 0.5rem" rowspan="1">
+                            <th style="padding: 5px" rowspan="1">
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   AGE:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                   v-html="getAge(first.student.birthday)"
-                                ></h5>
+                                ></h6>
                               </span>
                             </th>
                           </tr>
                           <tr>
-                            <th style="padding: 0.5rem" colspan="1">
+                            <th style="padding: 5px" colspan="1">
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   ATTENDANCE:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.num_present }} /
                                   {{ first.num_total }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
-                            <th style="padding: 0.5rem" colspan="1">
+                            <th style="padding: 5px" colspan="1">
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   NUMBER IN CLASS:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ numStudents }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
-                            <th style="padding: 0.5rem" colspan="1">
+                            <th style="padding: 5px" colspan="1">
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   POSITION:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                   v-html="position(first.position)"
-                                ></h5>
+                                ></h6>
                               </span>
                             </th>
 
-                            <th style="padding: 0.5rem" colspan="1">
+                            <th style="padding: 5px" colspan="1">
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   RESULT STATUS:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   v-if="first.avg >= setPromotion.name"
                                   class="mt-2 ml-2"
                                   style="color: green; font-weight: bold"
                                 >
                                   PASS
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   v-else
                                   class="mt-2 ml-2"
                                   style="color: #d9534f; font-weight: bold"
                                 >
                                   FAIL
-                                </h5>
+                                </h6>
                               </span>
                             </th>
                             <th
                               v-if="term == 1"
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="1"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   class:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.klase.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
                             <th
                               v-if="term == 2"
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="1"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   class:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.klase.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
                             <th
                               v-if="term == 3 && first.ps != 'graduated'"
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="1"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   PROMOTED TO:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.promoted_to }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
                             <th
                               v-if="term == 3 && first.ps == 'graduated'"
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="1"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   class :
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.klase.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
                           </tr>
 
                           <tr>
                             <th
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               rowspan="1"
                               v-if="first.ps != 'graduated'"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   Term Begins:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.term_start }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
                             <th
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               rowspan="1"
                               v-if="first.ps != 'graduated'"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   Term Ends:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.term_end }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
                             <th
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="2"
                               v-if="first.ps == 'graduated'"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   Graduate Student
-                                </h5>
+                                </h6>
                               </span>
                             </th>
                             <th
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="1"
                               v-if="term == 1"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   TERM:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.term.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
                             <th
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="1"
                               v-if="term == 2"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   TERM:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.term.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
                             <th
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               colspan="1"
                               v-if="term == 3"
                             >
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   TERM:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #1f1f9f; font-weight: bold"
                                 >
                                   {{ first.term.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
 
-                            <th style="padding: 0.5rem" colspan="1">
+                            <th style="padding: 5px" colspan="1">
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   SECTION:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #1f1f9f; font-weight: bold"
                                 >
                                   {{ first.section.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
-                            <th style="padding: 0.5rem" rowspan="1">
+                            <th style="padding: 5px" rowspan="1">
                               <span class="d-flex align-items-stretch">
-                                <h5
+                                <h6
                                   class="mt-2"
                                   style="color: #1c09f5; font-weight: bold"
                                 >
                                   SESSION:
-                                </h5>
-                                <h5
+                                </h6>
+                                <h6
                                   class="mt-2 ml-2"
                                   style="color: #111; font-weight: bold"
                                 >
                                   {{ first.session.name }}
-                                </h5>
+                                </h6>
                               </span>
                             </th>
                           </tr>
@@ -484,7 +492,7 @@
                         overflow-x: auto;
                         font-weight: bold;
                         width: 99%;
-                        margin: 2rem auto;
+                        margin: 25px auto;
                       "
                     >
                       <div class="d-flex flex-column">
@@ -493,41 +501,39 @@
                           style="text-align: center; border: 3px solid #292b2c"
                         >
                           <tr style="color: #1c0988">
-                            <th style="padding: 0.5rem" rowspan="2">
-                              Subjects
-                            </th>
-                            <th style="padding: 0.5rem" colspan="3">
+                            <th style="padding: 5px" rowspan="2">Subjects</th>
+                            <th style="padding: 5px" colspan="3">
                               Contineous Assesment
                             </th>
-                            <th style="padding: 0.5rem" rowspan="2">
+                            <th style="padding: 5px" rowspan="2">
                               Exam <br />60%
                             </th>
-                            <th style="padding: 0.5rem" rowspan="2">
+                            <th style="padding: 5px" rowspan="2">
                               Final remarks <br />(100%)
                             </th>
-                            <th style="padding: 0.5rem" rowspan="2">Grade</th>
-                            <th style="padding: 0.5rem" rowspan="2">
+                            <th style="padding: 5px" rowspan="2">Grade</th>
+                            <th style="padding: 5px" rowspan="2">
                               Subject <br />position
                             </th>
-                            <th style="padding: 0.5rem" rowspan="2">Remarks</th>
+                            <th style="padding: 5px" rowspan="2">Remarks</th>
                           </tr>
                           <tr style="color: #1c0988">
-                            <th style="padding: 0.5rem">Ca1<br />(20%)</th>
-                            <th style="padding: 0.5rem">Ca2<br />(20%)</th>
-                            <th style="padding: 0.5rem">Total<br />(40%)</th>
+                            <th style="padding: 5px">Ca1<br />(20%)</th>
+                            <th style="padding: 5px">Ca2<br />(20%)</th>
+                            <th style="padding: 5px">Total<br />(40%)</th>
                           </tr>
                           <tr
                             v-for="second in studentMarkResult"
                             :key="second.id"
                           >
-                            <th style="padding: 0.5rem; color: #d9534f">
+                            <th style="padding: 5px; color: #d9534f">
                               {{ second.subject.subject }}
                             </th>
-                            <td style="padding: 0.5rem">{{ second.ca1 }}</td>
-                            <td style="padding: 0.5rem">{{ second.ca2 }}</td>
-                            <td style="padding: 0.5rem">{{ second.tca }}</td>
-                            <td style="padding: 0.5rem">{{ second.exam }}</td>
-                            <td style="padding: 0.5rem">
+                            <td style="padding: 5px">{{ second.ca1 }}</td>
+                            <td style="padding: 5px">{{ second.ca2 }}</td>
+                            <td style="padding: 5px">{{ second.tca }}</td>
+                            <td style="padding: 5px">{{ second.exam }}</td>
+                            <td style="padding: 5px">
                               {{ second.exam_total }}
                             </td>
 
@@ -537,21 +543,21 @@
                                   ? ''
                                   : second.grade.name == 'F'
                               "
-                              style="padding: 0.5rem; color: #d9534f"
+                              style="padding: 5px; color: #d9534f"
                             >
                               {{
                                 second.grade == null ? '' : second.grade.name
                               }}
                             </td>
 
-                            <td v-else style="padding: 0.5rem; color: green">
+                            <td v-else style="padding: 5px; color: green">
                               {{
                                 second.grade == null ? '' : second.grade.name
                               }}
                             </td>
 
                             <td
-                              style="padding: 0.5rem"
+                              style="padding: 5px"
                               v-html="position(second.sub_position)"
                             ></td>
 
@@ -561,14 +567,14 @@
                                   ? ''
                                   : second.grade.name == 'F'
                               "
-                              style="padding: 0.5rem; color: #d9534f"
+                              style="padding: 5px; color: #d9534f"
                             >
                               {{
                                 second.grade == null ? '' : second.grade.remark
                               }}
                             </td>
 
-                            <td v-else style="padding: 0.5rem; color: green">
+                            <td v-else style="padding: 5px; color: green">
                               {{
                                 second.grade == null ? '' : second.grade.remark
                               }}
@@ -580,13 +586,13 @@
                             :key="index"
                             style="color: #1c0988"
                           >
-                            <th style="padding: 0.5rem" colspan="3">
+                            <th style="padding: 5px" colspan="3">
                               Total score obtained: {{ third.total }}
                             </th>
-                            <th style="padding: 0.5rem" colspan="3">
+                            <th style="padding: 5px" colspan="3">
                               Final Average: {{ third.avg }}
                             </th>
-                            <th style="padding: 0.5rem" colspan="3">
+                            <th style="padding: 5px" colspan="3">
                               Class Average: {{ third.klase_avg }}
                             </th>
                           </tr>
@@ -597,18 +603,16 @@
 
                       <div
                         class="d-flex justify-content-between"
-                        style="margin-top: 4rem; font-weight: bold"
+                        style="margin-top: 45px"
                       >
-                        <div
-                          class="mt-4"
-                          style="width: 30rem; border: 2px solid #292b2c"
-                        >
-                          <div class="mr-2" style="width: 30rem">
+                        <div class="mt-4" style="width: 320px">
+                          <div class="mr-2" style="width: 320px">
                             <div
                               class="text-center p-1"
                               style="
                                 margin: 0;
-                                background-color: #007bff;
+                                background-color: #007bff93;
+                                font-weight: bold;
                                 color: #fff;
                               "
                             >
@@ -616,48 +620,73 @@
                             </div>
                           </div>
 
-                          <span
-                            class="p-1 mt-2 d-flex justify-content-between"
-                            style="color: #1c0988"
-                            v-for="grade in grades"
-                            :key="grade.id"
-                          >
-                            <span>{{ grade.name }} - {{ grade.remark }}</span>
-                            <span class="ml-auto m-r-2" style="color: #1c0988"
-                              >{{ grade.mark_from }} -
-                              {{ grade.mark_to }} %</span
+                          <div class="blue p-2">
+                            <span
+                              class="p-1 mt-2 d-flex justify-content-between"
+                              style="color: #000"
+                              v-for="grade in grades"
+                              :key="grade.id"
                             >
-                          </span>
+                              <span>{{ grade.name }} - {{ grade.remark }}</span>
+                              <span class="ml-auto m-r-2" style="color: #000"
+                                >{{ grade.mark_from }} -
+                                {{ grade.mark_to }} %</span
+                              >
+                            </span>
+                          </div>
                         </div>
 
                         <!-- comments -->
 
                         <div class="mt-4 ml-3">
-                          <div
-                            class="p-1"
-                            style="width: 59rem; border: 2px solid #111"
-                          >
+                          <div class="p-1" style="width: 620px">
                             <div
                               class="text-center p-1"
                               style="
                                 margin: 0;
-                                background-color: #007bff;
+                                background-color: #007bff93;
                                 color: #fff;
                               "
                             >
-                              Teacher's Remark
+                              Principal's Remark
                             </div>
                             <div v-if="!studentExamResult"></div>
-                            <h5 v-else class="p-2 mt-2" style="color: #1c0988">
+                            <h6 v-else class="blue p-3" style="color: #000">
                               {{ studentExamResult[0].p_comment }}
-                            </h5>
+                            </h6>
+                          </div>
+
+                          <div class="p-1" style="width: 620px">
+                            <div
+                              class="text-center p-1"
+                              style="
+                                margin: 0;
+                                background-color: #007bff93;
+                                color: #fff;
+                              "
+                            >
+                              Head Teacher's Remark
+                            </div>
+                            <div v-if="!studentExamResult"></div>
+                            <h6
+                              v-else
+                              class="blue p-2"
+                              style="color: #000; font-style: italic"
+                            >
+                              {{ studentExamResult[0].t_comment }}
+                              {{
+                                studentExamResult[0].avg > 50
+                                  ? studentExamResult[0].t_comment
+                                  : 'A poor performance'
+                              }}
+                            </h6>
                           </div>
 
                           <div
                             class="p-1"
                             style="
-                              width: 59rem;
-                              border: 2px solid #111;
+                              width: 620px;
+                              border: 0px solid #111;
                               margin-top: 0.2px;
                             "
                           >
@@ -665,20 +694,20 @@
                               class="text-center p-1"
                               style="
                                 margin: 0;
-                                background-color: #007bff;
+
                                 color: #fff;
                               "
-                            >
-                              Head Teacher's Remark
-                            </div>
-                            <div v-if="!studentExamResult"></div>
-                            <h5
-                              v-else
-                              class="p-2 mt-2"
-                              style="color: #1c0988; font-style: italic"
-                            >
-                              {{ studentExamResult[0].t_comment }}
-                            </h5>
+                            ></div>
+
+                            <h6 class="p-4 text-center">
+                              <div v-if="mainWorkspace.stamp == null"></div>
+                              <img
+                                v-else
+                                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/stamp/${mainWorkspace.stamp}`"
+                                alt=""
+                                width="50"
+                              />
+                            </h6>
                           </div>
                         </div>
                       </div>
@@ -689,10 +718,11 @@
             </vue-html2pdf>
             <div class="d-flex justify-content-center mb-4">
               <b-button
-                variant="danger"
-                size="lg"
+                variant="secondary"
+                pill
+                size="md"
                 @click.prevent="generateReport"
-                >Download</b-button
+                ><b-icon icon="printer" /> print</b-button
               >
             </div>
           </div>
@@ -723,7 +753,7 @@ import ExamResultCommitsModal from '~/components/Exam/ResultCommentsModal.vue'
 import Preload from '~/components/Preload.vue'
 
 export default {
-  components: {ExamResultCommitsModal, Preload},
+  components: { ExamResultCommitsModal, Preload },
   middleware: 'auth',
   data: () => ({
     isResultComments: false,
@@ -849,10 +879,8 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.card {
-  font-size: 1.5rem;
-  // color: #1c0988;
+<style scoped>
+.blue {
+  background-color: #007bff07;
 }
 </style>

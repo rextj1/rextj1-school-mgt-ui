@@ -14,8 +14,16 @@
           <div class="profile-avatar mb-2">
             <div v-if="preview_url == null" class="photo-preview">
               <img
-                :src="`${$config.APIRoot}/storage/${mainWorkspace.slug}/teacher/${form.image}`"
+                v-if="form.image == null"
+                src="@/assets/svg/graduate-student.svg"
                 alt=""
+                style="border-radius: 50%"
+              />
+
+              <img
+                v-else
+                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/teachers/${form.image}`"
+                alt="teacher"
                 style="border-radius: 50%"
               />
             </div>
@@ -422,7 +430,7 @@ import { TEACHER_QUERY } from '~/graphql/teachers/queries'
 import Preload from '~/components/Preload.vue'
 
 export default {
-  components: {Preload},
+  components: { Preload },
   middleware: 'auth',
   props: {
     teacherInfo: {
@@ -502,7 +510,7 @@ export default {
           this.form.teacherTable.middle_name = data.teacher.middle_name
           this.form.teacherTable.birthday = data.teacher.birthday
           this.form.teacherTable.qualification = data.teacher.qualification
-          this.form.photo = data.teacher.photo
+          this.form.image = data.teacher.photo
           this.form.teacherTable.phone = data.teacher.phone
           this.form.teacherTable.gender = data.teacher.gender
           this.form.teacherTable.employment = data.teacher.employment
@@ -673,7 +681,7 @@ export default {
 .teacher-modal {
   .form-control,
   .mb-3 {
-     background-color: var(--color-input);
+    background-color: var(--color-input);
     height: 43px;
     font-size: 16px;
   }

@@ -10,6 +10,7 @@ export const ADMIN_WORKSPACE_QUERIES = gql`
       email
       status
       gender
+      photo
       paystack_secret_key
     }
   }
@@ -23,6 +24,7 @@ export const SCHOOL_QUERIES = gql`
       email
       status
       gender
+      photo
       user {
         ...UxerFields
       }
@@ -39,6 +41,7 @@ export const SCHOOL_QUERY = gql`
       email
       status
       gender
+      photo
       user {
         ...UxerFields
       }

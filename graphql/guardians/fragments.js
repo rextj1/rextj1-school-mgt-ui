@@ -5,7 +5,7 @@ export const GUARDIANS_FIELDS_FRAGMENT = gql`
   fragment GuardiansFields on Guardian {
     id
     slug
-    Students {
+    students {
       ...SingleStudentField
     }
     user{
