@@ -11,31 +11,31 @@
         >Change Password</b-button
       >
 
-      <!-- {{ user }} -->
       <b-card class="shadow">
         <div class="text-center mb-4">
           <div v-if="student.photo == 'null'">
             <b-img
               src="@/assets/svg/user-avatar.svg"
-              thumbnail
               fluid
-              alt="Responsive image"
-              width="230"
+              alt="student"
+              width="200"
             ></b-img>
           </div>
           <div v-else>
             <b-img
-              :src="`${$config.APIRoot}/storage/student/${student.photo}`"
+              style="border-radius: 50%"
+              :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${student.photo}`"
               thumbnail
               fluid
-              alt="Responsive image"
-              width="230"
+              alt="student"
+              width="200"
             ></b-img>
           </div>
         </div>
 
         <div class="d-flex justify-content-between p-4">
           <div>
+             <p>Full Name</p>
             <p>Gender</p>
             <p>Class</p>
             <p>Admission No:</p>
@@ -43,8 +43,6 @@
             <p>Year of Admission</p>
             <p>Date of Birth</p>
             <p>Blood Group</p>
-            <p>Guardian Name</p>
-
             <p>Country</p>
             <p>State</p>
             <p>city</p>
@@ -64,8 +62,6 @@
             <p>{{ student.birthday }}</p>
             <p>
               {{ user.blood_group != null ? user.blood_group.name : '' }}
-            </p>
-            <p>{{ student.guardian_name }}</p>
 
             <p>
               {{ user.country.name }}
@@ -154,6 +150,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { USER_STUDENT_QUERY } from '~/graphql/students/queries'
 import Preload from '~/components/Preload.vue'
 
@@ -174,6 +172,10 @@ export default {
     }
   },
   computed: {
+    ...mapState(useWorkspaceStore, ['currentWorkspace']),
+    mainWorkspace() {
+      return this.currentWorkspace
+    },
     student() {
       return this.user.student
     },
@@ -253,5 +255,3 @@ export default {
   },
 }
 </script>
-
-

@@ -1,26 +1,47 @@
 <template>
-  <div class="p-3">
+  <div class="p-3 rounded-5">
     <template v-if="$apollo.queries.user.loading"> <Preload /></template>
     <template v-else>
-      <b-button
-        class="shadow-sm mb-3"
-        variant="light"
-        pill
-        size="md"
-        @click="changePassword"
-        >Change Password</b-button
-      >
+      <div class="d-flex justify-content-between">
+        <b-button
+          class="shadow-sm mb-3"
+          variant="light"
+          pill
+          size="md"
+          @click="changePassword"
+          >Change Password</b-button
+        >
+        <b-button
+          class="shadow-sm mb-3"
+          variant="warning"
+          pill
+          size="md"
+          @click="uploadPhoto"
+          >upload Photo</b-button
+        >
+      </div>
 
       <b-card class="students shadow-sm">
         <div class="text-center mb-4">
           <b-img
-            src="@/assets/svg/user-avatar.svg"
+            v-if="user.photo == null"
+            src="~/assets/svg/user-avatar.svg"
+            fluid
+            alt="guardian"
+            width="200"
+          ></b-img>
+
+          <b-img
+            v-else
+            style="border-radius: 50%"
+            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/guardians/${user.photo}`"
             thumbnail
             fluid
-            alt="Responsive image"
-            width="230"
+            alt="guardian"
+            width="200"
           ></b-img>
         </div>
+
         <div class="d-flex justify-content-between p-4">
           <div>
             <p>Full Name</p>
@@ -56,8 +77,10 @@
           </div>
         </div>
       </b-card>
+      <GuardianPhotoUpload v-if="photo" v-model="isUploadModal" :user="user" />
+
       <!-- change password modal -->
-      <b-modal id="passwordModal" size="sm" centered hide-header hide-footer>
+      <b-modal id="passwordModal" size="md" centered hide-header hide-footer>
         <div class="p-5">
           <div class="form">
             <!-- description -->
@@ -74,7 +97,7 @@
                   placeholder="Enter old Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
 
                 <span style="color: red">{{ oldPassword }}</span>
@@ -86,7 +109,7 @@
                   placeholder="Enter Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
               </b-form-group>
 
@@ -97,7 +120,7 @@
                   placeholder="Comfirm password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                   @input="changeColor"
                   :style="{ border: isGreen }"
                 ></b-form-input>
@@ -108,7 +131,7 @@
                 type="submit"
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="md"
                 :disabled="form.busy"
               >
                 <b-spinner
@@ -127,16 +150,21 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { USER_GUARDIAN_QUERY } from '@/graphql/guardians/queries'
 import { CHANGE_USER_PASSWORD_MUTATION } from '~/graphql/users/mutations'
+import GuardianPhotoUpload from '~/components/GuardianPhotoUpload'
 import Preload from '~/components/Preload.vue'
 import Swal from 'sweetalert2'
 
 export default {
-  components: { Preload },
+  components: { Preload, GuardianPhotoUpload },
   middleware: 'auth',
   data() {
     return {
+      photo: null,
+      isUploadModal: false,
       isGreen: '',
       passwordValidation: null,
       oldPassword: null,
@@ -152,6 +180,10 @@ export default {
     students() {
       return this.user.guardian.students[0]
     },
+
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
   },
   apollo: {
     user: {
@@ -224,6 +256,11 @@ export default {
         this.passwordValidation = 'Unmatched passwords'
         this.form.busy = false
       }
+    },
+
+    uploadPhoto() {
+      this.photo = 'yes'
+      this.isUploadModal = true
     },
   },
 }

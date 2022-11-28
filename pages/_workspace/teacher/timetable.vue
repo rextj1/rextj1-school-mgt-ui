@@ -100,7 +100,7 @@
           </div>
         </b-card>
         <b-card v-else-if="timetables.length == 0" class="p-4">
-          <h3 class="text-center p-4">No record found</h3>
+          <h3 class="text-center p-5">No record found</h3>
         </b-card>
       </div>
     </template>
@@ -207,18 +207,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.timetable-page {
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    font-size: 16px;
-    color: #000;
-  }
-}
-</style>

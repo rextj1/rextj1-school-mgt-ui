@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 fee-receipt-wrapper">
+  <div class="p-3">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="px-3 mb-4">
@@ -173,21 +173,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.fee-receipt-wrapper {
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    width: 300px;
-
-    font-size: 16px;
-    color: #000;
-  }
-}
-</style>

@@ -1,8 +1,19 @@
 <template>
   <div class="sidebar-wrapper">
-    <div class="aside shadow-sm" :class="`${isCollasped == true ? 'is-expanded' : ''}`">
+    <div
+      class="aside shadow-sm"
+      :class="`${isCollasped == true ? 'is-expanded' : ''}`"
+    >
       <div class="logo">
-        <img src="@/assets/svg/ronazon-logo.svg" alt="" />
+        <div
+          v-if="mainWorkspace.logo == null"
+        />
+        <img
+          v-else
+          :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
+          alt=""
+          width="50"
+        />
       </div>
 
       <div v-for="role in user.roles" :key="role.id">
@@ -37,7 +48,7 @@
               <span class="text" @click="ToggleMenus">Create School</span>
             </nuxt-link>
           </div>
-        </span>   
+        </span>
 
         <!-- Accountant -->
         <span v-if="role.name == 'accountant'">
@@ -254,7 +265,7 @@
               class="button"
             >
               <b-icon
-                icon="person-fill"
+                icon="person-circle"
                 class="material-icons"
                 @click="ToggleMenus"
               />
@@ -493,11 +504,7 @@
               }"
               class="button"
             >
-              <b-icon
-                icon="grid"
-                class="material-icons"
-                @click="ToggleMenus"
-              />
+              <b-icon icon="grid" class="material-icons" @click="ToggleMenus" />
               <span class="text" @click="ToggleMenus">Dashboard</span>
             </nuxt-link>
 
@@ -509,7 +516,7 @@
               to="admin"
               class="button"
             >
-               <b-icon
+              <b-icon
                 icon="people"
                 class="material-icons"
                 @click="ToggleMenus()"
@@ -938,7 +945,7 @@
                 class="material-icons"
                 @click="ToggleMenus()"
               />
-              <span class="text" @click="ToggleMenus()"
+              <span class="text"
                 >Users
                 <b-icon
                   style="margin-left: 103px"
@@ -1029,7 +1036,7 @@
                 class="material-icons"
                 @click="ToggleMenus()"
               />
-              <span class="text" @click="ToggleMenus()"
+              <span class="text"
                 >Exam
                 <b-icon
                   style="margin-left: 103px"
@@ -1222,7 +1229,7 @@
                 class="material-icons"
                 @click="ToggleMenus()"
               />
-              <span class="text" @click="ToggleMenus()"
+              <span class="text"
                 >Setup
                 <b-icon
                   style="margin-left: 103px"
@@ -1451,23 +1458,16 @@ export default {
         return
       }
     },
-    // caretDown() {
-    //   if (this.rotate === '') {
-    //     this.rotate = 'upDown'
-    //   } else {
-    //     this.rotate = ''
-    //   }
-    // },
   },
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .sidebar-wrapper {
   top: 0;
   background-color: #fff;
   z-index: 3;
-  font-size: 19px;
+  font-size: 18px;
 
   .aside {
     overflow-y: auto;
@@ -1477,7 +1477,7 @@ export default {
     background-color: var(--color-white);
     padding: 10px;
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(sm) {
       margin-top: 85px;
       width: 0;
       padding: 0;
@@ -1496,14 +1496,11 @@ export default {
     }
 
     .dropMenuClose {
-      // display: block;
-
       .button {
         &.nuxt-link-exact-active {
           border-radius: 0 !important;
           border-left: 0px solid red !important;
           width: 108%;
-          // margin-left: -1.40px !important;
         }
         &:hover {
           border-left: 0px solid red !important;
@@ -1517,7 +1514,7 @@ export default {
       opacity: 0;
       transition: opacity 0.1s ease-out;
       color: var(--color-primary);
-      font-size: 25px;
+      font-size: 23px;
       margin-bottom: 2px;
       text-transform: uppercase;
     }
@@ -1530,7 +1527,7 @@ export default {
         align-items: center;
         text-decoration: none;
         transition: 0.1s ease-out;
-        padding: 5px 10px;
+        padding: 4px 10px;
         margin-bottom: 8px;
 
         .material-icons {
@@ -1560,7 +1557,6 @@ export default {
         .text {
           color: var(--color-body);
           transition: 0.2s ease-out;
-          // height: 20px;
           display: none;
         }
       }
@@ -1606,10 +1602,6 @@ export default {
           .material-icon {
             margin-right: 0;
           }
-          // .text {
-          //     display: flex;
-          //     flex-wrap: wrap;
-          //   }
 
           &:hover {
             background-color: var(--color-primary);
@@ -1636,15 +1628,10 @@ export default {
       }
     }
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(sm) {
       position: absolute;
       z-index: 999;
     }
-
-    // @media (max-width: 1024px) {
-    //   position: absolute;
-    //   z-index: 99;
-    // }
   }
 }
 </style>

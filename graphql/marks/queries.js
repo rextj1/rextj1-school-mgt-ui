@@ -1,4 +1,6 @@
 import gql from 'graphql-tag'
+import { SINGLE_SUBJECTS_FIELDS_FRAGMENT } from '../subjects/fragments'
+import { MARK_STUDENT_FIELD_FRAGMENT } from '../students/fragments'
 import { MARK_FIELDS_FRAGMENT } from './fragments'
 
 export const MARK_QUERIES = gql`
@@ -24,6 +26,48 @@ export const MARK_QUERIES = gql`
   ${MARK_FIELDS_FRAGMENT}
 `
 
+export const MARK_SUBJECT_QUERIES = gql`
+  query MarkSubjecQuery(
+    $klase_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+    $section_id: Int!
+    $workspaceId: Int
+  ) {
+    markSubjects(
+      klase_id: $klase_id
+      term_id: $term_id
+      session_id: $session_id
+      section_id: $section_id
+      workspaceId: $workspaceId
+    ) {
+      ...SingleSubjectsFields
+    }
+  }
+  ${SINGLE_SUBJECTS_FIELDS_FRAGMENT}
+`
+
+export const MARK_STUDENT_QUERIES = gql`
+  query MarkSTudentQuery(
+    $klase_id: Int!
+    $term_id: Int!
+    $session_id: Int!
+    $section_id: Int!
+    $workspaceId: Int
+  ) {
+    markStudents(
+      klase_id: $klase_id
+      term_id: $term_id
+      session_id: $session_id
+      section_id: $section_id
+      workspaceId: $workspaceId
+    ) {
+      
+    ...MarkSingleStudentField
+    }
+  }${MARK_STUDENT_FIELD_FRAGMENT}
+`
+
 export const STUDENT_MARK_RESULT_QUERIES = gql`
   query studentMarkResultsQuery(
     $klase_id: Int!
@@ -42,7 +86,6 @@ export const STUDENT_MARK_RESULT_QUERIES = gql`
       section_id: $section_id
       status: $status
       workspaceId: $workspaceId
-      
     ) {
       ...MarkFields
     }

@@ -17,7 +17,15 @@
           </template>
 
           <template #cell(first_name)="data">
-            {{ data.item.first_name }} {{ data.item.last_name }}
+            {{ data.item.last_name }} {{ data.item.first_name }}
+          </template>
+
+          <template #cell(photo)="data">
+            <b-avatar
+              variant="primary"
+              :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${data.item.student.photo}`"
+            >
+            </b-avatar>
           </template>
 
           <template #cell(session)="data">
@@ -71,6 +79,12 @@ export default {
         {
           key: 'first_name',
           label: 'Full Name',
+          sortable: false,
+        },
+
+        {
+          key: 'photo',
+          label: 'Photo',
           sortable: false,
         },
         {
@@ -154,7 +168,6 @@ export default {
               data.promoteStudents.filter((t) => {
                 t.status !== true
               })
-              
 
               data.promoteStudents = createPromoteStudents
 

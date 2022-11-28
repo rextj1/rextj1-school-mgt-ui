@@ -71,13 +71,13 @@
                     {{ DuePaymentrecord.receipt }}
                   </b-td>
                   <b-td>
-                      <b-icon
-                        class="ml-2"
-                        scale="1.5"
-                        icon="printer"
-                        v-show="DuePaymentrecord.amt_paid > 0"
-                        @click.prevent="generateDueReport(index)"
-                      />
+                    <b-icon
+                      class="ml-2"
+                      scale="1.5"
+                      icon="printer"
+                      v-show="DuePaymentrecord.amt_paid > 0"
+                      @click.prevent="generateDueReport(index)"
+                    />
 
                     <vue-html2pdf
                       ref="html2Pdf"
@@ -105,9 +105,16 @@
                               min-height: 100vh;
                             "
                           >
-                            <!-- {{ PaidPaymentrecord }} -->
-
-                            <div class="m-4">
+                            <div class="mt-3">
+                              <div class="text-center">
+                                <div v-if="mainWorkspace.logo == null"></div>
+                                <img
+                                  v-else
+                                  :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
+                                  alt="logo"
+                                  width="50"
+                                />
+                              </div>
                               <h3 align="center">{{ mainWorkspace.name }}</h3>
                               <h5 align="center">
                                 {{ DuePaymentrecord.term.name }} Payment Receipt
@@ -125,11 +132,15 @@
                             </div>
 
                             <div class="d-flex justify-content-center">
-                              <b-img
-                                thumbnail
-                                src="@/assets/images/teacher.jpeg"
-                                width="100"
-                              ></b-img>
+                              <div
+                                v-if="DuePaymentrecord.student.photo == null"
+                              ></div>
+                              <img
+                                v-else
+                                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${DuePaymentrecord.student.photo}`"
+                                alt="student"
+                                width="50"
+                              />
                             </div>
 
                             <div class="d-flex justify-content-between mt-4">
@@ -295,22 +306,24 @@
                       pdf-format="a4"
                       pdf-orientation="landscape"
                       pdf-content-width=""
+                      :html-to-pdf-options="htmlToPdfOptions"
                     >
                       <section slot="pdf-content">
                         <div
                           class="card-student display"
                           style="background-color: #fff"
                         >
-                          <div
-                            style="
-                              padding: 50px;
-                              margin: auto;
-                              min-height: 100vh;
-                            "
-                          >
-                            <!-- {{ PaidPaymentrecord }} -->
-
+                          <div style="padding: 50px; margin: auto">
                             <div class="m-4">
+                              <div class="text-center">
+                                <div v-if="mainWorkspace.logo == null"></div>
+                                <img
+                                  v-else
+                                  :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
+                                  alt="logo"
+                                  width="50"
+                                />
+                              </div>
                               <h3 align="center">{{ mainWorkspace.name }}</h3>
                               <h5 align="center">
                                 {{ PaidPaymentrecord.term.name }} Payment
@@ -329,11 +342,15 @@
                             </div>
 
                             <div class="d-flex justify-content-center">
-                              <b-img
-                                thumbnail
-                                src="@/assets/images/teacher.jpeg"
-                                width="100"
-                              ></b-img>
+                              <div
+                                v-if="PaidPaymentrecord.student.photo == null"
+                              ></div>
+                              <img
+                                v-else
+                                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${PaidPaymentrecord.student.photo}`"
+                                alt="student"
+                                width="50"
+                              />
                             </div>
 
                             <div class="d-flex justify-content-between mt-4">
@@ -442,6 +459,13 @@ export default {
     ...mapState(useWorkspaceStore, ['currentWorkspace']),
     mainWorkspace() {
       return this.currentWorkspace
+    },
+    htmlToPdfOptions() {
+      return {
+        html2canvas: {
+          useCORS: true,
+        },
+      }
     },
   },
 }

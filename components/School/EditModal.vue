@@ -1,6 +1,6 @@
 <template>
-  <div class="student">
-    <div class="p-4 student__wrapper">
+  <div class="school p-3">
+    <div class="school__wrapper">
       <template v-if="nowLoading"><Preload /></template>
       <template v-else>
         <b-form
@@ -9,8 +9,75 @@
           @keydown="form.onKeydown($event)"
           @reset.prevent="onReset"
         >
-          <b-row class="p-4">
-            <b-col md="4" class="p-4">
+          <div
+            class="d-flex flex-column align-items-center mb-4 edit-lead-modal"
+          >
+            <div class="profile-avatar mb-2">
+              <div v-if="preview_url == null" class="photo-preview">
+                <img
+                  v-if="image == null"
+                  src="@/assets/svg/graduate-student.svg"
+                  alt="school"
+                  style="border-radius: 50%"
+                />
+
+                <img
+                  v-else
+                  :src="`${$config.APIRoot}/storage/${school.id}/schools/${image}`"
+                  alt="school"
+                  width="100"
+                  style="border-radius: 50%"
+                />
+              </div>
+              <div
+                v-else
+                class="photo-preview"
+                :style="{
+                  backgroundImage: `url(${preview_url})`,
+                }"
+              ></div>
+
+              <b-form-group>
+                <div class="file-upload">
+                  <b-button
+                    variant="white"
+                    class="shadow-sm"
+                    size="sm"
+                    pill
+                    @click="selectImage"
+                  >
+                    <b-icon icon="camera-fill" />
+                  </b-button>
+                  <input
+                    id="avatar"
+                    ref="Avatar"
+                    type="file"
+                    accept="image"
+                    class="file-upload__input"
+                    hidden
+                    @change="handleFileUpload()"
+                  />
+                </div>
+              </b-form-group>
+            </div>
+
+            <div class="text-center">
+              <p class="small mb-2">
+                Recommended size: Less than 2MB (150 x 150)
+              </p>
+              <b-button
+                variant="outline-primary"
+                size="md"
+                class="px-3"
+                pill
+                @click="selectImage"
+              >
+                Upload photo
+              </b-button>
+            </div>
+          </div>
+          <b-row>
+            <b-col md="4" class="p-2">
               <b-form-group label="School Name">
                 <b-form-input
                   id="name"
@@ -28,7 +95,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-2">
               <b-form-group label="slug">
                 <b-form-input
                   id="slug"
@@ -46,7 +113,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-2">
               <b-form-group label="First Name">
                 <b-form-input
                   id="first_name"
@@ -66,7 +133,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-2">
               <b-form-group label="Last Name">
                 <b-form-input
                   id="last_name"
@@ -84,7 +151,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-2">
               <b-form-group label="email">
                 <b-form-input
                   id="email"
@@ -103,7 +170,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="4" class="p-4">
+            <b-col md="4" class="p-2">
               <b-form-group label="Phone No.">
                 <b-form-input
                   id="phone"
@@ -124,7 +191,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-2">
               <b-form-group label="Gender">
                 <b-form-select
                   v-model="form.gender"
@@ -145,7 +212,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-2">
               <b-form-group label="Country">
                 <b-form-select
                   id="country"
@@ -169,7 +236,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-2">
               <div v-if="!country">
                 <b-form-group label="State">
                   <b-form-select class="mb-3">
@@ -193,7 +260,7 @@
               </div>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-2">
               <b-form-group id="city" label="City">
                 <b-form-input
                   id="city"
@@ -209,7 +276,7 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="3" class="p-4">
+            <b-col md="3" class="p-2">
               <b-form-group id="input-group-1" label="L.G.A">
                 <b-form-input
                   id="lga"
@@ -225,13 +292,13 @@
               </b-form-group>
             </b-col>
 
-            <b-col md="12" class="d-flex justify-content-center p-4 mt-2 mb-4"
+            <b-col md="12" class="d-flex justify-content-center p-2 mt-2 mb-4"
               ><b-button
                 type="submit"
                 pill
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="md"
               >
                 <b-spinner
                   v-if="form.busy"
@@ -243,8 +310,7 @@
               <b-button
                 pill
                 class="ml-4"
-                style="font-size: 1.4rem"
-                size="lg"
+                size="md"
                 type="reset"
                 variant="danger"
                 >Reset</b-button
@@ -276,6 +342,8 @@ export default {
   },
   data() {
     return {
+      image: null,
+      preview_url: null,
       form: new this.$form({
         name: '',
         slug: '',
@@ -288,6 +356,7 @@ export default {
         gender: null,
         city: null,
         lga: null,
+        photo: null,
         busy: false,
       }),
       genders: ['Male', 'Female'],
@@ -347,6 +416,7 @@ export default {
           this.form.slug = school.slug
           this.form.email = school.email
           this.form.gender = school.gender
+          this.image = school.photo
           this.form.last_name = school.user.last_name
           this.form.first_name = school.user.first_name
           this.form.phone = school.user.phone
@@ -360,6 +430,57 @@ export default {
   },
 
   methods: {
+    selectImage() {
+      this.$refs.Avatar.click()
+    },
+    handleFileUpload() {
+      const input = this.$refs.Avatar
+      const file = input.files[0]
+      if (!file) return
+      const reader = new FileReader()
+
+      reader.onload = (e) => {
+        this.preview_url = e.target.result
+      }
+      reader.readAsDataURL(file)
+      this.form.photo = file
+
+      this.isValidFile(file)
+    },
+
+    isValidFile(file) {
+      const imageFormats = ['image/png', 'image/jpeg', 'image/jpg']
+
+      const inValidType = !imageFormats.includes(file.type)
+
+      if (inValidType) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Please upload a valid image',
+          timer: 1500,
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+        return false
+      }
+
+      const size = file.size / 1000
+      if (imageFormats.includes(file.type) && size > 2240) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops..',
+          text: 'Image size must not exceed 5MB',
+          color: '#716add',
+          backdrop: '#7a7d7f',
+        })
+
+        return false
+      }
+
+      return true
+    },
+
     onSubmit() {
       this.form.busy = true
       // submit exam
@@ -380,6 +501,7 @@ export default {
             state: parseInt(this.form.state),
             city: this.form.city,
             lga: this.form.lga,
+            photo: this.form.photo,
           },
           update: (store, { data: { updateSchool } }) => {
             // Read the data from our cache for this query.
@@ -389,7 +511,6 @@ export default {
                 id: parseInt(schoolId),
               },
             })
-            console.log(data.school)
             data.school = updateSchool
 
             // Mutate cache result
@@ -458,15 +579,7 @@ export default {
   top: 50%;
   left: 50%;
 }
-.student {
-  font-size: 1.4rem;
-  padding: 2rem;
-  .form-control,
-  .mb-3 {
-    background-color: var(--color-input);
-    height: 4rem;
-    font-size: 1.4rem;
-  }
+.school {
   .grow {
     position: absolute;
     transform: translate(-50%, -50%);
@@ -511,7 +624,7 @@ export default {
     }
   }
 
-  .student__wrapper {
+  .school__wrapper {
     background-color: var(--color-white);
     border-radius: 0.5rem;
     border: none;

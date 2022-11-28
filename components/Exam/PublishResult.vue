@@ -54,7 +54,6 @@
                   </h6>
                 </div>
               </div>
-
               <h5 style="text-align: center; font-weight: bold">
                 <span style="color: green" v-if="student[1] == 3"
                   >{{ student[1] }}rd Term</span
@@ -65,11 +64,99 @@
                 <span style="color: green" v-else>{{ student[1] }}st Term</span>
                 Tabulation sheet
               </h5>
-              <table class="table table-responsive table-striped">
-                <tr>
-                 
-                </tr>
-              </table>
+              <div class="card-body">
+                <table class="table table-responsive table-striped">
+                  <thead>
+                    <tr>
+                      <th>S/N</th>
+                      <th>Full Name</th>
+                      <th
+                        v-for="subject in subjects"
+                        :key="subject.id"
+                        rowspan="2"
+                      >
+                        {{ subject.subject }}
+                      </th>
+
+                      <th v-if="student[1] == 3">1ST TERM TOTAL</th>
+                      <th v-if="student[1] == 3">2ND TERM TOTAL</th>
+                      <th v-if="student[1] == 3">3RD TERM TOTAL</th>
+                      <th v-if="student[1] == 3" style="color: darkred">
+                        CUM Total
+                      </th>
+                      <th v-if="student[1] == 3" style="color: darkblue">
+                        CUM Average
+                      </th>
+
+                      <th
+                        v-if="student[1] == 1 || student[1] == 2"
+                        style="color: darkred"
+                      >
+                        Total
+                      </th>
+                      <th
+                        v-if="student[1] == 1 || student[1] == 2"
+                        style="color: darkblue"
+                      >
+                        Average
+                      </th>
+
+                      <th style="color: darkgreen">Position</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(stud, index) in studentx" :key="stud.id">
+                   
+                      <td>{{ index + 1 }}</td>
+                      
+                      <td>
+                        {{
+                          filterNames(stud.id) != null
+                            ? filterNames(stud.id).student.last_name
+                            : ''
+                        }}
+                        {{
+                          filterNames(stud.id) != null
+                            ? filterNames(stud.id).student.first_name
+                            : ''
+                        }}
+                      </td>
+
+                      <td v-for="subject in subjects" :key="subject.id">
+                        {{
+                          filterMarks(subject, stud.id) != null
+                            ? filterMarks(subject, stud.id).exam_total
+                            : ''
+                        }}
+                      </td>
+                      <td>
+                        {{
+                          classRecords(stud.id) != null
+                            ? classRecords(stud.id).total
+                            : ''
+                        }}
+                      </td>
+                      <td>
+                        {{
+                          classRecords(stud.id) != null
+                            ? classRecords(stud.id).avg
+                            : ''
+                        }}
+                      </td>
+
+                      <td
+                        v-html="
+                          postion(
+                            classRecords(stud.id) != null
+                              ? classRecords(stud.id).position
+                              : ''
+                          )
+                        "
+                      ></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="d-flex justify-content-center mb-4">
               <b-button
@@ -96,13 +183,38 @@ import { UPDATE_PUBLISH_RESULT_MUTATION } from '~/graphql/examRecord/mutations'
 import { EXAM_RECORD_QUERIES } from '~/graphql/examRecord/queries'
 export default {
   props: {
-    records: Array,
-    examRecords: Array,
-    firstTerm: Array,
-    secoundTerm: Array,
-    marks: Array,
-    thirdTerm: Array,
-    student: Array,
+    records: {
+      type: Array,
+      required: false,
+    },
+    firstTerm: {
+      type: Array,
+      required: false,
+    },
+    secoundTerm: {
+      type: Array,
+      required: false,
+    },
+    marks: {
+      type: Array,
+      required: false,
+    },
+    thirdTerm: {
+      type: Array,
+      required: false,
+    },
+    student: {
+      type: Array,
+      required: false,
+    },
+    subjects: {
+      type: Array,
+      required: false,
+    },
+    studentx: {
+      type: Array,
+      required: false,
+    },
   },
 
   data: () => ({
@@ -116,6 +228,30 @@ export default {
   },
 
   methods: {
+    filterNames(stud) {
+      const n = this.marks.filter((value) => value.student.id == stud)
+
+      return n[0]
+    },
+    filterMarks(sub, stud) {
+      const l = this.marks
+        .filter((t) => t.subject.id == sub.id)
+        .filter(
+          (value) => value.student.id == stud
+        )
+
+      return l[0]
+    },
+    filterOthers(stud) {
+      const t = this.marks.filter((value) => value.student.id == stud)
+
+      return t[0]
+    },
+    classRecords(stud) {
+      const r = this.records.filter((value) => value.student.id == stud)
+
+      return r[0]
+    },
     postion(i) {
       const j = i % 10
       const k = i % 100

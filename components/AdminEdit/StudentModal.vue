@@ -10,12 +10,21 @@
           @keydown="form.onKeydown($event)"
           @reset.prevent="onReset"
         >
+
           <div class="d-flex flex-column align-items-center mb-4">
             <div class="profile-avatar mb-2">
               <div v-if="preview_url == null" class="photo-preview">
                 <img
-                  :src="`${$config.APIRoot}/storage/student/${form.photo}`"
+                  v-if="form.photo == null"
+                  src="@/assets/svg/graduate-student.svg"
                   alt=""
+                  style="border-radius: 50%"
+                />
+
+                <img
+                  v-else
+                  :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${form.photo}`"
+                  alt="student"
                   width="100"
                   style="border-radius: 50%"
                 />
@@ -518,7 +527,7 @@
               </div>
             </b-col>
 
-              <b-col md="4" class="p-3">
+            <b-col md="4" class="p-3">
               <b-form-group id="input-group-1" label="City">
                 <b-form-input
                   id="city"
@@ -528,7 +537,9 @@
                   name="city"
                   required
                 ></b-form-input>
-                <b-form-invalid-feedback :state="!form.errors.has('userStudent.city')">
+                <b-form-invalid-feedback
+                  :state="!form.errors.has('userStudent.city')"
+                >
                   {{ form.errors.get('userStudent.city') }}
                 </b-form-invalid-feedback>
               </b-form-group>
@@ -623,7 +634,7 @@ import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import Preload from '~/components/Preload.vue'
 
 export default {
-  components: {Preload},
+  components: { Preload },
   props: {
     slug: Array,
   },

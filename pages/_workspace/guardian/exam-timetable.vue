@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 exam-wrapper">
+  <div class="p-3">
     <template v-if="nowloading"><Preload /></template>
     <template v-else>
       <b-card class="mb-2">
@@ -209,19 +209,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.exam-wrapper {
-  .custom-select:focus {
-    box-shadow: none;
-  }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    font-size: 16px;
-    color: #000;
-  }
-}
-</style>

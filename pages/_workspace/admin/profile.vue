@@ -12,24 +12,23 @@
         >Change Password</b-button
       >
 
-      <b-card class="user shadow">
-        <div v-if="user.photo == null" class="text-center mb-4 mt-4">
+      <b-card class="user shadow-sm">
+        <div v-if="mainWorkspace.photo == null" class="text-center mb-4 mt-4">
           <b-img
             src="@/assets/svg/user-avatar.svg"
-            thumbnail
             fluid
             alt="School image"
-            width="150"
+            width="200"
           ></b-img>
         </div>
 
         <div v-else class="text-center mb-4 mt-4">
-          <b-img
-            :src="`${$config.APIRoot}/storage/user/${user.photo}`"
+          <b-img style="border-radius:50%"
+            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/schools/${mainWorkspace.photo}`"
             thumbnail
             fluid
-            alt="Responsive image"
-            width="150"
+            alt="profile image"
+            width="200"
           ></b-img>
         </div>
 
@@ -236,23 +235,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.admin-profile {
-  .custom-select {
-    font-size: 16px;
-  }
-
-  .custom-select:focus {
-    box-shadow: none;
-  }
-
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    font-size: 16px;
-    color: #000;
-  }
-}
-</style>

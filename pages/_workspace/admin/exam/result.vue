@@ -165,6 +165,14 @@
                 {{ data.value.first_name }} {{ data.value.last_name }}
               </template>
 
+              <template #cell(photo)="data">
+                 <b-avatar
+                    variant="primary"
+                    :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${data.item.student.photo}`"
+                  >
+                  </b-avatar>
+              </template>
+
               <template #cell(adm_no)="data">
                 {{ data.item.student.adm_no }}
               </template>
@@ -251,6 +259,11 @@ export default {
           key: 'student',
           label: 'Full Name',
           sortable: false,
+        },
+
+        {
+          key: 'photo',
+          label: 'Photo.',
         },
         {
           key: 'adm_no',

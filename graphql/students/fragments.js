@@ -1,6 +1,4 @@
 import gql from 'graphql-tag'
-import { SINGLE_TIMETABLE_FIELDS_FRAGMENT } from '../timetables/fragments'
-import { UXER_FIELDS_FRAGMENT } from '../users/fragments'
 import { KLASE_FIELDS_FRAGMENT } from '~/graphql/klases/fragments'
 
 export const STUDENT_FIELDS_FRAGMENT = gql`
@@ -41,6 +39,10 @@ export const STUDENT_FIELDS_FRAGMENT = gql`
     guardian {
       id
       slug
+      user{
+        id
+        photo
+      }
     }
     klase {
       ...KlaseFields
@@ -106,5 +108,11 @@ export const SINGLE_STUDENT_FIELD_FRAGMENT = gql`
       id
       name
     }
+  }
+`
+
+export const MARK_STUDENT_FIELD_FRAGMENT = gql`
+  fragment MarkSingleStudentField on Student {
+    id
   }
 `

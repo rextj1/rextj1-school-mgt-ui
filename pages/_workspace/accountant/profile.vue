@@ -15,19 +15,19 @@
           <div v-if="accountant.photo == 'null'">
             <b-img
               src="~/assets/svg/user-avatar.svg"
-              thumbnail
               fluid
-              alt="Responsive image"
-              width="230"
+              alt="accountant"
+              width="200"
             ></b-img>
           </div>
           <div v-else>
             <b-img
+              style="border-radius: 50%"
               :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/accountants/${accountant.photo}`"
               thumbnail
               fluid
-              alt="Responsive image"
-              width="230"
+              alt="accountant"
+              width="200"
             ></b-img>
           </div>
         </div>

@@ -14,8 +14,16 @@
           <div class="profile-avatar mb-2">
             <div v-if="preview_url == null" class="photo-preview">
               <img
-                :src="`${$config.APIRoot}/storage/${mainWorkspace.slug}/teacher/${form.image}`"
+                v-if="form.image == null"
+                src="@/assets/svg/graduate-student.svg"
                 alt=""
+                style="border-radius: 50%"
+              />
+
+              <img
+                v-else
+                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/admin/${form.image}`"
+                alt="admin"
                 style="border-radius: 50%"
               />
             </div>
@@ -482,7 +490,7 @@ export default {
           this.form.schoolAdminTable.birthday = data.schoolAdmin.birthday
           this.form.schoolAdminTable.qualification =
             data.schoolAdmin.qualification
-          this.form.photo = data.schoolAdmin.photo
+          this.form.image = data.schoolAdmin.photo
           this.form.schoolAdminTable.phone = data.schoolAdmin.phone
           this.form.schoolAdminTable.gender = data.schoolAdmin.gender
 

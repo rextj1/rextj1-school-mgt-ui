@@ -14,6 +14,7 @@ export const CREATE_SCHOOL_MUTATION = gql`
     $country: Int!
     $state: Int!
     $city: String!
+    $photo: Upload
   ) {
     createSchool(
       name: $name
@@ -27,6 +28,7 @@ export const CREATE_SCHOOL_MUTATION = gql`
       country: $country
       state: $state
       city: $city
+      photo: $photo
     )
   }
 `
@@ -44,6 +46,7 @@ export const UPDATE_SCHOOL_MUTATION = gql`
     $country: Int!
     $state: Int!
     $city: String!
+    $photo: Upload
   ) {
     updateSchool(
       id: $id
@@ -58,12 +61,14 @@ export const UPDATE_SCHOOL_MUTATION = gql`
       country: $country
       state: $state
       city: $city
+      photo: $photo
     ) {
       id
       name
       slug
       email
       status
+      photo
       gender
       user {
         ...UxerFields

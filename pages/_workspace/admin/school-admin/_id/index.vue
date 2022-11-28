@@ -9,29 +9,29 @@
         }"
         variant="primary"
         size="md"
-        class="add-student mb-4"
+        class="add-student mb-2"
       >
         <b-icon icon="arrow-left" /> Back
       </b-button>
 
-      <b-card class="user shadow">
-        <div v-if="schoolAdmin.user.photo == null" class="text-center mb-4 mt-4">
+      <b-card class="user shadow-sm">
+        <div v-if="schoolAdmin.photo == null" class="text-center mb-4 mt-4">
           <b-img
-            src="@/assets/images/teacher.jpeg"
-            thumbnail
+            src="@/assets/svg/user-avatar.svg"
+            
             fluid
-            alt="School image"
-            width="150"
+            alt="admin"
+            width="200"
           ></b-img>
         </div>
 
         <div v-else class="text-center mb-4 mt-4">
-          <b-img
-            :src="`${$config.APIRoot}/storage/user/${schoolAdmin.user.photo}`"
+          <b-img style="border-radius:50%"
+            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/admin/${schoolAdmin.photo}`"
             thumbnail
             fluid
-            alt="Responsive image"
-            width="150"
+            alt="admin"
+            width="200"
           ></b-img>
         </div>
 

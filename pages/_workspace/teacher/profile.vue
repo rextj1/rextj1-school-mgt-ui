@@ -15,19 +15,19 @@
           <div v-if="teacher.photo == 'null'">
             <b-img
               src="@/assets/svg/user-avatar.svg"
-              thumbnail
               fluid
-              alt="Responsive image"
-              width="230"
+              alt="teacher"
+              width="200"
             ></b-img>
           </div>
           <div v-else>
             <b-img
-              :src="`${$config.APIRoot}/storage/teacher/${teacher.photo}`"
+              style="border-radius: 50%"
+              :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/teachers/${teacher.photo}`"
               thumbnail
               fluid
-              alt="Responsive image"
-              width="230"
+              alt="teacher"
+              width="200"
             ></b-img>
           </div>
         </div>
@@ -47,11 +47,12 @@
             <p>city</p>
             <p>L.G.A</p>
 
-            <p>
-              <b-badge style="font-size: 1.6rem" variant="warning"
-                >Subjects Assigned</b-badge
-              >
-            </p>
+            <h6>
+              <b-badge variant="primary">Class Assigned</b-badge>
+            </h6>
+            <h6>
+              <b-badge variant="warning">Subjects Assigned</b-badge>
+            </h6>
           </div>
 
           <div style="font-weight: bold">
@@ -81,29 +82,29 @@
               {{ user.lga }}
             </p>
 
-            <h3 v-for="klase in teacher.klases" :key="klase.id">
+            <h6 v-for="klase in teacher.klases" :key="klase.id">
               <p>
                 <b-badge
                   :id="klase.id"
                   style="line-height: 1.6"
-                  variant="warning"
+                  variant="primary"
                   class="px-2"
                   >{{ klase.name }}</b-badge
                 >
               </p>
-              <b-popover :target="klase.id" triggers="hover click">
+              <!-- <b-popover :target="klase.id" triggers="hover click">
                 <b-nav vertical>
                   <b-nav-item
                     v-for="subject in klase.subjects"
                     :key="subject.id"
                   >
-                    <div style="font-size: 1.4rem">{{ subject.subject }}</div>
+                    <div>{{ subject.subject }}</div>
                   </b-nav-item>
                 </b-nav>
-              </b-popover>
-            </h3>
+              </b-popover> -->
+            </h6>
 
-            <h3 v-for="subject in teacher.subjects" :key="subject.id">
+            <h6 v-for="subject in teacher.subjects" :key="subject.id">
               <p>
                 <b-badge
                   :id="subject.id"
@@ -113,13 +114,13 @@
                   >{{ subject.subject }}</b-badge
                 >
               </p>
-            </h3>
+            </h6>
           </div>
         </div>
       </b-card>
 
       <!-- change password modal -->
-      <b-modal id="passwordModal" size="sm" centered hide-header hide-footer>
+      <b-modal id="passwordModal" size="md" centered hide-header hide-footer>
         <div class="p-5">
           <div class="form">
             <!-- description -->
@@ -136,7 +137,7 @@
                   placeholder="Enter old Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
 
                 <span style="color: red">{{ oldPassword }}</span>
@@ -148,7 +149,7 @@
                   placeholder="Enter Password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                 ></b-form-input>
               </b-form-group>
 
@@ -159,7 +160,7 @@
                   placeholder="Comfirm password"
                   type="password"
                   required
-                  size="lg"
+                  size="md"
                   @input="changeColor"
                   :style="{ border: isGreen }"
                 ></b-form-input>
@@ -170,7 +171,7 @@
                 type="submit"
                 variant="primary"
                 class="mr-4"
-                size="lg"
+                size="md"
                 :disabled="form.busy"
               >
                 <b-spinner
@@ -189,6 +190,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useWorkspaceStore } from '@/stores/wokspace'
 import { USER_TEACHER_QUERY } from '@/graphql/teachers/queries'
 import Preload from '~/components/Preload.vue'
 
@@ -219,6 +222,9 @@ export default {
     },
   },
   computed: {
+    ...mapState(useWorkspaceStore, {
+      mainWorkspace: (store) => store.currentWorkspace,
+    }),
     teacher() {
       return this.user.teacher
     },

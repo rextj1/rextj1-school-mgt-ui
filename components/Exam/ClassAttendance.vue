@@ -24,14 +24,14 @@
         <b-row>
           <b-col md="2">
             <b-form-group label="Total Days">
-              <b-form-input
+              <input
                 v-model="form.num_total"
                 type="number"
-                class="mb-3"
-                size="lg"
+                class="mb-2"
+               style="width: 70px; padding-left: 5px; height:35px"
                 required
               >
-              </b-form-input>
+             
             </b-form-group>
           </b-col>
         </b-row>
@@ -42,7 +42,7 @@
               <tr>
                 <th scope="col">S/N</th>
                 <th scope="col">Name</th>
-                <th scope="col">ADM No.</th>
+                <th scope="col">Photo</th>
                 <th scope="col">Days Present</th>
               </tr>
             </thead>
@@ -55,8 +55,17 @@
                 <td>{{ value + 1 }}</td>
 
                 <td>
-                  {{ classAttendance.student.first_name }}
+                  
                   {{ classAttendance.student.last_name }}
+                  {{ classAttendance.student.first_name }}
+                </td>
+
+                <td>
+                  <b-avatar
+                    variant="primary"
+                    :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${classAttendance.student.photo}`"
+                  >
+                  </b-avatar>
                 </td>
 
                 <td>{{ classAttendance.student.adm_no }}</td>
@@ -73,7 +82,7 @@
                         'num_present'
                       )
                     "
-                    style="width: 60px; padding-left: 5px"
+                    style="width: 70px; padding-left: 5px; height:35px"
                   />
                 </td>
               </tr>

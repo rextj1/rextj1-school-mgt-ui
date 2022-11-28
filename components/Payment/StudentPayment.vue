@@ -250,10 +250,18 @@
                         >
                           <div class="mt-4">
                             <div class="text-center mb-4">
-                              <b-img
+                              <img
+                                v-if="mainWorkspace.logo == null"
                                 src="@/assets/svg/ronazon-logo.svg"
+                                alt="logo"
                                 width="100"
-                              ></b-img>
+                              />
+                              <img
+                                v-else
+                                :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
+                                alt="logo"
+                                width="50"
+                              />
                             </div>
 
                             <h1
@@ -287,10 +295,19 @@
 
                           <div class="d-flex justify-content-center">
                             <b-img
+                              v-if="data.item.student.photo == null"
                               class="mt-3"
                               thumbnail
-                              src="@/assets/images/teacher.jpeg"
+                              src="@/assets/svg/graduate-student.svg"
+                              alt="student"
                               width="100"
+                            ></b-img>
+                            <b-img
+                              v-else
+                              :show="true"
+                              :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${data.item.student.photo}`"
+                              alt="student"
+                              width="200"
                             ></b-img>
                           </div>
 
@@ -626,14 +643,15 @@
                     pdf-content-width=""
                   >
                     <section slot="pdf-content">
-                      <div
-                        class="display"
-                        style="padding: 2rem; margin: auto"
-                      >
+                      <div class="display" style="padding: 2rem; margin: auto">
                         <div class="mt-3 mb-3">
                           <div class="text-center mb-3">
+                            <div v-if="mainWorkspace.logo == null"></div>
                             <b-img
-                              src="@/assets/svg/ronazon-logo.svg"
+                              v-else
+                              :show="true"
+                              :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
+                              alt="logo"
                               width="100"
                             ></b-img>
                           </div>
@@ -668,11 +686,13 @@
                         </div>
 
                         <div class="d-flex justify-content-center">
+                          <div v-if="data.item.student.photo == null"></div>
                           <b-img
-                            class="mt-3"
-                            thumbnail
-                            src="@/assets/images/teacher.jpeg"
-                            width="100"
+                            v-else
+                            :show="true"
+                            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${data.item.student.photo}`"
+                            alt="student"
+                            width="200"
                           ></b-img>
                         </div>
 

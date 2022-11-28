@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 view-payment">
+  <div class="p-3">
     <div v-if="nowLoading"><Preload /></div>
     <div v-else>
       <b-card class="px-2 mb-4">
@@ -16,7 +16,7 @@
             <div v-else>
               <b-form-group label="Select Student">
                 <b-form-select v-model="form.student_id" class="mb-3">
-                  <b-form-select-option
+                  <b-form-select-option 
                     v-for="student in user.guardian.students"
                     :key="student.id"
                     :value="student.id"
@@ -154,19 +154,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.view-payment {
-  .custom-select:focus {
-    box-shadow: none;
-  }
-  .custom-select,
-  .form-control,
-  .mb-3 {
-    height: 50px;
-    font-size: 16px;
-    width: 300px;
-    color: #000;
-  }
-}
-</style>

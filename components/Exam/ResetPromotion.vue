@@ -32,7 +32,7 @@
 
                   <td>
                     <b-img
-                      :src="`${$config.APIRoot}/storage/student/${reset.student.photo}`"
+                      :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${reset.student.photo}`"
                       alt="photo"
                       width="30"
                     />

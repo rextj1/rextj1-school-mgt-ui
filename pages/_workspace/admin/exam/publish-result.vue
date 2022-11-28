@@ -118,6 +118,8 @@
           v-if="records"
           :records="records"
           :marks="marks"
+          :subjects="markSubjects"
+          :studentx="studentx"
           :first-term="firstTerm"
           :secound-term="secoundTerm"
           :third-term="thirdTerm"
@@ -138,7 +140,12 @@ import {
   THIRD_TERM_QUERIES,
 } from '~/graphql/examRecord/queries'
 import { KLASE_QUERIES } from '~/graphql/klases/queries'
-import { MARK_QUERIES, TERM_QUERIES } from '~/graphql/marks/queries'
+import {
+  MARK_QUERIES,
+  MARK_STUDENT_QUERIES,
+  MARK_SUBJECT_QUERIES,
+  TERM_QUERIES,
+} from '~/graphql/marks/queries'
 import { SECTION_QUERIES } from '~/graphql/sections/queries'
 import { SESSION_QUERIES } from '~/graphql/sessions/queries'
 import ExamPublishResult from '~/components/Exam/PublishResult.vue'
@@ -152,6 +159,9 @@ export default {
       records: null,
       klaseResults: [],
       marks: [],
+      markSubjects: [],
+      markStudents: [],
+      studentx: [],
       firstTerm: [],
       secoundTerm: [],
       thirdTerm: [],
@@ -249,6 +259,38 @@ export default {
           },
         })
 
+        this.$apollo.addSmartQuery('markSubjects', {
+          query: MARK_SUBJECT_QUERIES,
+          variables: {
+            klase_id: parseInt(this.form.class),
+            session_id: parseInt(this.form.session),
+            section_id: parseInt(this.form.section),
+            term_id: parseInt(this.form.term),
+            workspaceId: parseInt(this.mainWorkspace.id),
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.markSubjects = data.markSubjects
+            }
+          },
+        })
+
+        this.$apollo.addSmartQuery('markStudents', {
+          query: MARK_STUDENT_QUERIES,
+          variables: {
+            klase_id: parseInt(this.form.class),
+            session_id: parseInt(this.form.session),
+            section_id: parseInt(this.form.section),
+            term_id: parseInt(this.form.term),
+            workspaceId: parseInt(this.mainWorkspace.id),
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.studentx = data.markStudents
+            }
+          },
+        })
+
         this.$apollo.addSmartQuery('marks', {
           query: MARK_QUERIES,
           variables: {
@@ -261,6 +303,7 @@ export default {
           result({ loading, data }, key) {
             if (!loading) {
               this.marks = data.marks
+               this.isBusy = false
               this.timetableDropdownClass = true
             }
           },
@@ -302,28 +345,26 @@ export default {
           },
         })
 
-        setTimeout(() => {
-          this.isBusy = true
-          this.$apollo.addSmartQuery('thirdTerm', {
-            query: THIRD_TERM_QUERIES,
-            variables() {
-              return {
-                klase_id: parseInt(this.form.class),
-                term_id: 3,
-                session_id: parseInt(this.form.session),
-                section_id: parseInt(this.form.section),
-                workspaceId: parseInt(this.mainWorkspace.id),
-              }
-            },
-            result({ loading, data }, key) {
-              if (!loading) {
-                this.thirdTerm = data.thirdTerm
-                this.isBusy = false
-                this.timetableDropdownClass = true
-              }
-            },
-          })
-        }, 100)
+        this.isBusy = true
+        this.$apollo.addSmartQuery('thirdTerm', {
+          query: THIRD_TERM_QUERIES,
+          variables() {
+            return {
+              klase_id: parseInt(this.form.class),
+              term_id: 3,
+              session_id: parseInt(this.form.session),
+              section_id: parseInt(this.form.section),
+              workspaceId: parseInt(this.mainWorkspace.id),
+            }
+          },
+          result({ loading, data }, key) {
+            if (!loading) {
+              this.thirdTerm = data.thirdTerm
+              this.isBusy = false
+              this.timetableDropdownClass = true
+            }
+          },
+        })
       }
     },
   },

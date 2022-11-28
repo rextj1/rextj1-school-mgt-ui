@@ -19,7 +19,7 @@
       <b-row no-gutters>
         <b-col md="12">
           <div class="card-body">
-            <div class="card-student shadow p-3" style="background-color: #fff">
+            <div class="card-student shadow-sm p-3" style="background-color: #fff">
               <h3 class="d-flex justify-content-center mb-4 mt-4">All Admin</h3>
               <hr />
               <b-container fluid>
@@ -180,7 +180,7 @@
                   <template #cell(photo)="data">
                     <b-avatar
                       variant="primary"
-                      :src="`http://sms.test/storage/admin/${data.value}`"
+                      :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/admin/${data.value}`"
                     >
                     </b-avatar>
                   </template>
@@ -201,7 +201,6 @@
                         class="px-3"
                       >
                         <b-icon icon="eye" class="mr-1"></b-icon>
-                        
                       </b-button>
 
                       <b-button
@@ -210,7 +209,7 @@
                         class="px-3 ml-1"
                         @click="handleSchoolAdminEditModal(data.item.id)"
                       >
-                       <b-icon icon="pen" class="mr-1"></b-icon> 
+                        <b-icon icon="pen" class="mr-1"></b-icon>
                       </b-button>
 
                       <b-button
@@ -220,7 +219,6 @@
                         @click="handleDeleteModal(data.item)"
                       >
                         <b-icon icon="trash" class="mr-1" />
-                        
                       </b-button>
                     </div>
                   </template>
@@ -324,23 +322,17 @@ export default {
       fields: [
         {
           key: 'index',
-          label: '#',
+          label: 'S/N',
+        },
+        {
+          key: 'last_name',
+          label: 'Surname Name',
+          sortable: true,
+          // sortDirection: 'desc',
         },
         {
           key: 'first_name',
           label: 'First Name',
-          sortable: true,
-          // sortDirection: 'desc',
-        },
-        {
-          key: 'last_name',
-          label: 'Last Name',
-          sortable: true,
-          // sortDirection: 'desc',
-        },
-        {
-          key: 'code',
-          label: 'Code',
           sortable: true,
           // sortDirection: 'desc',
         },
@@ -351,6 +343,13 @@ export default {
           sortable: true,
           //   class: 'text-center',
         },
+        {
+          key: 'code',
+          label: 'Reg. Code',
+          sortable: true,
+          // sortDirection: 'desc',
+        },
+
         {
           key: 'gender',
           label: 'Gender',
@@ -372,7 +371,6 @@ export default {
           key: 'birthday',
           label: 'Birthday',
           sortable: true,
-          sortDirection: 'desc',
         },
         { key: 'actions', label: 'Actions' },
       ],
@@ -511,7 +509,6 @@ export default {
 
 <style lang="scss" scoped>
 .schoolAdmin {
-
   .add-student {
     box-shadow: 0 5px 5px 0 #1f64b367;
   }

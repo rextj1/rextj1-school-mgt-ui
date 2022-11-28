@@ -19,7 +19,6 @@
           <section slot="pdf-content">
             <div class="p-4">
               <div
-                class="student__wrapper"
                 style="
                   border: 2px solid #111;
                   font-weight: bold;
@@ -45,29 +44,31 @@
                       justify-content-between
                       align-items-center
                     "
-                    style=""
                   >
-                    <!-- :src="`${$config.APIRoot}/student/storage/${first.student.photo}`" -->
-                    <div class="school-logo" style="">
+                    <div class="school-logo">
+                      <div v-if="mainWorkspace.logo == null"></div>
                       <img
-                        src="@/assets/svg/ronazon-logo.svg"
+                        v-else
+                        :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/logo/${mainWorkspace.logo}`"
                         alt="logo"
-                        width="100"
+                        width="50"
                       />
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                      <h2 style="font-weight: bold; color: #1c0988">
-                        <em>Ronazon Academy International</em>
-                      </h2>
-                      <h6 style="font-weight: bold; color: #1c0988">
+                      <h1 style="font-weight: bold; color: #1c0988">
+                        {{ mainWorkspace.name }}
+                      </h1>
+                      <h4 style="font-weight: bold; color: #1c0988">
                         Result sheet {{ first.klase.name }}
-                      </h6>
+                      </h4>
                     </div>
                     <div class="student-picture">
+                      <div v-if="first.student.photo == null"></div>
                       <img
-                        src="@/assets/images/teacher.jpeg"
-                        alt="student-photo"
-                        width="60"
+                        v-else
+                        :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/students/${first.student.photo}`"
+                        alt=""
+                        width="100"
                       />
                     </div>
                   </div>
@@ -573,18 +574,16 @@
 
                   <div
                     class="d-flex justify-content-between"
-                    style="margin-top: 40px; font-weight: bold"
+                    style="margin-top: 45px"
                   >
-                    <div
-                      class="mt-4"
-                      style="width: 300px; border: 2px solid #292b2c"
-                    >
-                      <div class="mr-2" style="width: 300px">
+                    <div class="mt-4" style="width: 320px">
+                      <div class="mr-2" style="width: 320px">
                         <div
                           class="text-center p-1"
                           style="
                             margin: 0;
-                            background-color: #007bff;
+                            background-color: #007bff93;
+                            font-weight: bold;
                             color: #fff;
                           "
                         >
@@ -592,47 +591,72 @@
                         </div>
                       </div>
 
-                      <span
-                        class="p-1 mt-2 d-flex justify-content-between"
-                        style="color: #1c0988"
-                        v-for="grade in grades"
-                        :key="grade.id"
-                      >
-                        <span>{{ grade.name }} - {{ grade.remark }}</span>
-                        <span class="ml-auto m-r-2" style="color: #1c0988"
-                          >{{ grade.mark_from }} - {{ grade.mark_to }} %</span
+                      <div class="blue p-2">
+                        <span
+                          class="p-1 mt-2 d-flex justify-content-between"
+                          style="color: #000"
+                          v-for="grade in grades"
+                          :key="grade.id"
                         >
-                      </span>
+                          <span>{{ grade.name }} - {{ grade.remark }}</span>
+                          <span class="ml-auto m-r-2" style="color: #000"
+                            >{{ grade.mark_from }} - {{ grade.mark_to }} %</span
+                          >
+                        </span>
+                      </div>
                     </div>
 
                     <!-- comments -->
 
                     <div class="mt-4 ml-3">
-                      <div
-                        class="p-1"
-                        style="width: 590px; border: 2px solid #111"
-                      >
+                      <div class="p-1" style="width: 620px">
                         <div
                           class="text-center p-1"
                           style="
                             margin: 0;
-                            background-color: #007bff;
+                            background-color: #007bff93;
                             color: #fff;
                           "
                         >
-                          Teacher's Remark
+                          Principal's Remark
                         </div>
-                        <div v-if="!studentExamResult[0]"></div>
-                        <h6 v-else class="p-2 mt-2" style="color: #1c0988">
+                        <div v-if="!studentExamResult"></div>
+                        <h6 v-else class="blue p-3" style="color: #000">
                           {{ studentExamResult[0].p_comment }}
+                        </h6>
+                      </div>
+
+                      <div class="p-1" style="width: 620px">
+                        <div
+                          class="text-center p-1"
+                          style="
+                            margin: 0;
+                            background-color: #007bff93;
+                            color: #fff;
+                          "
+                        >
+                          Head Teacher's Remark
+                        </div>
+                        <div v-if="!studentExamResult"></div>
+                        <h6
+                          v-else
+                          class="blue p-2"
+                          style="color: #000; font-style: italic"
+                        >
+                          {{ studentExamResult[0].t_comment }}
+                          {{
+                            studentExamResult[0].avg > 50
+                              ? studentExamResult[0].t_comment
+                              : 'A poor performance'
+                          }}
                         </h6>
                       </div>
 
                       <div
                         class="p-1"
                         style="
-                          width: 590px;
-                          border: 2px solid #111;
+                          width: 620px;
+                          border: 0px solid #111;
                           margin-top: 0.2px;
                         "
                       >
@@ -640,19 +664,24 @@
                           class="text-center p-1"
                           style="
                             margin: 0;
-                            background-color: #007bff;
+
                             color: #fff;
                           "
-                        >
-                          Head Teacher's Remark
-                        </div>
-                        <div v-if="!studentExamResult[0]"></div>
-                        <h6
-                          v-else
-                          class="p-2 mt-2"
-                          style="color: #1c0988; font-style: italic"
-                        >
-                          {{ studentExamResult[0].t_comment }}
+                        ></div>
+
+                        <h6 class="p-4 text-center">
+                          <img
+                            v-if="mainWorkspace.stamp == null"
+                            src="@/assets/svg/ronazon-logo.svg"
+                            alt="logo"
+                            width="100"
+                          />
+                          <img
+                            v-else
+                            :src="`${$config.APIRoot}/storage/${mainWorkspace.id}/stamp/${mainWorkspace.stamp}`"
+                            alt=""
+                            width="50"
+                          />
                         </h6>
                       </div>
                     </div>
@@ -663,8 +692,12 @@
           </section>
         </vue-html2pdf>
         <div class="d-flex justify-content-center mb-4">
-          <b-button variant="danger" size="md" pill @click.prevent="generateReport"
-            ><b-icon variant="seccondary" icon="printer"/> print</b-button
+          <b-button
+            variant="danger"
+            size="md"
+            pill
+            @click.prevent="generateReport"
+            ><b-icon variant="seccondary" icon="printer" /> print</b-button
           >
         </div>
       </template>
@@ -694,6 +727,9 @@ export default {
     ...mapState(useWorkspaceStore, {
       mainWorkspace: (store) => store.currentWorkspace,
     }),
+    numStudents() {
+      return this.student[4]
+    },
   },
   apollo: {
     setPromotion: {
@@ -744,3 +780,8 @@ export default {
   },
 }
 </script>
+<style scoped>
+.blue {
+  background-color: #007bff07;
+}
+</style>

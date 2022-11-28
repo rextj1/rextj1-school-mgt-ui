@@ -26,6 +26,10 @@ export const TEACHER_QUERY = gql`
   query TeacherQuery($id: Int!, $workspaceId: Int) {
     teacher(id: $id, workspaceId: $workspaceId) {
       ...TeachersFields
+      subjects{
+        id
+        subject
+      }
     }
   }
   ${TEACHERS_FIELDS_FRAGMENT}

@@ -68,7 +68,7 @@ export default {
     '@nuxtjs/style-resources',
     '@nuxtjs/apollo',
     'nuxt-paystack',
-    ["vue2-editor/nuxt"]
+    ['vue2-editor/nuxt'],
     // 'vue-sweetalert2/nuxt',
   ],
   hooks: {
@@ -96,6 +96,7 @@ export default {
       '~/node_modules/bootstrap/scss/_mixins.scss',
     ],
   },
+  
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},

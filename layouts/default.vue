@@ -147,7 +147,7 @@ export default {
 
     checkScreen() {
       this.windowWidth = window.innerWidth
-      if (this.windowWidth <= 750) {
+      if (this.windowWidth <= 900) {
         this.toggleIcon(false)
         return
       }

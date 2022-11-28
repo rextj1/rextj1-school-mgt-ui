@@ -149,6 +149,7 @@ export const USER_WORKSPACE_QUERY = gql`
         logo
         stamp
         status
+        photo
         gender
         bank
         account_no
